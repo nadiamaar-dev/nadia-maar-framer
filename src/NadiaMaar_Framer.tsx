@@ -751,7 +751,7 @@ const FOOTER_DATA = {
     { label: "Blog",      href: "#s1" },
     { label: "Contatti",  href: "#s9" },
   ],
-  copyright: "© 2025 Nadiia Marchenko · Nadia Maar. Tutti i diritti riservati.",
+  copyright: "© 2025 Nadia Maar. Tutti i diritti riservati.",
 }
 
 const FC = {
@@ -773,6 +773,32 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
       <span style={{ color: FC.accent, overflow: "hidden", width: 0, opacity: 0, transition: "width 0.18s, opacity 0.18s" }} aria-hidden>›</span>
       {children}
     </a>
+  )
+}
+
+function FooterAccordion({ title, children }: { title: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div>
+      <button onClick={() => setOpen(o => !o)}
+        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", cursor: "pointer", padding: "0 0 20px", fontFamily: "inherit" }}>
+        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#A1A1AA", margin: 0 }}>{title}</p>
+        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.25 }} style={{ color: "#A1A1AA", fontSize: 9, lineHeight: 1 }}>▼</motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            style={{ overflow: "hidden" }}
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   )
 }
 
@@ -809,19 +835,17 @@ function SiteFooter() {
             </div>
           </div>
           {/* Services */}
-          <div>
-            <FooterColHeader>Servizi</FooterColHeader>
-            <ul style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <FooterAccordion title="Servizi">
+            <ul style={{ display: "flex", flexDirection: "column", gap: 12, paddingBottom: 4 }}>
               {FOOTER_DATA.services.map(({ label, href }) => <li key={label}><FooterLink href={href}>{label}</FooterLink></li>)}
             </ul>
-          </div>
+          </FooterAccordion>
           {/* Nav */}
-          <div>
-            <FooterColHeader>Esplora</FooterColHeader>
-            <ul style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <FooterAccordion title="Esplora">
+            <ul style={{ display: "flex", flexDirection: "column", gap: 12, paddingBottom: 4 }}>
               {FOOTER_DATA.nav.map(({ label, href }) => <li key={label}><FooterLink href={href}>{label}</FooterLink></li>)}
             </ul>
-          </div>
+          </FooterAccordion>
           {/* Contact */}
           <div>
             <FooterColHeader>Contatto</FooterColHeader>
