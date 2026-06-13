@@ -183,6 +183,7 @@ const GLOBAL_CSS = `
     .hp-skills-grid { grid-template-columns: 1fr !important; }
     .hp-wrap { padding: 0 20px !important; }
     .hp-sec { padding: 80px 0 !important; }
+    .hp-hero { padding: 48px 0 !important; min-height: auto !important; }
     .hp-nav-desktop { display: none !important; }
     .hp-nav-burger { display: flex !important; }
     .hp-brand-text  { display: none !important; }
@@ -331,7 +332,7 @@ function GlassCard({ children, padding = "36px 30px", radius = 16, height = "100
 ══════════════════════════════════════════════════════════════════════════ */
 function Hero() {
   return (
-    <section style={{ ...SEC, minHeight: 860, display: "flex", alignItems: "center" }} id="s1" className="hp-sec">
+    <section style={{ ...SEC, minHeight: 860, display: "flex", alignItems: "center" }} id="s1" className="hp-sec hp-hero">
       <div aria-hidden style={{ position: "absolute", top: "18%", left: "50%", transform: "translateX(-50%)", width: 900, height: 600, borderRadius: "50%", background: `radial-gradient(ellipse, ${T.accentDim} 0%, transparent 68%)`, pointerEvents: "none" }} />
       <div style={WRAP} className="hp-wrap">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
@@ -779,11 +780,11 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
 function FooterAccordion({ title, children }: { title: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
   return (
-    <div>
+    <div style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
       <button onClick={() => setOpen(o => !o)}
-        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", cursor: "pointer", padding: "0 0 20px", fontFamily: "inherit" }}>
-        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#A1A1AA", margin: 0 }}>{title}</p>
-        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.25 }} style={{ color: "#A1A1AA", fontSize: 9, lineHeight: 1 }}>▼</motion.span>
+        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", borderBottom: `1px solid ${open ? "rgba(124,58,237,0.35)" : "rgba(255,255,255,0.07)"}`, cursor: "pointer", padding: "14px 0", fontFamily: "inherit", transition: "border-color 0.25s" }}>
+        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: open ? FC.text : "#A1A1AA", margin: 0, transition: "color 0.2s" }}>{title}</p>
+        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.25 }} style={{ color: open ? FC.accent : "#A1A1AA", fontSize: 9, lineHeight: 1, transition: "color 0.2s" }}>▼</motion.span>
       </button>
       <AnimatePresence initial={false}>
         {open && (
@@ -794,7 +795,9 @@ function FooterAccordion({ title, children }: { title: string; children: React.R
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             style={{ overflow: "hidden" }}
           >
-            {children}
+            <div style={{ padding: "14px 0 16px" }}>
+              {children}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -834,18 +837,19 @@ function SiteFooter() {
               ))}
             </div>
           </div>
-          {/* Services */}
-          <FooterAccordion title="Servizi">
-            <ul style={{ display: "flex", flexDirection: "column", gap: 12, paddingBottom: 4 }}>
-              {FOOTER_DATA.services.map(({ label, href }) => <li key={label}><FooterLink href={href}>{label}</FooterLink></li>)}
-            </ul>
-          </FooterAccordion>
-          {/* Nav */}
-          <FooterAccordion title="Esplora">
-            <ul style={{ display: "flex", flexDirection: "column", gap: 12, paddingBottom: 4 }}>
-              {FOOTER_DATA.nav.map(({ label, href }) => <li key={label}><FooterLink href={href}>{label}</FooterLink></li>)}
-            </ul>
-          </FooterAccordion>
+          {/* Services + Nav grouped */}
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+            <FooterAccordion title="Servizi">
+              <ul style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {FOOTER_DATA.services.map(({ label, href }) => <li key={label}><FooterLink href={href}>{label}</FooterLink></li>)}
+              </ul>
+            </FooterAccordion>
+            <FooterAccordion title="Esplora">
+              <ul style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {FOOTER_DATA.nav.map(({ label, href }) => <li key={label}><FooterLink href={href}>{label}</FooterLink></li>)}
+              </ul>
+            </FooterAccordion>
+          </div>
           {/* Contact */}
           <div>
             <FooterColHeader>Contatto</FooterColHeader>
