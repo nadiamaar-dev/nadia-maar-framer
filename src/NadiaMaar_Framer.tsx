@@ -163,18 +163,18 @@ const GLOBAL_CSS = `
   .rainbow-btn::after {
     content: '';
     position: absolute;
-    left: -2px; top: -2px;
+    left: -1px; top: -1px;
     border-radius: inherit;
     background: linear-gradient(45deg,
-      #7000FF, #7000FF, #6600EE, #8B0038, #6600EE,
-      #7000FF, #7000FF, #6600EE, #8B0038, #6600EE);
+      rgba(112,0,255,0.45), rgba(100,0,240,0.20), rgba(153,68,255,0.35), rgba(100,0,240,0.15),
+      rgba(112,0,255,0.45), rgba(100,0,240,0.20), rgba(153,68,255,0.35), rgba(100,0,240,0.15));
     background-size: 400%;
-    width: calc(100% + 4px);
-    height: calc(100% + 4px);
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
     z-index: -1;
-    animation: rainbow-anim 18s linear infinite;
+    animation: rainbow-anim 32s linear infinite;
   }
-  .rainbow-btn::after { filter: blur(32px); opacity: 0.7; }
+  .rainbow-btn::after { filter: blur(18px); opacity: 0.22; }
 
   @keyframes colon-blink {
     0%, 100% { opacity: 0.55; }
@@ -215,6 +215,11 @@ const GLOBAL_CSS = `
     .hp-hero-stat-item { padding: 12px 14px !important; gap: 8px !important; }
     .hp-hero-stat-value { font-size: 17px !important; }
     .hp-hero-stat-label { font-size: 10px !important; }
+    .hp-method-grid { grid-template-columns: 1fr !important; }
+    .hp-method-content { padding: 24px 20px !important; }
+    .hp-method-visual { border-left: none !important; border-top: 1px solid rgba(255,255,255,0.05) !important; min-height: 150px !important; }
+    .hp-method-nav { flex-wrap: wrap !important; }
+    .hp-method-nav > button { flex: 0 0 calc(50% - 4px) !important; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -304,9 +309,9 @@ function Btn({ children, primary: _primary, small, type = "button", onClick }: {
         position: "relative", padding: small ? "9px 20px" : "16px 34px",
         borderRadius: small ? 9 : 12, fontSize: small ? 13 : 15, fontWeight: 600,
         cursor: "pointer", letterSpacing: "0.01em", fontFamily: "inherit", border: "none",
-        background: "rgba(18, 6, 38, 0.52)", backdropFilter: "blur(16px) saturate(1.6)",
-        WebkitBackdropFilter: "blur(16px) saturate(1.6)",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 -1px 0 rgba(0,0,0,0.28), 0 2px 14px rgba(0,0,0,0.35)",
+        background: "rgba(255,255,255,0.06)", backdropFilter: "blur(24px) saturate(1.3)",
+        WebkitBackdropFilter: "blur(24px) saturate(1.3)",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.09), 0 2px 10px rgba(0,0,0,0.18)",
         color: T.text, transition: "transform 0.15s",
       } as React.CSSProperties}
     >
@@ -442,9 +447,9 @@ function Hero() {
             style={{
               position: "relative", padding: "16px 34px", borderRadius: 12, fontSize: 15, fontWeight: 600,
               cursor: "pointer", letterSpacing: "0.01em", fontFamily: "inherit", border: "none",
-              background: "rgba(18, 6, 38, 0.52)", backdropFilter: "blur(16px) saturate(1.6)",
-              WebkitBackdropFilter: "blur(16px) saturate(1.6)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 -1px 0 rgba(0,0,0,0.28), 0 2px 14px rgba(0,0,0,0.35)",
+              background: "rgba(255,255,255,0.06)", backdropFilter: "blur(24px) saturate(1.3)",
+              WebkitBackdropFilter: "blur(24px) saturate(1.3)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.09), 0 2px 10px rgba(0,0,0,0.18)",
               color: T.text,
             } as React.CSSProperties}
           >
@@ -490,34 +495,6 @@ function Hero() {
   )
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   §2  VALUE PROPOSITION
-══════════════════════════════════════════════════════════════════════════ */
-function ValueProp() {
-  return (
-    <section style={{ ...SEC, borderTop: `1px solid ${T.border}` }} id="s2" className="hp-sec">
-      <div style={WRAP} className="hp-wrap">
-        <div className="hp-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px 72px", alignItems: "start" }}>
-          <Reveal>
-            <Label text="Value Proposition" />
-            <h2 style={{ fontSize: "clamp(28px, 3.5vw, 46px)", fontWeight: 700, lineHeight: 1.13, letterSpacing: "-0.028em" }}>
-              Dal concetto al mercato: un ecosistema digitale senza compromessi.
-            </h2>
-          </Reveal>
-          <Reveal>
-            <p style={{ fontSize: 16, color: T.muted, lineHeight: 1.82, marginBottom: 28 }}>
-              Lanciare o scalare un progetto commerciale online richiede molto più di un layout grafico. Richiede infrastrutture capaci di sostenere migliaia di prodotti, flussi logistici sincronizzati, contenuti ottimizzati e una strategia di acquisizione clienti che funzioni fin dal primo giorno.
-            </p>
-            <p style={{ fontSize: 16, color: T.muted, lineHeight: 1.82 }}>
-              <span style={{ color: T.text, fontWeight: 600 }}>Il mio approccio:</span>{" "}
-              Elimino la complessità tecnica e frammentata. Sviluppo soluzioni end-to-end che uniscono codice, automazione avanzata e marketing predittivo, offrendoti un unico punto di riferimento per la nascita e l'espansione del tuo business digitale.
-            </p>
-          </Reveal>
-        </div>
-      </div>
-    </section>
-  )
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    §3  ALL-IN-ONE ADVANTAGE
@@ -562,30 +539,66 @@ function AllInOne() {
 /* ══════════════════════════════════════════════════════════════════════════
    §4  SKILLS
 ══════════════════════════════════════════════════════════════════════════ */
-const SKILLS = [
-  { icon: "💻", title: "Sviluppo & Architettura Web", items: [
+const SkillIconLayers = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7">
+    <defs><linearGradient id="sk-g1" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stopColor="#9944FF"/><stop offset="1" stopColor="#C084FC"/></linearGradient></defs>
+    <polygon points="12 2 2 7 12 12 22 7 12 2" stroke="url(#sk-g1)"/>
+    <polyline points="2 17 12 22 22 17" stroke="url(#sk-g1)"/>
+    <polyline points="2 12 12 17 22 12" stroke="url(#sk-g1)"/>
+  </svg>
+)
+const SkillIconCpu = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7">
+    <defs><linearGradient id="sk-g2" x1="1" y1="1" x2="23" y2="23" gradientUnits="userSpaceOnUse"><stop stopColor="#9944FF"/><stop offset="1" stopColor="#C084FC"/></linearGradient></defs>
+    <rect x="4" y="4" width="16" height="16" rx="2" stroke="url(#sk-g2)"/>
+    <rect x="9" y="9" width="6" height="6" stroke="url(#sk-g2)"/>
+    <line x1="9" y1="1" x2="9" y2="4" stroke="url(#sk-g2)"/>
+    <line x1="15" y1="1" x2="15" y2="4" stroke="url(#sk-g2)"/>
+    <line x1="9" y1="20" x2="9" y2="23" stroke="url(#sk-g2)"/>
+    <line x1="15" y1="20" x2="15" y2="23" stroke="url(#sk-g2)"/>
+    <line x1="20" y1="9" x2="23" y2="9" stroke="url(#sk-g2)"/>
+    <line x1="20" y1="14" x2="23" y2="14" stroke="url(#sk-g2)"/>
+    <line x1="1" y1="9" x2="4" y2="9" stroke="url(#sk-g2)"/>
+    <line x1="1" y1="14" x2="4" y2="14" stroke="url(#sk-g2)"/>
+  </svg>
+)
+const SkillIconRocket = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7">
+    <defs><linearGradient id="sk-g3" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stopColor="#9944FF"/><stop offset="1" stopColor="#C084FC"/></linearGradient></defs>
+    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" stroke="url(#sk-g3)"/>
+    <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" stroke="url(#sk-g3)"/>
+    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" stroke="url(#sk-g3)"/>
+    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" stroke="url(#sk-g3)"/>
+  </svg>
+)
+
+const SKILLS: { icon: React.ReactNode; title: string; items: { name: string; desc: string }[] }[] = [
+  { icon: <SkillIconLayers />, title: "Sviluppo & Architettura Web", items: [
     { name: "Piattaforme E-Commerce Scalabili", desc: "Sviluppo avanzato su Shopify con ottimizzazione del codice Liquid per cataloghi massivi oltre i 30.000 prodotti. Store enterprise ottimizzati per conversioni e velocità di caricamento fulminee." },
     { name: "Siti Corporate & Portfolio d'Impatto", desc: "Creazione di interfacce interattive e moderne con Framer e Webflow, utilizzando componentistica React personalizzata per animazioni fluide e una UX superiore." },
     { name: "Ingegnerizzazione dei Processi & API", desc: "Integrazione e configurazione di API/Middleware personalizzati (Node.js, Python) per connettere in tempo reale fornitori, dropshipper, inventari, gestionali (ERP) e CRM." },
   ]},
-  { icon: "🧠", title: "Intelligenza Artificiale & Automazione", items: [
+  { icon: <SkillIconCpu />, title: "Intelligenza Artificiale & Automazione", items: [
     { name: "Content Automation", desc: "Implementazione di sistemi AI per la generazione massiva e l'ottimizzazione SEO di schede prodotto, descrizioni e attributi tecnici, migliorando l'efficienza operativa." },
     { name: "Customer Experience", desc: "Sviluppo di Chatbot intelligenti e assistenti virtuali per automatizzare il customer care e incrementare le conversioni." },
+    { name: "Smart Conversion & Recovery", desc: "Intercettazione intelligente degli abbandoni tramite AI. Sistemi automatizzati per il recupero dei carrelli e sconti dinamici in tempo reale, progettati per abbattere il tasso di abbandono e recuperare vendite perse." },
   ]},
-  { icon: "📈", title: "Performance Marketing & Growth", items: [
+  { icon: <SkillIconRocket />, title: "Performance Marketing & Growth", items: [
     { name: "E-Commerce SEO", desc: "Architettura SEO avanzata studiata per garantire il massimo posizionamento organico su motori di ricerca per cataloghi di grandi dimensioni." },
     { name: "Paid Advertising orientato al ROI", desc: "Strategia, setup e scaling di campagne pubblicitarie ad alto budget su Meta (Facebook & Instagram), Google Ads e Pinterest." },
     { name: "UI/UX Design & Sviluppo Applicativo", desc: "Studio del comportamento dell'utente per interfacce fluide. Sviluppo di web app e funzionalità su misura per differenziare il brand sul mercato." },
   ]},
 ]
 
-function SkillAccordion({ icon, title, items, defaultOpen }: { icon: string; title: string; items: { name: string; desc: string }[]; defaultOpen?: boolean }) {
+function SkillAccordion({ icon, title, items, defaultOpen }: { icon: React.ReactNode; title: string; items: { name: string; desc: string }[]; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen ?? false)
   return (
     <Reveal>
       <div data-glow="" style={{ '--base': '220', '--spread': '140', '--radius': '16', '--border': '1.5', '--size': '270', borderRadius: 16, position: "relative", backgroundColor: "rgba(255,255,255,0.026)", backdropFilter: "blur(16px) saturate(1.4)", WebkitBackdropFilter: "blur(16px) saturate(1.4)", border: `1px solid ${open ? "rgba(102,0,255,0.32)" : "rgba(255,255,255,0.07)"}`, boxShadow: open ? "0 10px 30px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.07)" : "0 2px 12px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}>
         <button onClick={() => setOpen(o => !o)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 18, padding: "26px 32px", background: open ? "rgba(102,0,255,0.07)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
-          <span style={{ fontSize: 22, lineHeight: 1 }}>{icon}</span>
+          <div style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: open ? "rgba(102,0,255,0.20)" : "rgba(102,0,255,0.10)", border: `1px solid ${open ? "rgba(153,68,255,0.45)" : "rgba(153,68,255,0.22)"}`, boxShadow: open ? "0 0 14px rgba(102,0,255,0.28), inset 0 1px 0 rgba(255,255,255,0.08)" : "inset 0 1px 0 rgba(255,255,255,0.05)", transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s" }}>
+            {icon}
+          </div>
           <span style={{ fontSize: 17, fontWeight: 600, letterSpacing: "-0.015em", flex: 1 }}>{title}</span>
           <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3 }} style={{ fontSize: 11, color: T.accentLt, lineHeight: 1 }}>▼</motion.span>
         </button>
@@ -610,12 +623,12 @@ function SkillAccordion({ icon, title, items, defaultOpen }: { icon: string; tit
 
 function Skills() {
   return (
-    <section id="s4" style={SEC} className="hp-sec">
+    <section id="s4" style={{ ...SEC, borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <Label text="Core Skills & Tech Stack" />
           <h2 style={{ fontSize: "clamp(26px, 3.4vw, 44px)", fontWeight: 700, lineHeight: 1.13, letterSpacing: "-0.028em", marginBottom: 60, maxWidth: 560 }}>
-            Soluzioni su Misura per Obiettivi Sfidanti
+            Soluzioni su misura per scalare il tuo business online
           </h2>
         </Reveal>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -627,24 +640,346 @@ function Skills() {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   §5  METHOD
+   §5  METHOD — CAROUSEL + ANIMATED VISUALS
 ══════════════════════════════════════════════════════════════════════════ */
-const PHASES = [
-  { n: "01", title: "FASE 1: Analisi Tecnica e di Business", body: "Non inizio a scrivere codice senza una strategia. Analizzo il tuo modello di business, i competitor e i flussi logistici per mappare lo stack tecnologico perfetto in base ai tuoi obiettivi commerciali." },
-  { n: "02", title: "FASE 2: UI/UX Design & Sviluppo", body: "Progetto l'interfaccia focalizzandomi sulla User Experience. Sviluppo l'infrastruttura garantendo velocità di caricamento massime, sicurezza e un design sartoriale studiato sul target." },
-  { n: "03", title: "FASE 3: Ingegnerizzazione & Sincronizzazione API", body: "Collego i sistemi di fornitori e gestionali. Automatizzo l'aggiornamento in tempo reale di scorte, prezzi e ordini. Configuro l'AI per ottimizzare il catalogo ed eliminare i processi manuali." },
-  { n: "04", title: "FASE 4: Lancio, Tracking & Growth Marketing", body: "Configuro i pixel di tracciamento e attivo i canali di acquisizione (SEO, Adv, Social). Monitoro i dati in tempo reale per ottimizzare il tasso di conversione (CRO) e scalare il fatturato." },
+
+function VisualAnalisi() {
+  const cx = 150, cy = 125, R = 80
+  const topics = ["Mercato","Stack Tech","Obiettivi","Competitor","Logistica","Budget"]
+  const sats = topics.map((label, i) => {
+    const a = (i * 60 - 90) * (Math.PI / 180)
+    return { label, x: cx + R * Math.cos(a), y: cy + R * Math.sin(a) }
+  })
+  return (
+    <svg viewBox="0 0 300 250" width="100%" height="100%">
+      {sats.map((s, i) => (
+        <motion.path key={i} d={`M${cx},${cy}L${s.x},${s.y}`}
+          stroke="rgba(153,68,255,0.28)" strokeWidth="1" fill="none" strokeDasharray="4 3"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
+        />
+      ))}
+      <motion.circle cx={cx} cy={cy} r={36} fill="rgba(102,0,255,0.07)"
+        animate={{ r: [36, 45, 36] }} transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.circle cx={cx} cy={cy} r={28}
+        fill="rgba(102,0,255,0.18)" stroke="rgba(192,132,252,0.55)" strokeWidth="1.5"
+        initial={{ scale: 0 }} animate={{ scale: 1 }}
+        transition={{ type: "spring", stiffness: 250, delay: 0.1 }}
+        style={{ transformOrigin: `${cx}px ${cy}px` }}
+      />
+      <text x={cx} y={cy - 3} textAnchor="middle" fontSize={9} fontWeight="700"
+        fill="#C084FC" fontFamily="Inter,sans-serif">Business</text>
+      <text x={cx} y={cy + 9} textAnchor="middle" fontSize={6.5} fill="rgba(192,132,252,0.5)"
+        fontFamily="Inter,sans-serif">Analysis</text>
+      {sats.map((s, i) => (
+        <motion.g key={i} initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4 + i * 0.1, type: "spring", stiffness: 280 }}
+          style={{ transformOrigin: `${s.x}px ${s.y}px` }}
+        >
+          <circle cx={s.x} cy={s.y} r={21} fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.13)" strokeWidth="1"/>
+          <text x={s.x} y={s.y + 1.5} textAnchor="middle" fontSize={7} fill="rgba(242,242,250,0.68)"
+            fontFamily="Inter,sans-serif">{s.label}</text>
+        </motion.g>
+      ))}
+      {sats.map((s, i) => (
+        <motion.circle key={`p${i}`} cx={cx} cy={cy} r={2.5} fill="#9944FF"
+          animate={{ x: [0, s.x - cx, 0], y: [0, s.y - cy, 0], opacity: [0, 0.9, 0] }}
+          transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.38, ease: "easeInOut" }}
+        />
+      ))}
+    </svg>
+  )
+}
+
+function VisualDesign() {
+  return (
+    <svg viewBox="0 0 300 220" width="100%" height="100%">
+      <motion.rect x={15} y={10} width={270} height={200} rx={10}
+        fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.11)" strokeWidth="1"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0 }}
+      />
+      <motion.rect x={15} y={10} width={270} height={30} rx={10}
+        fill="rgba(255,255,255,0.06)"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.08 }}
+      />
+      {[22,32,42].map((x, i) => (
+        <motion.circle key={i} cx={x} cy={25} r={4}
+          fill={["#ff5f56","#ffbd2e","#27c93f"][i]}
+          initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 0.75, scale: 1 }}
+          transition={{ delay: 0.12 + i * 0.05, type: "spring" }}
+          style={{ transformOrigin: `${x}px 25px` }}
+        />
+      ))}
+      <motion.rect x={65} y={17} width={170} height={16} rx={8}
+        fill="rgba(255,255,255,0.07)"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.18 }}
+      />
+      <motion.rect x={25} y={50} width={250} height={16} rx={5}
+        fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" strokeWidth="1"
+        initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+        style={{ transformOrigin: "150px 58px" }}
+      />
+      <motion.rect x={25} y={76} width={250} height={50} rx={7}
+        fill="rgba(102,0,255,0.09)" stroke="rgba(153,68,255,0.20)" strokeWidth="1"
+        initial={{ opacity: 0, scaleX: 0.7 }} animate={{ opacity: 1, scaleX: 1 }}
+        transition={{ delay: 0.34, duration: 0.4, ease: [0.16,1,0.3,1] }}
+        style={{ transformOrigin: "150px 101px" }}
+      />
+      <motion.rect x={55} y={90} width={0} height={8} rx={4} fill="rgba(192,132,252,0.45)"
+        animate={{ width: 110 }} transition={{ delay: 0.54, duration: 0.5 }}
+      />
+      <motion.rect x={80} y={105} width={0} height={5} rx={3} fill="rgba(255,255,255,0.14)"
+        animate={{ width: 60 }} transition={{ delay: 0.68, duration: 0.35 }}
+      />
+      <motion.rect x={167} y={89} width={2} height={11} rx={1} fill="rgba(192,132,252,0.75)"
+        animate={{ opacity: [1, 0, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.9 }}
+      />
+      {[25,112,199].map((x, i) => (
+        <motion.g key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.54 + i * 0.09, duration: 0.35, ease: [0.16,1,0.3,1] }}
+        >
+          <rect x={x} y={138} width={76} height={54} rx={7}
+            fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
+          <circle cx={x+38} cy={157} r={9} fill="rgba(102,0,255,0.17)"/>
+          <rect x={x+16} y={172} width={44} height={4} rx={2} fill="rgba(255,255,255,0.10)"/>
+          <rect x={x+22} y={180} width={32} height={3} rx={2} fill="rgba(255,255,255,0.06)"/>
+        </motion.g>
+      ))}
+    </svg>
+  )
+}
+
+function VisualAPI() {
+  const boxes = [
+    { label: "Fornitore", sub: "ERP/CRM",     x: 14,  y: 72, w: 76, h: 86,  ac: "rgba(102,0,255,0.16)", bd: "rgba(153,68,255,0.36)" },
+    { label: "API Layer", sub: "Middleware",   x: 112, y: 50, w: 76, h: 130, ac: "rgba(192,132,252,0.10)", bd: "rgba(192,132,252,0.40)" },
+    { label: "Shopify",   sub: "+ Analytics",  x: 210, y: 72, w: 76, h: 86,  ac: "rgba(102,0,255,0.16)", bd: "rgba(153,68,255,0.36)" },
+  ]
+  return (
+    <svg viewBox="0 0 300 230" width="100%" height="100%">
+      <motion.text x={150} y={20} textAnchor="middle" fontSize={15} fontWeight="800"
+        fill="#C084FC" fontFamily="Inter,sans-serif"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+      >30.247 SKU</motion.text>
+      <motion.text x={150} y={36} textAnchor="middle" fontSize={7} fill="rgba(192,132,252,0.48)"
+        fontFamily="Inter,sans-serif"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+      >sincronizzati in tempo reale</motion.text>
+      {[[90,115,112,115],[188,115,210,115]].map(([x1,y1,x2,y2], i) => (
+        <motion.path key={i} d={`M${x1},${y1}L${x2},${y2}`}
+          stroke="rgba(153,68,255,0.26)" strokeWidth="1.5" fill="none" strokeDasharray="5 3"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 + i * 0.15 }}
+        />
+      ))}
+      {[112,210].map((x, i) => (
+        <motion.polygon key={i} points={`${x},111 ${x},119 ${x+7},115`}
+          fill="rgba(153,68,255,0.48)"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 + i * 0.15 }}
+        />
+      ))}
+      {boxes.map((b, i) => (
+        <motion.g key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.14, duration: 0.45, ease: [0.16,1,0.3,1] }}
+        >
+          <rect x={b.x} y={b.y} width={b.w} height={b.h} rx={11} fill={b.ac} stroke={b.bd} strokeWidth="1"/>
+          <text x={b.x+b.w/2} y={b.y+b.h/2-5} textAnchor="middle" fontSize={8} fontWeight="600"
+            fill="rgba(242,242,250,0.88)" fontFamily="Inter,sans-serif">{b.label}</text>
+          <text x={b.x+b.w/2} y={b.y+b.h/2+8} textAnchor="middle" fontSize={6.5}
+            fill="rgba(242,242,250,0.38)" fontFamily="Inter,sans-serif">{b.sub}</text>
+          <motion.circle cx={b.x+b.w-11} cy={b.y+11} r={3.5} fill="#22c55e"
+            animate={{ opacity: [1,0.3,1] }} transition={{ duration: 1.5, repeat: Infinity, delay: i*0.45 }}/>
+          <motion.circle cx={b.x+b.w-11} cy={b.y+11} r={7} fill="rgba(34,197,94,0.16)"
+            animate={{ r: [7,13,7], opacity: [0.35,0,0.35] }}
+            transition={{ duration: 1.5, repeat: Infinity, delay: i*0.45 }}/>
+        </motion.g>
+      ))}
+      {[0,1].map(edge => [0,1,2].map(j => (
+        <motion.rect key={`p${edge}-${j}`}
+          x={edge===0 ? 86 : 184} y={112} width={8} height={6} rx={2} fill="rgba(153,68,255,0.65)"
+          animate={{ x: [0,22,22], opacity: [0,1,0] }}
+          transition={{ duration: 1.1, repeat: Infinity, delay: j*0.4 + edge*0.22, ease: "easeInOut" }}
+        />
+      )))}
+    </svg>
+  )
+}
+
+function VisualLancio() {
+  const pts: [number,number][] = [[22,178],[57,162],[92,147],[127,124],[162,92],[197,62],[232,34]]
+  const lineD = `M${pts.map(([x,y])=>`${x},${y}`).join(" L")}`
+  const areaD = `${lineD} L232,192 L22,192 Z`
+  return (
+    <svg viewBox="0 0 260 205" width="100%" height="100%">
+      <defs>
+        <linearGradient id="mgl" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#7C3AED"/><stop offset="100%" stopColor="#F0ABFC"/>
+        </linearGradient>
+        <linearGradient id="mga" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="rgba(102,0,255,0.20)"/><stop offset="100%" stopColor="rgba(102,0,255,0)"/>
+        </linearGradient>
+      </defs>
+      {[40,80,120,160].map((y,i) => (
+        <line key={i} x1={22} y1={y} x2={242} y2={y} stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
+      ))}
+      <motion.path d={areaD} fill="url(#mga)"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}
+      />
+      <motion.path d={lineD} stroke="url(#mgl)" strokeWidth="2.5" fill="none" strokeLinecap="round"
+        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+        transition={{ duration: 1.4, ease: [0.16,1,0.3,1], delay: 0.2 }}
+      />
+      {pts.map(([x,y],i) => (
+        <motion.circle key={i} cx={x} cy={y} r={4}
+          fill="#C084FC" stroke="rgba(5,5,10,0.8)" strokeWidth="2"
+          initial={{ scale: 0 }} animate={{ scale: 1 }}
+          transition={{ delay: 0.25 + (i/pts.length)*1.3, type: "spring", stiffness: 350 }}
+          style={{ transformOrigin: `${x}px ${y}px` }}
+        />
+      ))}
+      {["Gen","Feb","Mar","Apr","Mag","Giu","Lug"].map((m,i) => (
+        <text key={i} x={22+i*35} y={200} textAnchor="middle" fontSize={6.5}
+          fill="rgba(242,242,250,0.26)" fontFamily="Inter,sans-serif">{m}</text>
+      ))}
+      {[{v:"+240%",l:"ROI",x:152,y:56},{v:"+85%",l:"CRO",x:152,y:106}].map((m,i) => (
+        <motion.g key={i} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1.1 + i * 0.18, duration: 0.4 }}
+        >
+          <rect x={m.x} y={m.y-14} width={58} height={28} rx={8}
+            fill="rgba(102,0,255,0.16)" stroke="rgba(153,68,255,0.35)" strokeWidth="1"/>
+          <text x={m.x+29} y={m.y-1} textAnchor="middle" fontSize={13} fontWeight="800"
+            fill="#C084FC" fontFamily="Inter,sans-serif">{m.v}</text>
+          <text x={m.x+29} y={m.y+9} textAnchor="middle" fontSize={7}
+            fill="rgba(192,132,252,0.52)" fontFamily="Inter,sans-serif">{m.l}</text>
+        </motion.g>
+      ))}
+    </svg>
+  )
+}
+
+const METHOD_STEPS = [
+  { n: "01", label: "FASE 1", title: "Analisi Tecnica e di Business", body: "Non inizio a scrivere codice senza una strategia. Analizzo il tuo modello di business, i competitor e i flussi logistici per mappare lo stack tecnologico perfetto in base ai tuoi obiettivi commerciali." },
+  { n: "02", label: "FASE 2", title: "UI/UX Design & Sviluppo", body: "Progetto l'interfaccia focalizzandomi sulla User Experience. Sviluppo l'infrastruttura garantendo velocità di caricamento massime, sicurezza e un design sartoriale studiato sul target." },
+  { n: "03", label: "FASE 3", title: "Ingegnerizzazione & Sincronizzazione API", body: "Collego i sistemi di fornitori e gestionali. Automatizzo l'aggiornamento in tempo reale di scorte, prezzi e ordini. Configuro l'AI per ottimizzare il catalogo ed eliminare i processi manuali." },
+  { n: "04", label: "FASE 4", title: "Lancio, Tracking & Growth Marketing", body: "Configuro i pixel di tracciamento e attivo i canali di acquisizione (SEO, Adv, Social). Monitoro i dati in tempo reale per ottimizzare il tasso di conversione (CRO) e scalare il fatturato." },
 ]
 
-function PhaseCard({ n, title, body }: { n: string; title: string; body: string }) {
+const METHOD_VISUALS = [VisualAnalisi, VisualDesign, VisualAPI, VisualLancio]
+
+function MethodNavBtn({ active, tick, duration, label, onClick }: {
+  active: boolean; tick: number; duration: number; label: string; onClick: () => void
+}) {
+  const [h, setH] = useState(false)
+  const [lx, setLx] = useState(50)
+  const [ly, setLy] = useState(50)
+  const ref = useRef<HTMLButtonElement>(null)
+  const trackCursor = (e: React.MouseEvent) => {
+    const r = ref.current?.getBoundingClientRect()
+    if (r) { setLx(((e.clientX - r.left) / r.width) * 100); setLy(((e.clientY - r.top) / r.height) * 100) }
+  }
   return (
-    <GlassCard padding="36px 32px">
-      <div style={{ display: "flex", flexDirection: "column", gap: 18, height: "100%" }}>
-        <span style={{ fontSize: 54, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", background: `linear-gradient(135deg, ${T.accent}55, ${T.accentLt}22)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" } as React.CSSProperties}>{n}</span>
-        <h3 style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.01em", color: T.text }}>{title}</h3>
-        <p style={{ fontSize: 15, color: T.muted, lineHeight: 1.82 }}>{body}</p>
+    <motion.button
+      ref={ref as React.RefObject<HTMLButtonElement>}
+      data-glow=""
+      onClick={onClick}
+      onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} onMouseMove={trackCursor}
+      animate={{ opacity: active ? 1 : 0.68 }}
+      style={{
+        "--base": "220", "--spread": "140", "--radius": "12", "--border": "1.5", "--size": "260",
+        flex: 1, padding: "16px 18px", borderRadius: 12, cursor: "pointer",
+        fontFamily: "inherit", textAlign: "left" as const, position: "relative",
+        backgroundColor: active ? "rgba(102,0,255,0.11)" : h ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.026)",
+        border: `1px solid ${active ? "rgba(102,0,255,0.38)" : h ? "rgba(255,255,255,0.13)" : "rgba(255,255,255,0.07)"}`,
+        boxShadow: h || active ? "0 8px 28px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.10)" : "0 2px 10px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.04)",
+        backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
+        transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s",
+      } as React.CSSProperties}
+    >
+      <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", borderRadius: 12, background: h ? `radial-gradient(110px circle at ${lx}% ${ly}%, rgba(102,0,255,0.16) 0%, transparent 100%)` : "none", transition: "background 0.1s" }} />
+      <div aria-hidden style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: 1, pointerEvents: "none", background: `linear-gradient(90deg, transparent, rgba(255,255,255,${h ? 0.14 : 0.05}), transparent)`, transition: "all 0.3s" }} />
+      {active && (
+        <motion.div key={tick} initial={{ width: "0%" }} animate={{ width: "100%" }}
+          transition={{ duration: duration / 1000, ease: "linear" }}
+          style={{ position: "absolute", bottom: 0, left: 0, height: 2, background: `linear-gradient(90deg, ${T.accent}, ${T.accentLt})` }}
+        />
+      )}
+      <div style={{ position: "relative", zIndex: 1, fontSize: 13, fontWeight: 600, color: active ? T.text : T.muted, letterSpacing: "0.02em" }}>
+        {label}
       </div>
-    </GlassCard>
+    </motion.button>
+  )
+}
+
+function MethodCarousel() {
+  const [step, setStep] = useState(0)
+  const [tick, setTick] = useState(0)
+  const [ch, setCh] = useState(false)
+  const [lx, setLx] = useState(50)
+  const [ly, setLy] = useState(50)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const STEP_MS = 9000
+
+  useEffect(() => {
+    const t = setTimeout(() => { setStep(s => (s + 1) % 4); setTick(k => k + 1) }, STEP_MS)
+    return () => clearTimeout(t)
+  }, [step])
+
+  const goTo = (i: number) => { setStep(i); setTick(k => k + 1) }
+  const Visual = METHOD_VISUALS[step]
+  const trackCursor = (e: React.MouseEvent) => {
+    const r = cardRef.current?.getBoundingClientRect()
+    if (r) { setLx(((e.clientX - r.left) / r.width) * 100); setLy(((e.clientY - r.top) / r.height) * 100) }
+  }
+
+  return (
+    <div>
+      <motion.div ref={cardRef} data-glow=""
+        onHoverStart={() => setCh(true)} onHoverEnd={() => setCh(false)} onMouseMove={trackCursor}
+        style={{
+          '--base': '220', '--spread': '140', '--radius': '20', '--border': '1.5', '--size': '320',
+          borderRadius: 20, overflow: "hidden", position: "relative",
+          background: ch ? "rgba(255,255,255,0.042)" : "rgba(255,255,255,0.026)",
+          backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
+          border: `1px solid ${ch ? "rgba(255,255,255,0.13)" : "rgba(255,255,255,0.08)"}`,
+          boxShadow: ch
+            ? "0 22px 50px rgba(0,0,0,0.50), 0 0 0 1px rgba(102,0,255,0.13), inset 0 1px 0 rgba(255,255,255,0.10)"
+            : "0 8px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)",
+          marginBottom: 28,
+          transition: "background 0.25s, border-color 0.25s, box-shadow 0.3s",
+        } as React.CSSProperties}>
+        <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, borderRadius: 20, background: ch ? `radial-gradient(240px circle at ${lx}% ${ly}%, rgba(102,0,255,0.11) 0%, transparent 100%)` : "none", transition: "background 0.12s" }} />
+        <div aria-hidden style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: 1, pointerEvents: "none", zIndex: 0, background: `linear-gradient(90deg, transparent, rgba(255,255,255,${ch ? 0.14 : 0.06}), transparent)`, transition: "all 0.3s" }} />
+        <div className="hp-method-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", position: "relative", zIndex: 1 }}>
+          <div className="hp-method-content" style={{ padding: "44px 40px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <AnimatePresence mode="wait">
+              <motion.div key={step} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }} transition={{ duration: 0.38, ease: [0.16,1,0.3,1] }}>
+                <div style={{ fontSize: 52, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", marginBottom: 18, background: `linear-gradient(135deg, ${T.accent}55, ${T.accentLt}28)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" } as React.CSSProperties}>
+                  {METHOD_STEPS[step].n}
+                </div>
+                <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", color: T.text, marginBottom: 18, lineHeight: 1.25, overflowWrap: "break-word" }}>
+                  {METHOD_STEPS[step].title}
+                </h3>
+                <p style={{ fontSize: 15, color: T.muted, lineHeight: 1.82, overflowWrap: "break-word" }}>
+                  {METHOD_STEPS[step].body}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          <div className="hp-method-visual" style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.13)", borderLeft: "1px solid rgba(255,255,255,0.05)", padding: "28px", minHeight: 320 }}>
+            <AnimatePresence mode="wait">
+              <motion.div key={step} initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94 }} transition={{ duration: 0.38, ease: [0.16,1,0.3,1] }} style={{ width: "100%", height: "100%" }}>
+                <Visual />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </motion.div>
+      <div className="hp-method-nav" style={{ display: "flex", gap: 8 }}>
+        {METHOD_STEPS.map((s, i) => (
+          <MethodNavBtn key={i} active={step === i} tick={tick} duration={STEP_MS} label={s.label} onClick={() => goTo(i)} />
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -654,13 +989,14 @@ function Method() {
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <Label text="Il Metodo di Lavoro" />
-          <h2 style={{ fontSize: "clamp(26px, 3.4vw, 44px)", fontWeight: 700, lineHeight: 1.13, letterSpacing: "-0.028em", marginBottom: 60, maxWidth: 600 }}>
-            Una Roadmap Chiara, Trasparente e Orientata ai Risultati
+          <h2 style={{ fontSize: "clamp(26px, 3.4vw, 44px)", fontWeight: 700, lineHeight: 1.13, letterSpacing: "-0.028em", marginBottom: 48, maxWidth: 580, color: T.text }}>
+            Una roadmap chiara e trasparente,{" "}
+            <span style={{ background: "linear-gradient(90deg, #BF5FFF, #C084FC)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
+              orientata ai risultati.
+            </span>
           </h2>
         </Reveal>
-        <div className="hp-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-          {PHASES.map((p, i) => <Reveal key={i}><PhaseCard {...p} /></Reveal>)}
-        </div>
+        <MethodCarousel />
       </div>
     </section>
   )
@@ -1373,9 +1709,8 @@ export default function NadiaMaar() {
       <Navbar />
       <div style={{ position: "relative", zIndex: 1, paddingTop: 64 }}>
         <Hero />
-        <ValueProp />
-        <AllInOne />
         <Skills />
+        <AllInOne />
         <Method />
         <Portfolio />
         <Scarcity />
