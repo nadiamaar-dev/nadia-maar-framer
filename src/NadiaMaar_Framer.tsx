@@ -192,6 +192,7 @@ const GLOBAL_CSS = `
     .hp-stat-icon { font-size: 18px !important; }
     .hp-stat-title { font-size: 13px !important; margin-bottom: 3px !important; }
     .hp-stat-desc { font-size: 11px !important; }
+    .hp-skillcards { grid-template-columns: repeat(2, 1fr) !important; }
   }
 
   @media (max-width: 800px) {
@@ -220,7 +221,12 @@ const GLOBAL_CSS = `
     .hp-method-visual { border-left: none !important; border-top: 1px solid rgba(255,255,255,0.05) !important; min-height: 150px !important; }
     .hp-method-nav { flex-wrap: wrap !important; }
     .hp-method-nav > button { flex: 0 0 calc(50% - 4px) !important; }
+    .hp-skillcards { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+    .hp-skillcard  { padding: 14px !important; }
+    .hp-skillcard h3 { font-size: 12px !important; }
+    .hp-skillcard-icon { width: 30px !important; height: 30px !important; border-radius: 8px !important; }
   }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -262,12 +268,12 @@ function Reveal({ children }: { children: React.ReactNode }) {
   return <div>{children}</div>
 }
 
-function PingDot({ color = T.green }: { color?: string }) {
+function PingDot({ color = T.green, size = 10 }: { color?: string; size?: number }) {
   return (
-    <span style={{ position: "relative", display: "inline-flex", width: 12, height: 12, flexShrink: 0 }}>
+    <span style={{ position: "relative", display: "inline-flex", width: size, height: size, flexShrink: 0 }}>
       <motion.span aria-hidden
-        style={{ position: "absolute", inset: -3, borderRadius: "50%", background: color, opacity: 0.6 }}
-        animate={{ scale: [1, 3.4], opacity: [0.6, 0] }}
+        style={{ position: "absolute", inset: -2, borderRadius: "50%", background: color, opacity: 0.55 }}
+        animate={{ scale: [1, 3.2], opacity: [0.55, 0] }}
         transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
       />
       <span style={{ width: "100%", height: "100%", borderRadius: "50%", background: color, display: "block", position: "relative" }} />
@@ -275,17 +281,18 @@ function PingDot({ color = T.green }: { color?: string }) {
   )
 }
 
-function Tag({ text }: { text: string }) {
+function Tag({ text, size }: { text: string; size?: "sm" }) {
   const [h, setH] = useState(false)
+  const sm = size === "sm"
   return (
     <motion.span
       onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}
       animate={h
-        ? { background: T.accent, color: "#fff", borderColor: T.accent, boxShadow: `0 0 16px ${T.accentGlo}` }
+        ? { background: T.accent, color: "#fff", borderColor: T.accent, boxShadow: `0 0 14px ${T.accentGlo}` }
         : { background: "rgba(255,255,255,0.05)", color: T.muted, borderColor: "rgba(255,255,255,0.10)", boxShadow: "none" }
       }
       transition={{ duration: 0.18 }}
-      style={{ display: "inline-block", padding: "5px 11px", borderRadius: 6, fontSize: 11, fontWeight: 600, cursor: "default", border: "1px solid transparent", letterSpacing: "0.03em" }}
+      style={{ display: "inline-block", padding: sm ? "3px 9px" : "5px 11px", borderRadius: 9999, fontSize: sm ? 10 : 11, fontWeight: 600, cursor: "default", border: "1px solid transparent", letterSpacing: "0.03em" }}
     >{text}</motion.span>
   )
 }
@@ -352,31 +359,72 @@ function GlassCard({ children, padding = "36px 30px", radius = 16, height = "100
     >
       <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", borderRadius: radius, background: h ? `radial-gradient(140px circle at ${lx}% ${ly}%, rgba(102,0,255,0.13) 0%, transparent 100%)` : "none", transition: "background 0.12s" }} />
       <div aria-hidden style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: 1, background: `linear-gradient(90deg, transparent, rgba(255,255,255,${h ? 0.15 : 0.06}), transparent)`, pointerEvents: "none", transition: "all 0.3s" }} />
+      <CornerBrackets />
       {children}
     </motion.div>
   )
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
+   CORNER BRACKETS DECORATION
+══════════════════════════════════════════════════════════════════════════ */
+function CornerBrackets({ color = "rgba(255,255,255,0.22)", size = 12, inset = 7 }: { color?: string; size?: number; inset?: number }) {
+  const base: React.CSSProperties = { position: "absolute", width: size, height: size, borderColor: color, borderStyle: "solid", pointerEvents: "none" }
+  return (
+    <>
+      <span aria-hidden style={{ ...base, top: inset,    left: inset,  borderWidth: "1.5px 0 0 1.5px" }} />
+      <span aria-hidden style={{ ...base, bottom: inset, right: inset, borderWidth: "0 1.5px 1.5px 0" }} />
+    </>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   HERO CARD LABEL (pill with pulsing dot)
+══════════════════════════════════════════════════════════════════════════ */
+function HeroCardLabel({ text }: { text: string }) {
+  return (
+    <div style={{
+      display: "inline-flex", alignItems: "center", gap: 10,
+      padding: "8px 16px 8px 10px", borderRadius: 100, marginBottom: 26,
+      background: "rgba(255,255,255,0.04)",
+      backdropFilter: "blur(16px) saturate(120%)", WebkitBackdropFilter: "blur(16px) saturate(120%)",
+      border: "1px solid rgba(255,255,255,0.09)",
+      boxShadow: "0 4px 20px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)",
+    }}>
+      <PingDot color="#8B1A2F" size={6} />
+      <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: T.accentLt }}>{text}</span>
+    </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
    HERO STAT NUMBERS
 ══════════════════════════════════════════════════════════════════════════ */
-function HeroStat({ value, label }: { value: string; label: string }) {
+function HeroStat({ value, label, index }: { value: string; label: string; index: number }) {
   return (
     <motion.div
       className="hp-hero-stat-item"
-      whileHover={{ y: -5, boxShadow: "0 16px 40px rgba(0,0,0,0.45), 0 0 0 1px rgba(102,0,255,0.32), inset 0 1px 0 rgba(255,255,255,0.12)" }}
-      transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+      animate={{ y: [0, index % 2 === 0 ? -5 : -7, 0] }}
+      transition={{ duration: 3.2 + index * 0.38, repeat: Infinity, ease: "easeInOut", delay: index * 0.55 }}
+      whileHover={{ scale: 1.05 }}
       style={{
-        padding: "16px 22px", borderRadius: 16, cursor: "default",
-        display: "flex", alignItems: "center", gap: 12,
+        padding: "18px 16px 15px",
+        borderRadius: 16, cursor: "default", position: "relative",
+        display: "flex", flexDirection: "column", gap: 10,
         background: "rgba(255,255,255,0.04)",
-        backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
-        border: "1px solid rgba(255,255,255,0.09)",
-        boxShadow: "0 8px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06)",
+        backdropFilter: "blur(16px) saturate(120%)", WebkitBackdropFilter: "blur(16px) saturate(120%)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        boxShadow: "0 8px 32px 0 rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)",
       } as React.CSSProperties}
     >
-      <span className="hp-hero-stat-value" style={{ fontSize: 22, fontWeight: 800, lineHeight: 1, letterSpacing: "-0.03em", flexShrink: 0, background: "linear-gradient(135deg, #BF5FFF 0%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" } as React.CSSProperties}>{value}</span>
-      <span className="hp-hero-stat-label" style={{ fontSize: 12, color: T.muted, fontWeight: 500, lineHeight: 1.3 }}>{label}</span>
+      <CornerBrackets />
+      <span className="hp-hero-stat-value" style={{ fontSize: 28, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", background: "linear-gradient(135deg, #BF5FFF 0%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" } as React.CSSProperties}>
+        {value}
+      </span>
+      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 4 }}>
+        <span className="hp-hero-stat-label" style={{ fontSize: 9, color: "rgba(242,242,250,0.42)", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, lineHeight: 1.4 }}>{label}</span>
+        <span style={{ fontSize: 9, color: "rgba(242,242,250,0.20)", fontWeight: 600, letterSpacing: "0.06em", fontFamily: "'SF Mono','Fira Code','Consolas',monospace", lineHeight: 1, flexShrink: 0 }}>{String(index + 1).padStart(2, "0")}</span>
+      </div>
     </motion.div>
   )
 }
@@ -485,10 +533,10 @@ function Hero() {
           className="hp-hero-stats"
           style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginTop: 32 }}
         >
-          <HeroStat value="05+" label="Anni di Esperienza" />
-          <HeroStat value="30k+" label="Prodotti Sincronizzati" />
-          <HeroStat value="100%" label="Soluzioni Custom" />
-          <HeroStat value="50+" label="Progetti Completati" />
+          <HeroStat value="05+" label="Anni di Esperienza"      index={0} />
+          <HeroStat value="30k+" label="Prodotti Sincronizzati" index={1} />
+          <HeroStat value="100%" label="Soluzioni Custom"       index={2} />
+          <HeroStat value="50+" label="Progetti Completati"     index={3} />
         </motion.div>
       </div>
     </section>
@@ -517,7 +565,7 @@ function AdvCard({ n, title, body }: { n: string; title: string; body: string })
 
 function AllInOne() {
   return (
-    <section style={{ ...SEC, background: T.bg2, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s3" className="hp-sec">
+    <section style={{ ...SEC, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s3" className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <Label text="The All-In-One Advantage" />
@@ -530,6 +578,130 @@ function AllInOne() {
         </Reveal>
         <div className="hp-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
           {ADVANTAGES.map((a, i) => <Reveal key={i}><AdvCard {...a} /></Reveal>)}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SKILL CARD ICONS
+══════════════════════════════════════════════════════════════════════════ */
+const TkShopify = () => (<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M3 5h14l-1.5 11H4.5L3 5z"/><path d="M7 5V3.5a3 3 0 0 1 6 0V5"/></svg>)
+const TkFramer  = () => (<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="4 2 16 2 16 10 10 10 10 18 4 10"/></svg>)
+const TkAPI     = () => (<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M5 7H3a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2"/><path d="M15 7h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><rect x="5" y="5" width="10" height="10" rx="2"/></svg>)
+const TkAI      = () => (<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="10" cy="10" r="3"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="10" y1="16" x2="10" y2="18"/><line x1="2" y1="10" x2="4" y2="10"/><line x1="16" y1="10" x2="18" y2="10"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="13.66" y1="13.66" x2="15.07" y2="15.07"/><line x1="4.93" y1="15.07" x2="6.34" y2="13.66"/><line x1="13.66" y1="6.34" x2="15.07" y2="4.93"/></svg>)
+
+const SKILL_CARDS_DATA = [
+  {
+    icon: <TkShopify />,
+    title: "E-Commerce Development",
+    tags: ["Shopify", "Liquid Optimization", "Enterprise Stores", "Cataloghi 30k+ SKU", "Scalable Platforms", "Conversion Rate Optimization"],
+  },
+  {
+    icon: <TkFramer />,
+    title: "Design & Frontend",
+    tags: ["Framer", "Webflow", "React Components", "UI/UX Design", "Fluid Animations", "Interactive Interfaces", "High-Impact Portfolios"],
+  },
+  {
+    icon: <TkAPI />,
+    title: "Process Engineering & API",
+    tags: ["Node.js", "Python", "Custom Middleware", "API Integration", "Real-Time Sync", "Dropshipping Systems", "ERP & CRM"],
+  },
+  {
+    icon: <TkAI />,
+    title: "AI & Growth Automation",
+    tags: ["AI Content Automation", "E-Commerce SEO", "AI Chatbots", "Conversion Recovery", "Smart Cart Recovery", "Meta Ads"],
+  },
+]
+
+function SkillCard({ icon, title, tags }: { icon: React.ReactNode; title: string; tags: string[] }) {
+  const [h, setH] = useState(false)
+  const [lx, setLx] = useState(50)
+  const [ly, setLy] = useState(50)
+  const ref = useRef<HTMLDivElement>(null)
+  const track = (e: React.MouseEvent) => {
+    const r = ref.current?.getBoundingClientRect()
+    if (r) { setLx(((e.clientX - r.left) / r.width) * 100); setLy(((e.clientY - r.top) / r.height) * 100) }
+  }
+  return (
+    <motion.div ref={ref} className="hp-skillcard"
+      onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)} onMouseMove={track}
+      whileHover={{ y: -8, scale: 1.016 }} whileTap={{ scale: 0.982 }}
+      transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+      style={{
+        aspectRatio: "1 / 1",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        padding: "22px",
+        borderRadius: 18,
+        overflow: "hidden",
+        /* 1. Glass background */
+        backgroundColor: h ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.03)",
+        /* 2. Backdrop blur — core glass effect */
+        backdropFilter: "blur(16px) saturate(120%)",
+        WebkitBackdropFilter: "blur(16px) saturate(120%)",
+        /* 3. Crisp glass edge */
+        border: `1px solid ${h ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.08)"}`,
+        /* 4. Depth shadow */
+        boxShadow: h
+          ? "0 16px 48px 0 rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.12)"
+          : "0 8px 32px 0 rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.07)",
+        transition: "background-color 0.28s, border-color 0.28s, box-shadow 0.32s",
+      } as React.CSSProperties}
+    >
+      {/* Subtle cursor-tracking glow — only on hover */}
+      <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", borderRadius: 18, background: h ? `radial-gradient(180px circle at ${lx}% ${ly}%, rgba(255,255,255,0.055) 0%, transparent 100%)` : "none", transition: "background 0.14s" }} />
+      {/* Top-edge reflection line */}
+      <div aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, pointerEvents: "none", background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,${h ? 0.22 : 0.10}) 40%, rgba(255,255,255,${h ? 0.18 : 0.07}) 70%, transparent 100%)` }} />
+      {/* Left-edge reflection line (glass edge illusion) */}
+      <div aria-hidden style={{ position: "absolute", top: 0, left: 0, width: 1, bottom: 0, pointerEvents: "none", background: `linear-gradient(180deg, rgba(255,255,255,${h ? 0.20 : 0.08}) 0%, transparent 60%)` }} />
+      <CornerBrackets color="rgba(255,255,255,0.20)" />
+
+      {/* 5. Content — title + icon row */}
+      <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 14 }}>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#ffffff", letterSpacing: "-0.015em", lineHeight: 1.35 }}>{title}</h3>
+        <div className="hp-skillcard-icon" style={{
+          width: 34, height: 34, borderRadius: 9, flexShrink: 0,
+          background: "rgba(255,255,255,0.06)",
+          border: "1px solid rgba(255,255,255,0.10)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          color: T.accentLt,
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
+          transition: "background 0.22s",
+        }}>
+          {icon}
+        </div>
+      </div>
+
+      {/* 5. Tags — glass-tinted badges */}
+      <div style={{ position: "relative", zIndex: 1, display: "flex", flexWrap: "wrap", gap: 6, alignContent: "flex-start" }}>
+        {tags.map((tag, j) => <Tag key={j} text={tag} size="sm" />)}
+      </div>
+    </motion.div>
+  )
+}
+
+function SkillsCardsGrid() {
+  return (
+    <section style={{ ...SEC, padding: "88px 0", borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} className="hp-sec">
+      <div style={WRAP} className="hp-wrap">
+        <div style={{ textAlign: "center", marginBottom: 52 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginBottom: 18 }}>
+            <span style={{ width: 28, height: 1, background: T.accent, flexShrink: 0 }} />
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: T.accentLt }}>Stack Tecnologico</span>
+            <span style={{ width: 28, height: 1, background: T.accent, flexShrink: 0 }} />
+          </div>
+          <h2 style={{ fontSize: "clamp(26px, 3.4vw, 44px)", fontWeight: 700, lineHeight: 1.13, letterSpacing: "-0.028em", marginBottom: 12 }}>
+            Skills
+          </h2>
+          <p style={{ fontSize: 16, color: T.muted, lineHeight: 1.7 }}>
+            Esperienze UI/UX fluide e codice pulito
+          </p>
+        </div>
+        <div className="hp-skillcards" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 18 }}>
+          {SKILL_CARDS_DATA.map((card, i) => <SkillCard key={i} {...card} />)}
         </div>
       </div>
     </section>
@@ -595,6 +767,7 @@ function SkillAccordion({ icon, title, items, defaultOpen }: { icon: React.React
   return (
     <Reveal>
       <div data-glow="" style={{ '--base': '220', '--spread': '140', '--radius': '16', '--border': '1.5', '--size': '270', borderRadius: 16, position: "relative", backgroundColor: "rgba(255,255,255,0.026)", backdropFilter: "blur(16px) saturate(1.4)", WebkitBackdropFilter: "blur(16px) saturate(1.4)", border: `1px solid ${open ? "rgba(102,0,255,0.32)" : "rgba(255,255,255,0.07)"}`, boxShadow: open ? "0 10px 30px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.07)" : "0 2px 12px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}>
+        <CornerBrackets />
         <button onClick={() => setOpen(o => !o)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 18, padding: "26px 32px", background: open ? "rgba(102,0,255,0.07)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
           <div style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: open ? "rgba(102,0,255,0.20)" : "rgba(102,0,255,0.10)", border: `1px solid ${open ? "rgba(153,68,255,0.45)" : "rgba(153,68,255,0.22)"}`, boxShadow: open ? "0 0 14px rgba(102,0,255,0.28), inset 0 1px 0 rgba(255,255,255,0.08)" : "inset 0 1px 0 rgba(255,255,255,0.05)", transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s" }}>
             {icon}
@@ -949,6 +1122,7 @@ function MethodCarousel() {
         } as React.CSSProperties}>
         <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, borderRadius: 20, background: ch ? `radial-gradient(240px circle at ${lx}% ${ly}%, rgba(102,0,255,0.11) 0%, transparent 100%)` : "none", transition: "background 0.12s" }} />
         <div aria-hidden style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: 1, pointerEvents: "none", zIndex: 0, background: `linear-gradient(90deg, transparent, rgba(255,255,255,${ch ? 0.14 : 0.06}), transparent)`, transition: "all 0.3s" }} />
+        <CornerBrackets inset={10} />
         <div className="hp-method-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", position: "relative", zIndex: 1 }}>
           <div className="hp-method-content" style={{ padding: "44px 40px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
             <AnimatePresence mode="wait">
@@ -985,7 +1159,7 @@ function MethodCarousel() {
 
 function Method() {
   return (
-    <section style={{ ...SEC, background: T.bg2, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s5" className="hp-sec">
+    <section style={{ ...SEC, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s5" className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <Label text="Il Metodo di Lavoro" />
@@ -1055,7 +1229,7 @@ function Portfolio() {
 ══════════════════════════════════════════════════════════════════════════ */
 function Scarcity() {
   return (
-    <section style={{ ...SEC, background: T.bg2, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s7" className="hp-sec">
+    <section style={{ ...SEC, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s7" className="hp-sec">
       <div style={{ ...WRAP, textAlign: "center" }} className="hp-wrap">
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 12, background: `${T.green}10`, border: `1px solid ${T.green}30`, borderRadius: 100, padding: "10px 24px", marginBottom: 44, cursor: "default" }}>
@@ -1086,6 +1260,7 @@ function FAQItem({ q, a, open, onToggle }: { q: string; a: string; open: boolean
     <motion.div data-glow="" whileHover={open ? {} : { scale: 1.008 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
       style={{ '--base': '220', '--spread': '140', '--radius': '14', '--border': '1.5', '--size': '260', borderRadius: 14, position: "relative", backgroundColor: "rgba(255,255,255,0.026)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: `1px solid ${open ? "rgba(102,0,255,0.35)" : "rgba(255,255,255,0.07)"}`, boxShadow: open ? "0 12px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)" : "0 2px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}
     >
+      <CornerBrackets />
       <button onClick={onToggle} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "22px 28px", background: open ? "rgba(102,0,255,0.06)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
         <span style={{ fontSize: 15, fontWeight: 600, lineHeight: 1.5 }}>{q}</span>
         <motion.span animate={{ rotate: open ? 45 : 0 }} transition={{ duration: 0.25 }} style={{ fontSize: 24, color: T.accentLt, flexShrink: 0, lineHeight: 1 }}>+</motion.span>
@@ -1154,7 +1329,7 @@ function Contact() {
   const [sent, setSent] = useState(false)
   const set = (k: keyof typeof fields) => (v: string) => setFields(f => ({ ...f, [k]: v }))
   return (
-    <section style={{ ...SEC, background: T.bg2, borderTop: `1px solid ${T.border}` }} id="s9" className="hp-sec">
+    <section style={{ ...SEC, borderTop: `1px solid ${T.border}` }} id="s9" className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <Label text="Contatto" />
@@ -1672,14 +1847,42 @@ function CursorGlow() {
 function AnimatedBackground() {
   return (
     <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
-      <motion.div animate={{ x: [0, 130, -70, 110, 0], y: [0, -90, 130, -60, 0] }} transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }} style={{ position: "absolute", top: "-8%", left: "8%", width: 680, height: 680, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.22) 0%, transparent 65%)", filter: "blur(72px)", willChange: "transform" }} />
-      <motion.div animate={{ x: [0, -110, 70, -80, 0], y: [0, 110, -90, 70, 0] }} transition={{ duration: 32, repeat: Infinity, ease: "easeInOut", delay: 8 }} style={{ position: "absolute", top: "28%", right: "-4%", width: 580, height: 580, borderRadius: "50%", background: "radial-gradient(circle, rgba(129,156,248,0.18) 0%, transparent 65%)", filter: "blur(80px)", willChange: "transform" }} />
-      <motion.div animate={{ x: [0, 90, -110, 70, 0], y: [0, 70, -90, 100, 0] }} transition={{ duration: 38, repeat: Infinity, ease: "easeInOut", delay: 16 }} style={{ position: "absolute", bottom: "4%", left: "28%", width: 520, height: 520, borderRadius: "50%", background: "radial-gradient(circle, rgba(109,40,217,0.14) 0%, transparent 65%)", filter: "blur(64px)", willChange: "transform" }} />
-      <motion.div animate={{ x: [0, -60, 90, -50, 0], y: [0, -100, 70, -90, 0] }} transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 4 }} style={{ position: "absolute", top: "62%", left: "-4%", width: 380, height: 380, borderRadius: "50%", background: "radial-gradient(circle, rgba(6,182,212,0.10) 0%, transparent 65%)", filter: "blur(52px)", willChange: "transform" }} />
-      <motion.div animate={{ scaleX: [1, 1.4, 0.7, 1.2, 1], opacity: [0.35, 0.55, 0.2, 0.45, 0.35] }} transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 2 }} style={{ position: "absolute", top: "18%", left: 0, right: 0, height: 3, background: "linear-gradient(90deg, transparent 0%, rgba(102,0,255,0.5) 20%, rgba(139,156,248,0.8) 50%, rgba(102,0,255,0.5) 80%, transparent 100%)", filter: "blur(10px)", transformOrigin: "center", willChange: "transform, opacity" }} />
-      <motion.div animate={{ scaleX: [0.8, 1.3, 0.6, 1.1, 0.8], opacity: [0.2, 0.4, 0.1, 0.35, 0.2] }} transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 7 }} style={{ position: "absolute", top: "55%", left: 0, right: 0, height: 2, background: "linear-gradient(90deg, transparent 0%, rgba(109,40,217,0.4) 15%, rgba(139,156,248,0.6) 45%, rgba(6,182,212,0.4) 75%, transparent 100%)", filter: "blur(12px)", transformOrigin: "center", willChange: "transform, opacity" }} />
-      <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.09) 1px, transparent 1px)", backgroundSize: "44px 44px" }} />
-      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 100% 80% at 50% 50%, transparent 50%, rgba(5,5,10,0.72) 100%)" }} />
+      {/* Purple — primary brand orb */}
+      <motion.div animate={{ x: [0, 120, -60, 100, 0], y: [0, -80, 120, -50, 0] }} transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
+        style={{ position: "absolute", top: "-12%", left: "4%", width: 780, height: 780, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.30) 0%, transparent 65%)", filter: "blur(90px)", willChange: "transform" }} />
+      {/* Indigo/blue — depth right */}
+      <motion.div animate={{ x: [0, -100, 70, -80, 0], y: [0, 100, -80, 70, 0] }} transition={{ duration: 32, repeat: Infinity, ease: "easeInOut", delay: 8 }}
+        style={{ position: "absolute", top: "22%", right: "-8%", width: 640, height: 640, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.24) 0%, transparent 65%)", filter: "blur(88px)", willChange: "transform" }} />
+      {/* Teal/green — aurora signature */}
+      <motion.div animate={{ x: [0, 80, -100, 60, 0], y: [0, 60, -70, 90, 0] }} transition={{ duration: 40, repeat: Infinity, ease: "easeInOut", delay: 14 }}
+        style={{ position: "absolute", bottom: "-5%", left: "18%", width: 660, height: 660, borderRadius: "50%", background: "radial-gradient(circle, rgba(16,185,129,0.16) 0%, transparent 65%)", filter: "blur(80px)", willChange: "transform" }} />
+      {/* Cyan — bottom-left accent */}
+      <motion.div animate={{ x: [0, -50, 80, -40, 0], y: [0, -90, 60, -70, 0] }} transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+        style={{ position: "absolute", top: "58%", left: "-6%", width: 440, height: 440, borderRadius: "50%", background: "radial-gradient(circle, rgba(6,182,212,0.15) 0%, transparent 65%)", filter: "blur(64px)", willChange: "transform" }} />
+      {/* Violet — top-right accent */}
+      <motion.div animate={{ x: [0, -40, 55, -45, 0], y: [0, 55, -40, 50, 0] }} transition={{ duration: 28, repeat: Infinity, ease: "easeInOut", delay: 11 }}
+        style={{ position: "absolute", top: "3%", right: "6%", width: 380, height: 380, borderRadius: "50%", background: "radial-gradient(circle, rgba(168,85,247,0.20) 0%, transparent 65%)", filter: "blur(70px)", willChange: "transform" }} />
+
+      {/* Aurora band 1 — upper */}
+      <motion.div
+        animate={{ scaleX: [1, 1.35, 0.72, 1.18, 1], opacity: [0.45, 0.70, 0.24, 0.55, 0.45] }}
+        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        style={{ position: "absolute", top: "20%", left: 0, right: 0, height: 90, background: "linear-gradient(90deg, transparent 0%, rgba(102,0,255,0.08) 12%, rgba(99,102,241,0.16) 38%, rgba(16,185,129,0.06) 65%, transparent 100%)", filter: "blur(28px)", transformOrigin: "center", willChange: "transform, opacity" }} />
+      {/* Aurora band 2 — middle */}
+      <motion.div
+        animate={{ scaleX: [0.8, 1.28, 0.60, 1.10, 0.8], opacity: [0.30, 0.52, 0.14, 0.42, 0.30] }}
+        transition={{ duration: 19, repeat: Infinity, ease: "easeInOut", delay: 7 }}
+        style={{ position: "absolute", top: "54%", left: 0, right: 0, height: 70, background: "linear-gradient(90deg, transparent 0%, rgba(6,182,212,0.09) 14%, rgba(99,102,241,0.12) 44%, rgba(102,0,255,0.08) 74%, transparent 100%)", filter: "blur(22px)", transformOrigin: "center", willChange: "transform, opacity" }} />
+      {/* Aurora band 3 — lower */}
+      <motion.div
+        animate={{ scaleX: [1.1, 0.68, 1.28, 0.88, 1.1], opacity: [0.22, 0.40, 0.10, 0.30, 0.22] }}
+        transition={{ duration: 24, repeat: Infinity, ease: "easeInOut", delay: 12 }}
+        style={{ position: "absolute", bottom: "12%", left: 0, right: 0, height: 55, background: "linear-gradient(90deg, transparent 0%, rgba(16,185,129,0.10) 18%, rgba(6,182,212,0.12) 50%, rgba(99,102,241,0.08) 80%, transparent 100%)", filter: "blur(20px)", transformOrigin: "center", willChange: "transform, opacity" }} />
+
+      {/* Dot grid */}
+      <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)", backgroundSize: "44px 44px" }} />
+      {/* Edge vignette */}
+      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 100% 80% at 50% 50%, transparent 45%, rgba(5,5,10,0.68) 100%)" }} />
     </div>
   )
 }
@@ -1709,6 +1912,7 @@ export default function NadiaMaar() {
       <Navbar />
       <div style={{ position: "relative", zIndex: 1, paddingTop: 64 }}>
         <Hero />
+        <SkillsCardsGrid />
         <Skills />
         <AllInOne />
         <Method />
