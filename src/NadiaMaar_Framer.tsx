@@ -217,12 +217,15 @@ const GLOBAL_CSS = `
     .hp-hero-stat-value { font-size: 17px !important; }
     .hp-hero-stat-label { font-size: 10px !important; }
     .hp-method-grid { grid-template-columns: 1fr !important; }
-    .hp-method-content { padding: 24px 20px !important; }
-    .hp-method-visual { border-left: none !important; border-top: 1px solid rgba(255,255,255,0.05) !important; min-height: 150px !important; }
+    .hp-method-content { padding: 16px 16px !important; }
+    .hp-method-num { font-size: 28px !important; margin-bottom: 8px !important; }
+    .hp-method-title { font-size: 14px !important; margin-bottom: 8px !important; }
+    .hp-method-body { font-size: 12px !important; line-height: 1.55 !important; }
+    .hp-method-visual { border-left: none !important; border-top: 1px solid rgba(255,255,255,0.05) !important; min-height: 100px !important; padding: 14px !important; }
     .hp-method-nav { flex-wrap: wrap !important; }
-    .hp-method-nav > button { flex: 0 0 calc(50% - 4px) !important; }
+    .hp-method-nav > button { flex: 0 0 calc(50% - 4px) !important; padding: 10px 12px !important; font-size: 11px !important; }
     .hp-skillcards { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
-    .hp-skillcard  { padding: 14px !important; }
+    .hp-skillcard  { padding: 14px !important; aspect-ratio: auto !important; }
     .hp-skillcard h3 { font-size: 12px !important; }
     .hp-skillcard-icon { width: 30px !important; height: 30px !important; border-radius: 8px !important; }
   }
@@ -359,7 +362,7 @@ function GlassCard({ children, padding = "36px 30px", radius = 16, height = "100
     >
       <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", borderRadius: radius, background: h ? `radial-gradient(140px circle at ${lx}% ${ly}%, rgba(102,0,255,0.13) 0%, transparent 100%)` : "none", transition: "background 0.12s" }} />
       <div aria-hidden style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: 1, background: `linear-gradient(90deg, transparent, rgba(255,255,255,${h ? 0.15 : 0.06}), transparent)`, pointerEvents: "none", transition: "all 0.3s" }} />
-      <CornerBrackets />
+
       {children}
     </motion.div>
   )
@@ -368,34 +371,6 @@ function GlassCard({ children, padding = "36px 30px", radius = 16, height = "100
 /* ══════════════════════════════════════════════════════════════════════════
    CORNER BRACKETS DECORATION
 ══════════════════════════════════════════════════════════════════════════ */
-function CornerBrackets({ color = "rgba(255,255,255,0.22)", size = 12, inset = 7 }: { color?: string; size?: number; inset?: number }) {
-  const base: React.CSSProperties = { position: "absolute", width: size, height: size, borderColor: color, borderStyle: "solid", pointerEvents: "none" }
-  return (
-    <>
-      <span aria-hidden style={{ ...base, top: inset,    left: inset,  borderWidth: "1.5px 0 0 1.5px" }} />
-      <span aria-hidden style={{ ...base, bottom: inset, right: inset, borderWidth: "0 1.5px 1.5px 0" }} />
-    </>
-  )
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   HERO CARD LABEL (pill with pulsing dot)
-══════════════════════════════════════════════════════════════════════════ */
-function HeroCardLabel({ text }: { text: string }) {
-  return (
-    <div style={{
-      display: "inline-flex", alignItems: "center", gap: 10,
-      padding: "8px 16px 8px 10px", borderRadius: 100, marginBottom: 26,
-      background: "rgba(255,255,255,0.04)",
-      backdropFilter: "blur(16px) saturate(120%)", WebkitBackdropFilter: "blur(16px) saturate(120%)",
-      border: "1px solid rgba(255,255,255,0.09)",
-      boxShadow: "0 4px 20px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)",
-    }}>
-      <PingDot color="#8B1A2F" size={6} />
-      <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: T.accentLt }}>{text}</span>
-    </div>
-  )
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    HERO STAT NUMBERS
@@ -417,7 +392,7 @@ function HeroStat({ value, label, index }: { value: string; label: string; index
         boxShadow: "0 8px 32px 0 rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)",
       } as React.CSSProperties}
     >
-      <CornerBrackets />
+
       <span className="hp-hero-stat-value" style={{ fontSize: 28, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", background: "linear-gradient(135deg, #BF5FFF 0%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" } as React.CSSProperties}>
         {value}
       </span>
@@ -657,7 +632,6 @@ function SkillCard({ icon, title, tags }: { icon: React.ReactNode; title: string
       <div aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, pointerEvents: "none", background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,${h ? 0.22 : 0.10}) 40%, rgba(255,255,255,${h ? 0.18 : 0.07}) 70%, transparent 100%)` }} />
       {/* Left-edge reflection line (glass edge illusion) */}
       <div aria-hidden style={{ position: "absolute", top: 0, left: 0, width: 1, bottom: 0, pointerEvents: "none", background: `linear-gradient(180deg, rgba(255,255,255,${h ? 0.20 : 0.08}) 0%, transparent 60%)` }} />
-      <CornerBrackets color="rgba(255,255,255,0.20)" />
 
       {/* 5. Content — title + icon row */}
       <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 14 }}>
@@ -767,7 +741,7 @@ function SkillAccordion({ icon, title, items, defaultOpen }: { icon: React.React
   return (
     <Reveal>
       <div data-glow="" style={{ '--base': '220', '--spread': '140', '--radius': '16', '--border': '1.5', '--size': '270', borderRadius: 16, position: "relative", backgroundColor: "rgba(255,255,255,0.026)", backdropFilter: "blur(16px) saturate(1.4)", WebkitBackdropFilter: "blur(16px) saturate(1.4)", border: `1px solid ${open ? "rgba(102,0,255,0.32)" : "rgba(255,255,255,0.07)"}`, boxShadow: open ? "0 10px 30px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.07)" : "0 2px 12px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}>
-        <CornerBrackets />
+  
         <button onClick={() => setOpen(o => !o)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 18, padding: "26px 32px", background: open ? "rgba(102,0,255,0.07)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
           <div style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: open ? "rgba(102,0,255,0.20)" : "rgba(102,0,255,0.10)", border: `1px solid ${open ? "rgba(153,68,255,0.45)" : "rgba(153,68,255,0.22)"}`, boxShadow: open ? "0 0 14px rgba(102,0,255,0.28), inset 0 1px 0 rgba(255,255,255,0.08)" : "inset 0 1px 0 rgba(255,255,255,0.05)", transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s" }}>
             {icon}
@@ -1122,18 +1096,17 @@ function MethodCarousel() {
         } as React.CSSProperties}>
         <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, borderRadius: 20, background: ch ? `radial-gradient(240px circle at ${lx}% ${ly}%, rgba(102,0,255,0.11) 0%, transparent 100%)` : "none", transition: "background 0.12s" }} />
         <div aria-hidden style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: 1, pointerEvents: "none", zIndex: 0, background: `linear-gradient(90deg, transparent, rgba(255,255,255,${ch ? 0.14 : 0.06}), transparent)`, transition: "all 0.3s" }} />
-        <CornerBrackets inset={10} />
         <div className="hp-method-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", position: "relative", zIndex: 1 }}>
           <div className="hp-method-content" style={{ padding: "44px 40px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
             <AnimatePresence mode="wait">
               <motion.div key={step} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }} transition={{ duration: 0.38, ease: [0.16,1,0.3,1] }}>
-                <div style={{ fontSize: 52, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", marginBottom: 18, background: `linear-gradient(135deg, ${T.accent}55, ${T.accentLt}28)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" } as React.CSSProperties}>
+                <div className="hp-method-num" style={{ fontSize: 52, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", marginBottom: 18, background: `linear-gradient(135deg, ${T.accent}55, ${T.accentLt}28)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" } as React.CSSProperties}>
                   {METHOD_STEPS[step].n}
                 </div>
-                <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", color: T.text, marginBottom: 18, lineHeight: 1.25, overflowWrap: "break-word" }}>
+                <h3 className="hp-method-title" style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", color: T.text, marginBottom: 18, lineHeight: 1.25, overflowWrap: "break-word" }}>
                   {METHOD_STEPS[step].title}
                 </h3>
-                <p style={{ fontSize: 15, color: T.muted, lineHeight: 1.82, overflowWrap: "break-word" }}>
+                <p className="hp-method-body" style={{ fontSize: 15, color: T.muted, lineHeight: 1.82, overflowWrap: "break-word" }}>
                   {METHOD_STEPS[step].body}
                 </p>
               </motion.div>
@@ -1260,7 +1233,7 @@ function FAQItem({ q, a, open, onToggle }: { q: string; a: string; open: boolean
     <motion.div data-glow="" whileHover={open ? {} : { scale: 1.008 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
       style={{ '--base': '220', '--spread': '140', '--radius': '14', '--border': '1.5', '--size': '260', borderRadius: 14, position: "relative", backgroundColor: "rgba(255,255,255,0.026)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: `1px solid ${open ? "rgba(102,0,255,0.35)" : "rgba(255,255,255,0.07)"}`, boxShadow: open ? "0 12px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)" : "0 2px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}
     >
-      <CornerBrackets />
+
       <button onClick={onToggle} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "22px 28px", background: open ? "rgba(102,0,255,0.06)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
         <span style={{ fontSize: 15, fontWeight: 600, lineHeight: 1.5 }}>{q}</span>
         <motion.span animate={{ rotate: open ? 45 : 0 }} transition={{ duration: 0.25 }} style={{ fontSize: 24, color: T.accentLt, flexShrink: 0, lineHeight: 1 }}>+</motion.span>
