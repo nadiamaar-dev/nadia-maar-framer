@@ -79,6 +79,11 @@ const LinkedinIcon = () => (
     <circle cx="4" cy="4" r="2"/>
   </svg>
 )
+const DiscordIcon = () => (
+  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+    <path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.055 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+  </svg>
+)
 
 /* ══════════════════════════════════════════════════════════════════════════
    GLOBAL CSS
@@ -177,6 +182,18 @@ const GLOBAL_CSS = `
   }
   .dt-colon { animation: colon-blink 1s ease-in-out infinite; display: inline-block; }
 
+  .hp-hero-cards-mobile { display: none; }
+
+  @media (max-width: 1024px) {
+    .hp-hero-grid { grid-template-columns: 1fr !important; }
+    .hp-hero-cards-desktop { display: none !important; }
+    .hp-hero-cards-mobile { display: flex !important; flex-direction: column; gap: 12px; margin-top: 32px; }
+    .hp-stat-card { padding: 14px 16px !important; border-radius: 14px !important; max-width: 300px; }
+    .hp-stat-icon { font-size: 18px !important; }
+    .hp-stat-title { font-size: 13px !important; margin-bottom: 3px !important; }
+    .hp-stat-desc { font-size: 11px !important; }
+  }
+
   @media (max-width: 800px) {
     .hp-grid-2 { grid-template-columns: 1fr !important; gap: 40px !important; }
     .hp-grid-3 { grid-template-columns: 1fr !important; gap: 16px !important; }
@@ -190,6 +207,14 @@ const GLOBAL_CSS = `
     .hp-datetime    { padding: 5px 11px !important; gap: 7px !important; }
     .hp-dt-date     { font-size: 9.5px !important; letter-spacing: 0.03em !important; }
     .hp-dt-time     { font-size: 11px !important; }
+    .hp-hero-ctas { flex-wrap: wrap !important; align-items: flex-start !important; }
+    .hp-hero-primary-btn { flex: 0 0 100% !important; }
+    .hp-hero-sep { display: none !important; }
+    .hp-hero-social-icons { width: 100% !important; justify-content: center !important; }
+    .hp-hero-stats { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; margin-top: 24px !important; }
+    .hp-hero-stat-item { padding: 12px 14px !important; gap: 8px !important; }
+    .hp-hero-stat-value { font-size: 17px !important; }
+    .hp-hero-stat-label { font-size: 10px !important; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -328,32 +353,137 @@ function GlassCard({ children, padding = "36px 30px", radius = 16, height = "100
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
+   HERO STAT NUMBERS
+══════════════════════════════════════════════════════════════════════════ */
+function HeroStat({ value, label }: { value: string; label: string }) {
+  return (
+    <motion.div
+      className="hp-hero-stat-item"
+      whileHover={{ y: -5, boxShadow: "0 16px 40px rgba(0,0,0,0.45), 0 0 0 1px rgba(102,0,255,0.32), inset 0 1px 0 rgba(255,255,255,0.12)" }}
+      transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+      style={{
+        padding: "16px 22px", borderRadius: 16, cursor: "default",
+        display: "flex", alignItems: "center", gap: 12,
+        background: "rgba(255,255,255,0.04)",
+        backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
+        border: "1px solid rgba(255,255,255,0.09)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06)",
+      } as React.CSSProperties}
+    >
+      <span className="hp-hero-stat-value" style={{ fontSize: 22, fontWeight: 800, lineHeight: 1, letterSpacing: "-0.03em", flexShrink: 0, background: "linear-gradient(135deg, #BF5FFF 0%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" } as React.CSSProperties}>{value}</span>
+      <span className="hp-hero-stat-label" style={{ fontSize: 12, color: T.muted, fontWeight: 500, lineHeight: 1.3 }}>{label}</span>
+    </motion.div>
+  )
+}
+
+const HERO_SOCIALS = [
+  { Icon: GithubIcon,    href: "https://github.com/nadiamaar-dev",          label: "GitHub"    },
+  { Icon: LinkedinIcon,  href: "https://linkedin.com/in/nadiamaar",          label: "LinkedIn"  },
+  { Icon: InstagramIcon, href: "https://instagram.com/nadiamaar.dev",        label: "Instagram" },
+  { Icon: DiscordIcon,   href: "https://discord.gg/nadiamaar",               label: "Discord"   },
+]
+
+/* ══════════════════════════════════════════════════════════════════════════
    §1  HERO
 ══════════════════════════════════════════════════════════════════════════ */
 function Hero() {
   return (
-    <section style={{ ...SEC, minHeight: 860, display: "flex", alignItems: "center" }} id="s1" className="hp-sec hp-hero">
-      <div aria-hidden style={{ position: "absolute", top: "18%", left: "50%", transform: "translateX(-50%)", width: 900, height: 600, borderRadius: "50%", background: `radial-gradient(ellipse, ${T.accentDim} 0%, transparent 68%)`, pointerEvents: "none" }} />
-      <div style={WRAP} className="hp-wrap">
+    <section style={{ ...SEC, minHeight: 860, display: "flex", alignItems: "center", overflow: "hidden" }} id="s1" className="hp-sec hp-hero">
+      {/* Orb 1 — purple, multi-axis animated */}
+      <motion.div aria-hidden
+        animate={{ x: [0, 60, -40, 70, 0], y: [0, -80, 60, -50, 0], scale: [1, 1.15, 0.9, 1.08, 1] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        style={{ position: "absolute", top: "5%", left: "32%", width: 720, height: 720, borderRadius: "50%", background: "radial-gradient(circle, rgba(147,51,234,0.15) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }}
+      />
+      {/* Orb 2 — pink, desynchronized loop */}
+      <motion.div aria-hidden
+        animate={{ x: [0, -50, 80, -60, 0], y: [0, 70, -60, 80, 0], scale: [1, 0.85, 1.2, 0.92, 1] }}
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+        style={{ position: "absolute", top: "25%", right: "-2%", width: 540, height: 540, borderRadius: "50%", background: "radial-gradient(circle, rgba(219,39,119,0.10) 0%, transparent 70%)", filter: "blur(72px)", pointerEvents: "none" }}
+      />
+
+      <div style={{ ...WRAP, position: "relative", zIndex: 1 }} className="hp-wrap">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
-          <Label text="Web Architecture & Digital Strategy" />
+          <Label text="Shopify Expert · AI Automation · Growth Marketing" />
         </motion.div>
-        <motion.h1 initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease }}
-          style={{ fontSize: "clamp(40px, 6.2vw, 86px)", fontWeight: 800, lineHeight: 1.05, letterSpacing: "-0.036em", margin: "0 0 32px", maxWidth: 860 }}
+
+        <motion.h1
+          initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.1, ease }}
+          style={{ fontSize: "clamp(38px, 5.2vw, 68px)", fontWeight: 800, lineHeight: 1.06, letterSpacing: "-0.036em", margin: "0 0 28px", maxWidth: 760 }}
         >
-          Architetture Digitali{" "}
-          <span style={{ color: T.accentLt }}>ad Alte Prestazioni</span> per il tuo Business.
+          Full-Stack Developer {" + "}
+          <span style={{ background: "linear-gradient(95deg, #BF5FFF 0%, #F0ABFC 50%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
+            Digital Strategist
+          </span>
         </motion.h1>
-        <motion.p initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, delay: 0.22, ease }}
-          style={{ fontSize: "clamp(16px, 1.65vw, 20px)", color: T.muted, maxWidth: 700, lineHeight: 1.78, margin: "0 0 54px" }}
+
+        <motion.p
+          initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.85, delay: 0.22, ease }}
+          style={{ fontSize: "clamp(15px, 1.4vw, 18px)", color: T.muted, maxWidth: 580, lineHeight: 1.82, margin: "0 0 40px" }}
         >
-          Progetto e sviluppo siti web corporate ed e-commerce scalabili, ingegnerizzando i processi aziendali dall'integrazione API al Performance Marketing. Trasformo la tua visione commerciale in una piattaforma digitale solida, automatizzata e pronta a generare profitto.
+          Sviluppo <strong style={{ color: T.text, fontWeight: 700 }}>Shopify enterprise su misura</strong> con integrazioni API complesse per cataloghi oltre 30.000 SKU. Implemento{" "}
+          <strong style={{ color: T.text, fontWeight: 700 }}>agenti AI autonomi</strong> per content generation e automazione operativa, sincronizzati con le campagne{" "}
+          <strong style={{ color: T.text, fontWeight: 700 }}>Meta e Google Ads</strong> per massimizzare il ROI in ogni fase del funnel.
         </motion.p>
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.36, ease }}
-          style={{ display: "flex", gap: 16, flexWrap: "wrap" }}
+
+        {/* CTA + social icons */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.36, ease }}
+          className="hp-hero-ctas"
+          style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}
         >
-          <Btn primary>Avvia il tuo Progetto</Btn>
-          <Btn>Scopri i Casi di Studio</Btn>
+          <motion.button
+            className="rainbow-btn hp-hero-primary-btn"
+            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            style={{
+              position: "relative", padding: "16px 34px", borderRadius: 12, fontSize: 15, fontWeight: 600,
+              cursor: "pointer", letterSpacing: "0.01em", fontFamily: "inherit", border: "none",
+              background: "rgba(18, 6, 38, 0.52)", backdropFilter: "blur(16px) saturate(1.6)",
+              WebkitBackdropFilter: "blur(16px) saturate(1.6)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 -1px 0 rgba(0,0,0,0.28), 0 2px 14px rgba(0,0,0,0.35)",
+              color: T.text,
+            } as React.CSSProperties}
+          >
+            <span aria-hidden style={{ position: "absolute", top: 0, left: "12%", right: "12%", height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent)", pointerEvents: "none" }} />
+            <span style={{ position: "relative", zIndex: 1 }}>Avvia il tuo Progetto</span>
+          </motion.button>
+
+          <span className="hp-hero-sep" style={{ width: 1, height: 36, background: "rgba(255,255,255,0.10)", flexShrink: 0 }} />
+
+          <div className="hp-hero-social-icons" style={{ display: "flex", gap: 10 }}>
+            {HERO_SOCIALS.map(({ Icon, href, label }) => (
+              <motion.a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+                whileHover={{ scale: 1.1, backgroundColor: "rgba(102,0,255,0.14)" }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                style={{
+                  width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center",
+                  justifyContent: "center", color: T.muted, border: "1px solid rgba(255,255,255,0.09)",
+                  backgroundColor: "rgba(255,255,255,0.04)", backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)", textDecoration: "none", flexShrink: 0,
+                } as React.CSSProperties}
+              >
+                <Icon />
+              </motion.a>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Stats row — 4 cols desktop / 2×2 mobile */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.52, ease }}
+          className="hp-hero-stats"
+          style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginTop: 32 }}
+        >
+          <HeroStat value="05+" label="Anni di Esperienza" />
+          <HeroStat value="30k+" label="Prodotti Sincronizzati" />
+          <HeroStat value="100%" label="Soluzioni Custom" />
+          <HeroStat value="50+" label="Progetti Completati" />
         </motion.div>
       </div>
     </section>
