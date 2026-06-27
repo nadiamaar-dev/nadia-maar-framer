@@ -184,6 +184,13 @@ const GLOBAL_CSS = `
 
   .hp-hero-cards-mobile { display: none; }
 
+  /* Soluzioni grid — desktop (6-col base) */
+  .hp-soluzioni-grid > div:nth-child(1),
+  .hp-soluzioni-grid > div:nth-child(2),
+  .hp-soluzioni-grid > div:nth-child(3) { grid-column: span 2; }
+  .hp-soluzioni-grid > div:nth-child(4),
+  .hp-soluzioni-grid > div:nth-child(5) { grid-column: span 3; }
+
   @media (max-width: 1024px) {
     .hp-hero-grid { grid-template-columns: 1fr !important; }
     .hp-hero-cards-desktop { display: none !important; }
@@ -193,6 +200,12 @@ const GLOBAL_CSS = `
     .hp-stat-title { font-size: 13px !important; margin-bottom: 3px !important; }
     .hp-stat-desc { font-size: 11px !important; }
     .hp-skillcards { grid-template-columns: repeat(2, 1fr) !important; }
+    .hp-soluzioni-grid { grid-template-columns: repeat(4, 1fr) !important; }
+    .hp-soluzioni-grid > div:nth-child(1),
+    .hp-soluzioni-grid > div:nth-child(2),
+    .hp-soluzioni-grid > div:nth-child(3),
+    .hp-soluzioni-grid > div:nth-child(4) { grid-column: span 2 !important; }
+    .hp-soluzioni-grid > div:nth-child(5) { grid-column: 1 / -1 !important; }
   }
 
   @media (max-width: 800px) {
@@ -221,10 +234,26 @@ const GLOBAL_CSS = `
     .hp-method-num { font-size: 28px !important; margin-bottom: 8px !important; }
     .hp-method-title { font-size: 14px !important; margin-bottom: 8px !important; }
     .hp-method-body { font-size: 12px !important; line-height: 1.55 !important; }
-    .hp-method-visual { border-left: none !important; border-top: 1px solid rgba(255,255,255,0.05) !important; min-height: 100px !important; padding: 14px !important; }
+    .hp-method-visual { border-left: none !important; border-top: 1px solid rgba(255,255,255,0.05) !important; min-height: unset !important; aspect-ratio: 16 / 9 !important; padding: 12px !important; width: 100% !important; }
     .hp-method-nav { flex-wrap: wrap !important; }
     .hp-method-nav > button { flex: 0 0 calc(50% - 4px) !important; padding: 10px 12px !important; font-size: 11px !important; }
     .hp-skillcards { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+    .hp-soluzioni-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+    .hp-diagnosi-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+    .hp-purche-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+    .hp-tech-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+    .hp-contact-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+    .hp-contact-row { grid-template-columns: 1fr !important; }
+    .hp-footer-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+    .hp-footer-brand { margin-bottom: 32px !important; padding-bottom: 32px !important; border-bottom: 1px solid rgba(255,255,255,0.07) !important; }
+    .hp-risultati-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+    .hp-risultati-grid > div { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.07); padding: 28px 0 !important; }
+    .hp-risultati-grid > div:last-child { border-bottom: none; }
+    .hp-soluzioni-grid > div:nth-child(1),
+    .hp-soluzioni-grid > div:nth-child(2),
+    .hp-soluzioni-grid > div:nth-child(3),
+    .hp-soluzioni-grid > div:nth-child(4) { grid-column: span 1 !important; }
+    .hp-soluzioni-grid > div:nth-child(5) { grid-column: 1 / -1 !important; }
     .hp-skillcard  { padding: 14px !important; aspect-ratio: auto !important; }
     .hp-skillcard h3 { font-size: 12px !important; }
     .hp-skillcard-icon { width: 30px !important; height: 30px !important; border-radius: 8px !important; }
@@ -392,7 +421,6 @@ function HeroStat({ value, label, index }: { value: string; label: string; index
         boxShadow: "0 8px 32px 0 rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)",
       } as React.CSSProperties}
     >
-
       <span className="hp-hero-stat-value" style={{ fontSize: 28, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", background: "linear-gradient(135deg, #BF5FFF 0%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" } as React.CSSProperties}>
         {value}
       </span>
@@ -432,7 +460,7 @@ function Hero() {
 
       <div style={{ ...WRAP, position: "relative", zIndex: 1 }} className="hp-wrap">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
-          <Label text="Shopify Expert · AI Automation · Growth Marketing" />
+          <Label text="DEVELOPMENT · AI AUTOMATION · PERFORMANCE MARKETING" />
         </motion.div>
 
         <motion.h1
@@ -440,7 +468,7 @@ function Hero() {
           transition={{ duration: 0.9, delay: 0.1, ease }}
           style={{ fontSize: "clamp(38px, 5.2vw, 68px)", fontWeight: 800, lineHeight: 1.06, letterSpacing: "-0.036em", margin: "0 0 28px", maxWidth: 760 }}
         >
-          Full-Stack Developer {" + "}
+          E-commerce Architect{" & "}
           <span style={{ background: "linear-gradient(95deg, #BF5FFF 0%, #F0ABFC 50%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
             Digital Strategist
           </span>
@@ -451,9 +479,9 @@ function Hero() {
           transition={{ duration: 0.85, delay: 0.22, ease }}
           style={{ fontSize: "clamp(15px, 1.4vw, 18px)", color: T.muted, maxWidth: 580, lineHeight: 1.82, margin: "0 0 40px" }}
         >
-          Sviluppo <strong style={{ color: T.text, fontWeight: 700 }}>Shopify enterprise su misura</strong> con integrazioni API complesse per cataloghi oltre 30.000 SKU. Implemento{" "}
-          <strong style={{ color: T.text, fontWeight: 700 }}>agenti AI autonomi</strong> per content generation e automazione operativa, sincronizzati con le campagne{" "}
-          <strong style={{ color: T.text, fontWeight: 700 }}>Meta e Google Ads</strong> per massimizzare il ROI in ogni fase del funnel.
+          E-commerce, Web Apps, AI e Performance Marketing. Un'unica mente strategica e codice ad alte prestazioni per il pieno controllo su{" "}
+          <strong style={{ color: T.text, fontWeight: 700 }}>advertising, promozione</strong> e{" "}
+          <strong style={{ color: T.text, fontWeight: 700 }}>scalabilità del tuo business</strong>.
         </motion.p>
 
         {/* CTA + social icons */}
@@ -535,6 +563,170 @@ function AdvCard({ n, title, body }: { n: string; title: string; body: string })
       <h3 style={{ fontSize: 18, fontWeight: 600, letterSpacing: "-0.015em", marginBottom: 14, color: T.text }}>{title}</h3>
       <p style={{ fontSize: 15, color: T.muted, lineHeight: 1.8 }}>{body}</p>
     </GlassCard>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   §  RISULTATI — Fatti, non promesse
+══════════════════════════════════════════════════════════════════════════ */
+const RISULTATI = [
+  { value: "100%",   symbol: "",    label: "Automazione dei processi di magazzino" },
+  { value: "< 0.5",  symbol: "s",   label: "Tempi di caricamento delle piattaforme" },
+  { value: "+150",   symbol: "%",   label: "Crescita media del traffico organico (SEO)" },
+]
+
+function RisultatiBlock() {
+  const track = [...RISULTATI, ...RISULTATI, ...RISULTATI, ...RISULTATI]
+  const SEP = (
+    <span aria-hidden style={{ flexShrink: 0, width: 5, height: 5, borderRadius: "50%", background: "rgba(192,132,252,0.40)", margin: "0 40px", alignSelf: "center" }} />
+  )
+  return (
+    <section style={{
+      position: "relative", overflow: "hidden",
+      background: "rgba(255,255,255,0.025)",
+      backdropFilter: "blur(20px) saturate(1.4)",
+      WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+      borderTop: "1px solid rgba(255,255,255,0.07)",
+      borderBottom: "1px solid rgba(255,255,255,0.07)",
+    }}>
+      {/* left fade */}
+      <div aria-hidden style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 140, background: `linear-gradient(90deg, ${T.bg} 0%, transparent 100%)`, zIndex: 2, pointerEvents: "none" }} />
+      {/* right fade */}
+      <div aria-hidden style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 140, background: `linear-gradient(-90deg, ${T.bg} 0%, transparent 100%)`, zIndex: 2, pointerEvents: "none" }} />
+
+      <motion.div
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+        style={{ display: "flex", alignItems: "center", padding: "28px 0", width: "max-content", willChange: "transform" }}
+      >
+        {track.map(({ value, symbol, label }, i) => (
+          <React.Fragment key={i}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 6, flexShrink: 0 }}>
+              <span style={{
+                fontSize: 28, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em",
+                background: "linear-gradient(135deg, #BF5FFF 0%, #C084FC 100%)",
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+              } as React.CSSProperties}>
+                {value}{symbol}
+              </span>
+              <span style={{ fontSize: 14, fontWeight: 500, color: "rgba(242,242,250,0.52)", letterSpacing: "0.01em", whiteSpace: "nowrap" as const }}>
+                {label}
+              </span>
+            </div>
+            {SEP}
+          </React.Fragment>
+        ))}
+      </motion.div>
+    </section>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   §  TECNOLOGIA ALL'AVANGUARDIA
+══════════════════════════════════════════════════════════════════════════ */
+const TECH_POINTS = [
+  {
+    icon: (
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+      </svg>
+    ),
+    title: "Caricamento in < 0.5 Secondi",
+    body: "Un sito istantaneo abbatte il tasso di abbandono degli utenti e aumenta drasticamente la conversione finale.",
+  },
+  {
+    icon: (
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+      </svg>
+    ),
+    title: "Core Web Vitals al 100%",
+    body: "Ottimizzazione nativa per i motori di ricerca. Google premia i siti tecnicamente perfetti, garantendoti un vantaggio competitivo immediato.",
+  },
+  {
+    icon: (
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    ),
+    title: "Infrastruttura Serverless Sicura",
+    body: "Nessun server da gestire, zero downtime durante i picchi di traffico e massima protezione contro le vulnerabilità informatiche.",
+  },
+]
+
+function TechBlock() {
+  return (
+    <section style={{ ...SEC, padding: "100px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
+      <div style={WRAP} className="hp-wrap">
+        <div className="hp-tech-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.35fr", gap: "0 72px", alignItems: "start" }}>
+
+          {/* left — title */}
+          <div style={{ position: "sticky", top: 100 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ duration: 0.6, ease }}
+            >
+              <Label text="Tecnologia all'Avanguardia" />
+            </motion.div>
+            <motion.h2
+              initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ duration: 0.75, delay: 0.08, ease }}
+              style={{ fontSize: "clamp(26px, 3.2vw, 44px)", fontWeight: 800, lineHeight: 1.12, letterSpacing: "-0.030em", margin: "0 0 20px" }}
+            >
+              Perché la Velocità{" "}
+              <span style={{ background: "linear-gradient(95deg, #BF5FFF 0%, #F0ABFC 60%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
+                Determina il tuo Fatturato.
+              </span>
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.16, ease }}
+              style={{ fontSize: 15, color: T.muted, lineHeight: 1.80 }}
+            >
+              Ogni millisecondo conta. Un'architettura tecnica di alto livello non è un lusso — è il fondamento su cui si costruisce la crescita del fatturato.
+            </motion.p>
+          </div>
+
+          {/* right — bullet points */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            {TECH_POINTS.map(({ icon, title, body }, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.6, delay: i * 0.11, ease }}
+                style={{
+                  display: "flex", gap: 22, alignItems: "flex-start",
+                  padding: "36px 0",
+                  borderBottom: i < TECH_POINTS.length - 1 ? `1px solid ${T.border}` : "none",
+                }}
+              >
+                {/* icon pill */}
+                <div style={{
+                  width: 44, height: 44, borderRadius: 13, flexShrink: 0,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  background: "rgba(102,0,255,0.10)",
+                  border: "1px solid rgba(153,68,255,0.22)",
+                  color: T.accentLt,
+                  marginTop: 2,
+                }}>
+                  {icon}
+                </div>
+
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.016em", color: T.text, marginBottom: 8, lineHeight: 1.3 }}>
+                    {title}
+                  </h3>
+                  <p style={{ fontSize: 15, color: T.muted, lineHeight: 1.80, margin: 0 }}>
+                    {body}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -654,6 +846,495 @@ function SkillCard({ icon, title, tags }: { icon: React.ReactNode; title: string
         {tags.map((tag, j) => <Tag key={j} text={tag} size="sm" />)}
       </div>
     </motion.div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   §  LE SOLUZIONI — La Matrice di Conversione
+══════════════════════════════════════════════════════════════════════════ */
+const SOLUZIONI = [
+  {
+    num: "01",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+    ),
+    gradient: "linear-gradient(135deg, #6600FF 0%, #9944FF 100%)",
+    glow: "rgba(102,0,255,0.28)",
+    title: "E-commerce ad Alta Conversione",
+    desc: "Negozi online veloci, stabili e scalabili. Automazione totale di magazzini, cataloghi massivi e logistica.",
+    cta: "Ottimizza il tuo E-commerce",
+  },
+  {
+    num: "02",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+      </svg>
+    ),
+    gradient: "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)",
+    glow: "rgba(124,58,237,0.28)",
+    title: "Siti Corporate & Lead Generation",
+    desc: "Identità digitale d'élite per aziende e professionisti. Design esclusivo focalizzato sull'acquisizione di clienti qualificati.",
+    cta: "Potenzia il tuo Brand",
+  },
+  {
+    num: "03",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      </svg>
+    ),
+    gradient: "linear-gradient(135deg, #6d28d9 0%, #c084fc 100%)",
+    glow: "rgba(109,40,217,0.28)",
+    title: "Applicazioni Web & Automazione Custom",
+    desc: "Software e strumenti di produttività su misura. Connettiamo i tuoi sistemi (CRM/ERP) per eliminare l'errore umano.",
+    cta: "Automatizza i tuoi Processi",
+  },
+  {
+    num: "04",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+      </svg>
+    ),
+    gradient: "linear-gradient(135deg, #9333ea 0%, #e879f9 100%)",
+    glow: "rgba(147,51,234,0.28)",
+    title: "SEO Strategico & Performance Marketing",
+    desc: "Posizionamento organico integrato nel codice fin dal primo giorno. Scaliamo Google per intercettare traffico pronto a comprare.",
+    cta: "Scala le Classifiche",
+  },
+  {
+    num: "05",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        <circle cx="12" cy="12" r="7" strokeDasharray="2 3"/>
+      </svg>
+    ),
+    gradient: "linear-gradient(135deg, #a855f7 0%, #f0abfc 100%)",
+    glow: "rgba(168,85,247,0.28)",
+    title: "Integrazione AI & Sistemi Intelligenti",
+    desc: "Soluzioni pratiche basate su Intelligenza Artificiale (Agenti AI, LLM). Abbattiamo i costi di gestione e ottimizziamo la routine.",
+    cta: "Innova con l'AI",
+  },
+]
+
+function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: typeof SOLUZIONI[0] & { index: number }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, delay: index * 0.08, ease }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      style={{
+        position: "relative",
+        borderRadius: 20,
+        padding: "36px 32px 32px",
+        background: "rgba(255,255,255,0.028)",
+        backdropFilter: "blur(20px) saturate(1.4)",
+        WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+        border: `1px solid ${hovered ? "rgba(153,68,255,0.40)" : "rgba(255,255,255,0.07)"}`,
+        boxShadow: hovered ? `0 16px 48px rgba(0,0,0,0.40), 0 0 0 1px rgba(153,68,255,0.18), inset 0 1px 0 rgba(255,255,255,0.08)` : "0 2px 16px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04)",
+        cursor: "pointer",
+        transition: "border-color 0.25s, box-shadow 0.3s",
+        display: "flex",
+        flexDirection: "column",
+        gap: 0,
+        overflow: "hidden",
+      }}
+    >
+      {/* glow orb on hover */}
+      <motion.div
+        aria-hidden
+        animate={{ opacity: hovered ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: `radial-gradient(circle, ${glow} 0%, transparent 70%)`, filter: "blur(24px)", pointerEvents: "none" }}
+      />
+
+      {/* number + icon row */}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 24 }}>
+        <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.18em", color: "rgba(242,242,250,0.18)", lineHeight: 1 }}>{num}</span>
+        <div style={{
+          width: 46, height: 46, borderRadius: 14, flexShrink: 0,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          background: hovered ? gradient : "rgba(102,0,255,0.10)",
+          border: `1px solid ${hovered ? "transparent" : "rgba(153,68,255,0.22)"}`,
+          boxShadow: hovered ? `0 0 22px ${glow}` : "none",
+          color: hovered ? "#fff" : T.accentLt,
+          transition: "background 0.3s, border-color 0.3s, box-shadow 0.3s, color 0.3s",
+        }}>
+          {icon}
+        </div>
+      </div>
+
+      {/* title */}
+      <h3 style={{ fontSize: 18, fontWeight: 700, lineHeight: 1.25, letterSpacing: "-0.02em", color: T.text, marginBottom: 14 }}>
+        {title}
+      </h3>
+
+      {/* desc */}
+      <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.78, marginBottom: 28, flex: 1 }}>
+        {desc}
+      </p>
+
+      {/* cta */}
+      <motion.div
+        animate={{ x: hovered ? 4 : 0 }}
+        transition={{ duration: 0.2 }}
+        style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 600, color: hovered ? T.accentLt : T.muted, transition: "color 0.25s" }}
+      >
+        {cta}
+        <motion.span animate={{ x: hovered ? 3 : 0 }} transition={{ duration: 0.2 }}>
+          <ArrowRightIcon size={13} />
+        </motion.span>
+      </motion.div>
+
+      {/* bottom accent line */}
+      <motion.div
+        animate={{ scaleX: hovered ? 1 : 0 }}
+        transition={{ duration: 0.35, ease }}
+        style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: gradient, transformOrigin: "left", borderRadius: "0 0 20px 20px" }}
+      />
+    </motion.div>
+  )
+}
+
+function SoluzioniMatrix() {
+  return (
+    <section style={{ ...SEC, padding: "100px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
+      <div style={WRAP} className="hp-wrap">
+        {/* header */}
+        <div style={{ marginBottom: 64 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.6, ease }}
+          >
+            <Label text="Core Skills & Tech Stack" />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.08, ease }}
+            style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 20 }}
+          >
+            <div>
+              <h2 style={{ fontSize: "clamp(28px, 3.6vw, 48px)", fontWeight: 800, lineHeight: 1.1, letterSpacing: "-0.032em", marginBottom: 14 }}>
+                Soluzioni su misura per scalare il tuo business online
+              </h2>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* cards grid — 6-col base, nth-child controls spans */}
+        <div
+          className="hp-soluzioni-grid"
+          style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 18 }}
+        >
+          {SOLUZIONI.map((s, i) => (
+            <SoluzioneCard key={i} {...s} index={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   §  IL PROBLEMA — La Diagnosi
+══════════════════════════════════════════════════════════════════════════ */
+const DIAGNOSI = [
+  {
+    icon: (
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+    ),
+    title: "E-commerce inefficiente",
+    body: "Perdi tempo e vendite a causa di cataloghi disconnessi, errori di magazzino e automatismi che non funzionano.",
+  },
+  {
+    icon: (
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+      </svg>
+    ),
+    title: "Invisibilità su Google",
+    body: "Il tuo sito web è tecnicamente invisibile. Se smetti di pagare le Ads, il tuo traffico e i tuoi clienti azzerano.",
+  },
+  {
+    icon: (
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+        <line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="12" x2="13" y2="12"/>
+      </svg>
+    ),
+    title: "Siti aziendali deboli",
+    body: "Una presenza online obsoleta o lenta che allontana i clienti premium invece di attrarli.",
+  },
+  {
+    icon: (
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+    ),
+    title: "Routine manuale",
+    body: "Il tuo team spreca ore in processi ripetitivi che potrebbero essere automatizzati con un software intelligente.",
+  },
+]
+
+function DiagnosiCard({ icon, title, body, index }: typeof DIAGNOSI[0] & { index: number }) {
+  const [hov, setHov] = useState(false)
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.55, delay: index * 0.09, ease }}
+      onHoverStart={() => setHov(true)}
+      onHoverEnd={() => setHov(false)}
+      style={{
+        position: "relative", borderRadius: 18, padding: "28px 26px",
+        background: hov ? "rgba(239,68,68,0.04)" : "rgba(255,255,255,0.024)",
+        border: `1px solid ${hov ? "rgba(239,68,68,0.22)" : "rgba(255,255,255,0.07)"}`,
+        boxShadow: hov
+          ? "0 12px 40px rgba(0,0,0,0.38), 0 0 0 1px rgba(239,68,68,0.10)"
+          : "0 2px 16px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04)",
+        transition: "background 0.25s, border-color 0.25s, box-shadow 0.3s",
+        overflow: "hidden",
+        cursor: "default",
+        display: "flex", flexDirection: "column", gap: 0,
+      }}
+    >
+      {/* subtle red glow on hover */}
+      <motion.div aria-hidden
+        animate={{ opacity: hov ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        style={{ position: "absolute", top: -30, right: -30, width: 140, height: 140, borderRadius: "50%", background: "radial-gradient(circle, rgba(239,68,68,0.12) 0%, transparent 70%)", filter: "blur(20px)", pointerEvents: "none" }}
+      />
+
+      {/* icon */}
+      <div style={{
+        width: 42, height: 42, borderRadius: 12, marginBottom: 20,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        background: hov ? "rgba(239,68,68,0.10)" : "rgba(255,255,255,0.05)",
+        border: `1px solid ${hov ? "rgba(239,68,68,0.28)" : "rgba(255,255,255,0.10)"}`,
+        color: hov ? "#FCA5A5" : "rgba(242,242,250,0.55)",
+        transition: "background 0.25s, border-color 0.25s, color 0.25s",
+        flexShrink: 0,
+      }}>
+        {icon}
+      </div>
+
+      {/* title */}
+      <h3 style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.016em", color: T.text, marginBottom: 10, lineHeight: 1.3 }}>
+        {title}
+      </h3>
+
+      {/* body */}
+      <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.78, margin: 0 }}>
+        {body}
+      </p>
+
+      {/* bottom accent */}
+      <motion.div
+        animate={{ scaleX: hov ? 1 : 0 }}
+        transition={{ duration: 0.32, ease }}
+        style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, rgba(239,68,68,0.60), rgba(251,113,133,0.40))", transformOrigin: "left", borderRadius: "0 0 18px 18px" }}
+      />
+    </motion.div>
+  )
+}
+
+function DiagnosiBlock() {
+  return (
+    <section style={{ ...SEC, padding: "100px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
+      <div style={WRAP} className="hp-wrap">
+
+        {/* header */}
+        <div style={{ marginBottom: 56 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.6, ease }}
+          >
+            <Label text="Il Problema — La Diagnosi" />
+          </motion.div>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.08, ease }}
+            style={{ fontSize: "clamp(26px, 3.4vw, 46px)", fontWeight: 800, lineHeight: 1.1, letterSpacing: "-0.030em", marginBottom: 0, maxWidth: 620 }}
+          >
+            Sei bloccato in una di{" "}
+            <span style={{ background: "linear-gradient(95deg, #BF5FFF 0%, #F0ABFC 60%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
+              queste situazioni?
+            </span>
+          </motion.h2>
+        </div>
+
+        {/* 2×2 grid */}
+        <div className="hp-diagnosi-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
+          {DIAGNOSI.map((d, i) => <DiagnosiCard key={i} {...d} index={i} />)}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   §  IL MIO METODO — Perché lavorare con me
+══════════════════════════════════════════════════════════════════════════ */
+const PERCHE_ITEMS = [
+  {
+    num: "01",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+    ),
+    title: "Capacità di gestire la complessità",
+    body: "Sviluppo architetture pesanti. Sincronizzo ecosistemi con oltre 35.000 prodotti in tempo reale, senza far crollare le performance del sito.",
+    metric: "35.000+",
+    metricLabel: "prodotti sincronizzati",
+  },
+  {
+    num: "02",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    ),
+    title: "Trasparenza e Approccio Diretto",
+    body: "Comunicazione chiara, zero costi nascosti, rispetto rigoroso di scadenze e confini. So esattamente quanto costa il tuo tempo.",
+    metric: "0",
+    metricLabel: "costi nascosti",
+  },
+  {
+    num: "03",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
+        <line x1="18" y1="8" x2="22" y2="8"/><line x1="20" y1="6" x2="20" y2="10"/>
+      </svg>
+    ),
+    title: "Unico Referente, Zero Scuse",
+    body: "Sviluppo tecnico, logica aziendale, integrazione AI e SEO gestiti da un'unica mente strategica. Nessun rimpallo di responsabilità.",
+    metric: "1",
+    metricLabel: "referente strategico",
+  },
+]
+
+function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: typeof PERCHE_ITEMS[0] & { index: number }) {
+  const [hov, setHov] = useState(false)
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, delay: index * 0.10, ease }}
+      onHoverStart={() => setHov(true)}
+      onHoverEnd={() => setHov(false)}
+      style={{
+        position: "relative", borderRadius: 20, padding: "36px 30px 30px",
+        background: hov ? "rgba(102,0,255,0.055)" : "rgba(255,255,255,0.026)",
+        border: `1px solid ${hov ? "rgba(153,68,255,0.38)" : "rgba(255,255,255,0.07)"}`,
+        boxShadow: hov
+          ? "0 16px 48px rgba(0,0,0,0.42), 0 0 0 1px rgba(153,68,255,0.16), inset 0 1px 0 rgba(255,255,255,0.08)"
+          : "0 2px 18px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.04)",
+        transition: "background 0.28s, border-color 0.28s, box-shadow 0.32s",
+        display: "flex", flexDirection: "column", gap: 0, overflow: "hidden", cursor: "default",
+      }}
+    >
+      {/* purple glow orb */}
+      <motion.div aria-hidden
+        animate={{ opacity: hov ? 1 : 0 }} transition={{ duration: 0.3 }}
+        style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.18) 0%, transparent 70%)", filter: "blur(24px)", pointerEvents: "none" }}
+      />
+
+      {/* top row: num + icon */}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 28 }}>
+        <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.18em", color: "rgba(242,242,250,0.18)", lineHeight: 1 }}>{num}</span>
+        <div style={{
+          width: 46, height: 46, borderRadius: 14, flexShrink: 0,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          background: hov ? "linear-gradient(135deg, #6600FF 0%, #9944FF 100%)" : "rgba(102,0,255,0.10)",
+          border: `1px solid ${hov ? "transparent" : "rgba(153,68,255,0.24)"}`,
+          color: hov ? "#fff" : T.accentLt,
+          boxShadow: hov ? "0 0 22px rgba(102,0,255,0.40)" : "none",
+          transition: "background 0.28s, border-color 0.28s, color 0.28s, box-shadow 0.28s",
+        }}>
+          {icon}
+        </div>
+      </div>
+
+      {/* metric callout */}
+      <div style={{ marginBottom: 16 }}>
+        <span style={{
+          fontSize: 36, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em",
+          background: "linear-gradient(135deg, #BF5FFF 0%, #C084FC 100%)",
+          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+        } as React.CSSProperties}>{metric}</span>
+        <span style={{ fontSize: 11, fontWeight: 600, color: T.accentLt, letterSpacing: "0.10em", textTransform: "uppercase" as const, marginLeft: 10, verticalAlign: "middle", opacity: 0.80 }}>{metricLabel}</span>
+      </div>
+
+      {/* title */}
+      <h3 style={{ fontSize: 17, fontWeight: 700, letterSpacing: "-0.018em", color: T.text, marginBottom: 12, lineHeight: 1.28 }}>
+        {title}
+      </h3>
+
+      {/* body */}
+      <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.80, margin: 0, flex: 1 }}>
+        {body}
+      </p>
+
+      {/* bottom accent line */}
+      <motion.div
+        animate={{ scaleX: hov ? 1 : 0 }}
+        transition={{ duration: 0.34, ease }}
+        style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, #6600FF, #C084FC)", transformOrigin: "left", borderRadius: "0 0 20px 20px" }}
+      />
+    </motion.div>
+  )
+}
+
+function PurcheBlock() {
+  return (
+    <section style={{ ...SEC, padding: "100px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
+      <div style={WRAP} className="hp-wrap">
+
+        {/* header */}
+        <div style={{ marginBottom: 60 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.6, ease }}
+          >
+            <Label text="Il Mio Metodo" />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.08, ease }}
+            style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 20 }}
+          >
+            <h2 style={{ fontSize: "clamp(28px, 3.6vw, 48px)", fontWeight: 800, lineHeight: 1.08, letterSpacing: "-0.032em", margin: 0, maxWidth: 560 }}>
+              Perché lavorare{" "}
+              <span style={{ background: "linear-gradient(95deg, #BF5FFF 0%, #F0ABFC 60%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
+                con me.
+              </span>
+            </h2>
+          </motion.div>
+        </div>
+
+        {/* 3-col grid */}
+        <div className="hp-purche-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
+          {PERCHE_ITEMS.map((item, i) => <PurcheCard key={i} {...item} index={i} />)}
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -1112,9 +1793,9 @@ function MethodCarousel() {
               </motion.div>
             </AnimatePresence>
           </div>
-          <div className="hp-method-visual" style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.13)", borderLeft: "1px solid rgba(255,255,255,0.05)", padding: "28px", minHeight: 320 }}>
+          <div className="hp-method-visual" style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.13)", borderLeft: "1px solid rgba(255,255,255,0.05)", padding: "14px", minHeight: 160 }}>
             <AnimatePresence mode="wait">
-              <motion.div key={step} initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94 }} transition={{ duration: 0.38, ease: [0.16,1,0.3,1] }} style={{ width: "100%", height: "100%" }}>
+              <motion.div key={step} initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94 }} transition={{ duration: 0.38, ease: [0.16,1,0.3,1] }} style={{ width: "100%", height: "100%", minHeight: 0 }}>
                 <Visual />
               </motion.div>
             </AnimatePresence>
@@ -1139,7 +1820,7 @@ function Method() {
           <h2 style={{ fontSize: "clamp(26px, 3.4vw, 44px)", fontWeight: 700, lineHeight: 1.13, letterSpacing: "-0.028em", marginBottom: 48, maxWidth: 580, color: T.text }}>
             Una roadmap chiara e trasparente,{" "}
             <span style={{ background: "linear-gradient(90deg, #BF5FFF, #C084FC)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
-              orientata ai risultati.
+              orientata ai risultati
             </span>
           </h2>
         </Reveal>
@@ -1297,39 +1978,98 @@ function FieldArea({ label, placeholder, value, onChange }: { label: string; pla
   )
 }
 
+function FieldSelect({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+  const [f, setF] = useState(false)
+  const options = [
+    "E-commerce ad Alta Conversione",
+    "Siti Corporate & Lead Generation",
+    "Applicazioni Web & Automazione Custom",
+    "SEO Strategico & Performance Marketing",
+    "Integrazione AI & Sistemi Intelligenti",
+  ]
+  return (
+    <div>
+      <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: T.faint, marginBottom: 8, letterSpacing: "0.12em", textTransform: "uppercase" as const }}>{label}</label>
+      <select value={value} onChange={e => onChange(e.target.value)} onFocus={() => setF(true)} onBlur={() => setF(false)} required
+        style={{ width: "100%", padding: "16px 20px", background: T.surface, border: `1px solid ${f ? T.accent : T.border}`, borderRadius: 12, color: value ? T.text : "rgba(242,242,250,0.35)", fontSize: 15, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", transition: "border-color 0.2s", appearance: "none", cursor: "pointer" }}>
+        <option value="" disabled>Seleziona un'area...</option>
+        {options.map(o => <option key={o} value={o} style={{ background: T.surface, color: T.text }}>{o}</option>)}
+      </select>
+    </div>
+  )
+}
+
 function Contact() {
-  const [fields, setFields] = useState({ name: "", email: "", site: "", desc: "" })
+  const [fields, setFields] = useState({ name: "", email: "", site: "", area: "", msg: "" })
   const [sent, setSent] = useState(false)
   const set = (k: keyof typeof fields) => (v: string) => setFields(f => ({ ...f, [k]: v }))
   return (
     <section style={{ ...SEC, borderTop: `1px solid ${T.border}` }} id="s9" className="hp-sec">
       <div style={WRAP} className="hp-wrap">
-        <Reveal>
-          <Label text="Contatto" />
-          <h2 style={{ fontSize: "clamp(26px, 3.4vw, 44px)", fontWeight: 700, lineHeight: 1.13, letterSpacing: "-0.028em", marginBottom: 18, maxWidth: 600 }}>Il tuo prossimo livello aziendale inizia da qui.</h2>
-          <p style={{ fontSize: 16, color: T.muted, lineHeight: 1.8, maxWidth: 600, marginBottom: 56 }}>Compila il modulo per richiedere un'analisi preliminare del tuo progetto. Riceverai una proposta di roadmap strategica iniziale entro 24 ore lavorative.</p>
-        </Reveal>
-        <Reveal>
+
+        {/* header */}
+        <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}>
+          <Label text="Call to Action" />
+        </motion.div>
+        <motion.h2
+          initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }} transition={{ duration: 0.75, delay: 0.08, ease }}
+          style={{ fontSize: "clamp(26px, 3.2vw, 44px)", fontWeight: 800, lineHeight: 1.10, letterSpacing: "-0.030em", margin: "0 0 16px" }}
+        >
+          Mettiamo fine ai blocchi tecnici{" "}
+          <span style={{ background: "linear-gradient(95deg, #BF5FFF 0%, #F0ABFC 60%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
+            della tua azienda.
+          </span>
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.16, ease }}
+          style={{ fontSize: 15, color: T.muted, lineHeight: 1.82, marginBottom: 52 }}
+        >
+          Seleziona il problema principale che sta frenando la tua crescita. Riceverai un piano d'azione chiaro e orientato ai numeri.
+        </motion.p>
+
+        {/* form */}
+        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.22, ease }} style={{ maxWidth: 720 }}>
           {!sent ? (
-            <form onSubmit={e => { e.preventDefault(); setSent(true) }} style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: 720 }}>
-              <Field label="Nome e Cognome / Azienda" placeholder="Nome e Cognome / Azienda" value={fields.name} onChange={set("name")} />
-              <Field label="Email Professionale" placeholder="Email Professionale" type="email" value={fields.email} onChange={set("email")} />
-              <Field label="Link al sito attuale" placeholder="Link al sito attuale (se esistente)" value={fields.site} onChange={set("site")} />
-              <FieldArea label="Descrizione del Progetto e Obiettivi Principali" placeholder="Descrizione del Progetto e Obiettivi Principali" value={fields.desc} onChange={set("desc")} />
-              <div style={{ paddingTop: 12 }}>
-                <Btn primary type="submit">Invia i Dati & Prenota la Consulenza Tecnica</Btn>
+            <form onSubmit={e => { e.preventDefault(); setSent(true) }} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+              <div className="hp-contact-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <Field label="Nome" placeholder="Il tuo nome" value={fields.name} onChange={set("name")} />
+                <Field label="Email Aziendale" placeholder="email@azienda.it" type="email" value={fields.email} onChange={set("email")} />
+              </div>
+              <Field label="Sito Web" placeholder="https://tuosito.it (se presente)" value={fields.site} onChange={set("site")} />
+              <FieldSelect label="Cosa dobbiamo risolvere?" value={fields.area} onChange={set("area")} />
+              <FieldArea label="Messaggio" placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={set("msg")} />
+              <div style={{ paddingTop: 8 }}>
+                <motion.button
+                  type="submit"
+                  className="rainbow-btn"
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                  style={{
+                    position: "relative", width: "100%", padding: "18px 36px", borderRadius: 12, fontSize: 15, fontWeight: 700,
+                    cursor: "pointer", letterSpacing: "0.02em", fontFamily: "inherit", border: "none",
+                    background: "rgba(255,255,255,0.06)", backdropFilter: "blur(24px) saturate(1.3)",
+                    WebkitBackdropFilter: "blur(24px) saturate(1.3)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.09), 0 2px 12px rgba(0,0,0,0.22)",
+                    color: T.text,
+                  } as React.CSSProperties}
+                >
+                  <span aria-hidden style={{ position: "absolute", top: 0, left: "12%", right: "12%", height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.20), transparent)", pointerEvents: "none" }} />
+                  <span style={{ position: "relative", zIndex: 1 }}>Richiedi Soluzione Tecnica</span>
+                </motion.button>
               </div>
             </form>
           ) : (
-            <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} style={{ padding: "44px 40px", background: T.surface, borderRadius: 20, border: `1px solid ${T.green}35`, maxWidth: 720 }}>
-              <div style={{ display: "flex", gap: 14, alignItems: "center", marginBottom: 14 }}>
-                <PingDot />
-                <span style={{ fontSize: 18, fontWeight: 600, color: T.green }}>Messaggio inviato con successo!</span>
-              </div>
-              <p style={{ fontSize: 15, color: T.muted, lineHeight: 1.8 }}>Riceverai una proposta di roadmap strategica iniziale entro 24 ore lavorative.</p>
-            </motion.div>
+              <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} style={{ padding: "44px 40px", background: T.surface, borderRadius: 20, border: `1px solid ${T.green}35` }}>
+                <div style={{ display: "flex", gap: 14, alignItems: "center", marginBottom: 14 }}>
+                  <PingDot />
+                  <span style={{ fontSize: 18, fontWeight: 600, color: T.green }}>Richiesta inviata con successo!</span>
+                </div>
+                <p style={{ fontSize: 15, color: T.muted, lineHeight: 1.8 }}>Riceverai un piano d'azione chiaro e orientato ai numeri entro 24 ore lavorative.</p>
+              </motion.div>
           )}
-        </Reveal>
+        </motion.div>
       </div>
     </section>
   )
@@ -1369,36 +2109,58 @@ const FOOTER_DATA = {
   copyright: "© 2025 Nadia Maar. Tutti i diritti riservati.",
 }
 
-const FC = {
-  bg: "#0A0A0F", border: "rgba(255,255,255,0.06)", text: "#F5F5F7", muted: "#A1A1AA",
-  dimLink: "rgba(245,245,247,0.45)", accent: "#7C3AED", accentBg: "rgba(124,58,237,0.1)",
-  accentBd: "rgba(124,58,237,0.3)", gold: "#D4AF37", surface: "rgba(255,255,255,0.03)",
-}
-
-function FooterColHeader({ children }: { children: React.ReactNode }) {
-  return <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#A1A1AA", marginBottom: 20 }}>{children}</p>
-}
-
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <a href={href} style={{ display: "flex", alignItems: "center", gap: 0, fontSize: 13, color: FC.dimLink, textDecoration: "none", transition: "color 0.18s, gap 0.18s" }}
-      onMouseEnter={e => { e.currentTarget.style.color = FC.text; e.currentTarget.style.gap = "6px" }}
-      onMouseLeave={e => { e.currentTarget.style.color = FC.dimLink; e.currentTarget.style.gap = "0px" }}
+    <a href={href}
+      style={{ display: "flex", alignItems: "center", gap: 0, fontSize: 13, color: T.muted, textDecoration: "none", transition: "color 0.20s, gap 0.20s" }}
+      onMouseEnter={e => { e.currentTarget.style.color = T.text; e.currentTarget.style.gap = "6px" }}
+      onMouseLeave={e => { e.currentTarget.style.color = T.muted; e.currentTarget.style.gap = "0px" }}
     >
-      <span style={{ color: FC.accent, overflow: "hidden", width: 0, opacity: 0, transition: "width 0.18s, opacity 0.18s" }} aria-hidden>›</span>
+      <span style={{ color: T.accentLt, overflow: "hidden", width: 0, opacity: 0, transition: "width 0.20s, opacity 0.20s" }} aria-hidden>›</span>
       {children}
     </a>
   )
 }
 
-function FooterAccordion({ title, children }: { title: string; children: React.ReactNode }) {
-  const [open, setOpen] = useState(false)
+function FooterSocialBtn({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
-    <div style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-      <button onClick={() => setOpen(o => !o)}
-        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", borderBottom: `1px solid ${open ? "rgba(124,58,237,0.35)" : "rgba(255,255,255,0.07)"}`, cursor: "pointer", padding: "14px 0", fontFamily: "inherit", transition: "border-color 0.25s" }}>
-        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: open ? FC.text : "#A1A1AA", margin: 0, transition: "color 0.2s" }}>{title}</p>
-        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.25 }} style={{ color: open ? FC.accent : "#A1A1AA", fontSize: 9, lineHeight: 1, transition: "color 0.2s" }}>▼</motion.span>
+    <motion.a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+      whileHover={{ scale: 1.08, y: -2 }} whileTap={{ scale: 0.92 }}
+      transition={{ type: "spring", stiffness: 400, damping: 16 }}
+      style={{ width: 36, height: 36, borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, transition: "color 0.22s, border-color 0.22s, background 0.22s", flexShrink: 0, textDecoration: "none" }}
+      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.text; el.style.borderColor = "rgba(153,68,255,0.42)"; el.style.background = "rgba(102,0,255,0.12)" }}
+      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.muted; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.background = "transparent" }}
+    >{children}</motion.a>
+  )
+}
+
+function FooterSection({ title, children }: { title: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false)
+  const [mobile, setMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setMobile(window.innerWidth <= 800)
+    check()
+    window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [])
+
+  if (!mobile) {
+    return (
+      <div>
+        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: T.faint, marginBottom: 20, margin: "0 0 20px" }}>{title}</p>
+        {children}
+      </div>
+    )
+  }
+
+  return (
+    <div style={{ borderBottom: `1px solid ${open ? "rgba(102,0,255,0.28)" : T.border}`, transition: "border-color 0.25s" }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: open ? "rgba(102,0,255,0.05)" : "transparent", border: "none", cursor: "pointer", padding: "16px 0", fontFamily: "inherit", transition: "background 0.25s" }}
+      >
+        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: open ? T.accentLt : T.faint, transition: "color 0.25s" }}>{title}</span>
+        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.28 }} style={{ color: open ? T.accentLt : T.faint, fontSize: 9, lineHeight: 1 }}>▼</motion.span>
       </button>
       <AnimatePresence initial={false}>
         {open && (
@@ -1406,12 +2168,10 @@ function FooterAccordion({ title, children }: { title: string; children: React.R
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             style={{ overflow: "hidden" }}
           >
-            <div style={{ padding: "14px 0 16px" }}>
-              {children}
-            </div>
+            <div style={{ padding: "4px 0 20px" }}>{children}</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1419,76 +2179,103 @@ function FooterAccordion({ title, children }: { title: string; children: React.R
   )
 }
 
-function FooterSocialBtn({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
-  return (
-    <motion.a href={href} target="_blank" rel="noopener noreferrer" aria-label={label} whileHover={{ y: -2 }} transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-      style={{ width: 34, height: 34, borderRadius: 9, border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: "#A1A1AA", transition: "color 0.2s, border-color 0.2s, background 0.2s", flexShrink: 0 }}
-      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = FC.text; el.style.borderColor = FC.accentBd; el.style.background = FC.accentBg }}
-      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = "#A1A1AA"; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.background = "transparent" }}
-    >{children}</motion.a>
-  )
-}
-
 function SiteFooter() {
+  const FOOT_NAV = [
+    { label: "Soluzioni",   href: "#s1" },
+    { label: "Il Problema", href: "#s1" },
+    { label: "Il Metodo",   href: "#s5" },
+    { label: "Tecnologia",  href: "#s1" },
+    { label: "Contatti",    href: "#s9" },
+  ]
+  const FOOT_SVC = [
+    { label: "E-commerce ad Alta Conversione",         href: "#s1" },
+    { label: "Siti Corporate & Lead Generation",       href: "#s1" },
+    { label: "Applicazioni Web & Automazione",         href: "#s1" },
+    { label: "SEO & Performance Marketing",            href: "#s1" },
+    { label: "Integrazione AI & Sistemi Intelligenti", href: "#s1" },
+  ]
+  const FOOT_CONTACT = (
+    <>
+      <ul style={{ display: "flex", flexDirection: "column", gap: 12, listStyle: "none", padding: 0, margin: "0 0 20px" }}>
+        <li>
+          <a href={`mailto:${FOOTER_DATA.email}`}
+            style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: T.muted, textDecoration: "none", transition: "color 0.2s", wordBreak: "break-all" as const }}
+            onMouseEnter={e => (e.currentTarget.style.color = T.text)} onMouseLeave={e => (e.currentTarget.style.color = T.muted)}>
+            <MailIcon size={13} />{FOOTER_DATA.email}
+          </a>
+        </li>
+        <li style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: T.muted }}>
+          <MapPinIcon size={13} />{FOOTER_DATA.location}
+        </li>
+      </ul>
+      <motion.a href="#s9"
+        whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+        style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 16px", borderRadius: 10, background: T.accentDim, border: `1px solid rgba(153,68,255,0.28)`, color: T.accentLt, fontSize: 13, fontWeight: 600, textDecoration: "none", transition: "background 0.2s, border-color 0.2s" }}
+        onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(102,0,255,0.20)"; el.style.borderColor = "rgba(153,68,255,0.50)" }}
+        onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = T.accentDim; el.style.borderColor = "rgba(153,68,255,0.28)" }}
+      >
+        Prenota una Call <ArrowRightIcon size={12} />
+      </motion.a>
+    </>
+  )
+
   return (
-    <footer style={{ background: FC.bg, borderTop: `1px solid ${FC.border}` }}>
-      <div style={{ height: 1, background: `linear-gradient(90deg, transparent 0%, ${FC.accent}88 25%, ${FC.gold}66 75%, transparent 100%)` }} />
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "72px 32px 40px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "48px 32px", marginBottom: 56 }}>
-          {/* Brand */}
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
-                <defs><linearGradient id="fs-grad" x1="0" y1="0" x2="20" y2="20" gradientUnits="userSpaceOnUse"><stop stopColor="#7C3AED"/><stop offset="1" stopColor="#D4AF37"/></linearGradient></defs>
-                <path d="M10 0.5C9.4 5.4 5.4 9.4 0.5 10C5.4 10.6 9.4 14.6 10 19.5C10.6 14.6 14.6 10.6 19.5 10C14.6 9.4 10.6 5.4 10 0.5Z" fill="url(#fs-grad)"/>
-              </svg>
-              <span style={{ fontSize: "1rem", fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase", color: FC.text }}>{FOOTER_DATA.name}</span>
+    <footer style={{ background: T.bg, borderTop: `1px solid ${T.border}`, position: "relative", overflow: "hidden" }}>
+      {/* top purple accent line */}
+      <div style={{ height: 1, background: `linear-gradient(90deg, transparent 0%, ${T.accent}70 25%, ${T.accentLt}60 75%, transparent 100%)` }} />
+
+      {/* ambient orb */}
+      <div aria-hidden style={{ position: "absolute", bottom: -80, left: "35%", width: 600, height: 300, borderRadius: "50%", background: "radial-gradient(ellipse, rgba(102,0,255,0.06) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
+
+      <div style={{ ...WRAP, padding: "64px 32px 40px" }}>
+
+        {/* grid: brand + 3 sections */}
+        <div className="hp-footer-grid" style={{ display: "grid", gridTemplateColumns: "1.8fr 1fr 1fr 1fr", gap: "0 48px", marginBottom: 52 }}>
+
+          {/* Brand — always visible, no accordion */}
+          <div className="hp-footer-brand">
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <Logo3D onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} />
+              <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.01em", color: T.text }}>Nadia Maar</span>
             </div>
-            <p style={{ fontSize: 13, color: FC.muted, lineHeight: 1.75, maxWidth: 230, marginBottom: 24 }}>{FOOTER_DATA.tagline}</p>
+            <p style={{ fontSize: 13, color: T.muted, lineHeight: 1.78, maxWidth: 250, marginBottom: 28 }}>
+              Architetture digitali ad alte prestazioni. E-commerce, AI e Performance Marketing — da un'unica mente strategica.
+            </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {FOOTER_DATA.socials.map(({ Icon, label, href }) => (
                 <FooterSocialBtn key={label} href={href} label={label}><Icon /></FooterSocialBtn>
               ))}
             </div>
           </div>
-          {/* Services + Nav grouped */}
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-            <FooterAccordion title="Servizi">
-              <ul style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {FOOTER_DATA.services.map(({ label, href }) => <li key={label}><FooterLink href={href}>{label}</FooterLink></li>)}
-              </ul>
-            </FooterAccordion>
-            <FooterAccordion title="Esplora">
-              <ul style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {FOOTER_DATA.nav.map(({ label, href }) => <li key={label}><FooterLink href={href}>{label}</FooterLink></li>)}
-              </ul>
-            </FooterAccordion>
-          </div>
-          {/* Contact */}
-          <div>
-            <FooterColHeader>Contatto</FooterColHeader>
-            <ul style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 24 }}>
-              <li>
-                <a href={`mailto:${FOOTER_DATA.email}`} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: FC.dimLink, textDecoration: "none", transition: "color 0.18s" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = FC.text)} onMouseLeave={e => (e.currentTarget.style.color = FC.dimLink)}>
-                  <MailIcon size={13} /><span style={{ wordBreak: "break-all" }}>{FOOTER_DATA.email}</span>
-                </a>
-              </li>
-              <li style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: FC.dimLink }}>
-                <MapPinIcon size={13} /><span>{FOOTER_DATA.location}</span>
-              </li>
+
+          {/* Soluzioni */}
+          <FooterSection title="Soluzioni">
+            <ul style={{ display: "flex", flexDirection: "column", gap: 12, listStyle: "none", padding: 0, margin: 0 }}>
+              {FOOT_SVC.map(({ label, href }) => <li key={label}><FooterLink href={href}>{label}</FooterLink></li>)}
             </ul>
-            <motion.a href={FOOTER_DATA.contactUrl} whileHover={{ scale: 1.03, y: -1 }} whileTap={{ scale: 0.97 }}
-              style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 16px", borderRadius: 10, background: "linear-gradient(135deg, rgba(124,58,237,0.22), rgba(212,175,55,0.10))", border: `1px solid ${FC.accentBd}`, color: FC.text, fontSize: 13, fontWeight: 500, textDecoration: "none", transition: "border-color 0.2s, background 0.2s" }}>
-              {FOOTER_DATA.contactCtaLabel}<ArrowRightIcon size={13} />
-            </motion.a>
-          </div>
+          </FooterSection>
+
+          {/* Navigazione */}
+          <FooterSection title="Navigazione">
+            <ul style={{ display: "flex", flexDirection: "column", gap: 12, listStyle: "none", padding: 0, margin: 0 }}>
+              {FOOT_NAV.map(({ label, href }) => <li key={label}><FooterLink href={href}>{label}</FooterLink></li>)}
+            </ul>
+          </FooterSection>
+
+          {/* Contatto */}
+          <FooterSection title="Contatto">
+            {FOOT_CONTACT}
+          </FooterSection>
         </div>
-        <div style={{ borderTop: `1px solid ${FC.border}`, paddingTop: 24, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-          <p style={{ fontSize: 11, color: FC.muted }}>{FOOTER_DATA.copyright}</p>
+
+        {/* bottom bar */}
+        <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 24, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <p style={{ fontSize: 11, color: T.faint, margin: 0 }}>{FOOTER_DATA.copyright}</p>
           <div style={{ display: "flex", gap: 20 }}>
-            <a href="#" style={{ fontSize: 11, color: "rgba(161,161,170,0.6)", textDecoration: "none" }} onMouseEnter={e => (e.currentTarget.style.color = FC.muted)} onMouseLeave={e => (e.currentTarget.style.color = "rgba(161,161,170,0.6)")}>Privacy Policy</a>
-            <a href="#" style={{ fontSize: 11, color: "rgba(161,161,170,0.6)", textDecoration: "none" }} onMouseEnter={e => (e.currentTarget.style.color = FC.muted)} onMouseLeave={e => (e.currentTarget.style.color = "rgba(161,161,170,0.6)")}>Cookie Policy</a>
+            {["Privacy Policy", "Cookie Policy"].map(l => (
+              <a key={l} href="#" style={{ fontSize: 11, color: T.faint, textDecoration: "none", transition: "color 0.2s" }}
+                onMouseEnter={e => (e.currentTarget.style.color = T.muted)} onMouseLeave={e => (e.currentTarget.style.color = T.faint)}>{l}</a>
+            ))}
           </div>
         </div>
       </div>
@@ -1885,13 +2672,13 @@ export default function NadiaMaar() {
       <Navbar />
       <div style={{ position: "relative", zIndex: 1, paddingTop: 64 }}>
         <Hero />
-        <SkillsCardsGrid />
-        <Skills />
+        <SoluzioniMatrix />
+        <DiagnosiBlock />
         <AllInOne />
+        <RisultatiBlock />
+        <TechBlock />
         <Method />
-        <Portfolio />
         <Scarcity />
-        <FAQ />
         <Contact />
         <SiteFooter />
       </div>
