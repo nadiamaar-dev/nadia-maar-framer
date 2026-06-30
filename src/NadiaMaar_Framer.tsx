@@ -89,11 +89,16 @@ const DiscordIcon = () => (
    GLOBAL CSS
 ══════════════════════════════════════════════════════════════════════════ */
 const GLOBAL_CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+  p, li { font-weight: 300; line-height: 1.75; }
+  button, a[role="button"], .rainbow-btn { font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; }
   ::placeholder { color: rgba(242,242,252,0.22) !important; }
   ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: #05050a; }
+  ::-webkit-scrollbar-track { background: #060608; }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); border-radius: 4px; }
   html { scroll-behavior: smooth; }
 
@@ -106,7 +111,7 @@ const GLOBAL_CSS = `
     background-image: radial-gradient(
       var(--spotlight-size) var(--spotlight-size) at
       calc(var(--x,-9999) * 1px) calc(var(--y,-9999) * 1px),
-      hsl(var(--hue) 100% 70% / var(--bg-spot-opacity,0.06)),
+      hsl(var(--hue) 100% 70% / var(--bg-spot-opacity,0.035)),
       transparent
     );
     background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
@@ -138,7 +143,7 @@ const GLOBAL_CSS = `
     background-image: radial-gradient(
       calc(var(--spotlight-size) * 0.7) calc(var(--spotlight-size) * 0.7) at
       calc(var(--x,-9999) * 1px) calc(var(--y,-9999) * 1px),
-      hsl(var(--hue) 100% 55% / var(--border-spot-opacity,0.9)),
+      hsl(var(--hue) 100% 55% / var(--border-spot-opacity,0.50)),
       transparent 100%
     );
     filter: brightness(2);
@@ -148,7 +153,7 @@ const GLOBAL_CSS = `
     background-image: radial-gradient(
       calc(var(--spotlight-size) * 0.4) calc(var(--spotlight-size) * 0.4) at
       calc(var(--x,-9999) * 1px) calc(var(--y,-9999) * 1px),
-      hsl(0 100% 100% / var(--border-light-opacity,0.45)),
+      hsl(0 100% 100% / var(--border-light-opacity,0.22)),
       transparent 100%
     );
   }
@@ -212,24 +217,25 @@ const GLOBAL_CSS = `
     .hp-grid-2 { grid-template-columns: 1fr !important; gap: 40px !important; }
     .hp-grid-3 { grid-template-columns: 1fr !important; gap: 16px !important; }
     .hp-skills-grid { grid-template-columns: 1fr !important; }
-    .hp-wrap { padding: 0 20px !important; }
-    .hp-sec { padding: 80px 0 !important; }
+    .hp-wrap { padding: 0 20px !important; overflow-x: hidden; }
+    .hp-sec { padding: 56px 0 !important; }
     .hp-hero { padding: 48px 0 !important; min-height: auto !important; }
     .hp-nav-desktop { display: none !important; }
     .hp-nav-burger { display: flex !important; }
     .hp-brand-text  { display: none !important; }
-    .hp-datetime    { padding: 5px 11px !important; gap: 7px !important; }
+    .hp-datetime    { padding: 5px 11px !important; gap: 7px !important; display: none !important; }
     .hp-dt-date     { font-size: 9.5px !important; letter-spacing: 0.03em !important; }
     .hp-dt-time     { font-size: 11px !important; }
-    .hp-hero-ctas { flex-wrap: wrap !important; align-items: flex-start !important; }
-    .hp-hero-primary-btn { flex: 0 0 100% !important; }
-    .hp-hero-sep { display: none !important; }
+    .hp-hero-ctas-wrap { flex-direction: column !important; align-items: flex-start !important; gap: 14px !important; }
+    .hp-hero-ctas { flex-wrap: nowrap !important; align-items: center !important; gap: 6px !important; }
+    .hp-hero-primary-btn { flex: 0 0 auto !important; }
     .hp-hero-social-icons { width: 100% !important; justify-content: center !important; }
     .hp-hero-stats { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; margin-top: 24px !important; }
     .hp-hero-stat-item { padding: 12px 14px !important; gap: 8px !important; }
     .hp-hero-stat-value { font-size: 17px !important; }
     .hp-hero-stat-label { font-size: 10px !important; }
     .hp-method-grid { grid-template-columns: 1fr !important; }
+    .hp-method-timeline { overflow-x: auto; padding-bottom: 8px; }
     .hp-method-content { padding: 16px 16px !important; }
     .hp-method-num { font-size: 28px !important; margin-bottom: 8px !important; }
     .hp-method-title { font-size: 14px !important; margin-bottom: 8px !important; }
@@ -238,8 +244,26 @@ const GLOBAL_CSS = `
     .hp-method-nav { flex-wrap: wrap !important; }
     .hp-method-nav > button { flex: 0 0 calc(50% - 4px) !important; padding: 10px 12px !important; font-size: 11px !important; }
     .hp-skillcards { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
-    .hp-soluzioni-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+    .hp-soluzioni-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+    .hp-soluzioni-grid > div:nth-child(n) { grid-column: 1 / -1 !important; }
+    .hp-sol-card { flex-direction: row !important; align-items: flex-start !important; padding: 18px !important; }
+    .hp-sol-card-head { flex-direction: column !important; align-items: center !important; justify-content: flex-start !important; margin-bottom: 0 !important; margin-right: 16px !important; gap: 8px !important; flex-shrink: 0 !important; width: 46px !important; }
+    .hp-sol-card-num { display: none !important; }
+    .hp-sol-card-body { flex: 1 !important; }
+    .hp-sol-card-title { font-size: 15px !important; margin-bottom: 8px !important; }
+    .hp-sol-card-desc { font-size: 13px !important; margin-bottom: 14px !important; }
     .hp-diagnosi-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+    .hp-allinone-desktop { display: none !important; }
+    .hp-allinone-mobile { display: block !important; }
+    .hp-tech-card { padding: 10px 12px !important; border-radius: 10px !important; }
+    .hp-tc-top { margin-bottom: 0 !important; }
+    .hp-tc-metric { font-size: 15px !important; }
+    .hp-tc-icon { width: 24px !important; height: 24px !important; border-radius: 6px !important; }
+    .hp-tc-icon svg { width: 12px !important; height: 12px !important; }
+    .hp-tc-title { font-size: 11px !important; margin-bottom: 2px !important; }
+    .hp-tc-body { font-size: 10.5px !important; margin-bottom: 8px !important; line-height: 1.5 !important; }
+    .hp-tc-score > div:first-child { margin-bottom: 3px !important; }
+    .hp-grid-3 { gap: 7px !important; }
     .hp-purche-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
     .hp-tech-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
     .hp-contact-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
@@ -249,14 +273,27 @@ const GLOBAL_CSS = `
     .hp-risultati-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
     .hp-risultati-grid > div { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.07); padding: 28px 0 !important; }
     .hp-risultati-grid > div:last-child { border-bottom: none; }
-    .hp-soluzioni-grid > div:nth-child(1),
-    .hp-soluzioni-grid > div:nth-child(2),
-    .hp-soluzioni-grid > div:nth-child(3),
-    .hp-soluzioni-grid > div:nth-child(4) { grid-column: span 1 !important; }
-    .hp-soluzioni-grid > div:nth-child(5) { grid-column: 1 / -1 !important; }
+    .hp-risultati-row { gap: 10px 0 !important; flex-direction: column !important; align-items: center !important; text-align: center; }
+    .hp-risultati-item { gap: 5px !important; align-items: baseline; }
+    .hp-risultati-value { font-size: 18px !important; }
+    .hp-risultati-label { font-size: 11px !important; }
+    .hp-risultati-sep { display: none !important; }
     .hp-skillcard  { padding: 14px !important; aspect-ratio: auto !important; }
     .hp-skillcard h3 { font-size: 12px !important; }
     .hp-skillcard-icon { width: 30px !important; height: 30px !important; border-radius: 8px !important; }
+  }
+
+  @media (max-width: 800px) {
+    .hp-hero-badge { max-width: 100%; padding: 6px 13px 6px 10px !important; flex-wrap: wrap; }
+    .hp-hero-badge-text { white-space: normal !important; letter-spacing: 0.09em !important; font-size: 9px !important; line-height: 1.55; }
+  }
+
+  @media (max-width: 480px) {
+    .hp-hero-badge-text { letter-spacing: 0.06em !important; font-size: 8.5px !important; }
+    .hp-hero-stats { gap: 8px !important; }
+    .hp-hero-stat-item { padding: 10px 12px !important; }
+    .hp-hero-stat-value { font-size: 15px !important; }
+    .hp-hero-stat-label { font-size: 9px !important; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -265,21 +302,23 @@ const GLOBAL_CSS = `
       transition-duration: 0.01ms !important;
     }
   }
+
+  html, body { overflow-x: hidden; max-width: 100%; }
 `
 
 /* ══════════════════════════════════════════════════════════════════════════
    DESIGN TOKENS
 ══════════════════════════════════════════════════════════════════════════ */
 const T = {
-  bg:        "#05050a",
-  bg2:       "#080810",
-  surface:   "#0e0e1a",
-  raised:    "#14142a",
-  border:    "rgba(255,255,255,0.07)",
-  borderHi:  "rgba(102,0,255,0.45)",
-  text:      "#f2f2fa",
-  muted:     "rgba(242,242,250,0.50)",
-  faint:     "rgba(242,242,250,0.22)",
+  bg:        "#0A0A0B",
+  bg2:       "#0E0E0F",
+  surface:   "#141415",
+  raised:    "#1C1C1D",
+  border:    "rgba(255,255,255,0.08)",
+  borderHi:  "rgba(180,180,190,0.35)",
+  text:      "#FFFFFF",
+  muted:     "rgba(255,255,255,0.68)",
+  faint:     "rgba(255,255,255,0.38)",
   accent:    "#6600FF",
   accentDim: "rgba(102,0,255,0.12)",
   accentGlo: "rgba(102,0,255,0.30)",
@@ -289,9 +328,21 @@ const T = {
 } as const
 
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1]
+const MONO = "'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace"
+/* Glass card system */
+const G = {
+  bg:     "rgba(255,255,255,0.07)",
+  bgHov:  "rgba(255,255,255,0.12)",
+  bd:     "rgba(255,255,255,0.24)",
+  bdHov:  "rgba(255,255,255,0.40)",
+  blur:   "blur(24px) saturate(1.8)",
+  shadow: "0 8px 32px 0 rgba(0,0,0,0.50), inset 0 1px 0 rgba(255,255,255,0.30)",
+  shadowHov: "0 16px 48px 0 rgba(0,0,0,0.60), inset 0 1px 0 rgba(255,255,255,0.36)",
+} as const
+const MONO_STYLE: React.CSSProperties = { fontFamily: MONO, letterSpacing: "0.14em", textTransform: "uppercase", fontSize: 12, fontWeight: 500 }
 
 const WRAP: React.CSSProperties = { maxWidth: 1120, margin: "0 auto", padding: "0 32px" }
-const SEC: React.CSSProperties  = { padding: "120px 0", position: "relative" }
+const SEC: React.CSSProperties  = { padding: "80px 0", position: "relative" }
 
 /* ══════════════════════════════════════════════════════════════════════════
    SHARED PRIMITIVES
@@ -331,9 +382,20 @@ function Tag({ text, size }: { text: string; size?: "sm" }) {
 
 function Label({ text }: { text: string }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 26 }}>
-      <span style={{ width: 32, height: 1, background: T.accent, flexShrink: 0 }} />
-      <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: T.accentLt }}>{text}</span>
+    <div style={{ display: "inline-flex", alignItems: "center", marginBottom: 20 }}>
+      <span style={{
+        display: "inline-flex", alignItems: "center", gap: 10,
+        padding: "7px 16px 7px 12px",
+        borderRadius: 9999,
+        background: G.bg,
+        backdropFilter: G.blur,
+        WebkitBackdropFilter: G.blur,
+        border: `1px solid ${G.bd}`,
+        boxShadow: "0 2px 16px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.10)",
+      }}>
+        <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.accentLt, flexShrink: 0, boxShadow: `0 0 8px ${T.accentLt}` }} />
+        <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: T.text, whiteSpace: "nowrap" as const }}>{text}</span>
+      </span>
     </div>
   )
 }
@@ -343,18 +405,19 @@ function Btn({ children, primary: _primary, small, type = "button", onClick }: {
 }) {
   return (
     <motion.button type={type} onClick={onClick} className="rainbow-btn"
-      whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.02, opacity: 0.92 }} whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 400, damping: 20 }}
       style={{
-        position: "relative", padding: small ? "9px 20px" : "16px 34px",
-        borderRadius: small ? 9 : 12, fontSize: small ? 13 : 15, fontWeight: 600,
-        cursor: "pointer", letterSpacing: "0.01em", fontFamily: "inherit", border: "none",
-        background: "rgba(255,255,255,0.06)", backdropFilter: "blur(24px) saturate(1.3)",
+        position: "relative", padding: small ? "8px 20px" : "13px 30px",
+        borderRadius: 9999, fontSize: 12, fontWeight: 500,
+        cursor: "pointer", letterSpacing: "0.14em", textTransform: "uppercase" as const,
+        fontFamily: MONO, border: "1px solid rgba(255,255,255,0.12)",
+        background: "rgba(255,255,255,0.05)", backdropFilter: "blur(24px) saturate(1.3)",
         WebkitBackdropFilter: "blur(24px) saturate(1.3)",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.09), 0 2px 10px rgba(0,0,0,0.18)",
-        color: T.text, transition: "transform 0.15s",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 12px rgba(0,0,0,0.20)",
+        color: T.text, transition: "opacity 0.2s",
       } as React.CSSProperties}
     >
-      <span aria-hidden style={{ position: "absolute", top: 0, left: "12%", right: "12%", height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent)", pointerEvents: "none" }} />
       <span style={{ position: "relative", zIndex: 1 }}>{children}</span>
     </motion.button>
   )
@@ -379,13 +442,14 @@ function GlassCard({ children, padding = "36px 30px", radius = 16, height = "100
       style={{
         '--base': '220', '--spread': '140', '--radius': String(radius), '--border': '1.5', '--size': '270',
         position: "relative",
-        backgroundColor: h ? "rgba(255,255,255,0.055)" : "rgba(255,255,255,0.026)",
-        backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)",
-        border: `1px solid ${h ? "rgba(255,255,255,0.13)" : "rgba(255,255,255,0.07)"}`,
+        backgroundColor: h ? G.bgHov : G.bg,
+        backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
+        borderTop: `1px solid ${h ? "rgba(255,255,255,0.60)" : "rgba(255,255,255,0.50)"}`,
+        borderRight: `1px solid ${h ? "rgba(255,255,255,0.32)" : "rgba(255,255,255,0.24)"}`,
+        borderBottom: `1px solid ${h ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.12)"}`,
+        borderLeft: `1px solid ${h ? "rgba(255,255,255,0.32)" : "rgba(255,255,255,0.24)"}`,
         borderRadius: radius, padding, height, cursor: onClick ? "pointer" : "default",
-        boxShadow: h
-          ? "0 22px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(102,0,255,0.13), inset 0 1px 0 rgba(255,255,255,0.10)"
-          : "0 4px 20px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.05)",
+        boxShadow: h ? G.shadowHov : G.shadow,
         transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s",
       } as React.CSSProperties}
     >
@@ -408,26 +472,28 @@ function HeroStat({ value, label, index }: { value: string; label: string; index
   return (
     <motion.div
       className="hp-hero-stat-item"
+      data-glow=""
       animate={{ y: [0, index % 2 === 0 ? -5 : -7, 0] }}
       transition={{ duration: 3.2 + index * 0.38, repeat: Infinity, ease: "easeInOut", delay: index * 0.55 }}
       whileHover={{ scale: 1.05 }}
       style={{
+        '--base': '220', '--spread': '90', '--radius': '16', '--border': '1', '--size': '200',
         padding: "18px 16px 15px",
         borderRadius: 16, cursor: "default", position: "relative",
         display: "flex", flexDirection: "column", gap: 10,
-        background: "rgba(255,255,255,0.04)",
-        backdropFilter: "blur(16px) saturate(120%)", WebkitBackdropFilter: "blur(16px) saturate(120%)",
-        border: "1px solid rgba(255,255,255,0.08)",
-        boxShadow: "0 8px 32px 0 rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)",
+        backgroundColor: "rgba(255,255,255,0.07)",
+        backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)",
+        borderTop: "1px solid rgba(255,255,255,0.50)",
+        borderRight: "1px solid rgba(255,255,255,0.24)",
+        borderBottom: "1px solid rgba(255,255,255,0.12)",
+        borderLeft: "1px solid rgba(255,255,255,0.24)",
+        boxShadow: "0 8px 32px 0 rgba(0,0,0,0.50), inset 0 1px 0 rgba(255,255,255,0.30)",
       } as React.CSSProperties}
     >
-      <span className="hp-hero-stat-value" style={{ fontSize: 28, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", background: "linear-gradient(135deg, #BF5FFF 0%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" } as React.CSSProperties}>
+      <span className="hp-hero-stat-value" style={{ fontFamily: MONO, fontSize: 26, fontWeight: 700, lineHeight: 1, letterSpacing: "0.08em", color: "#FFFFFF", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale" } as React.CSSProperties}>
         {value}
       </span>
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 4 }}>
-        <span className="hp-hero-stat-label" style={{ fontSize: 9, color: "rgba(242,242,250,0.42)", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, lineHeight: 1.4 }}>{label}</span>
-        <span style={{ fontSize: 9, color: "rgba(242,242,250,0.20)", fontWeight: 600, letterSpacing: "0.06em", fontFamily: "'SF Mono','Fira Code','Consolas',monospace", lineHeight: 1, flexShrink: 0 }}>{String(index + 1).padStart(2, "0")}</span>
-      </div>
+      <span className="hp-hero-stat-label" style={{ fontFamily: MONO, fontSize: 10, color: "rgba(226,232,240,0.82)", fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase" as const, lineHeight: 1.4, WebkitFontSmoothing: "antialiased" } as React.CSSProperties}>{label}</span>
     </motion.div>
   )
 }
@@ -444,90 +510,164 @@ const HERO_SOCIALS = [
 ══════════════════════════════════════════════════════════════════════════ */
 function Hero() {
   return (
-    <section style={{ ...SEC, minHeight: 860, display: "flex", alignItems: "center", overflow: "hidden" }} id="s1" className="hp-sec hp-hero">
+    <section style={{ ...SEC, minHeight: 740, display: "flex", alignItems: "center", overflow: "hidden" }} id="s1" className="hp-sec hp-hero">
       {/* Orb 1 — purple, multi-axis animated */}
       <motion.div aria-hidden
         animate={{ x: [0, 60, -40, 70, 0], y: [0, -80, 60, -50, 0], scale: [1, 1.15, 0.9, 1.08, 1] }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-        style={{ position: "absolute", top: "5%", left: "32%", width: 720, height: 720, borderRadius: "50%", background: "radial-gradient(circle, rgba(147,51,234,0.15) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }}
+        style={{ position: "absolute", top: "5%", left: "32%", width: 720, height: 720, borderRadius: "50%", background: "radial-gradient(circle, rgba(90,90,100,0.18) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }}
       />
       {/* Orb 2 — pink, desynchronized loop */}
       <motion.div aria-hidden
         animate={{ x: [0, -50, 80, -60, 0], y: [0, 70, -60, 80, 0], scale: [1, 0.85, 1.2, 0.92, 1] }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 5 }}
-        style={{ position: "absolute", top: "25%", right: "-2%", width: 540, height: 540, borderRadius: "50%", background: "radial-gradient(circle, rgba(219,39,119,0.10) 0%, transparent 70%)", filter: "blur(72px)", pointerEvents: "none" }}
+        style={{ position: "absolute", top: "25%", right: "-2%", width: 540, height: 540, borderRadius: "50%", background: "radial-gradient(circle, rgba(70,70,78,0.14) 0%, transparent 70%)", filter: "blur(72px)", pointerEvents: "none" }}
       />
 
       <div style={{ ...WRAP, position: "relative", zIndex: 1 }} className="hp-wrap">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
-          <Label text="DEVELOPMENT · AI AUTOMATION · PERFORMANCE MARKETING" />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease }}
+          style={{ marginBottom: 26 }}
+        >
+          <div className="hp-hero-badge" style={{
+            display: "inline-flex", alignItems: "center", gap: 10,
+            padding: "8px 18px 8px 14px",
+            borderRadius: 9999,
+            background: "rgba(255,255,255,0.18)",
+            backdropFilter: "blur(24px) saturate(1.8)",
+            WebkitBackdropFilter: "blur(24px) saturate(1.8)",
+            borderTop: "1px solid rgba(255,255,255,0.50)",
+            borderRight: "1px solid rgba(255,255,255,0.24)",
+            borderBottom: "1px solid rgba(255,255,255,0.12)",
+            borderLeft: "1px solid rgba(255,255,255,0.24)",
+            boxShadow: "0 8px 32px 0 rgba(0,0,0,0.50), inset 0 1px 0 rgba(255,255,255,0.30)",
+          }}>
+            <PingDot color={T.accentLt} size={7} />
+            <span className="hp-hero-badge-text" style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: T.text, whiteSpace: "nowrap" as const }}>
+              DEVELOPMENT · AI AUTOMATION · PERFORMANCE MARKETING
+            </span>
+          </div>
         </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.1, ease }}
-          style={{ fontSize: "clamp(38px, 5.2vw, 68px)", fontWeight: 800, lineHeight: 1.06, letterSpacing: "-0.036em", margin: "0 0 28px", maxWidth: 760 }}
+        {/* floating wrapper — slow hover loop, separate from entrance */}
+        <motion.div
+          animate={{ y: [0, -7, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
+          style={{ margin: "0 0 28px", display: "inline-block" }}
         >
-          E-commerce Architect{" & "}
-          <span style={{ background: "linear-gradient(95deg, #BF5FFF 0%, #F0ABFC 50%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
-            Digital Strategist
-          </span>
-        </motion.h1>
+          <motion.h1
+            initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.1, ease }}
+            style={{
+              fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+              fontSize: "clamp(28px, 5.2vw, 72px)", fontWeight: 800,
+              lineHeight: 1.08, letterSpacing: "-0.03em", margin: 0, maxWidth: "100%", color: "#FFFFFF", fontWeight: 600,
+              filter: [
+                "drop-shadow(0 1px 0 rgba(140,60,255,0.55))",
+                "drop-shadow(0 2px 0 rgba(110,0,255,0.40))",
+                "drop-shadow(0 4px 0 rgba(80,0,200,0.28))",
+                "drop-shadow(0 6px 0 rgba(60,0,160,0.18))",
+                "drop-shadow(0 10px 20px rgba(0,0,0,0.65))",
+                "drop-shadow(0 24px 40px rgba(102,0,255,0.18))",
+              ].join(" "),
+            }}
+          >
+            E-commerce Architect{" & "}Digital Strategist
+          </motion.h1>
+        </motion.div>
 
         <motion.p
           initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.85, delay: 0.22, ease }}
-          style={{ fontSize: "clamp(15px, 1.4vw, 18px)", color: T.muted, maxWidth: 580, lineHeight: 1.82, margin: "0 0 40px" }}
+          style={{ fontSize: "clamp(15px, 1.4vw, 18px)", color: "rgb(244,244,250)", fontWeight: 300, maxWidth: 580, lineHeight: 1.85, margin: "0 0 40px", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale" } as React.CSSProperties}
         >
-          E-commerce, Web Apps, AI e Performance Marketing. Un'unica mente strategica e codice ad alte prestazioni per il pieno controllo su{" "}
-          <strong style={{ color: T.text, fontWeight: 700 }}>advertising, promozione</strong> e{" "}
-          <strong style={{ color: T.text, fontWeight: 700 }}>scalabilità del tuo business</strong>.
+          E-commerce, Web Apps, AI e Performance Marketing. Un'unica mente strategica e codice ad alte prestazioni per il pieno controllo su advertising, promozione e scalabilità del tuo business.
         </motion.p>
 
         {/* CTA + social icons */}
+        {/* ── CTA wrapper: desktop = row, mobile = column ── */}
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.36, ease }}
+          className="hp-hero-ctas-wrap"
+          style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 16, flexWrap: "wrap", marginBottom: 0 }}
+        >
+
+        {/* ── Buttons row ── */}
+        <div
           className="hp-hero-ctas"
-          style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}
+          style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "nowrap" }}
         >
           <motion.button
             className="rainbow-btn hp-hero-primary-btn"
-            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            onClick={() => document.getElementById("s9")?.scrollIntoView({ behavior: "smooth" })}
+            whileHover={{ scale: 1.02, opacity: 0.90 }} whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             style={{
-              position: "relative", padding: "16px 34px", borderRadius: 12, fontSize: 15, fontWeight: 600,
-              cursor: "pointer", letterSpacing: "0.01em", fontFamily: "inherit", border: "none",
-              background: "rgba(255,255,255,0.06)", backdropFilter: "blur(24px) saturate(1.3)",
+              position: "relative", padding: "13px 34px", borderRadius: 9999, fontSize: 12, fontWeight: 500,
+              cursor: "pointer", letterSpacing: "0.14em", textTransform: "uppercase" as const,
+              fontFamily: MONO, border: "1px solid rgba(255,255,255,0.14)",
+              background: "rgba(255,255,255,0.05)", backdropFilter: "blur(24px) saturate(1.3)",
               WebkitBackdropFilter: "blur(24px) saturate(1.3)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.09), 0 2px 10px rgba(0,0,0,0.18)",
-              color: T.text,
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 14px rgba(0,0,0,0.25)",
+              color: T.text, flexShrink: 0,
             } as React.CSSProperties}
           >
-            <span aria-hidden style={{ position: "absolute", top: 0, left: "12%", right: "12%", height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent)", pointerEvents: "none" }} />
             <span style={{ position: "relative", zIndex: 1 }}>Avvia il tuo Progetto</span>
           </motion.button>
 
-          <span className="hp-hero-sep" style={{ width: 1, height: 36, background: "rgba(255,255,255,0.10)", flexShrink: 0 }} />
+          <motion.a
+            href="/about"
+            whileHover={{ scale: 1.02, x: 2 }} whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              padding: "13px 24px", borderRadius: 9999, fontSize: 12, fontWeight: 500,
+              cursor: "pointer", letterSpacing: "0.14em", textTransform: "uppercase" as const,
+              fontFamily: MONO, border: "none", background: "none",
+              color: T.muted, textDecoration: "none", flexShrink: 0,
+              transition: "color 0.22s",
+            } as React.CSSProperties}
+            onMouseEnter={e => (e.currentTarget.style.color = T.text)}
+            onMouseLeave={e => (e.currentTarget.style.color = T.muted)}
+          >
+            About Me
+            <motion.span
+              animate={{ x: [0, 3, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              style={{ display: "inline-flex" }}
+            >
+              <ArrowRightIcon size={12} />
+            </motion.span>
+          </motion.a>
+        </div>
 
-          <div className="hp-hero-social-icons" style={{ display: "flex", gap: 10 }}>
-            {HERO_SOCIALS.map(({ Icon, href, label }) => (
-              <motion.a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                whileHover={{ scale: 1.1, backgroundColor: "rgba(102,0,255,0.14)" }}
-                whileTap={{ scale: 0.92 }}
-                transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                style={{
-                  width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center",
-                  justifyContent: "center", color: T.muted, border: "1px solid rgba(255,255,255,0.09)",
-                  backgroundColor: "rgba(255,255,255,0.04)", backdropFilter: "blur(8px)",
-                  WebkitBackdropFilter: "blur(8px)", textDecoration: "none", flexShrink: 0,
-                } as React.CSSProperties}
-              >
-                <Icon />
-              </motion.a>
-            ))}
-          </div>
-        </motion.div>
+        {/* ── Social icons ── */}
+        <div
+          className="hp-hero-social-icons"
+          style={{ display: "flex", gap: 8 }}
+        >
+          {HERO_SOCIALS.map(({ Icon, href, label }) => (
+            <motion.a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+              data-glow=""
+              whileHover={{ scale: 1.1, backgroundColor: "rgba(102,0,255,0.14)" }}
+              whileTap={{ scale: 0.92 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              style={{
+                '--base': '220', '--spread': '90', '--radius': '12', '--border': '1', '--size': '160',
+                width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center",
+                justifyContent: "center", color: T.muted, border: `1px solid ${G.bd}`,
+                backgroundColor: G.bg, backdropFilter: G.blur,
+                WebkitBackdropFilter: G.blur, textDecoration: "none", flexShrink: 0,
+              } as React.CSSProperties}
+            >
+              <Icon />
+            </motion.a>
+          ))}
+        </div>
+
+        </motion.div>{/* end hp-hero-ctas-wrap */}
 
         {/* Stats row — 4 cols desktop / 2×2 mobile */}
         <motion.div
@@ -558,11 +698,52 @@ const ADVANTAGES = [
 
 function AdvCard({ n, title, body }: { n: string; title: string; body: string }) {
   return (
-    <GlassCard>
-      <div style={{ fontSize: 42, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", marginBottom: 24, background: `linear-gradient(135deg, ${T.accent}60, ${T.accentLt}28)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" } as React.CSSProperties}>{n}</div>
-      <h3 style={{ fontSize: 18, fontWeight: 600, letterSpacing: "-0.015em", marginBottom: 14, color: T.text }}>{title}</h3>
-      <p style={{ fontSize: 15, color: T.muted, lineHeight: 1.8 }}>{body}</p>
+    <GlassCard padding="22px 22px" height="100%">
+      <div style={{ fontSize: 28, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", marginBottom: 14, color: "rgba(255,255,255,0.18)" }}>{n}</div>
+      <h3 style={{ fontSize: 14, fontWeight: 600, letterSpacing: "-0.012em", marginBottom: 8, color: T.text, lineHeight: 1.3 }}>{title}</h3>
+      <p style={{ fontSize: 13, color: T.muted, lineHeight: 1.75, margin: 0 }}>{body}</p>
     </GlassCard>
+  )
+}
+
+function AllInOne() {
+  return (
+    <section style={{ ...SEC, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s3" className="hp-sec">
+      <div style={WRAP} className="hp-wrap">
+        <Reveal>
+          <Label text="The All-In-One Advantage" />
+          <h2 style={{ fontSize: "clamp(26px, 3.4vw, 44px)", fontWeight: 700, lineHeight: 1.13, letterSpacing: "-0.028em", marginBottom: 18, maxWidth: 720 }}>
+            Perché i brand lungimiranti scelgono un unico Partner Strategico?
+          </h2>
+          <p style={{ fontSize: 16, color: T.muted, lineHeight: 1.8, maxWidth: 680, marginBottom: 48 }}>
+            Gestire un business online oggi richiede uno sviluppatore, un designer, un esperto di automazioni API e un'agenzia di marketing. Risultato? Costi frammentati, problemi di comunicazione e ritardi continui. Ottieni tutto questo in un'unica soluzione integrata:
+          </p>
+        </Reveal>
+        {/* desktop: full-width 3-col grid */}
+        <div className="hp-allinone-desktop" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, paddingTop: 16, paddingBottom: 16, margin: "-16px 0" }}>
+          {ADVANTAGES.map((a, i) => (
+            <motion.div key={i}
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ duration: 0.55, delay: i * 0.10, ease }}
+            >
+              <AdvCard {...a} />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* mobile: horizontal scroll */}
+        <div className="hp-allinone-mobile" style={{ display: "none", marginLeft: -20, marginRight: -20, paddingLeft: 20, paddingRight: 20, overflowX: "auto", overflowY: "visible", WebkitOverflowScrolling: "touch" as any, scrollbarWidth: "none" as any, paddingTop: 16, paddingBottom: 16, marginTop: -16, marginBottom: -16 }}>
+          <style>{`.allinone-scroll::-webkit-scrollbar{display:none}`}</style>
+          <div className="allinone-scroll" style={{ display: "flex", gap: 14, width: "max-content" }}>
+            {ADVANTAGES.map((a, i) => (
+              <div key={i} style={{ width: 220, flexShrink: 0 }}>
+                <AdvCard {...a} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -576,47 +757,26 @@ const RISULTATI = [
 ]
 
 function RisultatiBlock() {
-  const track = [...RISULTATI, ...RISULTATI, ...RISULTATI, ...RISULTATI]
   const SEP = (
-    <span aria-hidden style={{ flexShrink: 0, width: 5, height: 5, borderRadius: "50%", background: "rgba(192,132,252,0.40)", margin: "0 40px", alignSelf: "center" }} />
+    <span aria-hidden style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(153,68,255,0.38)", flexShrink: 0 }} />
   )
   return (
-    <section style={{
-      position: "relative", overflow: "hidden",
-      background: "rgba(255,255,255,0.025)",
-      backdropFilter: "blur(20px) saturate(1.4)",
-      WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-      borderTop: "1px solid rgba(255,255,255,0.07)",
-      borderBottom: "1px solid rgba(255,255,255,0.07)",
-    }}>
-      {/* left fade */}
-      <div aria-hidden style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 140, background: `linear-gradient(90deg, ${T.bg} 0%, transparent 100%)`, zIndex: 2, pointerEvents: "none" }} />
-      {/* right fade */}
-      <div aria-hidden style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 140, background: `linear-gradient(-90deg, ${T.bg} 0%, transparent 100%)`, zIndex: 2, pointerEvents: "none" }} />
-
-      <motion.div
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-        style={{ display: "flex", alignItems: "center", padding: "28px 0", width: "max-content", willChange: "transform" }}
-      >
-        {track.map(({ value, symbol, label }, i) => (
+    <section style={{ padding: "36px 0" }}>
+      <div style={{ ...WRAP, display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap", gap: "14px 0" }} className="hp-wrap hp-risultati-row">
+        {RISULTATI.map(({ value, symbol, label }, i) => (
           <React.Fragment key={i}>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 6, flexShrink: 0 }}>
-              <span style={{
-                fontSize: 28, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em",
-                background: "linear-gradient(135deg, #BF5FFF 0%, #C084FC 100%)",
-                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-              } as React.CSSProperties}>
+            <div className="hp-risultati-item" style={{ display: "flex", alignItems: "baseline", gap: 7, flexShrink: 0 }}>
+              <span className="hp-risultati-value" style={{ fontSize: 26, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", color: T.text }}>
                 {value}{symbol}
               </span>
-              <span style={{ fontSize: 14, fontWeight: 500, color: "rgba(242,242,250,0.52)", letterSpacing: "0.01em", whiteSpace: "nowrap" as const }}>
+              <span className="hp-risultati-label" style={{ fontSize: 13, fontWeight: 400, color: T.muted, whiteSpace: "nowrap" as const }}>
                 {label}
               </span>
             </div>
-            {SEP}
+            {i < RISULTATI.length - 1 && <span className="hp-risultati-sep" style={{ margin: "0 28px" }}>{SEP}</span>}
           </React.Fragment>
         ))}
-      </motion.div>
+      </div>
     </section>
   )
 }
@@ -626,130 +786,161 @@ function RisultatiBlock() {
 ══════════════════════════════════════════════════════════════════════════ */
 const TECH_POINTS = [
   {
+    metric: "< 0.5s",
+    score: 96,
+    scoreLabel: "Performance",
     icon: (
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
       </svg>
     ),
-    title: "Caricamento in < 0.5 Secondi",
-    body: "Un sito istantaneo abbatte il tasso di abbandono degli utenti e aumenta drasticamente la conversione finale.",
+    title: "Caricamento Istantaneo",
+    body: "Un sito istantaneo abbatte il tasso di abbandono e aumenta drasticamente la conversione finale.",
+    color: "rgba(251,191,36,1)",
+    colorDim: "rgba(251,191,36,0.14)",
+    colorBd: "rgba(251,191,36,0.30)",
   },
   {
+    metric: "100/100",
+    score: 100,
+    scoreLabel: "Core Web Vitals",
     icon: (
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
       </svg>
     ),
-    title: "Core Web Vitals al 100%",
-    body: "Ottimizzazione nativa per i motori di ricerca. Google premia i siti tecnicamente perfetti, garantendoti un vantaggio competitivo immediato.",
+    title: "Core Web Vitals Perfetti",
+    body: "Google premia i siti tecnicamente perfetti. Vantaggio competitivo immediato sul posizionamento organico.",
+    color: T.accentLt,
+    colorDim: "rgba(153,68,255,0.14)",
+    colorBd: "rgba(153,68,255,0.32)",
   },
   {
+    metric: "99.9%",
+    score: 99,
+    scoreLabel: "Uptime",
     icon: (
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
       </svg>
     ),
-    title: "Infrastruttura Serverless Sicura",
-    body: "Nessun server da gestire, zero downtime durante i picchi di traffico e massima protezione contro le vulnerabilità informatiche.",
+    title: "Infrastruttura Serverless",
+    body: "Zero downtime durante i picchi di traffico e massima protezione contro le vulnerabilità informatiche.",
+    color: T.green,
+    colorDim: "rgba(34,197,94,0.12)",
+    colorBd: "rgba(34,197,94,0.28)",
   },
 ]
 
+function TechCard({ metric, score, scoreLabel, icon, title, body, color, colorDim, colorBd, index }: typeof TECH_POINTS[0] & { index: number }) {
+  const [hov, setHov] = useState(false)
+  const [inView, setInView] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true) }, { threshold: 0.4 })
+    if (ref.current) obs.observe(ref.current)
+    return () => obs.disconnect()
+  }, [])
+
+  return (
+    <motion.div ref={ref}
+      className="hp-tech-card"
+      initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.60, delay: index * 0.12, ease }}
+      onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
+      style={{
+        position: "relative", borderRadius: 20, padding: "28px 26px",
+        background: hov ? colorDim : G.bg,
+        backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
+        border: `1px solid ${hov ? colorBd : G.bd}`,
+        boxShadow: hov ? `0 16px 48px rgba(0,0,0,0.50), 0 0 0 1px ${colorBd}, inset 0 1px 0 rgba(255,255,255,0.12)` : G.shadow,
+        transition: "background 0.28s, border-color 0.28s, box-shadow 0.32s",
+        overflow: "hidden", cursor: "default",
+      } as React.CSSProperties}
+    >
+      {/* corner glow */}
+      <motion.div aria-hidden animate={{ opacity: hov ? 1 : 0 }} transition={{ duration: 0.28 }}
+        style={{ position: "absolute", top: -24, right: -24, width: 110, height: 110, borderRadius: "50%", background: `radial-gradient(circle, ${colorDim} 0%, transparent 70%)`, filter: "blur(16px)", pointerEvents: "none" }}
+      />
+
+      {/* top row: metric + icon */}
+      <div className="hp-tc-top" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20 }}>
+        <span className="hp-tc-metric" style={{ fontFamily: MONO, fontSize: 32, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.03em", color: hov ? color : T.text, transition: "color 0.28s" }}>
+          {metric}
+        </span>
+        <div className="hp-tc-icon" style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: hov ? colorDim : "rgba(255,255,255,0.05)", border: `1px solid ${hov ? colorBd : "rgba(255,255,255,0.10)"}`, color: hov ? color : T.faint, transition: "all 0.25s" }}>
+          {icon}
+        </div>
+      </div>
+
+      {/* title + body */}
+      <h3 className="hp-tc-title" style={{ fontSize: 14, fontWeight: 700, letterSpacing: "-0.013em", color: T.text, marginBottom: 8, lineHeight: 1.32 }}>{title}</h3>
+      <p className="hp-tc-body" style={{ fontSize: 13, color: T.muted, lineHeight: 1.78, margin: "0 0 22px" }}>{body}</p>
+
+      {/* score bar */}
+      <div className="hp-tc-score">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+          <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: T.faint }}>{scoreLabel}</span>
+          <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, color: hov ? color : T.faint, transition: "color 0.28s" }}>{score}/100</span>
+        </div>
+        <div style={{ height: 3, borderRadius: 2, background: "rgba(255,255,255,0.07)", overflow: "hidden" }}>
+          <motion.div
+            initial={{ width: "0%" }}
+            animate={{ width: inView ? `${score}%` : "0%" }}
+            transition={{ duration: 1.2, delay: index * 0.15 + 0.3, ease: [0.16, 1, 0.3, 1] }}
+            style={{ height: "100%", borderRadius: 2, background: hov ? color : `linear-gradient(90deg, ${T.accent}, ${T.accentLt})`, transition: "background 0.28s" }}
+          />
+        </div>
+      </div>
+
+      {/* bottom accent */}
+      <motion.div animate={{ scaleX: hov ? 1 : 0 }} transition={{ duration: 0.32, ease }}
+        style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${color}, transparent)`, transformOrigin: "left", borderRadius: "0 0 20px 20px" }}
+      />
+    </motion.div>
+  )
+}
+
 function TechBlock() {
   return (
-    <section style={{ ...SEC, padding: "100px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
+    <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
-        <div className="hp-tech-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.35fr", gap: "0 72px", alignItems: "start" }}>
 
-          {/* left — title */}
-          <div style={{ position: "sticky", top: 100 }}>
-            <motion.div
-              initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ duration: 0.6, ease }}
-            >
+        {/* header */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1.6fr", gap: "0 80px", alignItems: "end", marginBottom: 64 }} className="hp-tech-grid">
+          <div>
+            <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}>
               <Label text="Tecnologia all'Avanguardia" />
             </motion.div>
             <motion.h2
               initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ duration: 0.75, delay: 0.08, ease }}
-              style={{ fontSize: "clamp(26px, 3.2vw, 44px)", fontWeight: 800, lineHeight: 1.12, letterSpacing: "-0.030em", margin: "0 0 20px" }}
+              style={{ fontSize: "clamp(26px, 3.2vw, 44px)", fontWeight: 800, lineHeight: 1.10, letterSpacing: "-0.030em", margin: 0 }}
             >
               Perché la Velocità{" "}
-              <span style={{ background: "linear-gradient(95deg, #BF5FFF 0%, #F0ABFC 60%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
-                Determina il tuo Fatturato.
-              </span>
+              <span style={{ color: "#FFFFFF" } as React.CSSProperties}>Determina il tuo Fatturato</span>
             </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.16, ease }}
-              style={{ fontSize: 15, color: T.muted, lineHeight: 1.80 }}
-            >
-              Ogni millisecondo conta. Un'architettura tecnica di alto livello non è un lusso — è il fondamento su cui si costruisce la crescita del fatturato.
-            </motion.p>
           </div>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.16, ease }}
+            style={{ fontSize: 15, color: T.muted, lineHeight: 1.85, margin: 0 }}
+          >
+            Ogni millisecondo conta. Un'architettura tecnica di alto livello non è un lusso — è il fondamento su cui si costruisce la crescita del fatturato.
+          </motion.p>
+        </div>
 
-          {/* right — bullet points */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-            {TECH_POINTS.map(({ icon, title, body }, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.6, delay: i * 0.11, ease }}
-                style={{
-                  display: "flex", gap: 22, alignItems: "flex-start",
-                  padding: "36px 0",
-                  borderBottom: i < TECH_POINTS.length - 1 ? `1px solid ${T.border}` : "none",
-                }}
-              >
-                {/* icon pill */}
-                <div style={{
-                  width: 44, height: 44, borderRadius: 13, flexShrink: 0,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(102,0,255,0.10)",
-                  border: "1px solid rgba(153,68,255,0.22)",
-                  color: T.accentLt,
-                  marginTop: 2,
-                }}>
-                  {icon}
-                </div>
-
-                <div style={{ flex: 1 }}>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.016em", color: T.text, marginBottom: 8, lineHeight: 1.3 }}>
-                    {title}
-                  </h3>
-                  <p style={{ fontSize: 15, color: T.muted, lineHeight: 1.80, margin: 0 }}>
-                    {body}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+        {/* 3 cards */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }} className="hp-grid-3">
+          {TECH_POINTS.map((p, i) => <TechCard key={i} {...p} index={i} />)}
         </div>
       </div>
     </section>
   )
 }
 
-function AllInOne() {
-  return (
-    <section style={{ ...SEC, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s3" className="hp-sec">
-      <div style={WRAP} className="hp-wrap">
-        <Reveal>
-          <Label text="The All-In-One Advantage" />
-          <h2 style={{ fontSize: "clamp(26px, 3.4vw, 44px)", fontWeight: 700, lineHeight: 1.13, letterSpacing: "-0.028em", marginBottom: 18, maxWidth: 720 }}>
-            Perché i brand lungimiranti scelgono un unico Partner Strategico?
-          </h2>
-          <p style={{ fontSize: 16, color: T.muted, lineHeight: 1.8, maxWidth: 680, marginBottom: 64 }}>
-            Gestire un business online oggi richiede uno sviluppatore, un designer, un esperto di automazioni API e un'agenzia di marketing. Risultato? Costi frammentati, problemi di comunicazione e ritardi continui. Ottieni tutto questo in un'unica soluzione integrata:
-          </p>
-        </Reveal>
-        <div className="hp-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
-          {ADVANTAGES.map((a, i) => <Reveal key={i}><AdvCard {...a} /></Reveal>)}
-        </div>
-      </div>
-    </section>
-  )
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    SKILL CARD ICONS
@@ -792,11 +983,12 @@ function SkillCard({ icon, title, tags }: { icon: React.ReactNode; title: string
     if (r) { setLx(((e.clientX - r.left) / r.width) * 100); setLy(((e.clientY - r.top) / r.height) * 100) }
   }
   return (
-    <motion.div ref={ref} className="hp-skillcard"
+    <motion.div ref={ref} className="hp-skillcard" data-glow=""
       onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)} onMouseMove={track}
       whileHover={{ y: -8, scale: 1.016 }} whileTap={{ scale: 0.982 }}
       transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
       style={{
+        '--base': '220', '--spread': '90', '--radius': '18', '--border': '1', '--size': '200',
         aspectRatio: "1 / 1",
         position: "relative",
         display: "flex",
@@ -804,12 +996,9 @@ function SkillCard({ icon, title, tags }: { icon: React.ReactNode; title: string
         padding: "22px",
         borderRadius: 18,
         overflow: "hidden",
-        /* 1. Glass background */
         backgroundColor: h ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.03)",
-        /* 2. Backdrop blur — core glass effect */
         backdropFilter: "blur(16px) saturate(120%)",
         WebkitBackdropFilter: "blur(16px) saturate(120%)",
-        /* 3. Crisp glass edge */
         border: `1px solid ${h ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.08)"}`,
         /* 4. Depth shadow */
         boxShadow: h
@@ -874,7 +1063,7 @@ const SOLUZIONI = [
         <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
       </svg>
     ),
-    gradient: "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)",
+    gradient: "linear-gradient(135deg, #7c3aed 0%, #9944FF 100%)",
     glow: "rgba(124,58,237,0.28)",
     title: "Siti Corporate & Lead Generation",
     desc: "Identità digitale d'élite per aziende e professionisti. Design esclusivo focalizzato sull'acquisizione di clienti qualificati.",
@@ -887,7 +1076,7 @@ const SOLUZIONI = [
         <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
       </svg>
     ),
-    gradient: "linear-gradient(135deg, #6d28d9 0%, #c084fc 100%)",
+    gradient: "linear-gradient(135deg, #6d28d9 0%, #C084FC 100%)",
     glow: "rgba(109,40,217,0.28)",
     title: "Applicazioni Web & Automazione Custom",
     desc: "Software e strumenti di produttività su misura. Connettiamo i tuoi sistemi (CRM/ERP) per eliminare l'errore umano.",
@@ -900,8 +1089,8 @@ const SOLUZIONI = [
         <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
       </svg>
     ),
-    gradient: "linear-gradient(135deg, #9333ea 0%, #e879f9 100%)",
-    glow: "rgba(147,51,234,0.28)",
+    gradient: "linear-gradient(135deg, #9333ea 0%, #F0ABFC 100%)",
+    glow: "rgba(102,0,255,0.28)",
     title: "SEO Strategico & Performance Marketing",
     desc: "Posizionamento organico integrato nel codice fin dal primo giorno. Scaliamo Google per intercettare traffico pronto a comprare.",
     cta: "Scala le Classifiche",
@@ -914,8 +1103,8 @@ const SOLUZIONI = [
         <circle cx="12" cy="12" r="7" strokeDasharray="2 3"/>
       </svg>
     ),
-    gradient: "linear-gradient(135deg, #a855f7 0%, #f0abfc 100%)",
-    glow: "rgba(168,85,247,0.28)",
+    gradient: "linear-gradient(135deg, #9944FF 0%, #F0ABFC 100%)",
+    glow: "rgba(102,0,255,0.28)",
     title: "Integrazione AI & Sistemi Intelligenti",
     desc: "Soluzioni pratiche basate su Intelligenza Artificiale (Agenti AI, LLM). Abbattiamo i costi di gestione e ottimizziamo la routine.",
     cta: "Innova con l'AI",
@@ -926,6 +1115,8 @@ function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: t
   const [hovered, setHovered] = useState(false)
   return (
     <motion.div
+      className="hp-sol-card"
+      data-glow=""
       initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
@@ -933,21 +1124,21 @@ function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: t
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
       style={{
+        '--base': '220', '--spread': '90', '--radius': '20', '--border': '1', '--size': '220',
         position: "relative",
         borderRadius: 20,
         padding: "36px 32px 32px",
-        background: "rgba(255,255,255,0.028)",
-        backdropFilter: "blur(20px) saturate(1.4)",
-        WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-        border: `1px solid ${hovered ? "rgba(153,68,255,0.40)" : "rgba(255,255,255,0.07)"}`,
-        boxShadow: hovered ? `0 16px 48px rgba(0,0,0,0.40), 0 0 0 1px rgba(153,68,255,0.18), inset 0 1px 0 rgba(255,255,255,0.08)` : "0 2px 16px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04)",
+        backgroundColor: hovered ? G.bgHov : G.bg,
+        backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
+        border: `1px solid ${hovered ? "rgba(153,68,255,0.50)" : G.bd}`,
+        boxShadow: hovered ? `0 16px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(153,68,255,0.22), inset 0 1px 0 rgba(255,255,255,0.14)` : G.shadow,
         cursor: "pointer",
         transition: "border-color 0.25s, box-shadow 0.3s",
         display: "flex",
         flexDirection: "column",
         gap: 0,
         overflow: "hidden",
-      }}
+      } as React.CSSProperties}
     >
       {/* glow orb on hover */}
       <motion.div
@@ -957,10 +1148,10 @@ function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: t
         style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: `radial-gradient(circle, ${glow} 0%, transparent 70%)`, filter: "blur(24px)", pointerEvents: "none" }}
       />
 
-      {/* number + icon row */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 24 }}>
-        <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.18em", color: "rgba(242,242,250,0.18)", lineHeight: 1 }}>{num}</span>
-        <div style={{
+      {/* left: icon column (стаёт левым блоком на мобайле) */}
+      <div className="hp-sol-card-head" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 24 }}>
+        <span className="hp-sol-card-num" style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.18em", color: "rgba(242,242,250,0.18)", lineHeight: 1 }}>{num}</span>
+        <div className="hp-sol-card-icon" style={{
           width: 46, height: 46, borderRadius: 14, flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
           background: hovered ? gradient : "rgba(102,0,255,0.10)",
@@ -973,27 +1164,27 @@ function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: t
         </div>
       </div>
 
-      {/* title */}
-      <h3 style={{ fontSize: 18, fontWeight: 700, lineHeight: 1.25, letterSpacing: "-0.02em", color: T.text, marginBottom: 14 }}>
-        {title}
-      </h3>
+      {/* right: text body */}
+      <div className="hp-sol-card-body" style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+        <h3 className="hp-sol-card-title" style={{ fontSize: 18, fontWeight: 700, lineHeight: 1.25, letterSpacing: "-0.02em", color: T.text, marginBottom: 14 }}>
+          {title}
+        </h3>
 
-      {/* desc */}
-      <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.78, marginBottom: 28, flex: 1 }}>
-        {desc}
-      </p>
+        <p className="hp-sol-card-desc" style={{ fontSize: 14, color: T.muted, lineHeight: 1.78, marginBottom: 28, flex: 1 }}>
+          {desc}
+        </p>
 
-      {/* cta */}
-      <motion.div
-        animate={{ x: hovered ? 4 : 0 }}
-        transition={{ duration: 0.2 }}
-        style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 600, color: hovered ? T.accentLt : T.muted, transition: "color 0.25s" }}
-      >
-        {cta}
-        <motion.span animate={{ x: hovered ? 3 : 0 }} transition={{ duration: 0.2 }}>
-          <ArrowRightIcon size={13} />
-        </motion.span>
-      </motion.div>
+        <motion.div
+          animate={{ x: hovered ? 4 : 0 }}
+          transition={{ duration: 0.2 }}
+          style={{ display: "inline-flex", alignItems: "center", gap: 8, ...MONO_STYLE, color: hovered ? T.accentLt : T.faint, transition: "color 0.25s" }}
+        >
+          {cta}
+          <motion.span animate={{ x: hovered ? 4 : 0 }} transition={{ duration: 0.2 }}>
+            <ArrowRightIcon size={11} />
+          </motion.span>
+        </motion.div>
+      </div>
 
       {/* bottom accent line */}
       <motion.div
@@ -1007,7 +1198,7 @@ function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: t
 
 function SoluzioniMatrix() {
   return (
-    <section style={{ ...SEC, padding: "100px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
+    <section style={{ ...SEC, padding: "64px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         {/* header */}
         <div style={{ marginBottom: 64 }}>
@@ -1047,139 +1238,215 @@ function SoluzioniMatrix() {
 /* ══════════════════════════════════════════════════════════════════════════
    §  IL PROBLEMA — La Diagnosi
 ══════════════════════════════════════════════════════════════════════════ */
-const DIAGNOSI = [
+const DIAGNOSI_PS = [
   {
-    icon: (
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
-        <path d="M16 10a4 4 0 0 1-8 0"/>
-      </svg>
-    ),
-    title: "E-commerce inefficiente",
-    body: "Perdi tempo e vendite a causa di cataloghi disconnessi, errori di magazzino e automatismi che non funzionano.",
+    problem: {
+      icon: (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      ),
+      title: "E-commerce inefficiente",
+      body: "Cataloghi disconnessi, errori di magazzino e automatismi rotti. Perdi vendite ogni giorno senza saperlo.",
+    },
+    solution: {
+      icon: (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+      ),
+      title: "Shopify Custom Automatizzato",
+      body: "Sincronizzazione in tempo reale di stock, ordini e cataloghi con 30.000+ SKU. Zero errori manuali, conversioni al massimo.",
+    },
   },
   {
-    icon: (
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
-      </svg>
-    ),
-    title: "Invisibilità su Google",
-    body: "Il tuo sito web è tecnicamente invisibile. Se smetti di pagare le Ads, il tuo traffico e i tuoi clienti azzerano.",
+    problem: {
+      icon: (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+        </svg>
+      ),
+      title: "Invisibilità su Google",
+      body: "Traffico dipendente al 100% dalle Ads. Se smetti di pagare, i clienti spariscono. Nessuna rendita organica.",
+    },
+    solution: {
+      icon: (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+        </svg>
+      ),
+      title: "SEO Strutturale + Ads Scalabili",
+      body: "Architettura SEO integrata nel codice dal giorno uno. Traffico organico che cresce in autonomia, campagne Google e Meta che amplificano il ROI.",
+    },
   },
   {
-    icon: (
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-        <line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="12" x2="13" y2="12"/>
-      </svg>
-    ),
-    title: "Siti aziendali deboli",
-    body: "Una presenza online obsoleta o lenta che allontana i clienti premium invece di attrarli.",
+    problem: {
+      icon: (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+          <line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="12" x2="13" y2="12"/>
+        </svg>
+      ),
+      title: "Sito aziendale debole",
+      body: "Presenza online lenta e obsoleta. I clienti premium valutano il tuo brand in 3 secondi — e scelgono il competitor.",
+    },
+    solution: {
+      icon: (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      ),
+      title: "Interfaccia Premium ad Alta Conversione",
+      body: "Design d'élite in React/Next.js con Core Web Vitals al 100%. La prima impressione è impeccabile e converte clienti B2B di alto profilo.",
+    },
   },
   {
-    icon: (
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-      </svg>
-    ),
-    title: "Routine manuale",
-    body: "Il tuo team spreca ore in processi ripetitivi che potrebbero essere automatizzati con un software intelligente.",
+    problem: {
+      icon: (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+      ),
+      title: "Processi manuali e ripetitivi",
+      body: "Il tuo team spreca ore su attività che un sistema intelligente farebbe in secondi. Costi operativi fuori controllo.",
+    },
+    solution: {
+      icon: (
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+      ),
+      title: "Automazione AI su Misura",
+      body: "API, middleware e agenti AI che eliminano il lavoro ripetitivo. Il tuo team torna a fare ciò che conta davvero: crescita e strategia.",
+    },
   },
 ]
 
-function DiagnosiCard({ icon, title, body, index }: typeof DIAGNOSI[0] & { index: number }) {
+function DiagnosiRow({ problem, solution, index }: typeof DIAGNOSI_PS[0] & { index: number }) {
   const [hov, setHov] = useState(false)
   return (
     <motion.div
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.55, delay: index * 0.09, ease }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.60, delay: index * 0.10, ease }}
       onHoverStart={() => setHov(true)}
       onHoverEnd={() => setHov(false)}
-      style={{
-        position: "relative", borderRadius: 18, padding: "28px 26px",
-        background: hov ? "rgba(239,68,68,0.04)" : "rgba(255,255,255,0.024)",
-        border: `1px solid ${hov ? "rgba(239,68,68,0.22)" : "rgba(255,255,255,0.07)"}`,
-        boxShadow: hov
-          ? "0 12px 40px rgba(0,0,0,0.38), 0 0 0 1px rgba(239,68,68,0.10)"
-          : "0 2px 16px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04)",
-        transition: "background 0.25s, border-color 0.25s, box-shadow 0.3s",
-        overflow: "hidden",
-        cursor: "default",
-        display: "flex", flexDirection: "column", gap: 0,
-      }}
+      style={{ display: "grid", gridTemplateColumns: "1fr 56px 1fr", alignItems: "stretch", gap: 0 }}
     >
-      {/* subtle red glow on hover */}
-      <motion.div aria-hidden
-        animate={{ opacity: hov ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-        style={{ position: "absolute", top: -30, right: -30, width: 140, height: 140, borderRadius: "50%", background: "radial-gradient(circle, rgba(239,68,68,0.12) 0%, transparent 70%)", filter: "blur(20px)", pointerEvents: "none" }}
-      />
-
-      {/* icon */}
+      {/* ── PROBLEMA ── */}
       <div style={{
-        width: 42, height: 42, borderRadius: 12, marginBottom: 20,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        background: hov ? "rgba(239,68,68,0.10)" : "rgba(255,255,255,0.05)",
-        border: `1px solid ${hov ? "rgba(239,68,68,0.28)" : "rgba(255,255,255,0.10)"}`,
-        color: hov ? "#FCA5A5" : "rgba(242,242,250,0.55)",
-        transition: "background 0.25s, border-color 0.25s, color 0.25s",
-        flexShrink: 0,
+        position: "relative", borderRadius: "16px 0 0 16px",
+        padding: "28px 28px",
+        background: hov ? "rgba(239,68,68,0.06)" : "rgba(255,255,255,0.04)",
+        backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
+        borderTop: `1px solid ${hov ? "rgba(239,68,68,0.30)" : "rgba(255,255,255,0.10)"}`,
+        borderLeft: `1px solid ${hov ? "rgba(239,68,68,0.30)" : "rgba(255,255,255,0.10)"}`,
+        borderBottom: `1px solid ${hov ? "rgba(239,68,68,0.30)" : "rgba(255,255,255,0.10)"}`,
+        borderRight: "none",
+        transition: "background 0.28s, border-color 0.28s",
+        overflow: "hidden",
       }}>
-        {icon}
+        <motion.div aria-hidden
+          animate={{ opacity: hov ? 1 : 0 }} transition={{ duration: 0.30 }}
+          style={{ position: "absolute", top: -20, left: -20, width: 120, height: 120, borderRadius: "50%", background: "radial-gradient(circle, rgba(239,68,68,0.14) 0%, transparent 70%)", filter: "blur(18px)", pointerEvents: "none" }}
+        />
+        {/* label */}
+        <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 18 }}>
+          <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: hov ? "#FCA5A5" : "rgba(239,68,68,0.55)", transition: "color 0.28s" }}>Problema</span>
+        </div>
+        {/* icon + title */}
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 12 }}>
+          <div style={{ width: 40, height: 40, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: hov ? "rgba(239,68,68,0.12)" : "rgba(255,255,255,0.05)", border: `1px solid ${hov ? "rgba(239,68,68,0.30)" : "rgba(255,255,255,0.09)"}`, color: hov ? "#FCA5A5" : "rgba(242,242,250,0.50)", transition: "all 0.25s" }}>
+            {problem.icon}
+          </div>
+          <h3 style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.014em", color: T.text, margin: 0, lineHeight: 1.32, paddingTop: 2 }}>{problem.title}</h3>
+        </div>
+        <p style={{ fontSize: 13.5, color: T.muted, lineHeight: 1.78, margin: 0 }}>{problem.body}</p>
+        {/* bottom accent */}
+        <motion.div animate={{ scaleX: hov ? 1 : 0 }} transition={{ duration: 0.32, ease }}
+          style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, rgba(239,68,68,0.65), rgba(251,113,133,0.35))", transformOrigin: "left" }} />
       </div>
 
-      {/* title */}
-      <h3 style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.016em", color: T.text, marginBottom: 10, lineHeight: 1.3 }}>
-        {title}
-      </h3>
+      {/* ── ARROW ── */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.025)", borderTop: `1px solid rgba(255,255,255,0.08)`, borderBottom: `1px solid rgba(255,255,255,0.08)`, flexShrink: 0 }}>
+        <motion.div
+          animate={{ x: hov ? 3 : 0, color: hov ? T.accentLt : "rgba(255,255,255,0.22)" }}
+          transition={{ duration: 0.24 }}
+          style={{ fontSize: 18, lineHeight: 1 }}
+        >→</motion.div>
+      </div>
 
-      {/* body */}
-      <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.78, margin: 0 }}>
-        {body}
-      </p>
-
-      {/* bottom accent */}
-      <motion.div
-        animate={{ scaleX: hov ? 1 : 0 }}
-        transition={{ duration: 0.32, ease }}
-        style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, rgba(239,68,68,0.60), rgba(251,113,133,0.40))", transformOrigin: "left", borderRadius: "0 0 18px 18px" }}
-      />
+      {/* ── SOLUZIONE ── */}
+      <div style={{
+        position: "relative", borderRadius: "0 16px 16px 0",
+        padding: "28px 28px",
+        background: hov ? "rgba(102,0,255,0.07)" : "rgba(255,255,255,0.04)",
+        backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
+        borderTop: `1px solid ${hov ? "rgba(153,68,255,0.38)" : "rgba(255,255,255,0.10)"}`,
+        borderRight: `1px solid ${hov ? "rgba(153,68,255,0.38)" : "rgba(255,255,255,0.10)"}`,
+        borderBottom: `1px solid ${hov ? "rgba(153,68,255,0.38)" : "rgba(255,255,255,0.10)"}`,
+        borderLeft: "none",
+        transition: "background 0.28s, border-color 0.28s",
+        overflow: "hidden",
+      }}>
+        <motion.div aria-hidden
+          animate={{ opacity: hov ? 1 : 0 }} transition={{ duration: 0.30 }}
+          style={{ position: "absolute", top: -20, right: -20, width: 130, height: 130, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.16) 0%, transparent 70%)", filter: "blur(20px)", pointerEvents: "none" }}
+        />
+        {/* label */}
+        <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 18 }}>
+          <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: hov ? T.accentLt : "rgba(153,68,255,0.55)", transition: "color 0.28s" }}>Soluzione</span>
+        </div>
+        {/* icon + title */}
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 12 }}>
+          <div style={{ width: 40, height: 40, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: hov ? "rgba(102,0,255,0.14)" : "rgba(255,255,255,0.05)", border: `1px solid ${hov ? "rgba(153,68,255,0.38)" : "rgba(255,255,255,0.09)"}`, color: hov ? T.accentLt : "rgba(242,242,250,0.50)", transition: "all 0.25s" }}>
+            {solution.icon}
+          </div>
+          <h3 style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.014em", color: T.text, margin: 0, lineHeight: 1.32, paddingTop: 2 }}>{solution.title}</h3>
+        </div>
+        <p style={{ fontSize: 13.5, color: T.muted, lineHeight: 1.78, margin: 0 }}>{solution.body}</p>
+        {/* bottom accent */}
+        <motion.div animate={{ scaleX: hov ? 1 : 0 }} transition={{ duration: 0.32, ease }}
+          style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, rgba(102,0,255,0.65), rgba(153,68,255,0.35))", transformOrigin: "left" }} />
+      </div>
     </motion.div>
   )
 }
 
 function DiagnosiBlock() {
   return (
-    <section style={{ ...SEC, padding: "100px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
+    <section style={{ ...SEC, padding: "64px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
 
         {/* header */}
         <div style={{ marginBottom: 56 }}>
-          <motion.div
-            initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ duration: 0.6, ease }}
-          >
+          <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}>
             <Label text="Il Problema — La Diagnosi" />
           </motion.div>
-          <motion.h2
+          <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.08, ease }}
-            style={{ fontSize: "clamp(26px, 3.4vw, 46px)", fontWeight: 800, lineHeight: 1.1, letterSpacing: "-0.030em", marginBottom: 0, maxWidth: 620 }}
+            style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}
           >
-            Sei bloccato in una di{" "}
-            <span style={{ background: "linear-gradient(95deg, #BF5FFF 0%, #F0ABFC 60%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
-              queste situazioni?
-            </span>
-          </motion.h2>
+            <h2 style={{ fontSize: "clamp(26px, 3.4vw, 46px)", fontWeight: 800, lineHeight: 1.1, letterSpacing: "-0.030em", margin: 0, maxWidth: 560 }}>
+              Sei bloccato in una di{" "}
+              <span style={{ color: "#FFFFFF" } as React.CSSProperties}>queste situazioni?</span>
+            </h2>
+            {/* column headers */}
+            <div style={{ display: "flex", gap: 0, alignItems: "center", flexShrink: 0 }}>
+              <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(239,68,68,0.55)", minWidth: 180, textAlign: "right" as const }}>Problema</span>
+              <span style={{ width: 56, textAlign: "center" as const, color: "rgba(255,255,255,0.20)", fontSize: 14 }}>→</span>
+              <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(153,68,255,0.55)", minWidth: 180 }}>Soluzione</span>
+            </div>
+          </motion.div>
         </div>
 
-        {/* 2×2 grid */}
-        <div className="hp-diagnosi-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
-          {DIAGNOSI.map((d, i) => <DiagnosiCard key={i} {...d} index={i} />)}
+        {/* rows */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {DIAGNOSI_PS.map((d, i) => <DiagnosiRow key={i} {...d} index={i} />)}
         </div>
       </div>
     </section>
@@ -1233,6 +1500,7 @@ function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: type
   const [hov, setHov] = useState(false)
   return (
     <motion.div
+      data-glow=""
       initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -1240,15 +1508,16 @@ function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: type
       onHoverStart={() => setHov(true)}
       onHoverEnd={() => setHov(false)}
       style={{
+        '--base': '220', '--spread': '90', '--radius': '20', '--border': '1', '--size': '220',
         position: "relative", borderRadius: 20, padding: "36px 30px 30px",
-        background: hov ? "rgba(102,0,255,0.055)" : "rgba(255,255,255,0.026)",
+        backgroundColor: hov ? "rgba(102,0,255,0.055)" : "rgba(255,255,255,0.026)",
         border: `1px solid ${hov ? "rgba(153,68,255,0.38)" : "rgba(255,255,255,0.07)"}`,
         boxShadow: hov
           ? "0 16px 48px rgba(0,0,0,0.42), 0 0 0 1px rgba(153,68,255,0.16), inset 0 1px 0 rgba(255,255,255,0.08)"
           : "0 2px 18px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.04)",
-        transition: "background 0.28s, border-color 0.28s, box-shadow 0.32s",
+        transition: "background-color 0.28s, border-color 0.28s, box-shadow 0.32s",
         display: "flex", flexDirection: "column", gap: 0, overflow: "hidden", cursor: "default",
-      }}
+      } as React.CSSProperties}
     >
       {/* purple glow orb */}
       <motion.div aria-hidden
@@ -1276,9 +1545,8 @@ function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: type
       <div style={{ marginBottom: 16 }}>
         <span style={{
           fontSize: 36, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em",
-          background: "linear-gradient(135deg, #BF5FFF 0%, #C084FC 100%)",
-          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-        } as React.CSSProperties}>{metric}</span>
+          color: "#FFFFFF",
+        }}>{metric}</span>
         <span style={{ fontSize: 11, fontWeight: 600, color: T.accentLt, letterSpacing: "0.10em", textTransform: "uppercase" as const, marginLeft: 10, verticalAlign: "middle", opacity: 0.80 }}>{metricLabel}</span>
       </div>
 
@@ -1304,7 +1572,7 @@ function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: type
 
 function PurcheBlock() {
   return (
-    <section style={{ ...SEC, padding: "100px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
+    <section style={{ ...SEC, padding: "64px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
 
         {/* header */}
@@ -1322,7 +1590,7 @@ function PurcheBlock() {
           >
             <h2 style={{ fontSize: "clamp(28px, 3.6vw, 48px)", fontWeight: 800, lineHeight: 1.08, letterSpacing: "-0.032em", margin: 0, maxWidth: 560 }}>
               Perché lavorare{" "}
-              <span style={{ background: "linear-gradient(95deg, #BF5FFF 0%, #F0ABFC 60%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
+              <span style={{ color: "#FFFFFF" } as React.CSSProperties}>
                 con me.
               </span>
             </h2>
@@ -1340,7 +1608,7 @@ function PurcheBlock() {
 
 function SkillsCardsGrid() {
   return (
-    <section style={{ ...SEC, padding: "88px 0", borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} className="hp-sec">
+    <section style={{ ...SEC, padding: "44px 0", borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <div style={{ textAlign: "center", marginBottom: 52 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginBottom: 18 }}>
@@ -1421,7 +1689,7 @@ function SkillAccordion({ icon, title, items, defaultOpen }: { icon: React.React
   const [open, setOpen] = useState(defaultOpen ?? false)
   return (
     <Reveal>
-      <div data-glow="" style={{ '--base': '220', '--spread': '140', '--radius': '16', '--border': '1.5', '--size': '270', borderRadius: 16, position: "relative", backgroundColor: "rgba(255,255,255,0.026)", backdropFilter: "blur(16px) saturate(1.4)", WebkitBackdropFilter: "blur(16px) saturate(1.4)", border: `1px solid ${open ? "rgba(102,0,255,0.32)" : "rgba(255,255,255,0.07)"}`, boxShadow: open ? "0 10px 30px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.07)" : "0 2px 12px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}>
+      <div data-glow="" style={{ '--base': '220', '--spread': '140', '--radius': '16', '--border': '1.5', '--size': '270', borderRadius: 16, position: "relative", backgroundColor: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${open ? "rgba(102,0,255,0.45)" : G.bd}`, boxShadow: open ? G.shadowHov : G.shadow, transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}>
   
         <button onClick={() => setOpen(o => !o)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 18, padding: "26px 32px", background: open ? "rgba(102,0,255,0.07)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
           <div style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: open ? "rgba(102,0,255,0.20)" : "rgba(102,0,255,0.10)", border: `1px solid ${open ? "rgba(153,68,255,0.45)" : "rgba(153,68,255,0.22)"}`, boxShadow: open ? "0 0 14px rgba(102,0,255,0.28), inset 0 1px 0 rgba(255,255,255,0.08)" : "inset 0 1px 0 rgba(255,255,255,0.05)", transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s" }}>
@@ -1491,14 +1759,14 @@ function VisualAnalisi() {
         animate={{ r: [36, 45, 36] }} transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.circle cx={cx} cy={cy} r={28}
-        fill="rgba(102,0,255,0.18)" stroke="rgba(192,132,252,0.55)" strokeWidth="1.5"
+        fill="rgba(102,0,255,0.18)" stroke="rgba(153,68,255,0.55)" strokeWidth="1.5"
         initial={{ scale: 0 }} animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 250, delay: 0.1 }}
         style={{ transformOrigin: `${cx}px ${cy}px` }}
       />
       <text x={cx} y={cy - 3} textAnchor="middle" fontSize={9} fontWeight="700"
         fill="#C084FC" fontFamily="Inter,sans-serif">Business</text>
-      <text x={cx} y={cy + 9} textAnchor="middle" fontSize={6.5} fill="rgba(192,132,252,0.5)"
+      <text x={cx} y={cy + 9} textAnchor="middle" fontSize={6.5} fill="rgba(153,68,255,0.5)"
         fontFamily="Inter,sans-serif">Analysis</text>
       {sats.map((s, i) => (
         <motion.g key={i} initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
@@ -1554,13 +1822,13 @@ function VisualDesign() {
         transition={{ delay: 0.34, duration: 0.4, ease: [0.16,1,0.3,1] }}
         style={{ transformOrigin: "150px 101px" }}
       />
-      <motion.rect x={55} y={90} width={0} height={8} rx={4} fill="rgba(192,132,252,0.45)"
+      <motion.rect x={55} y={90} width={0} height={8} rx={4} fill="rgba(153,68,255,0.45)"
         animate={{ width: 110 }} transition={{ delay: 0.54, duration: 0.5 }}
       />
       <motion.rect x={80} y={105} width={0} height={5} rx={3} fill="rgba(255,255,255,0.14)"
         animate={{ width: 60 }} transition={{ delay: 0.68, duration: 0.35 }}
       />
-      <motion.rect x={167} y={89} width={2} height={11} rx={1} fill="rgba(192,132,252,0.75)"
+      <motion.rect x={167} y={89} width={2} height={11} rx={1} fill="rgba(153,68,255,0.75)"
         animate={{ opacity: [1, 0, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.9 }}
       />
       {[25,112,199].map((x, i) => (
@@ -1581,7 +1849,7 @@ function VisualDesign() {
 function VisualAPI() {
   const boxes = [
     { label: "Fornitore", sub: "ERP/CRM",     x: 14,  y: 72, w: 76, h: 86,  ac: "rgba(102,0,255,0.16)", bd: "rgba(153,68,255,0.36)" },
-    { label: "API Layer", sub: "Middleware",   x: 112, y: 50, w: 76, h: 130, ac: "rgba(192,132,252,0.10)", bd: "rgba(192,132,252,0.40)" },
+    { label: "API Layer", sub: "Middleware",   x: 112, y: 50, w: 76, h: 130, ac: "rgba(153,68,255,0.10)", bd: "rgba(153,68,255,0.40)" },
     { label: "Shopify",   sub: "+ Analytics",  x: 210, y: 72, w: 76, h: 86,  ac: "rgba(102,0,255,0.16)", bd: "rgba(153,68,255,0.36)" },
   ]
   return (
@@ -1590,7 +1858,7 @@ function VisualAPI() {
         fill="#C084FC" fontFamily="Inter,sans-serif"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
       >30.247 SKU</motion.text>
-      <motion.text x={150} y={36} textAnchor="middle" fontSize={7} fill="rgba(192,132,252,0.48)"
+      <motion.text x={150} y={36} textAnchor="middle" fontSize={7} fill="rgba(153,68,255,0.48)"
         fontFamily="Inter,sans-serif"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
       >sincronizzati in tempo reale</motion.text>
@@ -1678,7 +1946,7 @@ function VisualLancio() {
           <text x={m.x+29} y={m.y-1} textAnchor="middle" fontSize={13} fontWeight="800"
             fill="#C084FC" fontFamily="Inter,sans-serif">{m.v}</text>
           <text x={m.x+29} y={m.y+9} textAnchor="middle" fontSize={7}
-            fill="rgba(192,132,252,0.52)" fontFamily="Inter,sans-serif">{m.l}</text>
+            fill="rgba(153,68,255,0.52)" fontFamily="Inter,sans-serif">{m.l}</text>
         </motion.g>
       ))}
     </svg>
@@ -1694,57 +1962,9 @@ const METHOD_STEPS = [
 
 const METHOD_VISUALS = [VisualAnalisi, VisualDesign, VisualAPI, VisualLancio]
 
-function MethodNavBtn({ active, tick, duration, label, onClick }: {
-  active: boolean; tick: number; duration: number; label: string; onClick: () => void
-}) {
-  const [h, setH] = useState(false)
-  const [lx, setLx] = useState(50)
-  const [ly, setLy] = useState(50)
-  const ref = useRef<HTMLButtonElement>(null)
-  const trackCursor = (e: React.MouseEvent) => {
-    const r = ref.current?.getBoundingClientRect()
-    if (r) { setLx(((e.clientX - r.left) / r.width) * 100); setLy(((e.clientY - r.top) / r.height) * 100) }
-  }
-  return (
-    <motion.button
-      ref={ref as React.RefObject<HTMLButtonElement>}
-      data-glow=""
-      onClick={onClick}
-      onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} onMouseMove={trackCursor}
-      animate={{ opacity: active ? 1 : 0.68 }}
-      style={{
-        "--base": "220", "--spread": "140", "--radius": "12", "--border": "1.5", "--size": "260",
-        flex: 1, padding: "16px 18px", borderRadius: 12, cursor: "pointer",
-        fontFamily: "inherit", textAlign: "left" as const, position: "relative",
-        backgroundColor: active ? "rgba(102,0,255,0.11)" : h ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.026)",
-        border: `1px solid ${active ? "rgba(102,0,255,0.38)" : h ? "rgba(255,255,255,0.13)" : "rgba(255,255,255,0.07)"}`,
-        boxShadow: h || active ? "0 8px 28px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.10)" : "0 2px 10px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.04)",
-        backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
-        transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s",
-      } as React.CSSProperties}
-    >
-      <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", borderRadius: 12, background: h ? `radial-gradient(110px circle at ${lx}% ${ly}%, rgba(102,0,255,0.16) 0%, transparent 100%)` : "none", transition: "background 0.1s" }} />
-      <div aria-hidden style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: 1, pointerEvents: "none", background: `linear-gradient(90deg, transparent, rgba(255,255,255,${h ? 0.14 : 0.05}), transparent)`, transition: "all 0.3s" }} />
-      {active && (
-        <motion.div key={tick} initial={{ width: "0%" }} animate={{ width: "100%" }}
-          transition={{ duration: duration / 1000, ease: "linear" }}
-          style={{ position: "absolute", bottom: 0, left: 0, height: 2, background: `linear-gradient(90deg, ${T.accent}, ${T.accentLt})` }}
-        />
-      )}
-      <div style={{ position: "relative", zIndex: 1, fontSize: 13, fontWeight: 600, color: active ? T.text : T.muted, letterSpacing: "0.02em" }}>
-        {label}
-      </div>
-    </motion.button>
-  )
-}
-
 function MethodCarousel() {
   const [step, setStep] = useState(0)
   const [tick, setTick] = useState(0)
-  const [ch, setCh] = useState(false)
-  const [lx, setLx] = useState(50)
-  const [ly, setLy] = useState(50)
-  const cardRef = useRef<HTMLDivElement>(null)
   const STEP_MS = 9000
 
   useEffect(() => {
@@ -1754,59 +1974,120 @@ function MethodCarousel() {
 
   const goTo = (i: number) => { setStep(i); setTick(k => k + 1) }
   const Visual = METHOD_VISUALS[step]
-  const trackCursor = (e: React.MouseEvent) => {
-    const r = cardRef.current?.getBoundingClientRect()
-    if (r) { setLx(((e.clientX - r.left) / r.width) * 100); setLy(((e.clientY - r.top) / r.height) * 100) }
-  }
 
   return (
     <div>
-      <motion.div ref={cardRef} data-glow=""
-        onHoverStart={() => setCh(true)} onHoverEnd={() => setCh(false)} onMouseMove={trackCursor}
+      {/* ── Timeline ── */}
+      <div className="hp-method-timeline" style={{ display: "flex", alignItems: "center", marginBottom: 32, position: "relative" }}>
+        {METHOD_STEPS.map((s, i) => (
+          <React.Fragment key={i}>
+            {/* connector line */}
+            {i > 0 && (
+              <div style={{ flex: 1, height: 1, position: "relative", background: "rgba(255,255,255,0.08)" }}>
+                <motion.div
+                  animate={{ width: i <= step ? "100%" : "0%" }}
+                  transition={{ duration: 0.6, ease }}
+                  style={{ position: "absolute", inset: 0, background: `linear-gradient(90deg, ${T.accent}, ${T.accentLt})`, height: "100%" }}
+                />
+              </div>
+            )}
+
+            {/* step node */}
+            <button onClick={() => goTo(i)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 10, flexShrink: 0 }}>
+              <motion.div
+                animate={step === i
+                  ? { background: `linear-gradient(135deg, ${T.accent}, ${T.accentLt})`, borderColor: T.accentLt, boxShadow: `0 0 0 4px rgba(102,0,255,0.18), 0 0 24px rgba(102,0,255,0.40)` }
+                  : i < step
+                    ? { background: "rgba(102,0,255,0.22)", borderColor: "rgba(153,68,255,0.50)", boxShadow: "none" }
+                    : { background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.14)", boxShadow: "none" }
+                }
+                transition={{ duration: 0.35 }}
+                style={{ width: 48, height: 48, borderRadius: "50%", border: "1.5px solid", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}
+              >
+                {/* progress ring for active */}
+                {step === i && (
+                  <svg style={{ position: "absolute", inset: 0, width: 48, height: 48, transform: "rotate(-90deg)" }}>
+                    <motion.circle cx={24} cy={24} r={22}
+                      fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="1.5"
+                      strokeDasharray={`${2 * Math.PI * 22}`}
+                      key={tick}
+                      initial={{ strokeDashoffset: 2 * Math.PI * 22 }}
+                      animate={{ strokeDashoffset: 0 }}
+                      transition={{ duration: STEP_MS / 1000, ease: "linear" }}
+                    />
+                  </svg>
+                )}
+                {/* checkmark for done, number for others */}
+                {i < step
+                  ? <span style={{ fontSize: 16, color: T.accentLt }}>✓</span>
+                  : <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, color: step === i ? "#fff" : T.faint, letterSpacing: "0.04em" }}>{s.n}</span>
+                }
+              </motion.div>
+
+              <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: step === i ? T.accentLt : T.faint, transition: "color 0.3s", whiteSpace: "nowrap" as const }}>
+                {s.label}
+              </span>
+            </button>
+          </React.Fragment>
+        ))}
+      </div>
+
+      {/* ── Content card ── */}
+      <motion.div
         style={{
-          '--base': '220', '--spread': '140', '--radius': '20', '--border': '1.5', '--size': '320',
           borderRadius: 20, overflow: "hidden", position: "relative",
-          background: ch ? "rgba(255,255,255,0.042)" : "rgba(255,255,255,0.026)",
-          backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
-          border: `1px solid ${ch ? "rgba(255,255,255,0.13)" : "rgba(255,255,255,0.08)"}`,
-          boxShadow: ch
-            ? "0 22px 50px rgba(0,0,0,0.50), 0 0 0 1px rgba(102,0,255,0.13), inset 0 1px 0 rgba(255,255,255,0.10)"
-            : "0 8px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)",
-          marginBottom: 28,
-          transition: "background 0.25s, border-color 0.25s, box-shadow 0.3s",
-        } as React.CSSProperties}>
-        <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, borderRadius: 20, background: ch ? `radial-gradient(240px circle at ${lx}% ${ly}%, rgba(102,0,255,0.11) 0%, transparent 100%)` : "none", transition: "background 0.12s" }} />
-        <div aria-hidden style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: 1, pointerEvents: "none", zIndex: 0, background: `linear-gradient(90deg, transparent, rgba(255,255,255,${ch ? 0.14 : 0.06}), transparent)`, transition: "all 0.3s" }} />
+          background: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
+          border: "1px solid rgba(255,255,255,0.09)",
+          boxShadow: "0 8px 40px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.07)",
+        } as React.CSSProperties}
+      >
+        {/* giant watermark number */}
+        <AnimatePresence mode="wait">
+          <motion.div key={`wm-${step}`}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            aria-hidden
+            style={{ position: "absolute", top: -10, left: -6, fontFamily: MONO, fontSize: 140, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.06em", color: "rgba(255,255,255,0.028)", pointerEvents: "none", userSelect: "none", zIndex: 0 }}
+          >
+            {METHOD_STEPS[step].n}
+          </motion.div>
+        </AnimatePresence>
+
         <div className="hp-method-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", position: "relative", zIndex: 1 }}>
-          <div className="hp-method-content" style={{ padding: "44px 40px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+          {/* left: content */}
+          <div className="hp-method-content" style={{ padding: "24px 26px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
             <AnimatePresence mode="wait">
-              <motion.div key={step} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }} transition={{ duration: 0.38, ease: [0.16,1,0.3,1] }}>
-                <div className="hp-method-num" style={{ fontSize: 52, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", marginBottom: 18, background: `linear-gradient(135deg, ${T.accent}55, ${T.accentLt}28)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" } as React.CSSProperties}>
-                  {METHOD_STEPS[step].n}
+              <motion.div key={step}
+                initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "4px 10px", borderRadius: 9999, background: "rgba(102,0,255,0.12)", border: "1px solid rgba(153,68,255,0.28)", marginBottom: 12 }}>
+                  <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.accentLt }}>{METHOD_STEPS[step].label}</span>
                 </div>
-                <h3 className="hp-method-title" style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", color: T.text, marginBottom: 18, lineHeight: 1.25, overflowWrap: "break-word" }}>
+                <h3 className="hp-method-title" style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.016em", color: T.text, marginBottom: 10, lineHeight: 1.28 }}>
                   {METHOD_STEPS[step].title}
                 </h3>
-                <p className="hp-method-body" style={{ fontSize: 15, color: T.muted, lineHeight: 1.82, overflowWrap: "break-word" }}>
+                <p className="hp-method-body" style={{ fontSize: 13, color: T.muted, lineHeight: 1.75, margin: 0 }}>
                   {METHOD_STEPS[step].body}
                 </p>
               </motion.div>
             </AnimatePresence>
           </div>
-          <div className="hp-method-visual" style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.13)", borderLeft: "1px solid rgba(255,255,255,0.05)", padding: "14px", minHeight: 160 }}>
+
+          {/* right: animated visual */}
+          <div className="hp-method-visual" style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.14)", borderLeft: "1px solid rgba(255,255,255,0.05)", padding: 12, minHeight: 130 }}>
             <AnimatePresence mode="wait">
-              <motion.div key={step} initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94 }} transition={{ duration: 0.38, ease: [0.16,1,0.3,1] }} style={{ width: "100%", height: "100%", minHeight: 0 }}>
+              <motion.div key={step}
+                initial={{ opacity: 0, scale: 0.93 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.93 }}
+                transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+                style={{ width: "100%", height: "100%" }}
+              >
                 <Visual />
               </motion.div>
             </AnimatePresence>
           </div>
         </div>
       </motion.div>
-      <div className="hp-method-nav" style={{ display: "flex", gap: 8 }}>
-        {METHOD_STEPS.map((s, i) => (
-          <MethodNavBtn key={i} active={step === i} tick={tick} duration={STEP_MS} label={s.label} onClick={() => goTo(i)} />
-        ))}
-      </div>
     </div>
   )
 }
@@ -1819,7 +2100,7 @@ function Method() {
           <Label text="Il Metodo di Lavoro" />
           <h2 style={{ fontSize: "clamp(26px, 3.4vw, 44px)", fontWeight: 700, lineHeight: 1.13, letterSpacing: "-0.028em", marginBottom: 48, maxWidth: 580, color: T.text }}>
             Una roadmap chiara e trasparente,{" "}
-            <span style={{ background: "linear-gradient(90deg, #BF5FFF, #C084FC)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
+            <span style={{ color: "#FFFFFF" }}>
               orientata ai risultati
             </span>
           </h2>
@@ -1881,24 +2162,6 @@ function Portfolio() {
 /* ══════════════════════════════════════════════════════════════════════════
    §7  SCARCITY
 ══════════════════════════════════════════════════════════════════════════ */
-function Scarcity() {
-  return (
-    <section style={{ ...SEC, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s7" className="hp-sec">
-      <div style={{ ...WRAP, textAlign: "center" }} className="hp-wrap">
-        <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 12, background: `${T.green}10`, border: `1px solid ${T.green}30`, borderRadius: 100, padding: "10px 24px", marginBottom: 44, cursor: "default" }}>
-            <PingDot />
-            <span style={{ fontSize: 14, fontWeight: 600, color: T.green }}>Disponibilità Attuale: solo 1 slot libero per questo mese.</span>
-          </div>
-          <h2 style={{ fontSize: "clamp(24px, 3.2vw, 44px)", fontWeight: 700, lineHeight: 1.18, letterSpacing: "-0.028em", margin: "0 auto 22px", maxWidth: 640 }}>Prenota una Sessione Strategica di 15 minuti.</h2>
-          <p style={{ fontSize: 16, color: T.muted, lineHeight: 1.8, maxWidth: 580, margin: "0 auto 18px" }}>Lavoro esclusivamente con un massimo di 2 nuovi progetti al mese per garantire la massima dedizione e qualità ingegneristica ad ogni brand.</p>
-          <p style={{ fontSize: 16, color: T.muted, lineHeight: 1.8, maxWidth: 580, margin: "0 auto 48px" }}>Stai per lanciare un nuovo progetto commerciale o vuoi ottimizzare un sito esistente? Analizzeremo gli obiettivi del tuo business e individueremo lo stack tecnologico e le automazioni ideali per il tuo mercato.</p>
-          <Btn primary>Prenota la Consulenza</Btn>
-        </Reveal>
-      </div>
-    </section>
-  )
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    §8  FAQ
@@ -1912,7 +2175,7 @@ const FAQS = [
 function FAQItem({ q, a, open, onToggle }: { q: string; a: string; open: boolean; onToggle: () => void }) {
   return (
     <motion.div data-glow="" whileHover={open ? {} : { scale: 1.008 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-      style={{ '--base': '220', '--spread': '140', '--radius': '14', '--border': '1.5', '--size': '260', borderRadius: 14, position: "relative", backgroundColor: "rgba(255,255,255,0.026)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: `1px solid ${open ? "rgba(102,0,255,0.35)" : "rgba(255,255,255,0.07)"}`, boxShadow: open ? "0 12px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)" : "0 2px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}
+      style={{ '--base': '220', '--spread': '140', '--radius': '14', '--border': '1.5', '--size': '260', borderRadius: 14, position: "relative", backgroundColor: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${open ? "rgba(102,0,255,0.45)" : G.bd}`, boxShadow: open ? G.shadowHov : G.shadow, transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}
     >
 
       <button onClick={onToggle} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "22px 28px", background: open ? "rgba(102,0,255,0.06)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
@@ -1956,58 +2219,233 @@ function FAQ() {
 /* ══════════════════════════════════════════════════════════════════════════
    §9  CONTACT
 ══════════════════════════════════════════════════════════════════════════ */
-function Field({ label, placeholder, type = "text", value, onChange }: { label: string; placeholder: string; type?: string; value: string; onChange: (v: string) => void }) {
+/* ── Glass form fields ── */
+function GlassInput({ label, placeholder, type = "text", value, onChange }: {
+  label: string; placeholder: string; type?: string; value: string; onChange: (v: string) => void
+}) {
   const [f, setF] = useState(false)
   return (
     <div>
-      <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: T.faint, marginBottom: 8, letterSpacing: "0.12em", textTransform: "uppercase" as const }}>{label}</label>
-      <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} onFocus={() => setF(true)} onBlur={() => setF(false)} required
-        style={{ width: "100%", padding: "16px 20px", background: T.surface, border: `1px solid ${f ? T.accent : T.border}`, borderRadius: 12, color: T.text, fontSize: 15, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", transition: "border-color 0.2s" }} />
+      <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
+      <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
+        onFocus={() => setF(true)} onBlur={() => setF(false)} required
+        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(102,0,255,0.07)" : "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(153,68,255,0.55)" : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", boxShadow: f ? "0 0 0 3px rgba(102,0,255,0.11), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
     </div>
   )
 }
 
-function FieldArea({ label, placeholder, value, onChange }: { label: string; placeholder: string; value: string; onChange: (v: string) => void }) {
+function GlassTextarea({ label, placeholder, value, onChange }: {
+  label: string; placeholder: string; value: string; onChange: (v: string) => void
+}) {
   const [f, setF] = useState(false)
   return (
     <div>
-      <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: T.faint, marginBottom: 8, letterSpacing: "0.12em", textTransform: "uppercase" as const }}>{label}</label>
-      <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={6} onFocus={() => setF(true)} onBlur={() => setF(false)} required
-        style={{ width: "100%", padding: "16px 20px", background: T.surface, border: `1px solid ${f ? T.accent : T.border}`, borderRadius: 12, color: T.text, fontSize: 15, outline: "none", resize: "vertical", fontFamily: "inherit", boxSizing: "border-box" as const, transition: "border-color 0.2s" }} />
+      <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
+      <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={4}
+        onFocus={() => setF(true)} onBlur={() => setF(false)} required
+        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(102,0,255,0.07)" : "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(153,68,255,0.55)" : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", resize: "none" as const, fontFamily: "inherit", boxSizing: "border-box" as const, boxShadow: f ? "0 0 0 3px rgba(102,0,255,0.11), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
     </div>
   )
 }
 
-function FieldSelect({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+function GlassSelect({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   const [f, setF] = useState(false)
-  const options = [
-    "E-commerce ad Alta Conversione",
-    "Siti Corporate & Lead Generation",
-    "Applicazioni Web & Automazione Custom",
-    "SEO Strategico & Performance Marketing",
-    "Integrazione AI & Sistemi Intelligenti",
-  ]
+  const options = ["E-commerce ad Alta Conversione", "Siti Corporate & Lead Generation", "Applicazioni Web & Automazione Custom", "SEO Strategico & Performance Marketing", "Integrazione AI & Sistemi Intelligenti"]
   return (
     <div>
-      <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: T.faint, marginBottom: 8, letterSpacing: "0.12em", textTransform: "uppercase" as const }}>{label}</label>
+      <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
       <select value={value} onChange={e => onChange(e.target.value)} onFocus={() => setF(true)} onBlur={() => setF(false)} required
-        style={{ width: "100%", padding: "16px 20px", background: T.surface, border: `1px solid ${f ? T.accent : T.border}`, borderRadius: 12, color: value ? T.text : "rgba(242,242,250,0.35)", fontSize: 15, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", transition: "border-color 0.2s", appearance: "none", cursor: "pointer" }}>
-        <option value="" disabled>Seleziona un'area...</option>
-        {options.map(o => <option key={o} value={o} style={{ background: T.surface, color: T.text }}>{o}</option>)}
+        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(102,0,255,0.07)" : "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(153,68,255,0.55)" : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: value ? T.text : T.faint, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", appearance: "none" as const, cursor: "pointer", boxShadow: f ? "0 0 0 3px rgba(102,0,255,0.11), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }}>
+        <option value="" disabled style={{ background: "#141415", color: T.muted }}>Seleziona un'area...</option>
+        {options.map(o => <option key={o} value={o} style={{ background: "#141415", color: T.text }}>{o}</option>)}
       </select>
     </div>
   )
 }
 
-function Contact() {
+/* ── Contact modal ── */
+function ContactModal({ onClose }: { onClose: () => void }) {
   const [fields, setFields] = useState({ name: "", email: "", site: "", area: "", msg: "" })
   const [sent, setSent] = useState(false)
   const set = (k: keyof typeof fields) => (v: string) => setFields(f => ({ ...f, [k]: v }))
+  const overlayRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
+    document.addEventListener("keydown", onKey)
+    document.body.style.overflow = "hidden"
+    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = "" }
+  }, [onClose])
+
+  return (
+    <motion.div ref={overlayRef}
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      transition={{ duration: 0.26 }}
+      onClick={e => { if (e.target === overlayRef.current) onClose() }}
+      style={{ position: "fixed", inset: 0, zIndex: 500, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" } as React.CSSProperties}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.93, y: 28 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.93, y: 16 }}
+        transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+        style={{ width: "100%", maxWidth: 600, maxHeight: "90vh", overflowY: "auto", position: "relative", borderRadius: 24, background: "rgba(10,8,22,0.82)", backdropFilter: "blur(44px) saturate(2)", WebkitBackdropFilter: "blur(44px) saturate(2)", borderTop: "1px solid rgba(255,255,255,0.55)", borderRight: "1px solid rgba(255,255,255,0.16)", borderBottom: "1px solid rgba(255,255,255,0.08)", borderLeft: "1px solid rgba(255,255,255,0.16)", boxShadow: "0 0 0 1px rgba(255,255,255,0.03), 0 40px 100px rgba(0,0,0,0.80), 0 0 100px rgba(102,0,255,0.20), inset 0 1px 0 rgba(255,255,255,0.28)" } as React.CSSProperties}
+      >
+        {/* purple top line */}
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, #6600FF 28%, #9944FF 72%, transparent)", borderRadius: "24px 24px 0 0" }} />
+
+        {/* inner top glow */}
+        <div aria-hidden style={{ position: "absolute", top: -50, left: "50%", transform: "translateX(-50%)", width: 360, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.18) 0%, transparent 70%)", filter: "blur(30px)", pointerEvents: "none" }} />
+
+        <div style={{ padding: "30px 34px 34px", position: "relative" }}>
+
+          {/* modal header */}
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 26 }}>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
+                <PingDot color={T.accentLt} size={6} />
+                <span style={{ ...MONO_STYLE, fontSize: 10, color: T.accentLt, letterSpacing: "0.22em" }}>RICHIESTA CONSULENZA</span>
+              </div>
+              <h3 style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.025em", color: T.text, margin: 0, lineHeight: 1.22 }}>
+                Descrivi il tuo blocco principale
+              </h3>
+            </div>
+            <motion.button onClick={onClose}
+              whileHover={{ scale: 1.10, background: "rgba(255,255,255,0.10)" }} whileTap={{ scale: 0.92 }}
+              style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 10, border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.05)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, transition: "background 0.18s" }}>
+              <XIcon size={13} />
+            </motion.button>
+          </div>
+
+          {!sent ? (
+            <form onSubmit={e => { e.preventDefault(); setSent(true) }} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <GlassInput label="Nome" placeholder="Il tuo nome" value={fields.name} onChange={set("name")} />
+                <GlassInput label="Email" placeholder="email@azienda.it" type="email" value={fields.email} onChange={set("email")} />
+              </div>
+              <GlassInput label="Sito Web" placeholder="https://tuosito.it (opzionale)" value={fields.site} onChange={set("site")} />
+              <GlassSelect label="Cosa dobbiamo risolvere?" value={fields.area} onChange={set("area")} />
+              <GlassTextarea label="Messaggio" placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={set("msg")} />
+              <motion.button type="submit" className="rainbow-btn"
+                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 380, damping: 18 }}
+                style={{ marginTop: 4, width: "100%", padding: "14px 32px", borderRadius: 9999, cursor: "pointer", border: "1px solid rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.06)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 2px 16px rgba(0,0,0,0.30)", color: T.text, fontFamily: MONO, fontSize: 12, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase" as const } as React.CSSProperties}>
+                <span style={{ position: "relative", zIndex: 1 }}>Invia Richiesta →</span>
+              </motion.button>
+            </form>
+          ) : (
+            <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
+              style={{ textAlign: "center", padding: "36px 0" }}>
+              <motion.div
+                initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 320, damping: 18, delay: 0.08 }}
+                style={{ width: 60, height: 60, borderRadius: "50%", background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.35)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 22px", fontSize: 26, color: T.green }}>
+                ✓
+              </motion.div>
+              <h4 style={{ fontSize: 19, fontWeight: 700, color: T.green, marginBottom: 10 }}>Richiesta inviata!</h4>
+              <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.8, margin: 0 }}>Riceverai un piano d'azione chiaro entro 24 ore lavorative.</p>
+            </motion.div>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+function CTAContactButton({ onClick }: { onClick: () => void }) {
+  const [hov, setHov] = useState(false)
+  const btnRef = useRef<HTMLButtonElement>(null)
+  const [mx, setMx] = useState(0)
+  const [my, setMy] = useState(0)
+
+  const onMove = (e: React.MouseEvent) => {
+    const r = btnRef.current?.getBoundingClientRect()
+    if (r) { setMx(e.clientX - r.left); setMy(e.clientY - r.top) }
+  }
+
+  return (
+    <div style={{ position: "relative", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+
+      {/* pulsing rings */}
+      {[0, 1].map(i => (
+        <motion.div key={i} aria-hidden
+          animate={{ scale: [1, 1.55 + i * 0.35], opacity: [0.38 - i * 0.10, 0] }}
+          transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut", delay: i * 0.70 }}
+          style={{ position: "absolute", inset: -6, borderRadius: 9999, border: `1px solid rgba(${i === 0 ? "120,0,255,0.55" : "153,68,255,0.35"})`, pointerEvents: "none" }}
+        />
+      ))}
+
+      {/* bottom shadow glow */}
+      <motion.div aria-hidden
+        animate={{ opacity: [0.55, 0.90, 0.55], scale: [0.88, 1.04, 0.88] }}
+        transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+        style={{ position: "absolute", bottom: -16, left: "10%", right: "10%", height: 24, borderRadius: "50%", background: "radial-gradient(ellipse, rgba(102,0,255,0.45) 0%, transparent 70%)", filter: "blur(10px)", pointerEvents: "none" }}
+      />
+
+      <motion.button
+        ref={btnRef}
+        onClick={onClick}
+        onHoverStart={() => setHov(true)}
+        onHoverEnd={() => setHov(false)}
+        onMouseMove={onMove}
+        whileHover={{ scale: 1.05, y: -4 }}
+        whileTap={{ scale: 0.96, y: 0 }}
+        transition={{ type: "spring", stiffness: 340, damping: 18 }}
+        style={{
+          position: "relative", overflow: "hidden",
+          padding: "20px 56px", borderRadius: 9999, cursor: "pointer",
+          border: `1px solid ${hov ? "rgba(160,80,255,0.55)" : "rgba(255,255,255,0.16)"}`,
+          background: hov ? "rgba(102,0,255,0.13)" : "rgba(255,255,255,0.07)",
+          backdropFilter: "blur(28px) saturate(1.8)", WebkitBackdropFilter: "blur(28px) saturate(1.8)",
+          boxShadow: hov
+            ? "inset 0 1px 0 rgba(255,255,255,0.20), 0 14px 52px rgba(0,0,0,0.55), 0 0 100px rgba(102,0,255,0.38), inset 0 0 36px rgba(102,0,255,0.10)"
+            : "inset 0 1px 0 rgba(255,255,255,0.13), 0 4px 24px rgba(0,0,0,0.32), 0 0 56px rgba(102,0,255,0.18)",
+          color: T.text, fontFamily: MONO, fontSize: 13, fontWeight: 500,
+          letterSpacing: "0.20em", textTransform: "uppercase" as const,
+          transition: "background 0.28s, border-color 0.28s, box-shadow 0.32s",
+        } as React.CSSProperties}
+      >
+        {/* cursor-tracking inner spotlight */}
+        {hov && (
+          <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 9999, background: `radial-gradient(80px circle at ${mx}px ${my}px, rgba(200,150,255,0.12) 0%, transparent 100%)`, pointerEvents: "none" }} />
+        )}
+
+        {/* shimmer sweep — loops every 3.5 s */}
+        <motion.div aria-hidden
+          animate={{ x: ["-160%", "260%"] }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", repeatDelay: 1.8 }}
+          style={{ position: "absolute", top: 0, bottom: 0, width: "38%", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent)", transform: "skewX(-22deg)", pointerEvents: "none" }}
+        />
+
+        {/* top-edge reflection */}
+        <div aria-hidden style={{ position: "absolute", top: 0, left: "12%", right: "12%", height: 1, background: `linear-gradient(90deg, transparent, rgba(255,255,255,${hov ? 0.32 : 0.18}), transparent)`, transition: "all 0.28s", pointerEvents: "none" }} />
+
+        {/* label + icon */}
+        <span style={{ position: "relative", zIndex: 1, display: "inline-flex", alignItems: "center", gap: 16 }}>
+          <span>Richiedi Piano d'Azione</span>
+
+          {/* icon circle */}
+          <motion.span
+            animate={hov ? { x: 4, backgroundColor: "rgba(153,68,255,0.40)", borderColor: "rgba(153,68,255,0.70)" } : { x: 0, backgroundColor: "rgba(255,255,255,0.08)", borderColor: "rgba(255,255,255,0.18)" }}
+            transition={{ duration: 0.22 }}
+            style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.18)", fontSize: 14, lineHeight: 1 }}
+          >
+            <motion.span
+              animate={{ x: hov ? [0, 3, 0] : [0, 3, 0] }}
+              transition={{ duration: hov ? 0.5 : 1.6, repeat: Infinity, ease: "easeInOut" }}
+            >→</motion.span>
+          </motion.span>
+        </span>
+      </motion.button>
+    </div>
+  )
+}
+
+function Contact() {
+  const [modalOpen, setModalOpen] = useState(false)
   return (
     <section style={{ ...SEC, borderTop: `1px solid ${T.border}` }} id="s9" className="hp-sec">
       <div style={WRAP} className="hp-wrap">
-
-        {/* header */}
         <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}>
           <Label text="Call to Action" />
         </motion.div>
@@ -2017,60 +2455,25 @@ function Contact() {
           style={{ fontSize: "clamp(26px, 3.2vw, 44px)", fontWeight: 800, lineHeight: 1.10, letterSpacing: "-0.030em", margin: "0 0 16px" }}
         >
           Mettiamo fine ai blocchi tecnici{" "}
-          <span style={{ background: "linear-gradient(95deg, #BF5FFF 0%, #F0ABFC 60%, #C084FC 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" } as React.CSSProperties}>
-            della tua azienda.
-          </span>
+          <span style={{ color: "#FFFFFF" } as React.CSSProperties}>della tua azienda.</span>
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.16, ease }}
-          style={{ fontSize: 15, color: T.muted, lineHeight: 1.82, marginBottom: 52 }}
+          style={{ fontSize: 15, color: T.muted, lineHeight: 1.82, marginBottom: 52, maxWidth: 580 }}
         >
           Seleziona il problema principale che sta frenando la tua crescita. Riceverai un piano d'azione chiaro e orientato ai numeri.
         </motion.p>
 
-        {/* form */}
-        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.22, ease }} style={{ maxWidth: 720 }}>
-          {!sent ? (
-            <form onSubmit={e => { e.preventDefault(); setSent(true) }} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-              <div className="hp-contact-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-                <Field label="Nome" placeholder="Il tuo nome" value={fields.name} onChange={set("name")} />
-                <Field label="Email Aziendale" placeholder="email@azienda.it" type="email" value={fields.email} onChange={set("email")} />
-              </div>
-              <Field label="Sito Web" placeholder="https://tuosito.it (se presente)" value={fields.site} onChange={set("site")} />
-              <FieldSelect label="Cosa dobbiamo risolvere?" value={fields.area} onChange={set("area")} />
-              <FieldArea label="Messaggio" placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={set("msg")} />
-              <div style={{ paddingTop: 8 }}>
-                <motion.button
-                  type="submit"
-                  className="rainbow-btn"
-                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                  style={{
-                    position: "relative", width: "100%", padding: "18px 36px", borderRadius: 12, fontSize: 15, fontWeight: 700,
-                    cursor: "pointer", letterSpacing: "0.02em", fontFamily: "inherit", border: "none",
-                    background: "rgba(255,255,255,0.06)", backdropFilter: "blur(24px) saturate(1.3)",
-                    WebkitBackdropFilter: "blur(24px) saturate(1.3)",
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.09), 0 2px 12px rgba(0,0,0,0.22)",
-                    color: T.text,
-                  } as React.CSSProperties}
-                >
-                  <span aria-hidden style={{ position: "absolute", top: 0, left: "12%", right: "12%", height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.20), transparent)", pointerEvents: "none" }} />
-                  <span style={{ position: "relative", zIndex: 1 }}>Richiedi Soluzione Tecnica</span>
-                </motion.button>
-              </div>
-            </form>
-          ) : (
-              <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} style={{ padding: "44px 40px", background: T.surface, borderRadius: 20, border: `1px solid ${T.green}35` }}>
-                <div style={{ display: "flex", gap: 14, alignItems: "center", marginBottom: 14 }}>
-                  <PingDot />
-                  <span style={{ fontSize: 18, fontWeight: 600, color: T.green }}>Richiesta inviata con successo!</span>
-                </div>
-                <p style={{ fontSize: 15, color: T.muted, lineHeight: 1.8 }}>Riceverai un piano d'azione chiaro e orientato ai numeri entro 24 ore lavorative.</p>
-              </motion.div>
-          )}
+        {/* CTA button */}
+        <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.24, ease }}>
+          <CTAContactButton onClick={() => setModalOpen(true)} />
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {modalOpen && <ContactModal onClose={() => setModalOpen(false)} />}
+      </AnimatePresence>
     </section>
   )
 }
@@ -2125,11 +2528,12 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
 function FooterSocialBtn({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
     <motion.a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+      data-glow=""
       whileHover={{ scale: 1.08, y: -2 }} whileTap={{ scale: 0.92 }}
       transition={{ type: "spring", stiffness: 400, damping: 16 }}
-      style={{ width: 36, height: 36, borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, transition: "color 0.22s, border-color 0.22s, background 0.22s", flexShrink: 0, textDecoration: "none" }}
-      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.text; el.style.borderColor = "rgba(153,68,255,0.42)"; el.style.background = "rgba(102,0,255,0.12)" }}
-      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.muted; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.background = "transparent" }}
+      style={{ '--base': '220', '--spread': '90', '--radius': '10', '--border': '1', '--size': '140', width: 36, height: 36, borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, backgroundColor: "transparent", transition: "color 0.22s, border-color 0.22s, background-color 0.22s", flexShrink: 0, textDecoration: "none" } as React.CSSProperties}
+      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.text; el.style.borderColor = "rgba(153,68,255,0.42)"; el.style.backgroundColor = "rgba(102,0,255,0.12)" }}
+      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.muted; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.backgroundColor = "transparent" }}
     >{children}</motion.a>
   )
 }
@@ -2180,101 +2584,31 @@ function FooterSection({ title, children }: { title: string; children: React.Rea
 }
 
 function SiteFooter() {
-  const FOOT_NAV = [
-    { label: "Soluzioni",   href: "#s1" },
-    { label: "Il Problema", href: "#s1" },
-    { label: "Il Metodo",   href: "#s5" },
-    { label: "Tecnologia",  href: "#s1" },
-    { label: "Contatti",    href: "#s9" },
+  const FOOTER_SOCIALS = [
+    { label: "LinkedIn",  href: "https://linkedin.com/in/nadiamaar",   Icon: LinkedinIcon  },
+    { label: "GitHub",    href: "https://github.com/nadiamaar-dev",     Icon: GithubIcon    },
+    { label: "Instagram", href: "https://instagram.com/nadiamaar.dev",  Icon: InstagramIcon },
   ]
-  const FOOT_SVC = [
-    { label: "E-commerce ad Alta Conversione",         href: "#s1" },
-    { label: "Siti Corporate & Lead Generation",       href: "#s1" },
-    { label: "Applicazioni Web & Automazione",         href: "#s1" },
-    { label: "SEO & Performance Marketing",            href: "#s1" },
-    { label: "Integrazione AI & Sistemi Intelligenti", href: "#s1" },
-  ]
-  const FOOT_CONTACT = (
-    <>
-      <ul style={{ display: "flex", flexDirection: "column", gap: 12, listStyle: "none", padding: 0, margin: "0 0 20px" }}>
-        <li>
-          <a href={`mailto:${FOOTER_DATA.email}`}
-            style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: T.muted, textDecoration: "none", transition: "color 0.2s", wordBreak: "break-all" as const }}
-            onMouseEnter={e => (e.currentTarget.style.color = T.text)} onMouseLeave={e => (e.currentTarget.style.color = T.muted)}>
-            <MailIcon size={13} />{FOOTER_DATA.email}
-          </a>
-        </li>
-        <li style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: T.muted }}>
-          <MapPinIcon size={13} />{FOOTER_DATA.location}
-        </li>
-      </ul>
-      <motion.a href="#s9"
-        whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-        style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 16px", borderRadius: 10, background: T.accentDim, border: `1px solid rgba(153,68,255,0.28)`, color: T.accentLt, fontSize: 13, fontWeight: 600, textDecoration: "none", transition: "background 0.2s, border-color 0.2s" }}
-        onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(102,0,255,0.20)"; el.style.borderColor = "rgba(153,68,255,0.50)" }}
-        onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = T.accentDim; el.style.borderColor = "rgba(153,68,255,0.28)" }}
-      >
-        Prenota una Call <ArrowRightIcon size={12} />
-      </motion.a>
-    </>
-  )
 
   return (
-    <footer style={{ background: T.bg, borderTop: `1px solid ${T.border}`, position: "relative", overflow: "hidden" }}>
-      {/* top purple accent line */}
-      <div style={{ height: 1, background: `linear-gradient(90deg, transparent 0%, ${T.accent}70 25%, ${T.accentLt}60 75%, transparent 100%)` }} />
+    <footer style={{ background: "transparent", borderTop: `1px solid ${T.border}`, position: "relative" }}>
 
-      {/* ambient orb */}
-      <div aria-hidden style={{ position: "absolute", bottom: -80, left: "35%", width: 600, height: 300, borderRadius: "50%", background: "radial-gradient(ellipse, rgba(102,0,255,0.06) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
+      <div style={{ ...WRAP, padding: "48px 32px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 20 }}>
+          <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 500, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: T.faint }}>
+            © NADIA MAAR 2026
+          </span>
 
-      <div style={{ ...WRAP, padding: "64px 32px 40px" }}>
-
-        {/* grid: brand + 3 sections */}
-        <div className="hp-footer-grid" style={{ display: "grid", gridTemplateColumns: "1.8fr 1fr 1fr 1fr", gap: "0 48px", marginBottom: 52 }}>
-
-          {/* Brand — always visible, no accordion */}
-          <div className="hp-footer-brand">
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-              <Logo3D onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} />
-              <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.01em", color: T.text }}>Nadia Maar</span>
-            </div>
-            <p style={{ fontSize: 13, color: T.muted, lineHeight: 1.78, maxWidth: 250, marginBottom: 28 }}>
-              Architetture digitali ad alte prestazioni. E-commerce, AI e Performance Marketing — da un'unica mente strategica.
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {FOOTER_DATA.socials.map(({ Icon, label, href }) => (
-                <FooterSocialBtn key={label} href={href} label={label}><Icon /></FooterSocialBtn>
-              ))}
-            </div>
-          </div>
-
-          {/* Soluzioni */}
-          <FooterSection title="Soluzioni">
-            <ul style={{ display: "flex", flexDirection: "column", gap: 12, listStyle: "none", padding: 0, margin: 0 }}>
-              {FOOT_SVC.map(({ label, href }) => <li key={label}><FooterLink href={href}>{label}</FooterLink></li>)}
-            </ul>
-          </FooterSection>
-
-          {/* Navigazione */}
-          <FooterSection title="Navigazione">
-            <ul style={{ display: "flex", flexDirection: "column", gap: 12, listStyle: "none", padding: 0, margin: 0 }}>
-              {FOOT_NAV.map(({ label, href }) => <li key={label}><FooterLink href={href}>{label}</FooterLink></li>)}
-            </ul>
-          </FooterSection>
-
-          {/* Contatto */}
-          <FooterSection title="Contatto">
-            {FOOT_CONTACT}
-          </FooterSection>
-        </div>
-
-        {/* bottom bar */}
-        <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 24, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-          <p style={{ fontSize: 11, color: T.faint, margin: 0 }}>{FOOTER_DATA.copyright}</p>
-          <div style={{ display: "flex", gap: 20 }}>
-            {["Privacy Policy", "Cookie Policy"].map(l => (
-              <a key={l} href="#" style={{ fontSize: 11, color: T.faint, textDecoration: "none", transition: "color 0.2s" }}
-                onMouseEnter={e => (e.currentTarget.style.color = T.muted)} onMouseLeave={e => (e.currentTarget.style.color = T.faint)}>{l}</a>
+          <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
+            {FOOTER_SOCIALS.map(({ label, href, Icon }) => (
+              <motion.a
+                key={label} href={href} target="_blank" rel="noopener noreferrer"
+                whileHover={{ color: T.text, y: -1 }} transition={{ duration: 0.18 }}
+                style={{ display: "inline-flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 10, fontWeight: 500, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: T.faint, textDecoration: "none" }}
+              >
+                <Icon />
+                {label}
+              </motion.a>
             ))}
           </div>
         </div>
@@ -2295,10 +2629,26 @@ const FCC = {
 function FloatingActionBtn({ href, icon, label, color, bg, border, external }: {
   href: string; icon: React.ReactNode; label: string; color: string; bg: string; border: string; external?: boolean
 }) {
+  const [hov, setHov] = useState(false)
   return (
-    <motion.a href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}
-      whileHover={{ scale: 1.05, y: -1 }} whileTap={{ scale: 0.96 }}
-      style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5, padding: "10px 4px", borderRadius: 12, background: bg, border: `1px solid ${border}`, color: color, fontSize: 10, fontWeight: 600, letterSpacing: "0.03em", textDecoration: "none", cursor: "pointer", transition: "background 0.18s" }}>
+    <motion.a
+      href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}
+      onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
+      whileHover={{ scale: 1.07, y: -2 }} whileTap={{ scale: 0.94 }}
+      transition={{ type: "spring", stiffness: 420, damping: 22 }}
+      style={{
+        display: "flex", flexDirection: "column", alignItems: "center", gap: 5,
+        padding: "10px 4px", borderRadius: 12,
+        background: hov ? "rgba(102,0,255,0.18)" : bg,
+        border: `1px solid ${hov ? "rgba(102,0,255,0.58)" : border}`,
+        boxShadow: hov
+          ? "0 0 18px rgba(102,0,255,0.28), inset 0 1px 0 rgba(255,255,255,0.14)"
+          : "none",
+        color: hov ? "#fff" : color,
+        fontSize: 10, fontWeight: 600, letterSpacing: "0.03em",
+        textDecoration: "none", cursor: "pointer",
+        transition: "background 0.18s, border-color 0.18s, box-shadow 0.20s, color 0.18s",
+      }}>
       {icon}{label}
     </motion.a>
   )
@@ -2315,6 +2665,7 @@ function FloatingContact() {
   const [open, setOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
+  const btnRef = useRef<HTMLButtonElement>(null)
   const initials = name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)
 
   useEffect(() => {
@@ -2327,71 +2678,170 @@ function FloatingContact() {
   useEffect(() => {
     if (!open) return
     const handler = (e: MouseEvent) => {
-      if (cardRef.current && !cardRef.current.contains(e.target as Node)) setOpen(false)
+      const inCard = cardRef.current?.contains(e.target as Node)
+      const inBtn = btnRef.current?.contains(e.target as Node)
+      if (!inCard && !inBtn) setOpen(false)
     }
     document.addEventListener("mousedown", handler)
     return () => document.removeEventListener("mousedown", handler)
   }, [open])
 
-  const cardVariants = isMobile
-    ? { hidden: { opacity: 0, y: 20, scale: 0.96 }, visible: { opacity: 1, y: 0, scale: 1 }, exit: { opacity: 0, y: 16, scale: 0.96 } }
-    : { hidden: { opacity: 0, x: 16, scale: 0.96 }, visible: { opacity: 1, x: 0, scale: 1 }, exit: { opacity: 0, x: 16, scale: 0.96 } }
+  const mobileVariants = {
+    hidden: { opacity: 0, y: 48, scale: 0.92 },
+    visible: { opacity: 1, y: 0, scale: 1 },
+    exit:   { opacity: 0, y: 32, scale: 0.94 },
+  }
+  const desktopVariants = {
+    hidden: { opacity: 0, x: 18, scale: 0.94 },
+    visible: { opacity: 1, x: 0, scale: 1 },
+    exit:   { opacity: 0, x: 14, scale: 0.96 },
+  }
+
+  const cardBase: React.CSSProperties = {
+    position: "fixed",
+    zIndex: 400,
+    background: "rgba(255,255,255,0.05)",
+    backdropFilter: "blur(48px) saturate(1.5) brightness(0.90)",
+    WebkitBackdropFilter: "blur(48px) saturate(1.5) brightness(0.90)",
+    border: "1px solid rgba(102,0,255,0.42)",
+    boxShadow: [
+      "0 0 0 1px rgba(102,0,255,0.10)",
+      "0 28px 64px rgba(0,0,0,0.65)",
+      "0 0 40px rgba(102,0,255,0.10)",
+      "inset 0 1px 0 rgba(255,255,255,0.12)",
+    ].join(", "),
+    overflow: "hidden",
+  }
+
+  const mobileCardStyle: React.CSSProperties = {
+    ...cardBase,
+    left: 16,
+    right: 16,
+    bottom: 84,
+    borderRadius: 20,
+  }
+
+  const desktopCardStyle: React.CSSProperties = {
+    ...cardBase,
+    right: 90,
+    top: "50%",
+    transform: "translateY(-50%)",
+    width: 262,
+    borderRadius: 18,
+  }
 
   return (
-    <div ref={cardRef} style={{ position: "fixed", right: isMobile ? 16 : 24, bottom: isMobile ? 24 : "auto", top: isMobile ? "auto" : "50%", transform: isMobile ? "none" : "translateY(-50%)", zIndex: 400, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 12 }}>
+    <>
+      {/* backdrop — mobile only */}
+      <AnimatePresence>
+        {open && isMobile && (
+          <motion.div
+            key="fc-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            onClick={() => setOpen(false)}
+            style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.60)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", zIndex: 398 } as React.CSSProperties}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* popup card */}
       <AnimatePresence>
         {open && (
-          <motion.div variants={cardVariants} initial="hidden" animate="visible" exit="exit" transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            style={{ background: FCC.bg, backdropFilter: "blur(28px) saturate(1.7)", WebkitBackdropFilter: "blur(28px) saturate(1.7)", border: `1px solid ${FCC.border}`, borderRadius: 20, width: isMobile ? "calc(100vw - 32px)" : 292, maxWidth: 340, boxShadow: "0 0 0 1px rgba(255,255,255,0.04), 0 24px 60px rgba(0,0,0,0.60), 0 0 50px rgba(102,0,255,0.18), inset 0 1px 0 rgba(255,255,255,0.08)", overflow: "hidden" } as React.CSSProperties}>
-            <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(102,0,255,0.7), rgba(153,68,255,0.5), transparent)" }} />
-            <div style={{ padding: "20px 20px 16px", display: "flex", alignItems: "center", gap: 14 }}>
+          <motion.div
+            key="fc-card"
+            ref={cardRef}
+            style={isMobile ? mobileCardStyle : desktopCardStyle}
+            variants={isMobile ? mobileVariants : desktopVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={{ type: "spring", stiffness: 520, damping: 28 }}
+          >
+            {/* top accent line — purple like site */}
+            <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(102,0,255,0.80), rgba(153,68,255,0.55), transparent)" }} />
+
+            {/* header */}
+            <div style={{ padding: "14px 14px 12px", display: "flex", alignItems: "center", gap: 11 }}>
               <div style={{ position: "relative", flexShrink: 0 }}>
-                <div style={{ width: 60, height: 60, borderRadius: "50%", border: "2px solid rgba(112,0,255,0.5)", boxShadow: "0 0 16px rgba(102,0,255,0.35)", overflow: "hidden", background: "linear-gradient(135deg, rgba(102,0,255,0.4), rgba(60,0,180,0.3))", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <span style={{ fontSize: 20, fontWeight: 700, color: "rgba(200,160,255,0.95)" }}>{initials}</span>
+                <div style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid rgba(102,0,255,0.50)", boxShadow: "0 0 12px rgba(102,0,255,0.22), inset 0 1px 0 rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: "rgba(255,255,255,0.90)" }}>{initials}</span>
                 </div>
-                {available && (
-                  <span style={{ position: "absolute", bottom: 1, right: 1, width: 12, height: 12, borderRadius: "50%", background: FCC.green, border: "2px solid rgba(14,4,28,0.9)", display: "block" }}>
-                    <motion.span style={{ position: "absolute", inset: -2, borderRadius: "50%", background: FCC.green, opacity: 0.5 }} animate={{ scale: [1, 2.4], opacity: [0.5, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }} />
-                  </span>
-                )}
+                {/* pulsing purple dot */}
+                <span style={{ position: "absolute", bottom: 0, right: 0, width: 10, height: 10, borderRadius: "50%", background: T.accentLt, border: "2px solid rgba(10,5,20,0.90)", display: "block" }}>
+                  <motion.span
+                    style={{ position: "absolute", inset: -2, borderRadius: "50%", background: T.accentLt, opacity: 0.55 }}
+                    animate={{ scale: [1, 2.6], opacity: [0.55, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+                  />
+                </span>
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 15, fontWeight: 700, color: FCC.text, letterSpacing: "-0.01em", marginBottom: 2 }}>{name}</div>
-                <div style={{ fontSize: 11, color: FCC.muted, lineHeight: 1.4, marginBottom: 5 }}>Web Architecture & Digital Strategy</div>
-                {available && <span style={{ fontSize: 10, fontWeight: 600, color: FCC.green, letterSpacing: "0.04em" }}>● Disponibile</span>}
+                <div style={{ fontSize: 13, fontWeight: 700, color: FCC.text, letterSpacing: "-0.01em", lineHeight: 1.2, marginBottom: 2 }}>{name}</div>
+                <div style={{ fontSize: 10, color: FCC.muted, lineHeight: 1.35, marginBottom: 4 }}>Web Architecture & Digital Strategy</div>
+                <span style={{ fontSize: 9, fontWeight: 600, color: T.accentLt, letterSpacing: "0.08em", textTransform: "uppercase" as const }}>● Available</span>
               </div>
-              <motion.button onClick={() => setOpen(false)} whileHover={{ scale: 1.12 }} whileTap={{ scale: 0.9 }}
-                style={{ background: "rgba(255,255,255,0.06)", border: "none", borderRadius: 8, width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: FCC.muted, flexShrink: 0 }}>
-                <XIcon size={13} />
+              <motion.button onClick={() => setOpen(false)} whileHover={{ scale: 1.14, background: "rgba(255,255,255,0.10)" }} whileTap={{ scale: 0.90 }}
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 7, width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: FCC.muted, flexShrink: 0, transition: "background 0.16s" }}>
+                <XIcon size={11} />
               </motion.button>
             </div>
-            <div style={{ padding: "14px 20px 14px", display: "flex", flexDirection: "column", gap: 9, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-              <a href={`mailto:${email}`} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 12, color: FCC.muted, textDecoration: "none", transition: "color 0.18s" }}
-                onMouseEnter={e => (e.currentTarget.style.color = FCC.accentL)} onMouseLeave={e => (e.currentTarget.style.color = FCC.muted)}>
-                <MailIcon size={13} /><span style={{ wordBreak: "break-all" }}>{email}</span>
+
+            {/* contact info */}
+            <div style={{ padding: "9px 14px 9px", display: "flex", flexDirection: "column", gap: 7, borderTop: "1px solid rgba(102,0,255,0.18)" }}>
+              <a href={`mailto:${email}`} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: FCC.muted, textDecoration: "none", transition: "color 0.16s" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.90)")} onMouseLeave={e => (e.currentTarget.style.color = FCC.muted)}>
+                <MailIcon size={11} /><span style={{ wordBreak: "break-all" }}>{email}</span>
               </a>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 12, color: FCC.muted }}>
-                <MapPinIcon size={13} /><span>{location}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: FCC.muted }}>
+                <MapPinIcon size={11} /><span>{location}</span>
               </div>
             </div>
-            <div style={{ padding: "12px 16px 18px", borderTop: "1px solid rgba(255,255,255,0.06)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-              <FloatingActionBtn href={`mailto:${email}`} icon={<MailIcon size={15} />} label="Email" color="#9944FF" bg="rgba(102,0,255,0.14)" border="rgba(102,0,255,0.35)" />
-              <FloatingActionBtn href={`tel:${phone.replace(/\s/g, "")}`} icon={<PhoneIcon size={15} />} label="Chiama" color="#22c55e" bg="rgba(34,197,94,0.10)" border="rgba(34,197,94,0.30)" />
-              <FloatingActionBtn href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}?text=Ciao%20Nadia!`} icon={<WhatsAppIcon />} label="WhatsApp" color="#25D366" bg="rgba(37,211,102,0.10)" border="rgba(37,211,102,0.30)" external />
+
+            {/* action buttons */}
+            <div style={{ padding: "9px 12px 14px", borderTop: "1px solid rgba(102,0,255,0.18)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
+              <FloatingActionBtn href={`mailto:${email}`} icon={<MailIcon size={13} />} label="Email" color="rgba(255,255,255,0.85)" bg="rgba(255,255,255,0.07)" border="rgba(255,255,255,0.14)" />
+              <FloatingActionBtn href={`tel:${phone.replace(/\s/g, "")}`} icon={<PhoneIcon size={13} />} label="Chiama" color="rgba(255,255,255,0.85)" bg="rgba(255,255,255,0.07)" border="rgba(255,255,255,0.14)" />
+              <FloatingActionBtn href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}?text=Ciao%20Nadia!`} icon={<WhatsAppIcon />} label="WhatsApp" color="rgba(255,255,255,0.85)" bg="rgba(255,255,255,0.07)" border="rgba(255,255,255,0.14)" external />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-      <motion.button onClick={() => setOpen(o => !o)} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.93 }} transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }} aria-label="Contatta Nadia Maar"
-        style={{ width: 54, height: 54, borderRadius: "50%", border: open ? "2px solid rgba(112,0,255,0.75)" : "2px solid rgba(112,0,255,0.45)", boxShadow: open ? "0 0 0 4px rgba(102,0,255,0.18), 0 8px 28px rgba(0,0,0,0.5), 0 0 24px rgba(102,0,255,0.4)" : "0 0 0 3px rgba(102,0,255,0.10), 0 6px 20px rgba(0,0,0,0.45), 0 0 18px rgba(102,0,255,0.22)", overflow: "hidden", cursor: "pointer", background: "linear-gradient(135deg, rgba(60,0,140,0.9), rgba(14,4,28,0.95))", position: "relative", flexShrink: 0, transition: "border-color 0.25s, box-shadow 0.25s", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <span style={{ fontSize: 17, fontWeight: 700, color: "rgba(200,160,255,0.95)" }}>{initials}</span>
-        {available && (
-          <span style={{ position: "absolute", bottom: 2, right: 2, width: 11, height: 11, borderRadius: "50%", background: FCC.green, border: "2px solid rgba(14,4,28,0.9)" }}>
-            <motion.span style={{ position: "absolute", inset: -2, borderRadius: "50%", background: FCC.green, opacity: 0.55 }} animate={{ scale: [1, 2.6], opacity: [0.55, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }} />
-          </span>
-        )}
+
+      {/* trigger button */}
+      <motion.button
+        ref={btnRef}
+        onClick={() => setOpen(o => !o)}
+        whileHover={{ scale: 1.09 }}
+        whileTap={{ scale: 0.92 }}
+        transition={{ type: "spring", stiffness: 440, damping: 20 }}
+        aria-label="Contatta Nadia Maar"
+        style={{
+          position: "fixed",
+          right: isMobile ? 16 : 24,
+          bottom: isMobile ? 24 : "auto",
+          top: isMobile ? "auto" : "50%",
+          transform: isMobile ? "none" : "translateY(-50%)",
+          zIndex: 401,
+          width: 48, height: 48, borderRadius: "50%",
+          border: open ? "1.5px solid rgba(102,0,255,0.80)" : "1.5px solid rgba(102,0,255,0.45)",
+          boxShadow: open
+            ? "0 0 0 3px rgba(102,0,255,0.16), 0 8px 28px rgba(0,0,0,0.55), 0 0 22px rgba(102,0,255,0.30)"
+            : "0 0 0 2px rgba(102,0,255,0.08), 0 6px 20px rgba(0,0,0,0.45)",
+          cursor: "pointer",
+          background: "rgba(255,255,255,0.05)",
+          backdropFilter: "blur(24px) saturate(1.5)",
+          WebkitBackdropFilter: "blur(24px) saturate(1.5)",
+          transition: "border-color 0.24s, box-shadow 0.24s",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          flexShrink: 0,
+        } as React.CSSProperties}
+      >
+        <span style={{ fontSize: 15, fontWeight: 700, color: "rgba(255,255,255,0.88)", pointerEvents: "none" }}>{initials}</span>
       </motion.button>
-    </div>
+    </>
   )
 }
 
@@ -2404,21 +2854,60 @@ function DateTimeWidget() {
     const id = setInterval(() => setNow(new Date()), 1000)
     return () => clearInterval(id)
   }, [])
-  const datePart = new Intl.DateTimeFormat("it-IT", { weekday: "short", day: "2-digit", month: "short", year: "numeric" }).format(now)
-  const hh = String(now.getHours()).padStart(2, "0")
-  const mm = String(now.getMinutes()).padStart(2, "0")
-  const ss = String(now.getSeconds()).padStart(2, "0")
+
+  const hh  = String(now.getHours()).padStart(2, "0")
+  const mm  = String(now.getMinutes()).padStart(2, "0")
+  const ss  = now.getSeconds()
+  const ssStr = String(ss).padStart(2, "0")
+  const day = new Intl.DateTimeFormat("en", { weekday: "short" }).format(now).toUpperCase()
+  const date = now.getDate()
+  const mon = new Intl.DateTimeFormat("en", { month: "short" }).format(now).toUpperCase()
+
   return (
-    <div aria-label="Data e ora locale" className="hp-datetime" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", alignItems: "center", gap: 10, padding: "6px 18px", borderRadius: 100, background: "rgba(16, 4, 32, 0.55)", backdropFilter: "blur(18px) saturate(1.6)", WebkitBackdropFilter: "blur(18px) saturate(1.6)", border: "1px solid rgba(112, 0, 255, 0.28)", boxShadow: "0 0 0 1px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 24px rgba(112,0,255,0.12)", whiteSpace: "nowrap", userSelect: "none", pointerEvents: "none", zIndex: 10 } as React.CSSProperties}>
-      <span style={{ position: "relative", display: "inline-flex", width: 6, height: 6, flexShrink: 0 }}>
-        <motion.span aria-hidden style={{ position: "absolute", inset: -2, borderRadius: "50%", background: "#7000FF", opacity: 0.5 }} animate={{ scale: [1, 2.8], opacity: [0.5, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }} />
-        <span style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#7000FF", display: "block" }} />
+    <div
+      className="hp-datetime"
+      aria-label="Local time"
+      style={{
+        position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "5px 14px 5px 8px", borderRadius: 100,
+        background: "rgba(255,255,255,0.04)",
+        backdropFilter: "blur(22px) saturate(1.6)", WebkitBackdropFilter: "blur(22px) saturate(1.6)",
+        border: "1px solid rgba(255,255,255,0.09)",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 14px rgba(0,0,0,0.22)",
+        whiteSpace: "nowrap", userSelect: "none", pointerEvents: "none", zIndex: 10,
+      } as React.CSSProperties}
+    >
+      {/* seconds arc */}
+      <svg width="22" height="22" viewBox="0 0 22 22" style={{ flexShrink: 0 }}>
+        <circle cx="11" cy="11" r="8.5" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" />
+        <motion.circle
+          cx="11" cy="11" r="8.5"
+          fill="none" stroke="#9944FF" strokeWidth="1.5" strokeLinecap="round"
+          transform="rotate(-90 11 11)"
+          animate={{ pathLength: ss / 60 }}
+          transition={{ duration: 0.85, ease: "easeOut" }}
+        />
+      </svg>
+
+      {/* HH:MM + ss */}
+      <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.06em", color: "rgba(255,255,255,0.92)", display: "inline-flex", alignItems: "baseline", gap: 1 }}>
+        {hh}
+        <motion.span
+          animate={{ opacity: [1, 0.2, 1] }}
+          transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+          style={{ margin: "0 1px", color: "rgba(255,255,255,0.30)" }}
+        >:</motion.span>
+        {mm}
+        <span style={{ fontSize: 9, opacity: 0.36, marginLeft: 4, letterSpacing: "0.04em" }}>{ssStr}</span>
       </span>
-      <span className="hp-dt-date" style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.06em", color: "rgba(196, 160, 255, 0.72)", textTransform: "capitalize" }}>{datePart}</span>
-      <span style={{ width: 1, height: 13, background: "rgba(112,0,255,0.35)", flexShrink: 0 }} />
-      <span className="hp-dt-time" style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.10em", fontFamily: "'SF Mono','Fira Code','Consolas',monospace", color: "rgba(225, 205, 255, 0.95)", display: "inline-flex", alignItems: "baseline", gap: 0 }}>
-        {hh}<span className="dt-colon">:</span>{mm}
-        <span style={{ fontSize: 10, opacity: 0.55, marginLeft: 1 }}><span className="dt-colon">:</span>{ss}</span>
+
+      {/* divider */}
+      <span style={{ width: 1, height: 13, background: "rgba(255,255,255,0.10)", flexShrink: 0 }} />
+
+      {/* date */}
+      <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 500, letterSpacing: "0.14em", color: "rgba(255,255,255,0.36)" }}>
+        {day} {date} {mon}
       </span>
     </div>
   )
@@ -2437,16 +2926,63 @@ const NAV_LINKS = [
 function Logo3D({ onClick }: { onClick: () => void }) {
   const [h, setH] = useState(false)
   return (
-    <motion.button onClick={onClick} onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.94 }} transition={{ duration: 0.22, ease }}
-      style={{ background: "none", border: "none", padding: 0, cursor: "pointer", position: "relative", width: 36, height: 36, flexShrink: 0 }}>
-      <motion.div animate={{ opacity: h ? 1 : 0, scale: h ? 1 : 0.85 }} transition={{ duration: 0.25 }} style={{ position: "absolute", inset: -5, borderRadius: 14, background: "radial-gradient(circle, rgba(102,0,255,0.35) 0%, transparent 70%)", filter: "blur(6px)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", inset: 0, borderRadius: 10, background: h ? "linear-gradient(145deg, #1a1a2e 0%, #12122a 100%)" : "linear-gradient(145deg, #141428 0%, #0e0e1e 100%)", border: `1.5px solid ${h ? "rgba(102,0,255,0.7)" : "rgba(102,0,255,0.3)"}`, boxShadow: h ? "0 0 0 1px rgba(102,0,255,0.15), inset 0 1px 0 rgba(255,255,255,0.08)" : "inset 0 1px 0 rgba(255,255,255,0.05)", transition: "all 0.25s", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-        <motion.div animate={{ x: h ? 60 : -60, opacity: h ? 0.4 : 0 }} transition={{ duration: 0.5, ease: "easeOut" }} style={{ position: "absolute", top: 0, left: -20, bottom: 0, width: 20, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)", transform: "skewX(-20deg)", pointerEvents: "none" }} />
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M3 16V4L9.5 13.5V4M10.5 4V16L17 6.5V16" stroke="url(#n-grad)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-          <defs><linearGradient id="n-grad" x1="3" y1="4" x2="17" y2="16" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#c7d0ff"/><stop offset="100%" stopColor="#6b85f9"/></linearGradient></defs>
+    <motion.button
+      onClick={onClick}
+      onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}
+      whileHover={{ scale: 1.07 }} whileTap={{ scale: 0.93 }}
+      transition={{ type: "spring", stiffness: 420, damping: 22 }}
+      style={{ background: "none", border: "none", padding: 0, cursor: "pointer", position: "relative", flexShrink: 0, display: "flex", alignItems: "center", gap: 12 }}
+    >
+      {/* glow */}
+      <motion.div
+        animate={{ opacity: h ? 1 : 0 }}
+        transition={{ duration: 0.22 }}
+        style={{ position: "absolute", inset: -10, background: "radial-gradient(circle, rgba(102,0,255,0.32) 0%, transparent 68%)", filter: "blur(14px)", pointerEvents: "none" }}
+      />
+      {/* badge */}
+      <div style={{
+        width: 46, height: 38, borderRadius: 11, position: "relative", overflow: "hidden",
+        background: h ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.06)",
+        border: `1px solid ${h ? "rgba(255,255,255,0.30)" : "rgba(255,255,255,0.14)"}`,
+        boxShadow: h
+          ? "inset 0 1px 0 rgba(255,255,255,0.22), 0 0 0 1px rgba(102,0,255,0.18)"
+          : "inset 0 1px 0 rgba(255,255,255,0.10)",
+        backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        transition: "background 0.22s, border-color 0.22s, box-shadow 0.24s",
+      }}>
+        {/* shimmer on hover */}
+        <motion.div aria-hidden
+          initial={{ x: "-140%" }}
+          animate={{ x: h ? "220%" : "-140%" }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+          style={{ position: "absolute", top: 0, bottom: 0, width: "55%", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.13), transparent)", transform: "skewX(-18deg)", pointerEvents: "none" }}
+        />
+        <svg width="30" height="17" viewBox="0 0 30 17" fill="none">
+          {/* N */}
+          <line x1="1.2" y1="1.2" x2="1.2"  y2="15.8" stroke={h ? "#fff" : "rgba(255,255,255,0.90)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
+          <line x1="1.2" y1="1.2" x2="11.8" y2="15.8" stroke={h ? "#fff" : "rgba(255,255,255,0.90)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
+          <line x1="11.8" y1="1.2" x2="11.8" y2="15.8" stroke={h ? "#fff" : "rgba(255,255,255,0.90)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
+          {/* M */}
+          <line x1="15.5" y1="15.8" x2="15.5" y2="1.2" stroke={h ? "#b57fff" : "rgba(153,68,255,0.88)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
+          <line x1="15.5" y1="1.2"  x2="21.8" y2="9.5" stroke={h ? "#b57fff" : "rgba(153,68,255,0.88)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
+          <line x1="21.8" y1="9.5"  x2="28.8" y2="1.2" stroke={h ? "#b57fff" : "rgba(153,68,255,0.88)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
+          <line x1="28.8" y1="1.2"  x2="28.8" y2="15.8" stroke={h ? "#b57fff" : "rgba(153,68,255,0.88)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
         </svg>
       </div>
+
+      {/* wordmark */}
+      <span style={{
+        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+        fontSize: 12, fontWeight: 700,
+        letterSpacing: "0.22em",
+        textTransform: "uppercase" as const,
+        color: h ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.60)",
+        transition: "color 0.28s",
+        whiteSpace: "nowrap" as const,
+      }}>
+        Nadia Maar
+      </span>
     </motion.button>
   )
 }
@@ -2459,7 +2995,7 @@ function NavLinkAdv({ label, active, onClick }: { label: string; active: boolean
   const onMove = (e: React.MouseEvent) => { const r = btnRef.current?.getBoundingClientRect(); if (r) { setLx(e.clientX - r.left); setLy(e.clientY - r.top) } }
   return (
     <button ref={btnRef} onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} onMouseMove={onMove}
-      style={{ position: "relative", background: "none", border: "none", cursor: "pointer", color: active ? T.text : h ? T.text : T.muted, fontSize: 13, fontWeight: active ? 600 : 500, letterSpacing: "0.04em", padding: "8px 16px", borderRadius: 8, overflow: "hidden", fontFamily: "inherit", transition: "color 0.18s" }}>
+      style={{ position: "relative", background: "none", border: "none", cursor: "pointer", color: active ? T.text : h ? T.text : T.muted, fontSize: 11, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase" as const, padding: "8px 16px", borderRadius: 8, overflow: "hidden", fontFamily: MONO, transition: "color 0.18s" }}>
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: h ? `radial-gradient(55px circle at ${lx}px ${ly}px, rgba(102,0,255,0.22) 0%, transparent 100%)` : "none", transition: "background 0.08s" }} />
       <motion.div animate={{ opacity: h || active ? 1 : 0, background: active ? "rgba(102,0,255,0.14)" : "rgba(255,255,255,0.05)" }} transition={{ duration: 0.18 }} style={{ position: "absolute", inset: 0, borderRadius: 8, border: active ? "1px solid rgba(102,0,255,0.28)" : "1px solid transparent" }} />
       {active && <motion.div layoutId="nav-active-dot" style={{ position: "absolute", bottom: 3, left: "50%", transform: "translateX(-50%)", width: 3, height: 3, borderRadius: "50%", background: T.accent, boxShadow: `0 0 6px ${T.accent}` }} />}
@@ -2468,13 +3004,244 @@ function NavLinkAdv({ label, active, onClick }: { label: string; active: boolean
   )
 }
 
+/* Large nav item — for mobile full-screen overlay */
+function MenuNavItem({ num, label, onClick, index }: { num: string; label: string; onClick: () => void; index: number }) {
+  const [h, setH] = useState(false)
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.08 + index * 0.07, duration: 0.52, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <button
+        onClick={onClick}
+        onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+        style={{
+          background: "none", border: "none", cursor: "pointer", width: "100%",
+          display: "flex", alignItems: "center", gap: 20, padding: "16px 0",
+          borderBottom: `1px solid ${h ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.05)"}`,
+          transition: "border-color 0.22s", textAlign: "left" as const,
+        }}
+      >
+        <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.20em", color: h ? T.accentLt : "rgba(255,255,255,0.22)", transition: "color 0.22s", minWidth: 28 }}>{num}</span>
+        <span style={{
+          fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+          fontSize: "clamp(30px, 10vw, 52px)", fontWeight: 800,
+          letterSpacing: "-0.03em", lineHeight: 1.1,
+          color: h ? "#fff" : "rgba(255,255,255,0.72)",
+          transition: "color 0.24s",
+        }}>{label}</span>
+        <motion.span
+          animate={{ x: h ? 8 : 0, opacity: h ? 1 : 0 }}
+          transition={{ duration: 0.20 }}
+          style={{ marginLeft: "auto", color: T.accentLt, fontSize: 22, lineHeight: 1 }}
+        >→</motion.span>
+      </button>
+    </motion.div>
+  )
+}
+
+/* Compact nav item — for desktop right panel */
+function DesktopMenuNavItem({ num, label, onClick, index }: { num: string; label: string; onClick: () => void; index: number }) {
+  const [h, setH] = useState(false)
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 28 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.08 + index * 0.07, duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <button
+        onClick={onClick}
+        onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+        style={{
+          background: "none", border: "none", cursor: "pointer", width: "100%",
+          display: "flex", alignItems: "center", gap: 18, padding: "14px 0",
+          borderBottom: `1px solid ${h ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.05)"}`,
+          transition: "border-color 0.22s", textAlign: "left" as const,
+        }}
+      >
+        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.20em", color: h ? T.accentLt : "rgba(255,255,255,0.22)", transition: "color 0.22s", minWidth: 24 }}>{num}</span>
+        <span style={{
+          fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+          fontSize: 28, fontWeight: 800,
+          letterSpacing: "-0.025em", lineHeight: 1.1,
+          color: h ? "#fff" : "rgba(255,255,255,0.68)",
+          transition: "color 0.24s",
+        }}>{label}</span>
+        <motion.span
+          animate={{ x: h ? 6 : 0, opacity: h ? 1 : 0 }}
+          transition={{ duration: 0.18 }}
+          style={{ marginLeft: "auto", color: T.accentLt, fontSize: 18, lineHeight: 1 }}
+        >→</motion.span>
+      </button>
+    </motion.div>
+  )
+}
+
+function MenuOverlay({ onClose }: { onClose: () => void }) {
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" ? window.innerWidth <= 800 : false)
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 800)
+    window.addEventListener("resize", onResize)
+    document.body.style.overflow = "hidden"
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
+    document.addEventListener("keydown", onKey)
+    return () => {
+      window.removeEventListener("resize", onResize)
+      document.body.style.overflow = ""
+      document.removeEventListener("keydown", onKey)
+    }
+  }, [onClose])
+
+  const goto = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); onClose() }
+
+  const NAV = [
+    { num: "01", label: "Home",       action: () => goto("s1") },
+    { num: "02", label: "About Me",   action: () => { window.location.href = "/about" } },
+    { num: "03", label: "Projects",   action: () => goto("s4") },
+  ]
+
+  const SOCIALS = [
+    { label: "GitHub",    href: "https://github.com/nadiamaar-dev" },
+    { label: "Instagram", href: "https://instagram.com/nadiamaar.dev" },
+    { label: "LinkedIn",  href: "https://linkedin.com/in/nadiamaar" },
+  ]
+
+  const footer = (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.34, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      style={{
+        padding: "24px 0 36px",
+        borderTop: "1px solid rgba(255,255,255,0.07)",
+        display: "flex", justifyContent: "space-between", alignItems: "flex-end",
+        flexWrap: "wrap", gap: 16,
+      }}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        <a href="mailto:nadiamaar.dev@gmail.com"
+          style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: "rgba(255,255,255,0.45)", textDecoration: "none", transition: "color 0.18s" }}
+          onMouseEnter={e => (e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.45)")}>
+          nadiamaar.dev@gmail.com
+        </a>
+        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.10em", color: "rgba(255,255,255,0.22)" }}>Remote · Europa</span>
+      </div>
+      <div style={{ display: "flex", gap: 20 }}>
+        {SOCIALS.map(({ label, href }) => (
+          <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+            style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)", textDecoration: "none", transition: "color 0.18s" }}
+            onMouseEnter={e => (e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.28)")}>
+            {label}
+          </a>
+        ))}
+      </div>
+    </motion.div>
+  )
+
+  if (isMobile) {
+    /* ── Mobile: elegant full-screen overlay, fades + scales up ── */
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.97 }}
+        transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          position: "fixed", inset: 0, zIndex: 300,
+          background: "rgba(5, 3, 14, 0.97)",
+          backdropFilter: "blur(40px) saturate(1.8)",
+          WebkitBackdropFilter: "blur(40px) saturate(1.8)",
+          display: "flex", flexDirection: "column",
+          padding: "0 28px",
+        } as React.CSSProperties}
+      >
+        {/* close row */}
+        <div style={{ height: 64, display: "flex", alignItems: "center", justifyContent: "flex-end", flexShrink: 0 }}>
+          <motion.button
+            onClick={onClose}
+            whileHover={{ scale: 1.1, background: "rgba(255,255,255,0.10)" }}
+            whileTap={{ scale: 0.90 }}
+            transition={{ type: "spring", stiffness: 420, damping: 22 }}
+            style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 10, width: 38, height: 38, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "rgba(255,255,255,0.65)" }}
+          >
+            <XIcon size={14} />
+          </motion.button>
+        </div>
+
+        {/* accent line */}
+        <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(102,0,255,0.55), rgba(153,68,255,0.35), transparent)", flexShrink: 0 }} />
+
+        {/* subtle ambient glow */}
+        <div aria-hidden style={{ position: "absolute", top: "30%", left: "50%", transform: "translateX(-50%)", width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.10) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
+
+        {/* nav items */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative" }}>
+          {NAV.map((item, i) => (
+            <MenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} />
+          ))}
+        </div>
+
+        {footer}
+      </motion.div>
+    )
+  }
+
+  /* ── Desktop: right panel popup + backdrop ── */
+  return (
+    <>
+      {/* backdrop — click to close */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.28 }}
+        onClick={onClose}
+        style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", zIndex: 299 }}
+      />
+
+      {/* panel */}
+      <motion.div
+        initial={{ x: "100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "100%" }}
+        transition={{ type: "spring", stiffness: 340, damping: 38 }}
+        style={{
+          position: "fixed", top: 0, right: 0, bottom: 0, width: 420, zIndex: 300,
+          background: "rgba(7, 4, 18, 0.97)",
+          backdropFilter: "blur(48px) saturate(1.8)",
+          WebkitBackdropFilter: "blur(48px) saturate(1.8)",
+          borderLeft: "1px solid rgba(255,255,255,0.07)",
+          display: "flex", flexDirection: "column",
+          padding: "0 40px",
+        } as React.CSSProperties}
+      >
+        {/* top purple accent line */}
+        <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(102,0,255,0.55), rgba(153,68,255,0.35), transparent)", flexShrink: 0 }} />
+
+        {/* spacer matching header height so nav links stay centered */}
+        <div style={{ height: 64, flexShrink: 0 }} />
+
+        {/* subtle corner glow */}
+        <div aria-hidden style={{ position: "absolute", bottom: "20%", right: -60, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.12) 0%, transparent 70%)", filter: "blur(40px)", pointerEvents: "none" }} />
+
+        {/* nav links */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative" }}>
+          {NAV.map((item, i) => (
+            <DesktopMenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} />
+          ))}
+        </div>
+
+        {footer}
+      </motion.div>
+    </>
+  )
+}
+
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [active, setActive] = useState("s1")
-  const [cx, setCx] = useState(-400)
-  const [cy, setCy] = useState(32)
-  const headerRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 48)
@@ -2482,76 +3249,45 @@ function Navbar() {
     return () => window.removeEventListener("scroll", fn)
   }, [])
 
-  useEffect(() => {
-    const ids = ["s1", ...NAV_LINKS.map(l => l.id)]
-    const map: Record<string, boolean> = {}
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => { map[e.target.id] = e.isIntersecting })
-      const first = ids.find(id => map[id])
-      if (first) setActive(first)
-    }, { threshold: 0.25, rootMargin: "-64px 0px 0px 0px" })
-    ids.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el) })
-    return () => obs.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const el = headerRef.current
-    if (!el) return
-    const onMove  = (e: MouseEvent) => { const r = el.getBoundingClientRect(); setCx(e.clientX - r.left); setCy(e.clientY - r.top) }
-    const onLeave = () => setCx(-400)
-    el.addEventListener("mousemove", onMove)
-    el.addEventListener("mouseleave", onLeave)
-    return () => { el.removeEventListener("mousemove", onMove); el.removeEventListener("mouseleave", onLeave) }
-  }, [])
-
-  const goto = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setMenuOpen(false) }
+  const goto = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
 
   return (
     <>
-      <motion.header ref={headerRef} initial={{ y: -70, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.7, ease }}
-        style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200, height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 40px", backdropFilter: scrolled ? "blur(24px) saturate(1.8)" : "none", WebkitBackdropFilter: scrolled ? "blur(24px) saturate(1.8)" : "none", background: scrolled ? "rgba(5,5,10,0.78)" : "transparent", borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.07)" : "transparent"}`, transition: "background 0.4s, border-color 0.4s", overflow: "hidden" } as React.CSSProperties}>
-        <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", background: `radial-gradient(320px circle at ${cx}px ${cy}px, rgba(102,0,255,0.13) 0%, transparent 100%)` }} />
+      <motion.header
+        initial={{ y: -70, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.7, ease }}
+        style={{
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 400, height: 64,
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "0 32px",
+          backdropFilter: scrolled ? "blur(24px) saturate(1.8)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(24px) saturate(1.8)" : "none",
+          background: scrolled ? "rgba(5,5,10,0.72)" : "transparent",
+          borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.07)" : "transparent"}`,
+          transition: "background 0.4s, border-color 0.4s",
+        } as React.CSSProperties}
+      >
         <DateTimeWidget />
-        <div style={{ display: "flex", alignItems: "center", gap: 11, position: "relative" }}>
-          <Logo3D onClick={() => goto("s1")} />
-          <button onClick={() => goto("s1")} className="hp-brand-text" style={{ background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: "inherit" }}>
-            <span style={{ fontSize: 14, fontWeight: 800, letterSpacing: "0.16em", textTransform: "uppercase" as const, background: `linear-gradient(135deg, ${T.text} 20%, ${T.accentLt} 100%)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" } as React.CSSProperties}>Nadia Maar</span>
-          </button>
-        </div>
-        <nav style={{ display: "flex", alignItems: "center", gap: 2, position: "relative" }} className="hp-nav-desktop">
-          {NAV_LINKS.map(({ label, id }) => <NavLinkAdv key={id} label={label} active={active === id} onClick={() => goto(id)} />)}
-          <div style={{ marginLeft: 14 }}><Btn primary small onClick={() => goto("s9")}>Prenota Call</Btn></div>
-        </nav>
-        <button onClick={() => setMenuOpen(o => !o)} className="hp-nav-burger" style={{ display: "none", background: "none", border: "none", cursor: "pointer", padding: 8, color: T.text }}>
-          <div style={{ width: 22, height: 16, display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative" }}>
-            <motion.div
-              animate={menuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-              transition={{ duration: 0.3 }}
-              style={{ width: 22, height: 2, background: "currentColor", borderRadius: 1, transformOrigin: "50% 50%" }}
-            />
-            <motion.div
-              animate={{ opacity: menuOpen ? 0 : 1 }}
-              transition={{ duration: 0.25 }}
-              style={{ width: 22, height: 2, background: "currentColor", borderRadius: 1 }}
-            />
-            <motion.div
-              animate={menuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-              transition={{ duration: 0.3 }}
-              style={{ width: 22, height: 2, background: "currentColor", borderRadius: 1, transformOrigin: "50% 50%" }}
-            />
-          </div>
-        </button>
+        <Logo3D onClick={() => goto("s1")} />
+
+        {/* hamburger */}
+        <motion.button
+          onClick={() => setMenuOpen(o => !o)}
+          whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
+          aria-label="Menu"
+          style={{ background: "none", border: "none", cursor: "pointer", padding: "8px 4px", display: "flex", flexDirection: "column", gap: 5, zIndex: 401, flexShrink: 0 }}
+        >
+          <motion.span animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 7 : 0 }} transition={{ duration: 0.26 }}
+            style={{ display: "block", width: 22, height: 1.8, background: menuOpen ? "#fff" : "rgba(255,255,255,0.80)", borderRadius: 2, transformOrigin: "center" }} />
+          <motion.span animate={{ opacity: menuOpen ? 0 : 1, width: menuOpen ? 0 : 14 }} transition={{ duration: 0.18 }}
+            style={{ display: "block", width: 14, height: 1.8, background: "rgba(255,255,255,0.80)", borderRadius: 2 }} />
+          <motion.span animate={{ rotate: menuOpen ? -45 : 0, y: menuOpen ? -7 : 0 }} transition={{ duration: 0.26 }}
+            style={{ display: "block", width: 22, height: 1.8, background: menuOpen ? "#fff" : "rgba(255,255,255,0.80)", borderRadius: 2, transformOrigin: "center" }} />
+        </motion.button>
       </motion.header>
+
       <AnimatePresence>
-        {menuOpen && (
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.22, ease }}
-            style={{ position: "fixed", top: 64, left: 0, right: 0, zIndex: 199, background: "rgba(8,8,16,0.97)", backdropFilter: "blur(22px)", borderBottom: `1px solid ${T.border}`, padding: "16px 24px 24px", display: "flex", flexDirection: "column", gap: 4 }}>
-            {NAV_LINKS.map(({ label, id }) => (
-              <button key={id} onClick={() => goto(id)} style={{ background: "none", border: "none", cursor: "pointer", color: active === id ? T.text : T.muted, fontSize: 16, fontWeight: active === id ? 600 : 500, padding: "14px 8px", textAlign: "left", fontFamily: "inherit", borderBottom: `1px solid ${T.border}` }}>{label}</button>
-            ))}
-            <div style={{ paddingTop: 16 }}><Btn primary onClick={() => goto("s9")}>Prenota Call</Btn></div>
-          </motion.div>
-        )}
+        {menuOpen && <MenuOverlay onClose={() => setMenuOpen(false)} />}
       </AnimatePresence>
     </>
   )
@@ -2604,45 +3340,76 @@ function CursorGlow() {
 /* ══════════════════════════════════════════════════════════════════════════
    ANIMATED BACKGROUND
 ══════════════════════════════════════════════════════════════════════════ */
+/* Animated film-grain canvas */
+function NoiseGrain({ alpha = 16, interval = 2 }: { alpha?: number; interval?: number }) {
+  const ref = useRef<HTMLCanvasElement | null>(null)
+  useEffect(() => {
+    const c = ref.current
+    if (!c) return
+    const ctx = c.getContext("2d", { alpha: true })
+    if (!ctx) return
+    let frame = 0, id = 0
+    const S = 1024
+    const resize = () => { c.width = S; c.height = S; c.style.width = "100vw"; c.style.height = "100vh" }
+    const draw = () => {
+      const img = ctx.createImageData(S, S)
+      const d = img.data
+      for (let i = 0; i < d.length; i += 4) {
+        const v = Math.random() * 255
+        d[i] = v; d[i + 1] = v; d[i + 2] = v; d[i + 3] = alpha
+      }
+      ctx.putImageData(img, 0, 0)
+    }
+    const loop = () => { if (frame % interval === 0) draw(); frame++; id = requestAnimationFrame(loop) }
+    window.addEventListener("resize", resize)
+    resize(); loop()
+    return () => { window.removeEventListener("resize", resize); cancelAnimationFrame(id) }
+  }, [alpha, interval])
+  return <canvas ref={ref} aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", imageRendering: "pixelated" as const }} />
+}
+
 function AnimatedBackground() {
   return (
     <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
-      {/* Purple — primary brand orb */}
+
+      {/* ── Ambient orbs — dimmed ──────────────────────────── */}
       <motion.div animate={{ x: [0, 120, -60, 100, 0], y: [0, -80, 120, -50, 0] }} transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
-        style={{ position: "absolute", top: "-12%", left: "4%", width: 780, height: 780, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.30) 0%, transparent 65%)", filter: "blur(90px)", willChange: "transform" }} />
-      {/* Indigo/blue — depth right */}
+        style={{ position: "absolute", top: "-12%", left: "4%", width: 780, height: 780, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.12) 0%, transparent 65%)", filter: "blur(90px)", willChange: "transform" }} />
       <motion.div animate={{ x: [0, -100, 70, -80, 0], y: [0, 100, -80, 70, 0] }} transition={{ duration: 32, repeat: Infinity, ease: "easeInOut", delay: 8 }}
-        style={{ position: "absolute", top: "22%", right: "-8%", width: 640, height: 640, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.24) 0%, transparent 65%)", filter: "blur(88px)", willChange: "transform" }} />
-      {/* Teal/green — aurora signature */}
+        style={{ position: "absolute", top: "22%", right: "-8%", width: 640, height: 640, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.08) 0%, transparent 65%)", filter: "blur(88px)", willChange: "transform" }} />
       <motion.div animate={{ x: [0, 80, -100, 60, 0], y: [0, 60, -70, 90, 0] }} transition={{ duration: 40, repeat: Infinity, ease: "easeInOut", delay: 14 }}
-        style={{ position: "absolute", bottom: "-5%", left: "18%", width: 660, height: 660, borderRadius: "50%", background: "radial-gradient(circle, rgba(16,185,129,0.16) 0%, transparent 65%)", filter: "blur(80px)", willChange: "transform" }} />
-      {/* Cyan — bottom-left accent */}
-      <motion.div animate={{ x: [0, -50, 80, -40, 0], y: [0, -90, 60, -70, 0] }} transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 4 }}
-        style={{ position: "absolute", top: "58%", left: "-6%", width: 440, height: 440, borderRadius: "50%", background: "radial-gradient(circle, rgba(6,182,212,0.15) 0%, transparent 65%)", filter: "blur(64px)", willChange: "transform" }} />
-      {/* Violet — top-right accent */}
+        style={{ position: "absolute", bottom: "-5%", left: "18%", width: 660, height: 660, borderRadius: "50%", background: "radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 65%)", filter: "blur(80px)", willChange: "transform" }} />
       <motion.div animate={{ x: [0, -40, 55, -45, 0], y: [0, 55, -40, 50, 0] }} transition={{ duration: 28, repeat: Infinity, ease: "easeInOut", delay: 11 }}
-        style={{ position: "absolute", top: "3%", right: "6%", width: 380, height: 380, borderRadius: "50%", background: "radial-gradient(circle, rgba(168,85,247,0.20) 0%, transparent 65%)", filter: "blur(70px)", willChange: "transform" }} />
+        style={{ position: "absolute", top: "3%", right: "6%", width: 380, height: 380, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.08) 0%, transparent 65%)", filter: "blur(70px)", willChange: "transform" }} />
 
-      {/* Aurora band 1 — upper */}
+      {/* ── Aurora bands — dimmed ──────────────────────────── */}
       <motion.div
-        animate={{ scaleX: [1, 1.35, 0.72, 1.18, 1], opacity: [0.45, 0.70, 0.24, 0.55, 0.45] }}
+        animate={{ scaleX: [1, 1.35, 0.72, 1.18, 1], opacity: [0.20, 0.35, 0.08, 0.25, 0.20] }}
         transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        style={{ position: "absolute", top: "20%", left: 0, right: 0, height: 90, background: "linear-gradient(90deg, transparent 0%, rgba(102,0,255,0.08) 12%, rgba(99,102,241,0.16) 38%, rgba(16,185,129,0.06) 65%, transparent 100%)", filter: "blur(28px)", transformOrigin: "center", willChange: "transform, opacity" }} />
-      {/* Aurora band 2 — middle */}
+        style={{ position: "absolute", top: "20%", left: 0, right: 0, height: 90, background: "linear-gradient(90deg, transparent 0%, rgba(102,0,255,0.05) 12%, rgba(102,0,255,0.08) 38%, rgba(16,185,129,0.03) 65%, transparent 100%)", filter: "blur(28px)", transformOrigin: "center", willChange: "transform, opacity" }} />
       <motion.div
-        animate={{ scaleX: [0.8, 1.28, 0.60, 1.10, 0.8], opacity: [0.30, 0.52, 0.14, 0.42, 0.30] }}
+        animate={{ scaleX: [0.8, 1.28, 0.60, 1.10, 0.8], opacity: [0.12, 0.22, 0.05, 0.18, 0.12] }}
         transition={{ duration: 19, repeat: Infinity, ease: "easeInOut", delay: 7 }}
-        style={{ position: "absolute", top: "54%", left: 0, right: 0, height: 70, background: "linear-gradient(90deg, transparent 0%, rgba(6,182,212,0.09) 14%, rgba(99,102,241,0.12) 44%, rgba(102,0,255,0.08) 74%, transparent 100%)", filter: "blur(22px)", transformOrigin: "center", willChange: "transform, opacity" }} />
-      {/* Aurora band 3 — lower */}
-      <motion.div
-        animate={{ scaleX: [1.1, 0.68, 1.28, 0.88, 1.1], opacity: [0.22, 0.40, 0.10, 0.30, 0.22] }}
-        transition={{ duration: 24, repeat: Infinity, ease: "easeInOut", delay: 12 }}
-        style={{ position: "absolute", bottom: "12%", left: 0, right: 0, height: 55, background: "linear-gradient(90deg, transparent 0%, rgba(16,185,129,0.10) 18%, rgba(6,182,212,0.12) 50%, rgba(99,102,241,0.08) 80%, transparent 100%)", filter: "blur(20px)", transformOrigin: "center", willChange: "transform, opacity" }} />
+        style={{ position: "absolute", top: "54%", left: 0, right: 0, height: 70, background: "linear-gradient(90deg, transparent 0%, rgba(6,182,212,0.04) 14%, rgba(102,0,255,0.06) 44%, rgba(102,0,255,0.04) 74%, transparent 100%)", filter: "blur(22px)", transformOrigin: "center", willChange: "transform, opacity" }} />
 
-      {/* Dot grid */}
-      <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)", backgroundSize: "44px 44px" }} />
-      {/* Edge vignette */}
-      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 100% 80% at 50% 50%, transparent 45%, rgba(5,5,10,0.68) 100%)" }} />
+      {/* ── Line grid — dimmed ────────────────────────────── */}
+      <div style={{
+        position: "absolute", inset: 0,
+        backgroundImage: "linear-gradient(to right, rgba(100,116,139,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(100,116,139,0.06) 1px, transparent 1px)",
+        backgroundSize: "11px 12px",
+      }} />
+
+      {/* ── Purple radial spotlight — dimmed ─────────────── */}
+      <div style={{
+        position: "absolute", inset: 0,
+        background: "radial-gradient(circle 600px at 50% 0px, rgba(102,0,255,0.08), transparent 70%)",
+      }} />
+
+      {/* ── Edge vignette — stronger ─────────────────────── */}
+      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 100% 80% at 50% 50%, transparent 30%, rgba(6,6,8,0.85) 100%)" }} />
+
+      {/* ── Film-grain noise layer ────────────────────────── */}
+      <NoiseGrain alpha={16} interval={2} />
     </div>
   )
 }
@@ -2664,7 +3431,7 @@ export default function NadiaMaar() {
   }, [])
 
   return (
-    <div style={{ background: T.bg, color: T.text, fontFamily: "'Inter', 'Geist', system-ui, -apple-system, BlinkMacSystemFont, sans-serif", overflowX: "hidden", minHeight: "100vh", position: "relative" }}>
+    <div style={{ background: T.bg, color: T.text, fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif", overflowX: "hidden", minHeight: "100vh", position: "relative" }}>
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_CSS }} />
       <CursorGlow />
       <AnimatedBackground />
@@ -2678,7 +3445,6 @@ export default function NadiaMaar() {
         <RisultatiBlock />
         <TechBlock />
         <Method />
-        <Scarcity />
         <Contact />
         <SiteFooter />
       </div>
