@@ -217,8 +217,8 @@ const GLOBAL_CSS = `
     .hp-grid-2 { grid-template-columns: 1fr !important; gap: 40px !important; }
     .hp-grid-3 { grid-template-columns: 1fr !important; gap: 16px !important; }
     .hp-skills-grid { grid-template-columns: 1fr !important; }
-    .hp-wrap { padding: 0 20px !important; overflow-x: hidden; }
-    .hp-sec { padding: 56px 0 !important; isolation: isolate; }
+    .hp-wrap { padding: 0 20px !important; }
+    .hp-sec { padding: 56px 0 !important; position: relative; z-index: 1; }
     .hp-hero { padding: 48px 0 !important; min-height: auto !important; }
     .hp-nav-desktop { display: none !important; }
     .hp-nav-burger { display: flex !important; }
@@ -253,6 +253,11 @@ const GLOBAL_CSS = `
     .hp-sol-card-title { font-size: 15px !important; margin-bottom: 8px !important; }
     .hp-sol-card-desc { font-size: 13px !important; margin-bottom: 14px !important; }
     .hp-diagnosi-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+    .hp-diagnosi-col-headers { display: none !important; }
+    .hp-diagnosi-row { grid-template-columns: 1fr !important; }
+    .hp-diagnosi-row > div:nth-child(2) { display: none !important; }
+    .hp-diagnosi-row > div:first-child { border-radius: 16px 16px 0 0 !important; border-right: 1px solid rgba(255,255,255,0.10) !important; border-bottom: none !important; }
+    .hp-diagnosi-row > div:last-child { border-radius: 0 0 16px 16px !important; border-left: 1px solid rgba(255,255,255,0.10) !important; border-top: none !important; }
     .hp-allinone-desktop { display: none !important; }
     .hp-allinone-mobile { display: block !important; }
     .hp-tech-card { padding: 10px 12px !important; border-radius: 10px !important; }
@@ -303,7 +308,9 @@ const GLOBAL_CSS = `
     }
   }
 
-  html, body { overflow-x: hidden; max-width: 100%; }
+  html { overflow-x: hidden; max-width: 100%; }
+  body { overflow-x: clip; max-width: 100%; touch-action: pan-y; }
+  #root { overflow-x: clip; }
 `
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -394,7 +401,7 @@ function Label({ text }: { text: string }) {
         boxShadow: "0 2px 16px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.10)",
       }}>
         <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.accentLt, flexShrink: 0, boxShadow: `0 0 8px ${T.accentLt}` }} />
-        <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: T.text, whiteSpace: "nowrap" as const }}>{text}</span>
+        <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: T.text }}>{text}</span>
       </span>
     </div>
   )
@@ -506,7 +513,7 @@ const HERO_SOCIALS = [
 ══════════════════════════════════════════════════════════════════════════ */
 function Hero() {
   return (
-    <section style={{ ...SEC, minHeight: 740, display: "flex", alignItems: "center", overflow: "hidden" }} id="s1" className="hp-sec hp-hero">
+    <section style={{ ...SEC, minHeight: 740, display: "flex", alignItems: "center", overflow: "clip" }} id="s1" className="hp-sec hp-hero">
       {/* Orb 1 — purple, multi-axis animated */}
       <motion.div aria-hidden
         animate={{ x: [0, 60, -40, 70, 0], y: [0, -80, 60, -50, 0], scale: [1, 1.15, 0.9, 1.08, 1] }}
@@ -723,7 +730,7 @@ function AllInOne() {
         </div>
 
         {/* mobile: horizontal scroll */}
-        <div className="hp-allinone-mobile" style={{ display: "none", marginLeft: -20, marginRight: -20, paddingLeft: 20, paddingRight: 20, overflowX: "auto", overflowY: "visible", WebkitOverflowScrolling: "touch" as any, scrollbarWidth: "none" as any, paddingTop: 16, paddingBottom: 16, marginTop: -16, marginBottom: -16 }}>
+        <div className="hp-allinone-mobile" style={{ display: "none", overflowX: "auto", overflowY: "hidden", WebkitOverflowScrolling: "touch" as any, scrollbarWidth: "none" as any, paddingTop: 16, paddingBottom: 16 }}>
           <style>{`.allinone-scroll::-webkit-scrollbar{display:none}`}</style>
           <div className="allinone-scroll" style={{ display: "flex", gap: 14, width: "max-content" }}>
             {ADVANTAGES.map((a, i) => (
@@ -1325,6 +1332,7 @@ function DiagnosiRow({ problem, solution, index }: typeof DIAGNOSI_PS[0] & { ind
       transition={{ duration: 0.60, delay: index * 0.10, ease }}
       onHoverStart={() => setHov(true)}
       onHoverEnd={() => setHov(false)}
+      className="hp-diagnosi-row"
       style={{ display: "grid", gridTemplateColumns: "1fr 56px 1fr", alignItems: "stretch", gap: 0 }}
     >
       {/* ── PROBLEMA ── */}
@@ -1427,7 +1435,7 @@ function DiagnosiBlock() {
               <span style={{ color: "#FFFFFF" } as React.CSSProperties}>queste situazioni?</span>
             </h2>
             {/* column headers */}
-            <div style={{ display: "flex", gap: 0, alignItems: "center", flexShrink: 0 }}>
+            <div className="hp-diagnosi-col-headers" style={{ display: "flex", gap: 0, alignItems: "center", flexShrink: 0 }}>
               <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(239,68,68,0.55)", minWidth: 180, textAlign: "right" as const }}>Problema</span>
               <span style={{ width: 56, textAlign: "center" as const, color: "rgba(255,255,255,0.20)", fontSize: 14 }}>→</span>
               <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(153,68,255,0.55)", minWidth: 180 }}>Soluzione</span>
@@ -3422,7 +3430,7 @@ export default function NadiaMaar() {
   }, [])
 
   return (
-    <div style={{ background: T.bg, color: T.text, fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif", overflowX: "hidden", minHeight: "100vh", position: "relative" }}>
+    <div style={{ background: T.bg, color: T.text, fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif", minHeight: "100vh", position: "relative" }}>
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_CSS }} />
       <CursorGlow />
       <AnimatedBackground />
