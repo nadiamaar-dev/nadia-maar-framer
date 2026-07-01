@@ -218,7 +218,7 @@ const GLOBAL_CSS = `
     .hp-grid-3 { grid-template-columns: 1fr !important; gap: 16px !important; }
     .hp-skills-grid { grid-template-columns: 1fr !important; }
     .hp-wrap { padding: 0 20px !important; overflow-x: hidden; }
-    .hp-sec { padding: 56px 0 !important; }
+    .hp-sec { padding: 56px 0 !important; isolation: isolate; }
     .hp-hero { padding: 48px 0 !important; min-height: auto !important; }
     .hp-nav-desktop { display: none !important; }
     .hp-nav-burger { display: flex !important; }
@@ -472,10 +472,6 @@ function HeroStat({ value, label, index }: { value: string; label: string; index
   return (
     <motion.div
       className="hp-hero-stat-item"
-      data-glow=""
-      animate={{ y: [0, index % 2 === 0 ? -5 : -7, 0] }}
-      transition={{ duration: 3.2 + index * 0.38, repeat: Infinity, ease: "easeInOut", delay: index * 0.55 }}
-      whileHover={{ scale: 1.05 }}
       style={{
         '--base': '220', '--spread': '90', '--radius': '16', '--border': '1', '--size': '200',
         padding: "18px 16px 15px",
@@ -550,12 +546,7 @@ function Hero() {
           </div>
         </motion.div>
 
-        {/* floating wrapper — slow hover loop, separate from entrance */}
-        <motion.div
-          animate={{ y: [0, -7, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
-          style={{ margin: "0 0 28px", display: "inline-block" }}
-        >
+        <div style={{ margin: "0 0 28px", display: "inline-block" }}>
           <motion.h1
             initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.1, ease }}
@@ -575,7 +566,7 @@ function Hero() {
           >
             E-commerce Architect{" & "}Digital Strategist
           </motion.h1>
-        </motion.div>
+        </div>
 
         <motion.p
           initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
