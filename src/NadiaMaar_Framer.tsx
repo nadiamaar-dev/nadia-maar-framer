@@ -9,11 +9,9 @@ import React, { useRef, useState, useEffect } from "react"
 import {
   motion,
   AnimatePresence,
-  useMotionValue,
+  useScroll,
   useSpring,
-  useTransform,
 } from "framer-motion"
-import type { MotionValue } from "framer-motion"
 
 /* ══════════════════════════════════════════════════════════════════════════
    INLINE SVG ICONS (replaces lucide-react)
@@ -98,16 +96,21 @@ const GLOBAL_CSS = `
   button, a[role="button"], .rainbow-btn { font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; }
   ::placeholder { color: rgba(242,242,252,0.22) !important; }
   ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: #060608; }
+  ::-webkit-scrollbar-track { background: #0a0603; }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); border-radius: 4px; }
   html { scroll-behavior: smooth; }
+
+  @media (max-width: 600px) {
+    .contact-modal-content { padding: 20px 18px 24px !important; }
+    .contact-modal-grid { grid-template-columns: 1fr !important; }
+  }
 
   :root { --x:-9999; --y:-9999; --xp:0; --yp:0; }
 
   [data-glow] {
     --border-size: calc(var(--border,1.5) * 1px);
     --spotlight-size: calc(var(--size,260) * 1px);
-    --hue: calc(var(--base,220) + (var(--xp,0) * var(--spread,140)));
+    --hue: calc(var(--base,28) + (var(--xp,0) * var(--spread,40)));
     background-image: radial-gradient(
       var(--spotlight-size) var(--spotlight-size) at
       calc(var(--x,-9999) * 1px) calc(var(--y,-9999) * 1px),
@@ -171,8 +174,8 @@ const GLOBAL_CSS = `
     left: -1px; top: -1px;
     border-radius: inherit;
     background: linear-gradient(45deg,
-      rgba(112,0,255,0.45), rgba(100,0,240,0.20), rgba(153,68,255,0.35), rgba(100,0,240,0.15),
-      rgba(112,0,255,0.45), rgba(100,0,240,0.20), rgba(153,68,255,0.35), rgba(100,0,240,0.15));
+      rgba(255,106,0,0.45), rgba(255,106,0,0.20), rgba(255,178,92,0.35), rgba(255,106,0,0.15),
+      rgba(255,106,0,0.45), rgba(255,106,0,0.20), rgba(255,178,92,0.35), rgba(255,106,0,0.15));
     background-size: 400%;
     width: calc(100% + 2px);
     height: calc(100% + 2px);
@@ -198,6 +201,7 @@ const GLOBAL_CSS = `
 
   @media (max-width: 1024px) {
     .hp-hero-grid { grid-template-columns: 1fr !important; }
+    .hp-hero-visual { display: none !important; }
     .hp-hero-cards-desktop { display: none !important; }
     .hp-hero-cards-mobile { display: flex !important; flex-direction: column; gap: 12px; margin-top: 32px; }
     .hp-stat-card { padding: 14px 16px !important; border-radius: 14px !important; max-width: 300px; }
@@ -317,36 +321,45 @@ const GLOBAL_CSS = `
    DESIGN TOKENS
 ══════════════════════════════════════════════════════════════════════════ */
 const T = {
-  bg:        "#0A0A0B",
-  bg2:       "#0E0E0F",
-  surface:   "#141415",
-  raised:    "#1C1C1D",
+  bg:        "#080604",
+  bg2:       "#0E0A08",
+  surface:   "#141010",
+  raised:    "#1C1613",
   border:    "rgba(255,255,255,0.08)",
-  borderHi:  "rgba(180,180,190,0.35)",
+  borderHi:  "rgba(245,210,180,0.35)",
   text:      "#FFFFFF",
   muted:     "rgba(255,255,255,0.68)",
   faint:     "rgba(255,255,255,0.38)",
-  accent:    "#6600FF",
-  accentDim: "rgba(102,0,255,0.12)",
-  accentGlo: "rgba(102,0,255,0.30)",
-  accentLt:  "#9944FF",
+  accent:    "#F5852A",
+  accentDim: "rgba(245,133,42,0.12)",
+  accentGlo: "rgba(245,133,42,0.30)",
+  accentLt:  "#FFB25C",
   green:     "#22c55e",
   greenGlo:  "rgba(34,197,94,0.28)",
 } as const
 
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1]
 const MONO = "'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
 /* Glass card system */
 const G = {
-  bg:     "rgba(255,255,255,0.07)",
-  bgHov:  "rgba(255,255,255,0.12)",
-  bd:     "rgba(255,255,255,0.24)",
+  bg:     "rgba(255,255,255,0.06)",
+  bgHov:  "rgba(255,255,255,0.11)",
+  bd:     "rgba(255,255,255,0.22)",
   bdHov:  "rgba(255,255,255,0.40)",
-  blur:   "blur(24px) saturate(1.8)",
-  shadow: "0 8px 32px 0 rgba(0,0,0,0.50), inset 0 1px 0 rgba(255,255,255,0.30)",
-  shadowHov: "0 16px 48px 0 rgba(0,0,0,0.60), inset 0 1px 0 rgba(255,255,255,0.36)",
+  blur:   "blur(34px) saturate(1.9)",
+  shadow: "0 10px 36px 0 rgba(10,4,0,0.48), inset 0 1px 0 rgba(255,255,255,0.28), inset 0 0 0 1px rgba(255,255,255,0.035)",
+  shadowHov: "0 22px 64px 0 rgba(18,7,0,0.58), inset 0 1px 0 rgba(255,255,255,0.38), inset 0 0 0 1px rgba(255,255,255,0.05)",
 } as const
 const MONO_STYLE: React.CSSProperties = { fontFamily: MONO, letterSpacing: "0.14em", textTransform: "uppercase", fontSize: 12, fontWeight: 500 }
+
+/* white -> amber gradient text fill (matches Solar-Glass headline) */
+const gradText = (deg = 100): React.CSSProperties => ({
+  backgroundImage: `linear-gradient(${deg}deg, #FFFFFF 0%, #FFD6AC 48%, #F5852A 100%)`,
+  WebkitBackgroundClip: "text",
+  backgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+})
 
 const WRAP: React.CSSProperties = { maxWidth: 1120, margin: "0 auto", padding: "0 32px" }
 const SEC: React.CSSProperties  = { padding: "80px 0", position: "relative" }
@@ -354,8 +367,27 @@ const SEC: React.CSSProperties  = { padding: "80px 0", position: "relative" }
 /* ══════════════════════════════════════════════════════════════════════════
    SHARED PRIMITIVES
 ══════════════════════════════════════════════════════════════════════════ */
-function Reveal({ children }: { children: React.ReactNode }) {
-  return <div>{children}</div>
+function useIsMobile(breakpoint = 800) {
+  const [mobile, setMobile] = useState(() => typeof window !== "undefined" && window.innerWidth <= breakpoint)
+  useEffect(() => {
+    const fn = () => setMobile(window.innerWidth <= breakpoint)
+    window.addEventListener("resize", fn, { passive: true })
+    return () => window.removeEventListener("resize", fn)
+  }, [breakpoint])
+  return mobile
+}
+
+function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 26 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-12% 0px -8% 0px" }}
+      transition={{ duration: 0.7, delay, ease }}
+    >
+      {children}
+    </motion.div>
+  )
 }
 
 function PingDot({ color = T.green, size = 10 }: { color?: string; size?: number }) {
@@ -419,8 +451,8 @@ function Btn({ children, primary: _primary, small, type = "button", onClick }: {
         borderRadius: 9999, fontSize: 12, fontWeight: 500,
         cursor: "pointer", letterSpacing: "0.14em", textTransform: "uppercase" as const,
         fontFamily: MONO, border: "1px solid rgba(255,255,255,0.12)",
-        background: "rgba(255,255,255,0.05)", backdropFilter: "blur(24px) saturate(1.3)",
-        WebkitBackdropFilter: "blur(24px) saturate(1.3)",
+        background: "rgba(255,255,255,0.05)", backdropFilter: "blur(28px) saturate(1.5)",
+        WebkitBackdropFilter: "blur(28px) saturate(1.5)",
         boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 12px rgba(0,0,0,0.20)",
         color: T.text, transition: "opacity 0.2s",
       } as React.CSSProperties}
@@ -447,7 +479,7 @@ function GlassCard({ children, padding = "36px 30px", radius = 16, height = "100
       whileHover={{ y: -7, scale: 1.016 }} whileTap={{ scale: 0.982 }}
       transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
       style={{
-        '--base': '220', '--spread': '140', '--radius': String(radius), '--border': '1.5', '--size': '270',
+        '--base': '28', '--spread': '40', '--radius': String(radius), '--border': '1.5', '--size': '270',
         position: "relative",
         backgroundColor: h ? G.bgHov : G.bg,
         backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
@@ -460,7 +492,7 @@ function GlassCard({ children, padding = "36px 30px", radius = 16, height = "100
         transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s",
       } as React.CSSProperties}
     >
-      <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", borderRadius: radius, background: h ? `radial-gradient(140px circle at ${lx}% ${ly}%, rgba(102,0,255,0.13) 0%, transparent 100%)` : "none", transition: "background 0.12s" }} />
+      <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", borderRadius: radius, background: h ? `radial-gradient(140px circle at ${lx}% ${ly}%, rgba(245,133,42,0.13) 0%, transparent 100%)` : "none", transition: "background 0.12s" }} />
       <div aria-hidden style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: 1, background: `linear-gradient(90deg, transparent, rgba(255,255,255,${h ? 0.15 : 0.06}), transparent)`, pointerEvents: "none", transition: "all 0.3s" }} />
 
       {children}
@@ -480,12 +512,12 @@ function HeroStat({ value, label, index }: { value: string; label: string; index
     <motion.div
       className="hp-hero-stat-item"
       style={{
-        '--base': '220', '--spread': '90', '--radius': '16', '--border': '1', '--size': '200',
+        '--base': '28', '--spread': '36', '--radius': '16', '--border': '1', '--size': '200',
         padding: "18px 16px 15px",
         borderRadius: 16, cursor: "default", position: "relative",
         display: "flex", flexDirection: "column", gap: 10,
         backgroundColor: "rgba(255,255,255,0.07)",
-        backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)",
+        backdropFilter: "blur(30px) saturate(1.9)", WebkitBackdropFilter: "blur(30px) saturate(1.9)",
         borderTop: "1px solid rgba(255,255,255,0.50)",
         borderRight: "1px solid rgba(255,255,255,0.24)",
         borderBottom: "1px solid rgba(255,255,255,0.12)",
@@ -509,25 +541,92 @@ const HERO_SOCIALS = [
 ]
 
 /* ══════════════════════════════════════════════════════════════════════════
+   HERO — SIGNATURE GLASS STUDIO CARD
+══════════════════════════════════════════════════════════════════════════ */
+const HERO_STACK = ["React", "Next.js", "Shopify", "Supabase", "AI"]
+
+function HeroStudioCard() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [lx, setLx] = useState(50)
+  const [ly, setLy] = useState(50)
+  const track = (e: React.MouseEvent) => {
+    const r = ref.current?.getBoundingClientRect()
+    if (r) { setLx(((e.clientX - r.left) / r.width) * 100); setLy(((e.clientY - r.top) / r.height) * 100) }
+  }
+  return (
+    <motion.div
+      ref={ref} data-glow="" onMouseMove={track}
+      initial={{ opacity: 0, y: 34, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.9, delay: 0.3, ease }}
+      whileHover={{ y: -6 }}
+      style={{
+        '--base': '28', '--spread': '40', '--radius': '22', '--border': '1.5', '--size': '320',
+        position: "relative", borderRadius: 22, padding: "24px 24px 22px", overflow: "hidden",
+        backgroundColor: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
+        borderTop: "1px solid rgba(255,255,255,0.55)",
+        borderRight: "1px solid rgba(255,255,255,0.22)",
+        borderBottom: "1px solid rgba(255,255,255,0.12)",
+        borderLeft: "1px solid rgba(255,255,255,0.22)",
+        boxShadow: G.shadow,
+      } as React.CSSProperties}
+    >
+      {/* cursor sheen + top highlight */}
+      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 22, pointerEvents: "none", background: `radial-gradient(200px circle at ${lx}% ${ly}%, rgba(255,150,70,0.13), transparent 70%)`, transition: "background 0.12s" }} />
+      <div aria-hidden style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)", pointerEvents: "none" }} />
+
+      {/* header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 13, marginBottom: 18, position: "relative" }}>
+        <div style={{ width: 46, height: 46, borderRadius: 13, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(140deg, #FF6A00, #F5852A)", boxShadow: "0 6px 20px rgba(255,106,0,0.35), inset 0 1px 0 rgba(255,255,255,0.35)", fontFamily: DISPLAY, fontWeight: 800, fontSize: 17, color: "#1c0d02", letterSpacing: "-0.02em" }}>NM</div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 15, color: "#fff", letterSpacing: "-0.01em" }}>Nadia Maar</div>
+          <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "rgba(255,206,160,0.85)", marginTop: 3 }}>Digital Architect</div>
+        </div>
+        <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.14em", color: "rgba(255,255,255,0.28)" }}>©26</span>
+      </div>
+
+      {/* availability pill */}
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 9, padding: "7px 14px", borderRadius: 9999, background: "rgba(52,211,153,0.10)", border: "1px solid rgba(52,211,153,0.25)", marginBottom: 20, position: "relative" }}>
+        <PingDot color={T.green} size={7} />
+        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "rgba(190,245,220,0.92)" }}>Available for work</span>
+      </div>
+
+      {/* stack */}
+      <div style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.32)", marginBottom: 11, position: "relative" }}>Stack</div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 7, marginBottom: 22, position: "relative" }}>
+        {HERO_STACK.map(s => (
+          <span key={s} style={{ padding: "5px 11px", borderRadius: 9999, fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.04em", color: "rgba(255,255,255,0.78)", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)" }}>{s}</span>
+        ))}
+      </div>
+
+      {/* signal / perf */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "13px 15px", borderRadius: 14, background: "rgba(0,0,0,0.22)", border: "1px solid rgba(255,255,255,0.07)", position: "relative" }}>
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 22 }}>
+          {[0, 1, 2, 3, 4].map(i => (
+            <motion.span key={i}
+              animate={{ scaleY: [0.35, 1, 0.5, 0.85, 0.35] }}
+              transition={{ duration: 1.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.14 }}
+              style={{ width: 3, height: 22, borderRadius: 2, background: "linear-gradient(180deg, #FFB25C, #F5852A)", transformOrigin: "bottom", display: "block" }}
+            />
+          ))}
+        </div>
+        <div style={{ textAlign: "right" as const }}>
+          <div style={{ fontFamily: MONO, fontSize: 15, fontWeight: 600, color: "#fff", letterSpacing: "0.02em" }}>100<span style={{ color: "rgba(255,255,255,0.35)" }}>/100</span></div>
+          <div style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.32)", marginTop: 2 }}>Core Web Vitals</div>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
    §1  HERO
 ══════════════════════════════════════════════════════════════════════════ */
 function Hero() {
   return (
     <section style={{ ...SEC, minHeight: 740, display: "flex", alignItems: "center", overflow: "clip" }} id="s1" className="hp-sec hp-hero">
-      {/* Orb 1 — purple, multi-axis animated */}
-      <motion.div aria-hidden
-        animate={{ x: [0, 60, -40, 70, 0], y: [0, -80, 60, -50, 0], scale: [1, 1.15, 0.9, 1.08, 1] }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-        style={{ position: "absolute", top: "5%", left: "32%", width: 720, height: 720, borderRadius: "50%", background: "radial-gradient(circle, rgba(90,90,100,0.18) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }}
-      />
-      {/* Orb 2 — pink, desynchronized loop */}
-      <motion.div aria-hidden
-        animate={{ x: [0, -50, 80, -60, 0], y: [0, 70, -60, 80, 0], scale: [1, 0.85, 1.2, 0.92, 1] }}
-        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 5 }}
-        style={{ position: "absolute", top: "25%", right: "-2%", width: 540, height: 540, borderRadius: "50%", background: "radial-gradient(circle, rgba(70,70,78,0.14) 0%, transparent 70%)", filter: "blur(72px)", pointerEvents: "none" }}
-      />
-
       <div style={{ ...WRAP, position: "relative", zIndex: 1 }} className="hp-wrap">
+       <div className="hp-hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: 56, alignItems: "center" }}>
+        <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease }}
@@ -538,8 +637,8 @@ function Hero() {
             padding: "8px 18px 8px 14px",
             borderRadius: 9999,
             background: "rgba(255,255,255,0.18)",
-            backdropFilter: "blur(24px) saturate(1.8)",
-            WebkitBackdropFilter: "blur(24px) saturate(1.8)",
+            backdropFilter: "blur(30px) saturate(1.9)",
+            WebkitBackdropFilter: "blur(30px) saturate(1.9)",
             borderTop: "1px solid rgba(255,255,255,0.50)",
             borderRight: "1px solid rgba(255,255,255,0.24)",
             borderBottom: "1px solid rgba(255,255,255,0.12)",
@@ -558,20 +657,15 @@ function Hero() {
             initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.1, ease }}
             style={{
-              fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-              fontSize: "clamp(28px, 5.2vw, 72px)", fontWeight: 800,
-              lineHeight: 1.08, letterSpacing: "-0.03em", margin: 0, maxWidth: "100%", color: "#FFFFFF", fontWeight: 600,
-              filter: [
-                "drop-shadow(0 1px 0 rgba(140,60,255,0.55))",
-                "drop-shadow(0 2px 0 rgba(110,0,255,0.40))",
-                "drop-shadow(0 4px 0 rgba(80,0,200,0.28))",
-                "drop-shadow(0 6px 0 rgba(60,0,160,0.18))",
-                "drop-shadow(0 10px 20px rgba(0,0,0,0.65))",
-                "drop-shadow(0 24px 40px rgba(102,0,255,0.18))",
-              ].join(" "),
+              fontFamily: DISPLAY,
+              fontSize: "clamp(30px, 5vw, 68px)", fontWeight: 700,
+              lineHeight: 1.04, letterSpacing: "-0.035em", margin: 0, maxWidth: "100%", color: "#FFFFFF",
+              filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.55)) drop-shadow(0 18px 50px rgba(245,133,42,0.22))",
             }}
           >
-            E-commerce Architect{" & "}Digital Strategist
+            <span>E-commerce Architect</span><br />
+            <span style={{ color: "rgba(255,255,255,0.28)", fontWeight: 300 }}>{"& "}</span>
+            <span style={gradText(96)}>Digital Strategist</span>
           </motion.h1>
         </div>
 
@@ -606,8 +700,8 @@ function Hero() {
               position: "relative", padding: "13px 34px", borderRadius: 9999, fontSize: 12, fontWeight: 500,
               cursor: "pointer", letterSpacing: "0.14em", textTransform: "uppercase" as const,
               fontFamily: MONO, border: "1px solid rgba(255,255,255,0.14)",
-              background: "rgba(255,255,255,0.05)", backdropFilter: "blur(24px) saturate(1.3)",
-              WebkitBackdropFilter: "blur(24px) saturate(1.3)",
+              background: "rgba(255,255,255,0.05)", backdropFilter: "blur(28px) saturate(1.5)",
+              WebkitBackdropFilter: "blur(28px) saturate(1.5)",
               boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 14px rgba(0,0,0,0.25)",
               color: T.text, flexShrink: 0,
             } as React.CSSProperties}
@@ -649,11 +743,11 @@ function Hero() {
           {HERO_SOCIALS.map(({ Icon, href, label }) => (
             <motion.a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
               data-glow=""
-              whileHover={{ scale: 1.1, backgroundColor: "rgba(102,0,255,0.14)" }}
+              whileHover={{ scale: 1.1, backgroundColor: "rgba(245,133,42,0.14)" }}
               whileTap={{ scale: 0.92 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
               style={{
-                '--base': '220', '--spread': '90', '--radius': '12', '--border': '1', '--size': '160',
+                '--base': '28', '--spread': '36', '--radius': '12', '--border': '1', '--size': '160',
                 width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center",
                 justifyContent: "center", color: T.muted, border: `1px solid ${G.bd}`,
                 backgroundColor: G.bg, backdropFilter: G.blur,
@@ -679,6 +773,11 @@ function Hero() {
           <HeroStat value="100%" label="Soluzioni Custom"       index={2} />
           <HeroStat value="50+" label="Progetti Completati"     index={3} />
         </motion.div>
+        </div>{/* end left column */}
+
+        {/* RIGHT — signature glass studio card */}
+        <div className="hp-hero-visual"><HeroStudioCard /></div>
+       </div>{/* end hp-hero-grid */}
       </div>
     </section>
   )
@@ -756,7 +855,7 @@ const RISULTATI = [
 
 function RisultatiBlock() {
   const SEP = (
-    <span aria-hidden style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(153,68,255,0.38)", flexShrink: 0 }} />
+    <span aria-hidden style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,178,92,0.38)", flexShrink: 0 }} />
   )
   return (
     <section style={{ padding: "36px 0" }}>
@@ -810,8 +909,8 @@ const TECH_POINTS = [
     title: "Core Web Vitals Perfetti",
     body: "Google premia i siti tecnicamente perfetti. Vantaggio competitivo immediato sul posizionamento organico.",
     color: T.accentLt,
-    colorDim: "rgba(153,68,255,0.14)",
-    colorBd: "rgba(153,68,255,0.32)",
+    colorDim: "rgba(255,178,92,0.14)",
+    colorBd: "rgba(255,178,92,0.32)",
   },
   {
     metric: "99.9%",
@@ -986,7 +1085,7 @@ function SkillCard({ icon, title, tags }: { icon: React.ReactNode; title: string
       whileHover={{ y: -8, scale: 1.016 }} whileTap={{ scale: 0.982 }}
       transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
       style={{
-        '--base': '220', '--spread': '90', '--radius': '18', '--border': '1', '--size': '200',
+        '--base': '28', '--spread': '36', '--radius': '18', '--border': '1', '--size': '200',
         aspectRatio: "1 / 1",
         position: "relative",
         display: "flex",
@@ -1048,8 +1147,8 @@ const SOLUZIONI = [
         <path d="M16 10a4 4 0 0 1-8 0"/>
       </svg>
     ),
-    gradient: "linear-gradient(135deg, #6600FF 0%, #9944FF 100%)",
-    glow: "rgba(102,0,255,0.28)",
+    gradient: "linear-gradient(135deg, #F5852A 0%, #FFB25C 100%)",
+    glow: "rgba(245,133,42,0.28)",
     title: "E-commerce ad Alta Conversione",
     desc: "Negozi online veloci, stabili e scalabili. Automazione totale di magazzini, cataloghi massivi e logistica.",
     cta: "Ottimizza il tuo E-commerce",
@@ -1061,8 +1160,8 @@ const SOLUZIONI = [
         <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
       </svg>
     ),
-    gradient: "linear-gradient(135deg, #7c3aed 0%, #9944FF 100%)",
-    glow: "rgba(124,58,237,0.28)",
+    gradient: "linear-gradient(135deg, #E0662A 0%, #FFB25C 100%)",
+    glow: "rgba(245,133,42,0.28)",
     title: "Siti Corporate & Lead Generation",
     desc: "Identità digitale d'élite per aziende e professionisti. Design esclusivo focalizzato sull'acquisizione di clienti qualificati.",
     cta: "Potenzia il tuo Brand",
@@ -1075,7 +1174,7 @@ const SOLUZIONI = [
       </svg>
     ),
     gradient: "linear-gradient(135deg, #6d28d9 0%, #C084FC 100%)",
-    glow: "rgba(109,40,217,0.28)",
+    glow: "rgba(230,120,40,0.28)",
     title: "Applicazioni Web & Automazione Custom",
     desc: "Software e strumenti di produttività su misura. Connettiamo i tuoi sistemi (CRM/ERP) per eliminare l'errore umano.",
     cta: "Automatizza i tuoi Processi",
@@ -1087,8 +1186,8 @@ const SOLUZIONI = [
         <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
       </svg>
     ),
-    gradient: "linear-gradient(135deg, #9333ea 0%, #F0ABFC 100%)",
-    glow: "rgba(102,0,255,0.28)",
+    gradient: "linear-gradient(135deg, #9333ea 0%, #FFD6AC 100%)",
+    glow: "rgba(245,133,42,0.28)",
     title: "SEO Strategico & Performance Marketing",
     desc: "Posizionamento organico integrato nel codice fin dal primo giorno. Scaliamo Google per intercettare traffico pronto a comprare.",
     cta: "Scala le Classifiche",
@@ -1101,8 +1200,8 @@ const SOLUZIONI = [
         <circle cx="12" cy="12" r="7" strokeDasharray="2 3"/>
       </svg>
     ),
-    gradient: "linear-gradient(135deg, #9944FF 0%, #F0ABFC 100%)",
-    glow: "rgba(102,0,255,0.28)",
+    gradient: "linear-gradient(135deg, #FFB25C 0%, #FFD6AC 100%)",
+    glow: "rgba(245,133,42,0.28)",
     title: "Integrazione AI & Sistemi Intelligenti",
     desc: "Soluzioni pratiche basate su Intelligenza Artificiale (Agenti AI, LLM). Abbattiamo i costi di gestione e ottimizziamo la routine.",
     cta: "Innova con l'AI",
@@ -1122,14 +1221,14 @@ function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: t
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
       style={{
-        '--base': '220', '--spread': '90', '--radius': '20', '--border': '1', '--size': '220',
+        '--base': '28', '--spread': '36', '--radius': '20', '--border': '1', '--size': '220',
         position: "relative",
         borderRadius: 20,
         padding: "36px 32px 32px",
         backgroundColor: hovered ? G.bgHov : G.bg,
         backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
-        border: `1px solid ${hovered ? "rgba(153,68,255,0.50)" : G.bd}`,
-        boxShadow: hovered ? `0 16px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(153,68,255,0.22), inset 0 1px 0 rgba(255,255,255,0.14)` : G.shadow,
+        border: `1px solid ${hovered ? "rgba(255,178,92,0.50)" : G.bd}`,
+        boxShadow: hovered ? `0 16px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,178,92,0.22), inset 0 1px 0 rgba(255,255,255,0.14)` : G.shadow,
         cursor: "pointer",
         transition: "border-color 0.25s, box-shadow 0.3s",
         display: "flex",
@@ -1143,7 +1242,7 @@ function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: t
         aria-hidden
         animate={{ opacity: hovered ? 1 : 0 }}
         transition={{ duration: 0.3 }}
-        style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: `radial-gradient(circle, ${glow} 0%, transparent 70%)`, filter: "blur(24px)", pointerEvents: "none" }}
+        style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: `radial-gradient(circle, ${glow} 0%, transparent 70%)`, filter: "blur(30px)", pointerEvents: "none" }}
       />
 
       {/* left: icon column (стаёт левым блоком на мобайле) */}
@@ -1152,8 +1251,8 @@ function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: t
         <div className="hp-sol-card-icon" style={{
           width: 46, height: 46, borderRadius: 14, flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
-          background: hovered ? gradient : "rgba(102,0,255,0.10)",
-          border: `1px solid ${hovered ? "transparent" : "rgba(153,68,255,0.22)"}`,
+          background: hovered ? gradient : "rgba(245,133,42,0.10)",
+          border: `1px solid ${hovered ? "transparent" : "rgba(255,178,92,0.22)"}`,
           boxShadow: hovered ? `0 0 22px ${glow}` : "none",
           color: hovered ? "#fff" : T.accentLt,
           transition: "background 0.3s, border-color 0.3s, box-shadow 0.3s, color 0.3s",
@@ -1324,6 +1423,8 @@ const DIAGNOSI_PS = [
 
 function DiagnosiRow({ problem, solution, index }: typeof DIAGNOSI_PS[0] & { index: number }) {
   const [hov, setHov] = useState(false)
+  const isMobile = useIsMobile()
+  const active = hov || isMobile
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -1339,40 +1440,40 @@ function DiagnosiRow({ problem, solution, index }: typeof DIAGNOSI_PS[0] & { ind
       <div style={{
         position: "relative", borderRadius: "16px 0 0 16px",
         padding: "28px 28px",
-        background: hov ? "rgba(239,68,68,0.06)" : "rgba(255,255,255,0.04)",
+        background: active ? "rgba(239,68,68,0.06)" : "rgba(255,255,255,0.04)",
         backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
-        borderTop: `1px solid ${hov ? "rgba(239,68,68,0.30)" : "rgba(255,255,255,0.10)"}`,
-        borderLeft: `1px solid ${hov ? "rgba(239,68,68,0.30)" : "rgba(255,255,255,0.10)"}`,
-        borderBottom: `1px solid ${hov ? "rgba(239,68,68,0.30)" : "rgba(255,255,255,0.10)"}`,
+        borderTop: `1px solid ${active ? "rgba(239,68,68,0.30)" : "rgba(255,255,255,0.10)"}`,
+        borderLeft: `1px solid ${active ? "rgba(239,68,68,0.30)" : "rgba(255,255,255,0.10)"}`,
+        borderBottom: `1px solid ${active ? "rgba(239,68,68,0.30)" : "rgba(255,255,255,0.10)"}`,
         borderRight: "none",
         transition: "background 0.28s, border-color 0.28s",
         overflow: "hidden",
       }}>
         <motion.div aria-hidden
-          animate={{ opacity: hov ? 1 : 0 }} transition={{ duration: 0.30 }}
+          animate={{ opacity: active ? 1 : 0 }} transition={{ duration: 0.30 }}
           style={{ position: "absolute", top: -20, left: -20, width: 120, height: 120, borderRadius: "50%", background: "radial-gradient(circle, rgba(239,68,68,0.14) 0%, transparent 70%)", filter: "blur(18px)", pointerEvents: "none" }}
         />
         {/* label */}
         <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 18 }}>
-          <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: hov ? "#FCA5A5" : "rgba(239,68,68,0.55)", transition: "color 0.28s" }}>Problema</span>
+          <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: active ? "#FCA5A5" : "rgba(239,68,68,0.55)", transition: "color 0.28s" }}>Problema</span>
         </div>
         {/* icon + title */}
         <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 12 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: hov ? "rgba(239,68,68,0.12)" : "rgba(255,255,255,0.05)", border: `1px solid ${hov ? "rgba(239,68,68,0.30)" : "rgba(255,255,255,0.09)"}`, color: hov ? "#FCA5A5" : "rgba(242,242,250,0.50)", transition: "all 0.25s" }}>
+          <div style={{ width: 40, height: 40, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: active ? "rgba(239,68,68,0.12)" : "rgba(255,255,255,0.05)", border: `1px solid ${active ? "rgba(239,68,68,0.30)" : "rgba(255,255,255,0.09)"}`, color: active ? "#FCA5A5" : "rgba(242,242,250,0.50)", transition: "all 0.25s" }}>
             {problem.icon}
           </div>
           <h3 style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.014em", color: T.text, margin: 0, lineHeight: 1.32, paddingTop: 2 }}>{problem.title}</h3>
         </div>
         <p style={{ fontSize: 13.5, color: T.muted, lineHeight: 1.78, margin: 0 }}>{problem.body}</p>
         {/* bottom accent */}
-        <motion.div animate={{ scaleX: hov ? 1 : 0 }} transition={{ duration: 0.32, ease }}
+        <motion.div animate={{ scaleX: active ? 1 : 0 }} transition={{ duration: 0.32, ease }}
           style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, rgba(239,68,68,0.65), rgba(251,113,133,0.35))", transformOrigin: "left" }} />
       </div>
 
       {/* ── ARROW ── */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.025)", borderTop: `1px solid rgba(255,255,255,0.08)`, borderBottom: `1px solid rgba(255,255,255,0.08)`, flexShrink: 0 }}>
         <motion.div
-          animate={{ x: hov ? 3 : 0, color: hov ? T.accentLt : "rgba(255,255,255,0.22)" }}
+          animate={{ x: active ? 3 : 0, color: active ? T.accentLt : "rgba(255,255,255,0.22)" }}
           transition={{ duration: 0.24 }}
           style={{ fontSize: 18, lineHeight: 1 }}
         >→</motion.div>
@@ -1382,34 +1483,34 @@ function DiagnosiRow({ problem, solution, index }: typeof DIAGNOSI_PS[0] & { ind
       <div style={{
         position: "relative", borderRadius: "0 16px 16px 0",
         padding: "28px 28px",
-        background: hov ? "rgba(102,0,255,0.07)" : "rgba(255,255,255,0.04)",
+        background: active ? "rgba(245,133,42,0.07)" : "rgba(255,255,255,0.04)",
         backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
-        borderTop: `1px solid ${hov ? "rgba(153,68,255,0.38)" : "rgba(255,255,255,0.10)"}`,
-        borderRight: `1px solid ${hov ? "rgba(153,68,255,0.38)" : "rgba(255,255,255,0.10)"}`,
-        borderBottom: `1px solid ${hov ? "rgba(153,68,255,0.38)" : "rgba(255,255,255,0.10)"}`,
+        borderTop: `1px solid ${active ? "rgba(255,178,92,0.38)" : "rgba(255,255,255,0.10)"}`,
+        borderRight: `1px solid ${active ? "rgba(255,178,92,0.38)" : "rgba(255,255,255,0.10)"}`,
+        borderBottom: `1px solid ${active ? "rgba(255,178,92,0.38)" : "rgba(255,255,255,0.10)"}`,
         borderLeft: "none",
         transition: "background 0.28s, border-color 0.28s",
         overflow: "hidden",
       }}>
         <motion.div aria-hidden
-          animate={{ opacity: hov ? 1 : 0 }} transition={{ duration: 0.30 }}
-          style={{ position: "absolute", top: -20, right: -20, width: 130, height: 130, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.16) 0%, transparent 70%)", filter: "blur(20px)", pointerEvents: "none" }}
+          animate={{ opacity: active ? 1 : 0 }} transition={{ duration: 0.30 }}
+          style={{ position: "absolute", top: -20, right: -20, width: 130, height: 130, borderRadius: "50%", background: "radial-gradient(circle, rgba(245,133,42,0.16) 0%, transparent 70%)", filter: "blur(20px)", pointerEvents: "none" }}
         />
         {/* label */}
         <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 18 }}>
-          <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: hov ? T.accentLt : "rgba(153,68,255,0.55)", transition: "color 0.28s" }}>Soluzione</span>
+          <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: active ? T.accentLt : "rgba(255,178,92,0.55)", transition: "color 0.28s" }}>Soluzione</span>
         </div>
         {/* icon + title */}
         <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 12 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: hov ? "rgba(102,0,255,0.14)" : "rgba(255,255,255,0.05)", border: `1px solid ${hov ? "rgba(153,68,255,0.38)" : "rgba(255,255,255,0.09)"}`, color: hov ? T.accentLt : "rgba(242,242,250,0.50)", transition: "all 0.25s" }}>
+          <div style={{ width: 40, height: 40, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: active ? "rgba(245,133,42,0.14)" : "rgba(255,255,255,0.05)", border: `1px solid ${active ? "rgba(255,178,92,0.38)" : "rgba(255,255,255,0.09)"}`, color: active ? T.accentLt : "rgba(242,242,250,0.50)", transition: "all 0.25s" }}>
             {solution.icon}
           </div>
           <h3 style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.014em", color: T.text, margin: 0, lineHeight: 1.32, paddingTop: 2 }}>{solution.title}</h3>
         </div>
         <p style={{ fontSize: 13.5, color: T.muted, lineHeight: 1.78, margin: 0 }}>{solution.body}</p>
         {/* bottom accent */}
-        <motion.div animate={{ scaleX: hov ? 1 : 0 }} transition={{ duration: 0.32, ease }}
-          style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, rgba(102,0,255,0.65), rgba(153,68,255,0.35))", transformOrigin: "left" }} />
+        <motion.div animate={{ scaleX: active ? 1 : 0 }} transition={{ duration: 0.32, ease }}
+          style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, rgba(245,133,42,0.65), rgba(255,178,92,0.35))", transformOrigin: "left" }} />
       </div>
     </motion.div>
   )
@@ -1438,7 +1539,7 @@ function DiagnosiBlock() {
             <div className="hp-diagnosi-col-headers" style={{ display: "flex", gap: 0, alignItems: "center", flexShrink: 0 }}>
               <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(239,68,68,0.55)", minWidth: 180, textAlign: "right" as const }}>Problema</span>
               <span style={{ width: 56, textAlign: "center" as const, color: "rgba(255,255,255,0.20)", fontSize: 14 }}>→</span>
-              <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(153,68,255,0.55)", minWidth: 180 }}>Soluzione</span>
+              <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(255,178,92,0.55)", minWidth: 180 }}>Soluzione</span>
             </div>
           </motion.div>
         </div>
@@ -1507,12 +1608,12 @@ function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: type
       onHoverStart={() => setHov(true)}
       onHoverEnd={() => setHov(false)}
       style={{
-        '--base': '220', '--spread': '90', '--radius': '20', '--border': '1', '--size': '220',
+        '--base': '28', '--spread': '36', '--radius': '20', '--border': '1', '--size': '220',
         position: "relative", borderRadius: 20, padding: "36px 30px 30px",
-        backgroundColor: hov ? "rgba(102,0,255,0.055)" : "rgba(255,255,255,0.026)",
-        border: `1px solid ${hov ? "rgba(153,68,255,0.38)" : "rgba(255,255,255,0.07)"}`,
+        backgroundColor: hov ? "rgba(245,133,42,0.055)" : "rgba(255,255,255,0.026)",
+        border: `1px solid ${hov ? "rgba(255,178,92,0.38)" : "rgba(255,255,255,0.07)"}`,
         boxShadow: hov
-          ? "0 16px 48px rgba(0,0,0,0.42), 0 0 0 1px rgba(153,68,255,0.16), inset 0 1px 0 rgba(255,255,255,0.08)"
+          ? "0 16px 48px rgba(0,0,0,0.42), 0 0 0 1px rgba(255,178,92,0.16), inset 0 1px 0 rgba(255,255,255,0.08)"
           : "0 2px 18px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.04)",
         transition: "background-color 0.28s, border-color 0.28s, box-shadow 0.32s",
         display: "flex", flexDirection: "column", gap: 0, overflow: "hidden", cursor: "default",
@@ -1521,7 +1622,7 @@ function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: type
       {/* purple glow orb */}
       <motion.div aria-hidden
         animate={{ opacity: hov ? 1 : 0 }} transition={{ duration: 0.3 }}
-        style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.18) 0%, transparent 70%)", filter: "blur(24px)", pointerEvents: "none" }}
+        style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "radial-gradient(circle, rgba(245,133,42,0.18) 0%, transparent 70%)", filter: "blur(30px)", pointerEvents: "none" }}
       />
 
       {/* top row: num + icon */}
@@ -1530,10 +1631,10 @@ function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: type
         <div style={{
           width: 46, height: 46, borderRadius: 14, flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
-          background: hov ? "linear-gradient(135deg, #6600FF 0%, #9944FF 100%)" : "rgba(102,0,255,0.10)",
-          border: `1px solid ${hov ? "transparent" : "rgba(153,68,255,0.24)"}`,
+          background: hov ? "linear-gradient(135deg, #F5852A 0%, #FFB25C 100%)" : "rgba(245,133,42,0.10)",
+          border: `1px solid ${hov ? "transparent" : "rgba(255,178,92,0.24)"}`,
           color: hov ? "#fff" : T.accentLt,
-          boxShadow: hov ? "0 0 22px rgba(102,0,255,0.40)" : "none",
+          boxShadow: hov ? "0 0 22px rgba(245,133,42,0.40)" : "none",
           transition: "background 0.28s, border-color 0.28s, color 0.28s, box-shadow 0.28s",
         }}>
           {icon}
@@ -1563,7 +1664,7 @@ function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: type
       <motion.div
         animate={{ scaleX: hov ? 1 : 0 }}
         transition={{ duration: 0.34, ease }}
-        style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, #6600FF, #C084FC)", transformOrigin: "left", borderRadius: "0 0 20px 20px" }}
+        style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, #F5852A, #C084FC)", transformOrigin: "left", borderRadius: "0 0 20px 20px" }}
       />
     </motion.div>
   )
@@ -1635,7 +1736,7 @@ function SkillsCardsGrid() {
 ══════════════════════════════════════════════════════════════════════════ */
 const SkillIconLayers = () => (
   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7">
-    <defs><linearGradient id="sk-g1" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stopColor="#9944FF"/><stop offset="1" stopColor="#C084FC"/></linearGradient></defs>
+    <defs><linearGradient id="sk-g1" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stopColor="#FFB25C"/><stop offset="1" stopColor="#C084FC"/></linearGradient></defs>
     <polygon points="12 2 2 7 12 12 22 7 12 2" stroke="url(#sk-g1)"/>
     <polyline points="2 17 12 22 22 17" stroke="url(#sk-g1)"/>
     <polyline points="2 12 12 17 22 12" stroke="url(#sk-g1)"/>
@@ -1643,7 +1744,7 @@ const SkillIconLayers = () => (
 )
 const SkillIconCpu = () => (
   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7">
-    <defs><linearGradient id="sk-g2" x1="1" y1="1" x2="23" y2="23" gradientUnits="userSpaceOnUse"><stop stopColor="#9944FF"/><stop offset="1" stopColor="#C084FC"/></linearGradient></defs>
+    <defs><linearGradient id="sk-g2" x1="1" y1="1" x2="23" y2="23" gradientUnits="userSpaceOnUse"><stop stopColor="#FFB25C"/><stop offset="1" stopColor="#C084FC"/></linearGradient></defs>
     <rect x="4" y="4" width="16" height="16" rx="2" stroke="url(#sk-g2)"/>
     <rect x="9" y="9" width="6" height="6" stroke="url(#sk-g2)"/>
     <line x1="9" y1="1" x2="9" y2="4" stroke="url(#sk-g2)"/>
@@ -1658,7 +1759,7 @@ const SkillIconCpu = () => (
 )
 const SkillIconRocket = () => (
   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7">
-    <defs><linearGradient id="sk-g3" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stopColor="#9944FF"/><stop offset="1" stopColor="#C084FC"/></linearGradient></defs>
+    <defs><linearGradient id="sk-g3" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stopColor="#FFB25C"/><stop offset="1" stopColor="#C084FC"/></linearGradient></defs>
     <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" stroke="url(#sk-g3)"/>
     <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" stroke="url(#sk-g3)"/>
     <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" stroke="url(#sk-g3)"/>
@@ -1688,10 +1789,10 @@ function SkillAccordion({ icon, title, items, defaultOpen }: { icon: React.React
   const [open, setOpen] = useState(defaultOpen ?? false)
   return (
     <Reveal>
-      <div data-glow="" style={{ '--base': '220', '--spread': '140', '--radius': '16', '--border': '1.5', '--size': '270', borderRadius: 16, position: "relative", backgroundColor: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${open ? "rgba(102,0,255,0.45)" : G.bd}`, boxShadow: open ? G.shadowHov : G.shadow, transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}>
+      <div data-glow="" style={{ '--base': '28', '--spread': '40', '--radius': '16', '--border': '1.5', '--size': '270', borderRadius: 16, position: "relative", backgroundColor: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${open ? "rgba(245,133,42,0.45)" : G.bd}`, boxShadow: open ? G.shadowHov : G.shadow, transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}>
   
-        <button onClick={() => setOpen(o => !o)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 18, padding: "26px 32px", background: open ? "rgba(102,0,255,0.07)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
-          <div style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: open ? "rgba(102,0,255,0.20)" : "rgba(102,0,255,0.10)", border: `1px solid ${open ? "rgba(153,68,255,0.45)" : "rgba(153,68,255,0.22)"}`, boxShadow: open ? "0 0 14px rgba(102,0,255,0.28), inset 0 1px 0 rgba(255,255,255,0.08)" : "inset 0 1px 0 rgba(255,255,255,0.05)", transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s" }}>
+        <button onClick={() => setOpen(o => !o)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 18, padding: "26px 32px", background: open ? "rgba(245,133,42,0.07)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
+          <div style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: open ? "rgba(245,133,42,0.20)" : "rgba(245,133,42,0.10)", border: `1px solid ${open ? "rgba(255,178,92,0.45)" : "rgba(255,178,92,0.22)"}`, boxShadow: open ? "0 0 14px rgba(245,133,42,0.28), inset 0 1px 0 rgba(255,255,255,0.08)" : "inset 0 1px 0 rgba(255,255,255,0.05)", transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s" }}>
             {icon}
           </div>
           <span style={{ fontSize: 17, fontWeight: 600, letterSpacing: "-0.015em", flex: 1 }}>{title}</span>
@@ -1749,23 +1850,23 @@ function VisualAnalisi() {
     <svg viewBox="0 0 300 250" width="100%" height="100%">
       {sats.map((s, i) => (
         <motion.path key={i} d={`M${cx},${cy}L${s.x},${s.y}`}
-          stroke="rgba(153,68,255,0.28)" strokeWidth="1" fill="none" strokeDasharray="4 3"
+          stroke="rgba(255,178,92,0.28)" strokeWidth="1" fill="none" strokeDasharray="4 3"
           initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
           transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
         />
       ))}
-      <motion.circle cx={cx} cy={cy} r={36} fill="rgba(102,0,255,0.07)"
+      <motion.circle cx={cx} cy={cy} r={36} fill="rgba(245,133,42,0.07)"
         animate={{ r: [36, 45, 36] }} transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.circle cx={cx} cy={cy} r={28}
-        fill="rgba(102,0,255,0.18)" stroke="rgba(153,68,255,0.55)" strokeWidth="1.5"
+        fill="rgba(245,133,42,0.18)" stroke="rgba(255,178,92,0.55)" strokeWidth="1.5"
         initial={{ scale: 0 }} animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 250, delay: 0.1 }}
         style={{ transformOrigin: `${cx}px ${cy}px` }}
       />
       <text x={cx} y={cy - 3} textAnchor="middle" fontSize={9} fontWeight="700"
         fill="#C084FC" fontFamily="Inter,sans-serif">Business</text>
-      <text x={cx} y={cy + 9} textAnchor="middle" fontSize={6.5} fill="rgba(153,68,255,0.5)"
+      <text x={cx} y={cy + 9} textAnchor="middle" fontSize={6.5} fill="rgba(255,178,92,0.5)"
         fontFamily="Inter,sans-serif">Analysis</text>
       {sats.map((s, i) => (
         <motion.g key={i} initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
@@ -1778,7 +1879,7 @@ function VisualAnalisi() {
         </motion.g>
       ))}
       {sats.map((s, i) => (
-        <motion.circle key={`p${i}`} cx={cx} cy={cy} r={2.5} fill="#9944FF"
+        <motion.circle key={`p${i}`} cx={cx} cy={cy} r={2.5} fill="#FFB25C"
           animate={{ x: [0, s.x - cx, 0], y: [0, s.y - cy, 0], opacity: [0, 0.9, 0] }}
           transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.38, ease: "easeInOut" }}
         />
@@ -1816,18 +1917,18 @@ function VisualDesign() {
         style={{ transformOrigin: "150px 58px" }}
       />
       <motion.rect x={25} y={76} width={250} height={50} rx={7}
-        fill="rgba(102,0,255,0.09)" stroke="rgba(153,68,255,0.20)" strokeWidth="1"
+        fill="rgba(245,133,42,0.09)" stroke="rgba(255,178,92,0.20)" strokeWidth="1"
         initial={{ opacity: 0, scaleX: 0.7 }} animate={{ opacity: 1, scaleX: 1 }}
         transition={{ delay: 0.34, duration: 0.4, ease: [0.16,1,0.3,1] }}
         style={{ transformOrigin: "150px 101px" }}
       />
-      <motion.rect x={55} y={90} width={0} height={8} rx={4} fill="rgba(153,68,255,0.45)"
+      <motion.rect x={55} y={90} width={0} height={8} rx={4} fill="rgba(255,178,92,0.45)"
         animate={{ width: 110 }} transition={{ delay: 0.54, duration: 0.5 }}
       />
       <motion.rect x={80} y={105} width={0} height={5} rx={3} fill="rgba(255,255,255,0.14)"
         animate={{ width: 60 }} transition={{ delay: 0.68, duration: 0.35 }}
       />
-      <motion.rect x={167} y={89} width={2} height={11} rx={1} fill="rgba(153,68,255,0.75)"
+      <motion.rect x={167} y={89} width={2} height={11} rx={1} fill="rgba(255,178,92,0.75)"
         animate={{ opacity: [1, 0, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.9 }}
       />
       {[25,112,199].map((x, i) => (
@@ -1836,7 +1937,7 @@ function VisualDesign() {
         >
           <rect x={x} y={138} width={76} height={54} rx={7}
             fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
-          <circle cx={x+38} cy={157} r={9} fill="rgba(102,0,255,0.17)"/>
+          <circle cx={x+38} cy={157} r={9} fill="rgba(245,133,42,0.17)"/>
           <rect x={x+16} y={172} width={44} height={4} rx={2} fill="rgba(255,255,255,0.10)"/>
           <rect x={x+22} y={180} width={32} height={3} rx={2} fill="rgba(255,255,255,0.06)"/>
         </motion.g>
@@ -1847,9 +1948,9 @@ function VisualDesign() {
 
 function VisualAPI() {
   const boxes = [
-    { label: "Fornitore", sub: "ERP/CRM",     x: 14,  y: 72, w: 76, h: 86,  ac: "rgba(102,0,255,0.16)", bd: "rgba(153,68,255,0.36)" },
-    { label: "API Layer", sub: "Middleware",   x: 112, y: 50, w: 76, h: 130, ac: "rgba(153,68,255,0.10)", bd: "rgba(153,68,255,0.40)" },
-    { label: "Shopify",   sub: "+ Analytics",  x: 210, y: 72, w: 76, h: 86,  ac: "rgba(102,0,255,0.16)", bd: "rgba(153,68,255,0.36)" },
+    { label: "Fornitore", sub: "ERP/CRM",     x: 14,  y: 72, w: 76, h: 86,  ac: "rgba(245,133,42,0.16)", bd: "rgba(255,178,92,0.36)" },
+    { label: "API Layer", sub: "Middleware",   x: 112, y: 50, w: 76, h: 130, ac: "rgba(255,178,92,0.10)", bd: "rgba(255,178,92,0.40)" },
+    { label: "Shopify",   sub: "+ Analytics",  x: 210, y: 72, w: 76, h: 86,  ac: "rgba(245,133,42,0.16)", bd: "rgba(255,178,92,0.36)" },
   ]
   return (
     <svg viewBox="0 0 300 230" width="100%" height="100%">
@@ -1857,19 +1958,19 @@ function VisualAPI() {
         fill="#C084FC" fontFamily="Inter,sans-serif"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
       >30.247 SKU</motion.text>
-      <motion.text x={150} y={36} textAnchor="middle" fontSize={7} fill="rgba(153,68,255,0.48)"
+      <motion.text x={150} y={36} textAnchor="middle" fontSize={7} fill="rgba(255,178,92,0.48)"
         fontFamily="Inter,sans-serif"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
       >sincronizzati in tempo reale</motion.text>
       {[[90,115,112,115],[188,115,210,115]].map(([x1,y1,x2,y2], i) => (
         <motion.path key={i} d={`M${x1},${y1}L${x2},${y2}`}
-          stroke="rgba(153,68,255,0.26)" strokeWidth="1.5" fill="none" strokeDasharray="5 3"
+          stroke="rgba(255,178,92,0.26)" strokeWidth="1.5" fill="none" strokeDasharray="5 3"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 + i * 0.15 }}
         />
       ))}
       {[112,210].map((x, i) => (
         <motion.polygon key={i} points={`${x},111 ${x},119 ${x+7},115`}
-          fill="rgba(153,68,255,0.48)"
+          fill="rgba(255,178,92,0.48)"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 + i * 0.15 }}
         />
       ))}
@@ -1891,7 +1992,7 @@ function VisualAPI() {
       ))}
       {[0,1].map(edge => [0,1,2].map(j => (
         <motion.rect key={`p${edge}-${j}`}
-          x={edge===0 ? 86 : 184} y={112} width={8} height={6} rx={2} fill="rgba(153,68,255,0.65)"
+          x={edge===0 ? 86 : 184} y={112} width={8} height={6} rx={2} fill="rgba(255,178,92,0.65)"
           animate={{ x: [0,22,22], opacity: [0,1,0] }}
           transition={{ duration: 1.1, repeat: Infinity, delay: j*0.4 + edge*0.22, ease: "easeInOut" }}
         />
@@ -1908,10 +2009,10 @@ function VisualLancio() {
     <svg viewBox="0 0 260 205" width="100%" height="100%">
       <defs>
         <linearGradient id="mgl" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#7C3AED"/><stop offset="100%" stopColor="#F0ABFC"/>
+          <stop offset="0%" stopColor="#7C3AED"/><stop offset="100%" stopColor="#FFD6AC"/>
         </linearGradient>
         <linearGradient id="mga" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgba(102,0,255,0.20)"/><stop offset="100%" stopColor="rgba(102,0,255,0)"/>
+          <stop offset="0%" stopColor="rgba(245,133,42,0.20)"/><stop offset="100%" stopColor="rgba(245,133,42,0)"/>
         </linearGradient>
       </defs>
       {[40,80,120,160].map((y,i) => (
@@ -1941,11 +2042,11 @@ function VisualLancio() {
           transition={{ delay: 1.1 + i * 0.18, duration: 0.4 }}
         >
           <rect x={m.x} y={m.y-14} width={58} height={28} rx={8}
-            fill="rgba(102,0,255,0.16)" stroke="rgba(153,68,255,0.35)" strokeWidth="1"/>
+            fill="rgba(245,133,42,0.16)" stroke="rgba(255,178,92,0.35)" strokeWidth="1"/>
           <text x={m.x+29} y={m.y-1} textAnchor="middle" fontSize={13} fontWeight="800"
             fill="#C084FC" fontFamily="Inter,sans-serif">{m.v}</text>
           <text x={m.x+29} y={m.y+9} textAnchor="middle" fontSize={7}
-            fill="rgba(153,68,255,0.52)" fontFamily="Inter,sans-serif">{m.l}</text>
+            fill="rgba(255,178,92,0.52)" fontFamily="Inter,sans-serif">{m.l}</text>
         </motion.g>
       ))}
     </svg>
@@ -1995,9 +2096,9 @@ function MethodCarousel() {
             <button onClick={() => goTo(i)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 10, flexShrink: 0 }}>
               <motion.div
                 animate={step === i
-                  ? { background: `linear-gradient(135deg, ${T.accent}, ${T.accentLt})`, borderColor: T.accentLt, boxShadow: `0 0 0 4px rgba(102,0,255,0.18), 0 0 24px rgba(102,0,255,0.40)` }
+                  ? { background: `linear-gradient(135deg, ${T.accent}, ${T.accentLt})`, borderColor: T.accentLt, boxShadow: `0 0 0 4px rgba(245,133,42,0.18), 0 0 24px rgba(245,133,42,0.40)` }
                   : i < step
-                    ? { background: "rgba(102,0,255,0.22)", borderColor: "rgba(153,68,255,0.50)", boxShadow: "none" }
+                    ? { background: "rgba(245,133,42,0.22)", borderColor: "rgba(255,178,92,0.50)", boxShadow: "none" }
                     : { background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.14)", boxShadow: "none" }
                 }
                 transition={{ duration: 0.35 }}
@@ -2060,7 +2161,7 @@ function MethodCarousel() {
                 initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               >
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "4px 10px", borderRadius: 9999, background: "rgba(102,0,255,0.12)", border: "1px solid rgba(153,68,255,0.28)", marginBottom: 12 }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "4px 10px", borderRadius: 9999, background: "rgba(245,133,42,0.12)", border: "1px solid rgba(255,178,92,0.28)", marginBottom: 12 }}>
                   <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.accentLt }}>{METHOD_STEPS[step].label}</span>
                 </div>
                 <h3 className="hp-method-title" style={{ fontSize: 15, fontWeight: 700, letterSpacing: "-0.016em", color: T.text, marginBottom: 10, lineHeight: 1.28 }}>
@@ -2129,7 +2230,7 @@ function ProjectCard({ title, desc, tags }: { title: string; desc: string; tags:
       <div style={{ height: 172, background: "linear-gradient(135deg, rgba(8,8,22,0.9) 0%, rgba(20,20,46,0.8) 100%)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", borderRadius: "16px 16px 0 0" }}>
         <motion.div animate={{ opacity: h ? 0.6 : 0.2, scale: h ? 1.1 : 1 }} transition={{ duration: 0.35 }} style={{ fontSize: 44, color: T.accentLt }} onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}>◈</motion.div>
         <AnimatePresence>
-          {h && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${T.accentDim}, rgba(102,0,255,0.07))` }} />}
+          {h && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${T.accentDim}, rgba(245,133,42,0.07))` }} />}
         </AnimatePresence>
       </div>
       <div style={{ padding: 24, display: "flex", flexDirection: "column", flex: 1 }}>
@@ -2174,17 +2275,17 @@ const FAQS = [
 function FAQItem({ q, a, open, onToggle }: { q: string; a: string; open: boolean; onToggle: () => void }) {
   return (
     <motion.div data-glow="" whileHover={open ? {} : { scale: 1.008 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-      style={{ '--base': '220', '--spread': '140', '--radius': '14', '--border': '1.5', '--size': '260', borderRadius: 14, position: "relative", backgroundColor: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${open ? "rgba(102,0,255,0.45)" : G.bd}`, boxShadow: open ? G.shadowHov : G.shadow, transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}
+      style={{ '--base': '28', '--spread': '40', '--radius': '14', '--border': '1.5', '--size': '260', borderRadius: 14, position: "relative", backgroundColor: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${open ? "rgba(245,133,42,0.45)" : G.bd}`, boxShadow: open ? G.shadowHov : G.shadow, transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}
     >
 
-      <button onClick={onToggle} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "22px 28px", background: open ? "rgba(102,0,255,0.06)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
+      <button onClick={onToggle} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "22px 28px", background: open ? "rgba(245,133,42,0.06)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
         <span style={{ fontSize: 15, fontWeight: 600, lineHeight: 1.5 }}>{q}</span>
         <motion.span animate={{ rotate: open ? 45 : 0 }} transition={{ duration: 0.25 }} style={{ fontSize: 24, color: T.accentLt, flexShrink: 0, lineHeight: 1 }}>+</motion.span>
       </button>
       <AnimatePresence initial={false}>
         {open && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.35, ease }} style={{ overflow: "hidden" }}>
-            <div style={{ padding: "0 28px 26px", background: "rgba(102,0,255,0.04)" }}>
+            <div style={{ padding: "0 28px 26px", background: "rgba(245,133,42,0.04)" }}>
               <p style={{ fontSize: 15, color: T.muted, lineHeight: 1.82 }}>{a}</p>
             </div>
           </motion.div>
@@ -2228,7 +2329,7 @@ function GlassInput({ label, placeholder, type = "text", value, onChange }: {
       <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
       <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
         onFocus={() => setF(true)} onBlur={() => setF(false)} required
-        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(102,0,255,0.07)" : "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(153,68,255,0.55)" : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", boxShadow: f ? "0 0 0 3px rgba(102,0,255,0.11), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
+        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(245,133,42,0.07)" : "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(255,178,92,0.55)" : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", boxShadow: f ? "0 0 0 3px rgba(245,133,42,0.11), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
     </div>
   )
 }
@@ -2242,7 +2343,7 @@ function GlassTextarea({ label, placeholder, value, onChange }: {
       <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
       <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={4}
         onFocus={() => setF(true)} onBlur={() => setF(false)} required
-        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(102,0,255,0.07)" : "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(153,68,255,0.55)" : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", resize: "none" as const, fontFamily: "inherit", boxSizing: "border-box" as const, boxShadow: f ? "0 0 0 3px rgba(102,0,255,0.11), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
+        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(245,133,42,0.07)" : "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(255,178,92,0.55)" : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", resize: "none" as const, fontFamily: "inherit", boxSizing: "border-box" as const, boxShadow: f ? "0 0 0 3px rgba(245,133,42,0.11), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
     </div>
   )
 }
@@ -2254,7 +2355,7 @@ function GlassSelect({ label, value, onChange }: { label: string; value: string;
     <div>
       <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
       <select value={value} onChange={e => onChange(e.target.value)} onFocus={() => setF(true)} onBlur={() => setF(false)} required
-        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(102,0,255,0.07)" : "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(153,68,255,0.55)" : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: value ? T.text : T.faint, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", appearance: "none" as const, cursor: "pointer", boxShadow: f ? "0 0 0 3px rgba(102,0,255,0.11), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }}>
+        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(245,133,42,0.07)" : "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(255,178,92,0.55)" : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: value ? T.text : T.faint, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", appearance: "none" as const, cursor: "pointer", boxShadow: f ? "0 0 0 3px rgba(245,133,42,0.11), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }}>
         <option value="" disabled style={{ background: "#141415", color: T.muted }}>Seleziona un'area...</option>
         {options.map(o => <option key={o} value={o} style={{ background: "#141415", color: T.text }}>{o}</option>)}
       </select>
@@ -2281,22 +2382,22 @@ function ContactModal({ onClose }: { onClose: () => void }) {
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.26 }}
       onClick={e => { if (e.target === overlayRef.current) onClose() }}
-      style={{ position: "fixed", inset: 0, zIndex: 500, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" } as React.CSSProperties}
+      style={{ position: "fixed", inset: 0, zIndex: 500, display: "flex", alignItems: "flex-start", justifyContent: "center", overflowY: "auto", padding: "16px", background: "rgba(0,0,0,0.75)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" } as React.CSSProperties}
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.93, y: 28 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.93, y: 16 }}
         transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-        style={{ width: "100%", maxWidth: 600, maxHeight: "90vh", overflowY: "auto", position: "relative", borderRadius: 24, background: "rgba(10,8,22,0.82)", backdropFilter: "blur(44px) saturate(2)", WebkitBackdropFilter: "blur(44px) saturate(2)", borderTop: "1px solid rgba(255,255,255,0.55)", borderRight: "1px solid rgba(255,255,255,0.16)", borderBottom: "1px solid rgba(255,255,255,0.08)", borderLeft: "1px solid rgba(255,255,255,0.16)", boxShadow: "0 0 0 1px rgba(255,255,255,0.03), 0 40px 100px rgba(0,0,0,0.80), 0 0 100px rgba(102,0,255,0.20), inset 0 1px 0 rgba(255,255,255,0.28)" } as React.CSSProperties}
+        style={{ width: "100%", maxWidth: 600, marginTop: "auto", marginBottom: "auto", flexShrink: 0, position: "relative", borderRadius: 24, background: "rgba(10,8,22,0.82)", backdropFilter: "blur(44px) saturate(2)", WebkitBackdropFilter: "blur(44px) saturate(2)", borderTop: "1px solid rgba(255,255,255,0.55)", borderRight: "1px solid rgba(255,255,255,0.16)", borderBottom: "1px solid rgba(255,255,255,0.08)", borderLeft: "1px solid rgba(255,255,255,0.16)", boxShadow: "0 0 0 1px rgba(255,255,255,0.03), 0 40px 100px rgba(0,0,0,0.80), 0 0 100px rgba(245,133,42,0.20), inset 0 1px 0 rgba(255,255,255,0.28)" } as React.CSSProperties}
       >
         {/* purple top line */}
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, #6600FF 28%, #9944FF 72%, transparent)", borderRadius: "24px 24px 0 0" }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, #F5852A 28%, #FFB25C 72%, transparent)", borderRadius: "24px 24px 0 0" }} />
 
         {/* inner top glow */}
-        <div aria-hidden style={{ position: "absolute", top: -50, left: "50%", transform: "translateX(-50%)", width: 360, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.18) 0%, transparent 70%)", filter: "blur(30px)", pointerEvents: "none" }} />
+        <div aria-hidden style={{ position: "absolute", top: -50, left: "50%", transform: "translateX(-50%)", width: 360, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(245,133,42,0.18) 0%, transparent 70%)", filter: "blur(30px)", pointerEvents: "none" }} />
 
-        <div style={{ padding: "30px 34px 34px", position: "relative" }}>
+        <div className="contact-modal-content" style={{ padding: "30px 34px 34px", position: "relative" }}>
 
           {/* modal header */}
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 26 }}>
@@ -2318,7 +2419,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
 
           {!sent ? (
             <form onSubmit={e => { e.preventDefault(); setSent(true) }} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div className="contact-modal-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <GlassInput label="Nome" placeholder="Il tuo nome" value={fields.name} onChange={set("name")} />
                 <GlassInput label="Email" placeholder="email@azienda.it" type="email" value={fields.email} onChange={set("email")} />
               </div>
@@ -2328,7 +2429,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               <motion.button type="submit" className="rainbow-btn"
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
                 transition={{ type: "spring", stiffness: 380, damping: 18 }}
-                style={{ marginTop: 4, width: "100%", padding: "14px 32px", borderRadius: 9999, cursor: "pointer", border: "1px solid rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.06)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 2px 16px rgba(0,0,0,0.30)", color: T.text, fontFamily: MONO, fontSize: 12, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase" as const } as React.CSSProperties}>
+                style={{ marginTop: 4, width: "100%", padding: "14px 32px", borderRadius: 9999, cursor: "pointer", border: "1px solid rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.06)", backdropFilter: "blur(30px)", WebkitBackdropFilter: "blur(30px)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 2px 16px rgba(0,0,0,0.30)", color: T.text, fontFamily: MONO, fontSize: 12, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase" as const } as React.CSSProperties}>
                 <span style={{ position: "relative", zIndex: 1 }}>Invia Richiesta →</span>
               </motion.button>
             </form>
@@ -2378,7 +2479,7 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
       <motion.div aria-hidden
         animate={{ opacity: [0.55, 0.90, 0.55], scale: [0.88, 1.04, 0.88] }}
         transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-        style={{ position: "absolute", bottom: -16, left: "10%", right: "10%", height: 24, borderRadius: "50%", background: "radial-gradient(ellipse, rgba(102,0,255,0.45) 0%, transparent 70%)", filter: "blur(10px)", pointerEvents: "none" }}
+        style={{ position: "absolute", bottom: -16, left: "10%", right: "10%", height: 24, borderRadius: "50%", background: "radial-gradient(ellipse, rgba(245,133,42,0.45) 0%, transparent 70%)", filter: "blur(10px)", pointerEvents: "none" }}
       />
 
       <motion.button
@@ -2393,12 +2494,12 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
         style={{
           position: "relative", overflow: "hidden",
           padding: "20px 56px", borderRadius: 9999, cursor: "pointer",
-          border: `1px solid ${hov ? "rgba(160,80,255,0.55)" : "rgba(255,255,255,0.16)"}`,
-          background: hov ? "rgba(102,0,255,0.13)" : "rgba(255,255,255,0.07)",
+          border: `1px solid ${hov ? "rgba(255,150,70,0.55)" : "rgba(255,255,255,0.16)"}`,
+          background: hov ? "rgba(245,133,42,0.13)" : "rgba(255,255,255,0.07)",
           backdropFilter: "blur(28px) saturate(1.8)", WebkitBackdropFilter: "blur(28px) saturate(1.8)",
           boxShadow: hov
-            ? "inset 0 1px 0 rgba(255,255,255,0.20), 0 14px 52px rgba(0,0,0,0.55), 0 0 100px rgba(102,0,255,0.38), inset 0 0 36px rgba(102,0,255,0.10)"
-            : "inset 0 1px 0 rgba(255,255,255,0.13), 0 4px 24px rgba(0,0,0,0.32), 0 0 56px rgba(102,0,255,0.18)",
+            ? "inset 0 1px 0 rgba(255,255,255,0.20), 0 14px 52px rgba(0,0,0,0.55), 0 0 100px rgba(245,133,42,0.38), inset 0 0 36px rgba(245,133,42,0.10)"
+            : "inset 0 1px 0 rgba(255,255,255,0.13), 0 4px 24px rgba(0,0,0,0.32), 0 0 56px rgba(245,133,42,0.18)",
           color: T.text, fontFamily: MONO, fontSize: 13, fontWeight: 500,
           letterSpacing: "0.20em", textTransform: "uppercase" as const,
           transition: "background 0.28s, border-color 0.28s, box-shadow 0.32s",
@@ -2406,7 +2507,7 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
       >
         {/* cursor-tracking inner spotlight */}
         {hov && (
-          <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 9999, background: `radial-gradient(80px circle at ${mx}px ${my}px, rgba(200,150,255,0.12) 0%, transparent 100%)`, pointerEvents: "none" }} />
+          <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 9999, background: `radial-gradient(80px circle at ${mx}px ${my}px, rgba(255,214,172,0.12) 0%, transparent 100%)`, pointerEvents: "none" }} />
         )}
 
         {/* shimmer sweep — loops every 3.5 s */}
@@ -2425,7 +2526,7 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
 
           {/* icon circle */}
           <motion.span
-            animate={hov ? { x: 4, backgroundColor: "rgba(153,68,255,0.40)", borderColor: "rgba(153,68,255,0.70)" } : { x: 0, backgroundColor: "rgba(255,255,255,0.08)", borderColor: "rgba(255,255,255,0.18)" }}
+            animate={hov ? { x: 4, backgroundColor: "rgba(255,178,92,0.40)", borderColor: "rgba(255,178,92,0.70)" } : { x: 0, backgroundColor: "rgba(255,255,255,0.08)", borderColor: "rgba(255,255,255,0.18)" }}
             transition={{ duration: 0.22 }}
             style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.18)", fontSize: 14, lineHeight: 1 }}
           >
@@ -2530,8 +2631,8 @@ function FooterSocialBtn({ href, label, children }: { href: string; label: strin
       data-glow=""
       whileHover={{ scale: 1.08, y: -2 }} whileTap={{ scale: 0.92 }}
       transition={{ type: "spring", stiffness: 400, damping: 16 }}
-      style={{ '--base': '220', '--spread': '90', '--radius': '10', '--border': '1', '--size': '140', width: 36, height: 36, borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, backgroundColor: "transparent", transition: "color 0.22s, border-color 0.22s, background-color 0.22s", flexShrink: 0, textDecoration: "none" } as React.CSSProperties}
-      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.text; el.style.borderColor = "rgba(153,68,255,0.42)"; el.style.backgroundColor = "rgba(102,0,255,0.12)" }}
+      style={{ '--base': '28', '--spread': '36', '--radius': '10', '--border': '1', '--size': '140', width: 36, height: 36, borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, backgroundColor: "transparent", transition: "color 0.22s, border-color 0.22s, background-color 0.22s", flexShrink: 0, textDecoration: "none" } as React.CSSProperties}
+      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.text; el.style.borderColor = "rgba(255,178,92,0.42)"; el.style.backgroundColor = "rgba(245,133,42,0.12)" }}
       onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.muted; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.backgroundColor = "transparent" }}
     >{children}</motion.a>
   )
@@ -2557,10 +2658,10 @@ function FooterSection({ title, children }: { title: string; children: React.Rea
   }
 
   return (
-    <div style={{ borderBottom: `1px solid ${open ? "rgba(102,0,255,0.28)" : T.border}`, transition: "border-color 0.25s" }}>
+    <div style={{ borderBottom: `1px solid ${open ? "rgba(245,133,42,0.28)" : T.border}`, transition: "border-color 0.25s" }}>
       <button
         onClick={() => setOpen(o => !o)}
-        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: open ? "rgba(102,0,255,0.05)" : "transparent", border: "none", cursor: "pointer", padding: "16px 0", fontFamily: "inherit", transition: "background 0.25s" }}
+        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: open ? "rgba(245,133,42,0.05)" : "transparent", border: "none", cursor: "pointer", padding: "16px 0", fontFamily: "inherit", transition: "background 0.25s" }}
       >
         <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: open ? T.accentLt : T.faint, transition: "color 0.25s" }}>{title}</span>
         <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.28 }} style={{ color: open ? T.accentLt : T.faint, fontSize: 9, lineHeight: 1 }}>▼</motion.span>
@@ -2590,15 +2691,16 @@ function SiteFooter() {
   ]
 
   return (
-    <footer style={{ background: "transparent", borderTop: `1px solid ${T.border}`, position: "relative" }}>
+    <footer style={{ position: "relative", overflow: "hidden", borderTop: `1px solid ${T.border}`, background: "linear-gradient(180deg, transparent 0%, rgba(4,2,1,0.55) 28%, rgba(2,1,0,0.92) 100%)", paddingTop: 40 }}>
 
-      <div style={{ ...WRAP, padding: "48px 32px" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 20 }}>
+      {/* links row */}
+      <div style={{ ...WRAP, position: "relative", zIndex: 2 }}>
+        <div className="hp-footer-links" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 20, paddingBottom: 26 }}>
           <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 500, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: T.faint }}>
             © NADIA MAAR 2026
           </span>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
             {FOOTER_SOCIALS.map(({ label, href, Icon }) => (
               <motion.a
                 key={label} href={href} target="_blank" rel="noopener noreferrer"
@@ -2612,6 +2714,18 @@ function SiteFooter() {
           </div>
         </div>
       </div>
+
+      {/* giant glowing wordmark */}
+      <div aria-hidden style={{ position: "relative", textAlign: "center", lineHeight: 0.8, padding: "0 12px" }}>
+        <div aria-hidden style={{ position: "absolute", left: "50%", bottom: "10%", transform: "translateX(-50%)", width: "80%", height: 260, background: "radial-gradient(ellipse at center, rgba(255,106,0,0.24) 0%, rgba(255,55,0,0.10) 45%, transparent 72%)", filter: "blur(50px)", pointerEvents: "none" }} />
+        <span style={{
+          display: "block", fontFamily: DISPLAY, fontWeight: 900, letterSpacing: "-0.04em",
+          fontSize: "clamp(88px, 22vw, 320px)",
+          background: "linear-gradient(180deg, rgba(255,178,92,0.42) 0%, rgba(255,106,0,0.48) 50%, rgba(255,90,0,0.09) 100%)",
+          WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent",
+          position: "relative", zIndex: 1, userSelect: "none" as const, transform: "translateY(16%)",
+        }}>MAAR</span>
+      </div>
     </footer>
   )
 }
@@ -2620,8 +2734,8 @@ function SiteFooter() {
    FLOATING CONTACT (inlined from FloatingContact.tsx)
 ══════════════════════════════════════════════════════════════════════════ */
 const FCC = {
-  bg: "rgba(14, 4, 28, 0.88)", border: "rgba(102,0,255,0.30)",
-  accent: "#7000FF", accentL: "#9944FF", text: "#F5F5F7",
+  bg: "rgba(14, 4, 28, 0.88)", border: "rgba(245,133,42,0.30)",
+  accent: "#F5852A", accentL: "#FFB25C", text: "#F5F5F7",
   muted: "rgba(245,245,247,0.52)", green: "#22c55e",
 }
 
@@ -2638,10 +2752,10 @@ function FloatingActionBtn({ href, icon, label, color, bg, border, external }: {
       style={{
         display: "flex", flexDirection: "column", alignItems: "center", gap: 5,
         padding: "10px 4px", borderRadius: 12,
-        background: hov ? "rgba(102,0,255,0.18)" : bg,
-        border: `1px solid ${hov ? "rgba(102,0,255,0.58)" : border}`,
+        background: hov ? "rgba(245,133,42,0.18)" : bg,
+        border: `1px solid ${hov ? "rgba(245,133,42,0.58)" : border}`,
         boxShadow: hov
-          ? "0 0 18px rgba(102,0,255,0.28), inset 0 1px 0 rgba(255,255,255,0.14)"
+          ? "0 0 18px rgba(245,133,42,0.28), inset 0 1px 0 rgba(255,255,255,0.14)"
           : "none",
         color: hov ? "#fff" : color,
         fontSize: 10, fontWeight: 600, letterSpacing: "0.03em",
@@ -2702,11 +2816,11 @@ function FloatingContact() {
     background: "rgba(255,255,255,0.05)",
     backdropFilter: "blur(48px) saturate(1.5) brightness(0.90)",
     WebkitBackdropFilter: "blur(48px) saturate(1.5) brightness(0.90)",
-    border: "1px solid rgba(102,0,255,0.42)",
+    border: "1px solid rgba(245,133,42,0.42)",
     boxShadow: [
-      "0 0 0 1px rgba(102,0,255,0.10)",
+      "0 0 0 1px rgba(245,133,42,0.10)",
       "0 28px 64px rgba(0,0,0,0.65)",
-      "0 0 40px rgba(102,0,255,0.10)",
+      "0 0 40px rgba(245,133,42,0.10)",
       "inset 0 1px 0 rgba(255,255,255,0.12)",
     ].join(", "),
     overflow: "hidden",
@@ -2760,12 +2874,12 @@ function FloatingContact() {
             transition={{ type: "spring", stiffness: 520, damping: 28 }}
           >
             {/* top accent line — purple like site */}
-            <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(102,0,255,0.80), rgba(153,68,255,0.55), transparent)" }} />
+            <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(245,133,42,0.80), rgba(255,178,92,0.55), transparent)" }} />
 
             {/* header */}
             <div style={{ padding: "14px 14px 12px", display: "flex", alignItems: "center", gap: 11 }}>
               <div style={{ position: "relative", flexShrink: 0 }}>
-                <div style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid rgba(102,0,255,0.50)", boxShadow: "0 0 12px rgba(102,0,255,0.22), inset 0 1px 0 rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <div style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid rgba(245,133,42,0.50)", boxShadow: "0 0 12px rgba(245,133,42,0.22), inset 0 1px 0 rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <span style={{ fontSize: 15, fontWeight: 700, color: "rgba(255,255,255,0.90)" }}>{initials}</span>
                 </div>
                 {/* pulsing purple dot */}
@@ -2789,7 +2903,7 @@ function FloatingContact() {
             </div>
 
             {/* contact info */}
-            <div style={{ padding: "9px 14px 9px", display: "flex", flexDirection: "column", gap: 7, borderTop: "1px solid rgba(102,0,255,0.18)" }}>
+            <div style={{ padding: "9px 14px 9px", display: "flex", flexDirection: "column", gap: 7, borderTop: "1px solid rgba(245,133,42,0.18)" }}>
               <a href={`mailto:${email}`} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: FCC.muted, textDecoration: "none", transition: "color 0.16s" }}
                 onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.90)")} onMouseLeave={e => (e.currentTarget.style.color = FCC.muted)}>
                 <MailIcon size={11} /><span style={{ wordBreak: "break-all" }}>{email}</span>
@@ -2800,7 +2914,7 @@ function FloatingContact() {
             </div>
 
             {/* action buttons */}
-            <div style={{ padding: "9px 12px 14px", borderTop: "1px solid rgba(102,0,255,0.18)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
+            <div style={{ padding: "9px 12px 14px", borderTop: "1px solid rgba(245,133,42,0.18)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
               <FloatingActionBtn href={`mailto:${email}`} icon={<MailIcon size={13} />} label="Email" color="rgba(255,255,255,0.85)" bg="rgba(255,255,255,0.07)" border="rgba(255,255,255,0.14)" />
               <FloatingActionBtn href={`tel:${phone.replace(/\s/g, "")}`} icon={<PhoneIcon size={13} />} label="Chiama" color="rgba(255,255,255,0.85)" bg="rgba(255,255,255,0.07)" border="rgba(255,255,255,0.14)" />
               <FloatingActionBtn href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}?text=Ciao%20Nadia!`} icon={<WhatsAppIcon />} label="WhatsApp" color="rgba(255,255,255,0.85)" bg="rgba(255,255,255,0.07)" border="rgba(255,255,255,0.14)" external />
@@ -2825,14 +2939,14 @@ function FloatingContact() {
           transform: isMobile ? "none" : "translateY(-50%)",
           zIndex: 401,
           width: 48, height: 48, borderRadius: "50%",
-          border: open ? "1.5px solid rgba(102,0,255,0.80)" : "1.5px solid rgba(102,0,255,0.45)",
+          border: open ? "1.5px solid rgba(245,133,42,0.80)" : "1.5px solid rgba(245,133,42,0.45)",
           boxShadow: open
-            ? "0 0 0 3px rgba(102,0,255,0.16), 0 8px 28px rgba(0,0,0,0.55), 0 0 22px rgba(102,0,255,0.30)"
-            : "0 0 0 2px rgba(102,0,255,0.08), 0 6px 20px rgba(0,0,0,0.45)",
+            ? "0 0 0 3px rgba(245,133,42,0.16), 0 8px 28px rgba(0,0,0,0.55), 0 0 22px rgba(245,133,42,0.30)"
+            : "0 0 0 2px rgba(245,133,42,0.08), 0 6px 20px rgba(0,0,0,0.45)",
           cursor: "pointer",
           background: "rgba(255,255,255,0.05)",
-          backdropFilter: "blur(24px) saturate(1.5)",
-          WebkitBackdropFilter: "blur(24px) saturate(1.5)",
+          backdropFilter: "blur(30px) saturate(1.6)",
+          WebkitBackdropFilter: "blur(30px) saturate(1.6)",
           transition: "border-color 0.24s, box-shadow 0.24s",
           display: "flex", alignItems: "center", justifyContent: "center",
           flexShrink: 0,
@@ -2882,7 +2996,7 @@ function DateTimeWidget() {
         <circle cx="11" cy="11" r="8.5" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" />
         <motion.circle
           cx="11" cy="11" r="8.5"
-          fill="none" stroke="#9944FF" strokeWidth="1.5" strokeLinecap="round"
+          fill="none" stroke="#FFB25C" strokeWidth="1.5" strokeLinecap="round"
           transform="rotate(-90 11 11)"
           animate={{ pathLength: ss / 60 }}
           transition={{ duration: 0.85, ease: "easeOut" }}
@@ -2928,60 +3042,17 @@ function Logo3D({ onClick }: { onClick: () => void }) {
     <motion.button
       onClick={onClick}
       onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}
-      whileHover={{ scale: 1.07 }} whileTap={{ scale: 0.93 }}
+      whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
       transition={{ type: "spring", stiffness: 420, damping: 22 }}
-      style={{ background: "none", border: "none", padding: 0, cursor: "pointer", position: "relative", flexShrink: 0, display: "flex", alignItems: "center", gap: 12 }}
+      style={{ background: "none", border: "none", padding: 0, cursor: "pointer", flexShrink: 0 }}
     >
-      {/* glow */}
-      <motion.div
-        animate={{ opacity: h ? 1 : 0 }}
-        transition={{ duration: 0.22 }}
-        style={{ position: "absolute", inset: -10, background: "radial-gradient(circle, rgba(102,0,255,0.32) 0%, transparent 68%)", filter: "blur(14px)", pointerEvents: "none" }}
-      />
-      {/* badge */}
-      <div style={{
-        width: 46, height: 38, borderRadius: 11, position: "relative", overflow: "hidden",
-        background: h ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.06)",
-        border: `1px solid ${h ? "rgba(255,255,255,0.30)" : "rgba(255,255,255,0.14)"}`,
-        boxShadow: h
-          ? "inset 0 1px 0 rgba(255,255,255,0.22), 0 0 0 1px rgba(102,0,255,0.18)"
-          : "inset 0 1px 0 rgba(255,255,255,0.10)",
-        backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        transition: "background 0.22s, border-color 0.22s, box-shadow 0.24s",
-      }}>
-        {/* shimmer on hover */}
-        <motion.div aria-hidden
-          initial={{ x: "-140%" }}
-          animate={{ x: h ? "220%" : "-140%" }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
-          style={{ position: "absolute", top: 0, bottom: 0, width: "55%", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.13), transparent)", transform: "skewX(-18deg)", pointerEvents: "none" }}
-        />
-        <svg width="30" height="17" viewBox="0 0 30 17" fill="none">
-          {/* N */}
-          <line x1="1.2" y1="1.2" x2="1.2"  y2="15.8" stroke={h ? "#fff" : "rgba(255,255,255,0.90)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
-          <line x1="1.2" y1="1.2" x2="11.8" y2="15.8" stroke={h ? "#fff" : "rgba(255,255,255,0.90)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
-          <line x1="11.8" y1="1.2" x2="11.8" y2="15.8" stroke={h ? "#fff" : "rgba(255,255,255,0.90)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
-          {/* M */}
-          <line x1="15.5" y1="15.8" x2="15.5" y2="1.2" stroke={h ? "#b57fff" : "rgba(153,68,255,0.88)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
-          <line x1="15.5" y1="1.2"  x2="21.8" y2="9.5" stroke={h ? "#b57fff" : "rgba(153,68,255,0.88)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
-          <line x1="21.8" y1="9.5"  x2="28.8" y2="1.2" stroke={h ? "#b57fff" : "rgba(153,68,255,0.88)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
-          <line x1="28.8" y1="1.2"  x2="28.8" y2="15.8" stroke={h ? "#b57fff" : "rgba(153,68,255,0.88)"} strokeWidth="2.1" strokeLinecap="round" style={{ transition: "stroke 0.22s" }}/>
-        </svg>
-      </div>
-
-      {/* wordmark */}
       <span style={{
         fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
         fontSize: 12, fontWeight: 700,
-        letterSpacing: "0.22em",
-        textTransform: "uppercase" as const,
+        letterSpacing: "0.22em", textTransform: "uppercase" as const,
         color: h ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.60)",
-        transition: "color 0.28s",
-        whiteSpace: "nowrap" as const,
-      }}>
-        Nadia Maar
-      </span>
+        transition: "color 0.28s", whiteSpace: "nowrap" as const,
+      }}>Nadia Maar</span>
     </motion.button>
   )
 }
@@ -2995,8 +3066,8 @@ function NavLinkAdv({ label, active, onClick }: { label: string; active: boolean
   return (
     <button ref={btnRef} onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} onMouseMove={onMove}
       style={{ position: "relative", background: "none", border: "none", cursor: "pointer", color: active ? T.text : h ? T.text : T.muted, fontSize: 11, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase" as const, padding: "8px 16px", borderRadius: 8, overflow: "hidden", fontFamily: MONO, transition: "color 0.18s" }}>
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: h ? `radial-gradient(55px circle at ${lx}px ${ly}px, rgba(102,0,255,0.22) 0%, transparent 100%)` : "none", transition: "background 0.08s" }} />
-      <motion.div animate={{ opacity: h || active ? 1 : 0, background: active ? "rgba(102,0,255,0.14)" : "rgba(255,255,255,0.05)" }} transition={{ duration: 0.18 }} style={{ position: "absolute", inset: 0, borderRadius: 8, border: active ? "1px solid rgba(102,0,255,0.28)" : "1px solid transparent" }} />
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: h ? `radial-gradient(55px circle at ${lx}px ${ly}px, rgba(245,133,42,0.22) 0%, transparent 100%)` : "none", transition: "background 0.08s" }} />
+      <motion.div animate={{ opacity: h || active ? 1 : 0, background: active ? "rgba(245,133,42,0.14)" : "rgba(255,255,255,0.05)" }} transition={{ duration: 0.18 }} style={{ position: "absolute", inset: 0, borderRadius: 8, border: active ? "1px solid rgba(245,133,42,0.28)" : "1px solid transparent" }} />
       {active && <motion.div layoutId="nav-active-dot" style={{ position: "absolute", bottom: 3, left: "50%", transform: "translateX(-50%)", width: 3, height: 3, borderRadius: "50%", background: T.accent, boxShadow: `0 0 6px ${T.accent}` }} />}
       <span style={{ position: "relative" }}>{label}</span>
     </button>
@@ -3170,10 +3241,10 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* accent line */}
-        <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(102,0,255,0.55), rgba(153,68,255,0.35), transparent)", flexShrink: 0 }} />
+        <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(245,133,42,0.55), rgba(255,178,92,0.35), transparent)", flexShrink: 0 }} />
 
         {/* subtle ambient glow */}
-        <div aria-hidden style={{ position: "absolute", top: "30%", left: "50%", transform: "translateX(-50%)", width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.10) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
+        <div aria-hidden style={{ position: "absolute", top: "30%", left: "50%", transform: "translateX(-50%)", width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, rgba(245,133,42,0.10) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
 
         {/* nav items */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative" }}>
@@ -3217,13 +3288,13 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         } as React.CSSProperties}
       >
         {/* top purple accent line */}
-        <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(102,0,255,0.55), rgba(153,68,255,0.35), transparent)", flexShrink: 0 }} />
+        <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(245,133,42,0.55), rgba(255,178,92,0.35), transparent)", flexShrink: 0 }} />
 
         {/* spacer matching header height so nav links stay centered */}
         <div style={{ height: 64, flexShrink: 0 }} />
 
         {/* subtle corner glow */}
-        <div aria-hidden style={{ position: "absolute", bottom: "20%", right: -60, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.12) 0%, transparent 70%)", filter: "blur(40px)", pointerEvents: "none" }} />
+        <div aria-hidden style={{ position: "absolute", bottom: "20%", right: -60, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(245,133,42,0.12) 0%, transparent 70%)", filter: "blur(40px)", pointerEvents: "none" }} />
 
         {/* nav links */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative" }}>
@@ -3258,8 +3329,8 @@ function Navbar() {
           position: "fixed", top: 0, left: 0, right: 0, zIndex: 400, height: 64,
           display: "flex", alignItems: "center", justifyContent: "space-between",
           padding: "0 32px",
-          backdropFilter: scrolled ? "blur(24px) saturate(1.8)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(24px) saturate(1.8)" : "none",
+          backdropFilter: scrolled ? "blur(30px) saturate(1.9)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(30px) saturate(1.9)" : "none",
           background: scrolled ? "rgba(5,5,10,0.72)" : "transparent",
           borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.07)" : "transparent"}`,
           transition: "background 0.4s, border-color 0.4s",
@@ -3292,124 +3363,82 @@ function Navbar() {
   )
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   CURSOR BUBBLES
-══════════════════════════════════════════════════════════════════════════ */
-const BUBBLES = [
-  { sz: 11, s: 72, d: 22, m: 0.50, a: 0.88, ox:   9, oy:  -7 },
-  { sz:  8, s: 46, d: 15, m: 0.38, a: 0.72, ox: -11, oy:   6 },
-  { sz: 15, s: 22, d: 10, m: 0.85, a: 0.55, ox:   6, oy:  13 },
-  { sz:  6, s: 90, d: 26, m: 0.30, a: 0.80, ox: -16, oy:  -3 },
-  { sz:  9, s: 34, d: 12, m: 0.60, a: 0.65, ox:  14, oy:  -9 },
-  { sz: 13, s: 16, d:  9, m: 1.10, a: 0.45, ox:  -8, oy:  19 },
-]
-
-function Bubble({ mx, my, sz, s, d, m, a, ox, oy, visible }: {
-  mx: MotionValue<number>; my: MotionValue<number>
-  sz: number; s: number; d: number; m: number; a: number; ox: number; oy: number; visible: boolean
-}) {
-  const bx = useSpring(mx, { stiffness: s, damping: d, mass: m })
-  const by = useSpring(my, { stiffness: s, damping: d, mass: m })
-  const x  = useTransform(bx, v => v - sz / 2 + ox)
-  const y  = useTransform(by, v => v - sz / 2 + oy)
-  const hl = Math.round(sz * 0.28)
-  return (
-    <motion.div aria-hidden animate={{ opacity: visible ? a : 0 }} transition={{ duration: 0.45, ease: "easeOut" }}
-      style={{ position: "fixed", top: 0, left: 0, width: sz, height: sz, borderRadius: "50%", background: `radial-gradient(circle at 32% 32%, rgba(230,190,255,0.92) 0%, rgba(148,30,255,0.72) 22%, rgba(102,0,255,0.50) 50%, rgba(60,0,180,0.28) 75%, rgba(20,0,80,0.12) 100%)`, border: "1px solid rgba(180,100,255,0.70)", boxShadow: [`inset ${hl}px ${hl}px ${hl * 2}px rgba(230,200,255,0.45)`, `inset -${hl}px -${hl}px ${hl * 2}px rgba(0,0,60,0.40)`, `0 0 ${sz * 0.7}px rgba(102,0,255,0.55)`, `0 ${Math.round(sz*0.12)}px ${Math.round(sz*0.35)}px rgba(0,0,0,0.38)`].join(", "), backdropFilter: "blur(1px)", pointerEvents: "none", zIndex: 7, x, y, willChange: "transform" }}
-    />
-  )
-}
-
-function CursorGlow() {
-  const mx = useMotionValue(-800)
-  const my = useMotionValue(-800)
-  const [visible, setVisible] = useState(false)
-  useEffect(() => {
-    const onMove  = (e: MouseEvent) => { mx.set(e.clientX); my.set(e.clientY); setVisible(true) }
-    const onLeave = () => setVisible(false)
-    const onEnter = () => setVisible(true)
-    window.addEventListener("mousemove", onMove, { passive: true })
-    document.addEventListener("mouseleave", onLeave)
-    document.addEventListener("mouseenter", onEnter)
-    return () => { window.removeEventListener("mousemove", onMove); document.removeEventListener("mouseleave", onLeave); document.removeEventListener("mouseenter", onEnter) }
-  }, [mx, my])
-  return <>{BUBBLES.map((b, i) => <Bubble key={i} mx={mx} my={my} visible={visible} {...b} />)}</>
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    ANIMATED BACKGROUND
 ══════════════════════════════════════════════════════════════════════════ */
-/* Animated film-grain canvas */
-function NoiseGrain({ alpha = 16, interval = 2 }: { alpha?: number; interval?: number }) {
-  const ref = useRef<HTMLCanvasElement | null>(null)
-  useEffect(() => {
-    const c = ref.current
-    if (!c) return
-    const ctx = c.getContext("2d", { alpha: true })
-    if (!ctx) return
-    let frame = 0, id = 0
-    const S = 1024
-    const resize = () => { c.width = S; c.height = S; c.style.width = "100vw"; c.style.height = "100vh" }
-    const draw = () => {
-      const img = ctx.createImageData(S, S)
-      const d = img.data
-      for (let i = 0; i < d.length; i += 4) {
-        const v = Math.random() * 255
-        d[i] = v; d[i + 1] = v; d[i + 2] = v; d[i + 3] = alpha
-      }
-      ctx.putImageData(img, 0, 0)
-    }
-    const loop = () => { if (frame % interval === 0) draw(); frame++; id = requestAnimationFrame(loop) }
-    window.addEventListener("resize", resize)
-    resize(); loop()
-    return () => { window.removeEventListener("resize", resize); cancelAnimationFrame(id) }
-  }, [alpha, interval])
-  return <canvas ref={ref} aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", imageRendering: "pixelated" as const }} />
-}
-
 function AnimatedBackground() {
   return (
-    <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
+    <>
+      <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
 
-      {/* ── Ambient orbs — dimmed ──────────────────────────── */}
-      <motion.div animate={{ x: [0, 120, -60, 100, 0], y: [0, -80, 120, -50, 0] }} transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
-        style={{ position: "absolute", top: "-12%", left: "4%", width: 780, height: 780, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.12) 0%, transparent 65%)", filter: "blur(90px)", willChange: "transform" }} />
-      <motion.div animate={{ x: [0, -100, 70, -80, 0], y: [0, 100, -80, 70, 0] }} transition={{ duration: 32, repeat: Infinity, ease: "easeInOut", delay: 8 }}
-        style={{ position: "absolute", top: "22%", right: "-8%", width: 640, height: 640, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.08) 0%, transparent 65%)", filter: "blur(88px)", willChange: "transform" }} />
-      <motion.div animate={{ x: [0, 80, -100, 60, 0], y: [0, 60, -70, 90, 0] }} transition={{ duration: 40, repeat: Infinity, ease: "easeInOut", delay: 14 }}
-        style={{ position: "absolute", bottom: "-5%", left: "18%", width: 660, height: 660, borderRadius: "50%", background: "radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 65%)", filter: "blur(80px)", willChange: "transform" }} />
-      <motion.div animate={{ x: [0, -40, 55, -45, 0], y: [0, 55, -40, 50, 0] }} transition={{ duration: 28, repeat: Infinity, ease: "easeInOut", delay: 11 }}
-        style={{ position: "absolute", top: "3%", right: "6%", width: 380, height: 380, borderRadius: "50%", background: "radial-gradient(circle, rgba(102,0,255,0.08) 0%, transparent 65%)", filter: "blur(70px)", willChange: "transform" }} />
+        {/* ── Rotating warm conic aurora — living hue sweep ──────── */}
+        <div style={{ position: "absolute", top: "50%", left: "50%", width: "165vmax", height: "165vmax", transform: "translate(-50%,-50%)" }}>
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 64, repeat: Infinity, ease: "linear" }}
+            style={{
+              width: "100%", height: "100%", borderRadius: "50%", willChange: "transform",
+              background: "conic-gradient(from 0deg at 50% 50%, rgba(255,106,0,0.11) 0deg, rgba(255,55,0,0.05) 62deg, rgba(245,133,42,0.12) 132deg, rgba(120,40,0,0.03) 205deg, rgba(255,106,0,0.09) 272deg, rgba(255,55,0,0.05) 330deg, rgba(255,106,0,0.11) 360deg)",
+              filter: "blur(120px)", opacity: 0.9,
+            }}
+          />
+        </div>
 
-      {/* ── Aurora bands — dimmed ──────────────────────────── */}
-      <motion.div
-        animate={{ scaleX: [1, 1.35, 0.72, 1.18, 1], opacity: [0.20, 0.35, 0.08, 0.25, 0.20] }}
-        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        style={{ position: "absolute", top: "20%", left: 0, right: 0, height: 90, background: "linear-gradient(90deg, transparent 0%, rgba(102,0,255,0.05) 12%, rgba(102,0,255,0.08) 38%, rgba(16,185,129,0.03) 65%, transparent 100%)", filter: "blur(28px)", transformOrigin: "center", willChange: "transform, opacity" }} />
-      <motion.div
-        animate={{ scaleX: [0.8, 1.28, 0.60, 1.10, 0.8], opacity: [0.12, 0.22, 0.05, 0.18, 0.12] }}
-        transition={{ duration: 19, repeat: Infinity, ease: "easeInOut", delay: 7 }}
-        style={{ position: "absolute", top: "54%", left: 0, right: 0, height: 70, background: "linear-gradient(90deg, transparent 0%, rgba(6,182,212,0.04) 14%, rgba(102,0,255,0.06) 44%, rgba(102,0,255,0.04) 74%, transparent 100%)", filter: "blur(22px)", transformOrigin: "center", willChange: "transform, opacity" }} />
+        {/* ── Drifting warm blooms — organic depth ───────────────── */}
+        <motion.div animate={{ x: [0, 80, -40, 60, 0], y: [0, -60, 70, -30, 0], scale: [1, 1.12, 0.94, 1.06, 1] }}
+          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+          style={{ position: "absolute", top: "-16%", right: "-6%", width: 760, height: 760, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,106,0,0.17) 0%, rgba(255,55,0,0.08) 42%, transparent 70%)", filter: "blur(100px)", willChange: "transform" }} />
+        <motion.div animate={{ x: [0, -70, 50, -60, 0], y: [0, 70, -50, 50, 0] }}
+          transition={{ duration: 34, repeat: Infinity, ease: "easeInOut", delay: 6 }}
+          style={{ position: "absolute", top: "34%", left: "-12%", width: 620, height: 620, borderRadius: "50%", background: "radial-gradient(circle, rgba(245,133,42,0.12) 0%, transparent 66%)", filter: "blur(96px)", willChange: "transform" }} />
+        <motion.div animate={{ x: [0, 50, -60, 40, 0], y: [0, 50, -40, 60, 0] }}
+          transition={{ duration: 40, repeat: Infinity, ease: "easeInOut", delay: 12 }}
+          style={{ position: "absolute", bottom: "-10%", left: "26%", width: 640, height: 640, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,150,70,0.08) 0%, transparent 68%)", filter: "blur(90px)", willChange: "transform" }} />
 
-      {/* ── Line grid — dimmed ────────────────────────────── */}
-      <div style={{
-        position: "absolute", inset: 0,
-        backgroundImage: "linear-gradient(to right, rgba(100,116,139,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(100,116,139,0.06) 1px, transparent 1px)",
-        backgroundSize: "11px 12px",
+        {/* ── Soft dot-matrix grid with radial fade ──────────────── */}
+        <div style={{
+          position: "absolute", inset: 0,
+          backgroundImage: "radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1.4px)",
+          backgroundSize: "26px 26px",
+          WebkitMaskImage: "radial-gradient(ellipse 84% 72% at 50% 32%, #000 24%, transparent 82%)",
+          maskImage: "radial-gradient(ellipse 84% 72% at 50% 32%, #000 24%, transparent 82%)",
+        }} />
+
+        {/* ── Warm top spotlight ─────────────────────────────────── */}
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle 760px at 50% -4%, rgba(255,106,0,0.14), transparent 58%)" }} />
+
+        {/* ── Under-hero warm wash — gives glass cards colour to refract ── */}
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 70% 42% at 50% 30%, rgba(255,120,20,0.10), transparent 70%)" }} />
+
+        {/* ── Warm edge vignette — protects text contrast ────────── */}
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 112% 86% at 50% 46%, transparent 22%, rgba(6,4,2,0.92) 100%)" }} />
+      </div>
+
+      {/* ── Interactive warm cursor spotlight (follows --x/--y) ──── */}
+      <div aria-hidden style={{
+        position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", mixBlendMode: "screen",
+        background: "radial-gradient(560px circle at calc(var(--x,-9999) * 1px) calc(var(--y,-9999) * 1px), rgba(255,106,0,0.10) 0%, rgba(255,55,0,0.04) 34%, transparent 62%)",
       }} />
+    </>
+  )
+}
 
-      {/* ── Purple radial spotlight — dimmed ─────────────── */}
-      <div style={{
-        position: "absolute", inset: 0,
-        background: "radial-gradient(circle 600px at 50% 0px, rgba(102,0,255,0.08), transparent 70%)",
-      }} />
-
-      {/* ── Edge vignette — stronger ─────────────────────── */}
-      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 100% 80% at 50% 50%, transparent 30%, rgba(6,6,8,0.85) 100%)" }} />
-
-      {/* ── Film-grain noise layer ────────────────────────── */}
-      <NoiseGrain alpha={16} interval={2} />
-    </div>
+/* ══════════════════════════════════════════════════════════════════════════
+   SCROLL PROGRESS BAR
+══════════════════════════════════════════════════════════════════════════ */
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll()
+  const scaleX = useSpring(scrollYProgress, { stiffness: 140, damping: 26, mass: 0.3 })
+  return (
+    <motion.div aria-hidden
+      style={{
+        position: "fixed", top: 0, left: 0, right: 0, height: 2, zIndex: 500,
+        transformOrigin: "0% 50%", scaleX,
+        background: "linear-gradient(90deg, rgba(255,55,0,1), #F5852A, #FFB25C)",
+        boxShadow: "0 0 12px rgba(255,106,0,0.7)",
+      }}
+    />
   )
 }
 
@@ -3432,7 +3461,7 @@ export default function NadiaMaar() {
   return (
     <div style={{ background: T.bg, color: T.text, fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif", minHeight: "100vh", position: "relative" }}>
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_CSS }} />
-      <CursorGlow />
+      <ScrollProgress />
       <AnimatedBackground />
       <FloatingContact />
       <Navbar />
