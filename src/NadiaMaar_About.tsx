@@ -1366,15 +1366,14 @@ function FinalCTA() {
           </div>
         </div>
 
-        {/* wordmark */}
+        {/* wordmark — same glass style as hero */}
         <div aria-hidden style={{ position: "relative", textAlign: "center", lineHeight: 0.8, padding: "0 12px" }}>
-          <div aria-hidden style={{ position: "absolute", left: "50%", bottom: "10%", transform: "translateX(-50%)", width: "80%", height: 260, background: `radial-gradient(ellipse at center, ${OR(0.24)} 0%, ${RD(0.10)} 45%, transparent 72%)`, filter: "blur(50px)", pointerEvents: "none" }} />
           <span className="abt-wordmark" style={{
             display: "block", fontFamily: DISPLAY, fontWeight: 900, letterSpacing: "-0.04em",
             fontSize: "clamp(110px, 22vw, 340px)",
-            background: `linear-gradient(180deg, ${LT(0.42)} 0%, ${OR(0.48)} 50%, rgba(255,90,0,0.09) 100%)`,
-            WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent",
-            filter: "blur(0.5px)", position: "relative", zIndex: 1, userSelect: "none" as const,
+            color: "rgba(255,236,220,0.07)",
+            filter: "blur(1px) drop-shadow(0 0 60px rgba(212,67,28,0.18)) drop-shadow(0 0 120px rgba(212,67,28,0.08))",
+            position: "relative", zIndex: 1, userSelect: "none" as const,
             transform: "translateY(18%)",
           }}>MAAR</span>
         </div>
