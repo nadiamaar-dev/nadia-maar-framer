@@ -20,6 +20,7 @@ import {
   AnimatePresence,
   useScroll,
   useSpring,
+  useTransform,
   useInView,
 } from "framer-motion"
 
@@ -83,8 +84,8 @@ function NMmark({ size = 32, id = "nm-g", hover = false }: { size?: number; id?:
         <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
           <stop offset="44%"  stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
-          <stop offset="56%"  stopColor="#BB5C3F" />
-          <stop offset="100%" stopColor={hover ? "#A8452C" : "#923D2B"} />
+          <stop offset="56%"  stopColor="#B04A38" />
+          <stop offset="100%" stopColor={hover ? "#A8452C" : "#8C3525"} />
         </linearGradient>
       </defs>
       <motion.path
@@ -103,27 +104,27 @@ function NMmark({ size = 32, id = "nm-g", hover = false }: { size?: number; id?:
    DESIGN TOKENS — Obsidian + solar orange / copper aurora
 ══════════════════════════════════════════════════════════════════════════ */
 const T = {
-  bg:        "#0A0B0D",
-  surface:   "#16181C",
+  bg:        "#1A1816",
+  surface:   "#262320",
   border:    "rgba(255,255,255,0.11)",
   text:      "#FFFFFF",
-  muted:     "rgba(255,255,255,0.72)",
-  faint:     "rgba(255,255,255,0.44)",
-  accent:    "#923D2B",
-  accentGlo: "rgba(146,61,43,0.28)",
-  accentLt:  "#BB5C3F",
-  green:     "#22c55e",
+  muted:     "rgba(255,255,255,0.78)",
+  faint:     "rgba(255,255,255,0.58)",
+  accent:    "#8C3525",
+  accentGlo: "rgba(196,180,154,0.22)",
+  accentLt:  "#B04A38",
+  green:     "#10B981",
 } as const
 
 // warm rgba helpers
-const AM = (a: number) => `rgba(146,61,43,${a})`
-const LT = (a: number) => `rgba(187,92,63,${a})`
-const OR = (a: number) => `rgba(146,61,43,${a})`
-const RD = (a: number) => `rgba(115,38,22,${a})`
+const AM = (a: number) => `rgba(140,53,37,${a})`
+const LT = (a: number) => `rgba(176,74,56,${a})`
+const OR = (a: number) => `rgba(140,53,37,${a})`
+const RD = (a: number) => `rgba(100,35,22,${a})`
 
 // white -> amber gradient text fill
 const gradText = (deg = 180): React.CSSProperties => ({
-  backgroundImage: `linear-gradient(${deg}deg, #FFFFFF 0%, #E8B49A 50%, #923D2B 100%)`,
+  backgroundImage: `linear-gradient(${deg}deg, #FFFFFF 0%, #D4897A 48%, #8C3525 100%)`,
   WebkitBackgroundClip: "text",
   backgroundClip: "text",
   WebkitTextFillColor: "transparent",
@@ -160,7 +161,7 @@ const GLOBAL_CSS = `
   html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; scroll-behavior: smooth; }
   p, li { font-weight: 300; line-height: 1.8; }
   ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: #050403; }
+  ::-webkit-scrollbar-track { background: #1A1815; }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
   :root { --x:-9999; --y:-9999; --xp:0; --yp:0; }
 
@@ -220,7 +221,13 @@ const GLOBAL_CSS = `
 
   .abt-wrap { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
   .abt-footer-main-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 48px; }
-  @media (max-width: 768px) { .abt-footer-main-grid { grid-template-columns: 1fr !important; gap: 36px !important; } }
+  @media (max-width: 768px) {
+    .abt-footer-main-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+    .abt-footer-brand-desc { display: none !important; }
+    .abt-footer-nav-col { display: none !important; }
+    .abt-footer-contact-col { display: none !important; }
+    .abt-datetime { display: none !important; }
+  }
 
   .abt-hero-grid { display: grid; grid-template-columns: 1fr 400px; gap: 0 56px; align-items: center; }
   .abt-hero-right { display: flex; flex-direction: column; gap: 16px; }
@@ -244,7 +251,7 @@ const GLOBAL_CSS = `
     display: flex; align-items: center; justify-content: space-around; overflow: hidden; }
 
   .abt-cursor-ring { position: fixed; top: 0; left: 0; width: 30px; height: 30px; border-radius: 50%;
-    border: 1px solid ${OR(0.6)}; pointer-events: none; z-index: 600; mix-blend-mode: screen;
+    border: 1px solid rgba(140,53,37,0.60); pointer-events: none; z-index: 600; mix-blend-mode: screen;
     transform: translate(calc(var(--x) * 1px - 15px), calc(var(--y) * 1px - 15px));
     transition: transform 0.12s ease-out, width 0.2s, height 0.2s, opacity 0.2s; }
 
@@ -303,17 +310,9 @@ function PingDot({ color = T.accentLt, size = 7 }: { color?: string; size?: numb
 
 function ChipLabel({ text }: { text: string }) {
   return (
-    <div style={{ display: "inline-flex", alignItems: "center", marginBottom: 24 }}>
-      <span style={{
-        display: "inline-flex", alignItems: "center", gap: 10,
-        padding: "7px 16px 7px 12px", borderRadius: 9999,
-        background: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
-        border: `1px solid ${G.bd}`,
-        boxShadow: "0 2px 16px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.10)",
-      }}>
-        <PingDot />
-        <span style={{ ...MONO_LABEL, color: T.text, whiteSpace: "nowrap" as const }}>{text}</span>
-      </span>
+    <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 20, fontFamily: MONO, fontSize: 11, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.55)" }}>
+      <span style={{ color: T.accent }}>//</span>
+      <span>[ {text} ]</span>
     </div>
   )
 }
@@ -339,41 +338,32 @@ function Magnetic({ children, strength = 0.32 }: { children: React.ReactNode; st
   )
 }
 
-/** Solid orange pill CTA with a white circular arrow badge. */
 function PillCTA({ label, href, onClick, target }: { label: string; href?: string; onClick?: () => void; target?: string }) {
   const [h, setH] = useState(false)
-  const base: React.CSSProperties = {
-    display: "inline-flex", alignItems: "center", gap: 16,
-    padding: "7px 8px 7px 26px", borderRadius: 9999, cursor: "pointer",
-    border: "none", textDecoration: "none",
-    background: "linear-gradient(100deg, #923D2B 0%, #923D2B 100%)",
-    boxShadow: h ? `0 14px 44px ${OR(0.42)}, inset 0 1px 0 rgba(255,255,255,0.3)` : `0 6px 26px ${OR(0.30)}, inset 0 1px 0 rgba(255,255,255,0.25)`,
-    transition: "box-shadow 0.3s",
+  const btnStyle: React.CSSProperties = {
+    display: "inline-flex", alignItems: "stretch",
+    borderRadius: 12, cursor: "pointer",
+    border: `1px solid ${h ? "rgba(176,74,56,0.90)" : "rgba(176,74,56,0.65)"}`,
+    background: "linear-gradient(90deg, rgba(140,53,37,0.55) 0%, rgba(176,74,56,0.28) 100%)",
+    backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+    boxShadow: h ? "0 0 56px rgba(140,53,37,0.38), 0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18)" : "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
+    textDecoration: "none", overflow: "hidden",
+    transition: "border-color 0.25s, box-shadow 0.30s",
   }
   const inner = (
     <>
-      <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 15, letterSpacing: "-0.01em", color: "#1c0d02" }}>{label}</span>
-      <span style={{ width: 44, height: 44, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", color: "#1c0d02", flexShrink: 0 }}>
-        <motion.span animate={{ x: h ? 3 : 0 }} transition={{ duration: 0.2 }} style={{ display: "flex" }}>
-          <ArrowRight size={17} />
-        </motion.span>
+      <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,220,200,0.80)", flexShrink: 0 }}>[01]</span>
+      <span style={{ padding: "14px 20px", display: "flex", alignItems: "center", gap: 12, fontFamily: MONO, fontSize: 12, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
+        {label}
+        <motion.span animate={{ x: h ? [0,4,0] : 0 }} transition={{ duration: 0.55, repeat: h ? Infinity : 0, ease: "easeInOut" }} style={{ fontSize: 14, color: "rgba(255,220,200,0.90)" }}>→</motion.span>
       </span>
     </>
   )
   return (
-    <Magnetic strength={0.4}>
-      {href ? (
-        <motion.a href={href} target={target} rel={target ? "noopener noreferrer" : undefined}
-          onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)} whileTap={{ scale: 0.97 }} style={base}>
-          {inner}
-        </motion.a>
-      ) : (
-        <motion.button onClick={onClick}
-          onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)} whileTap={{ scale: 0.97 }} style={base}>
-          {inner}
-        </motion.button>
-      )}
-    </Magnetic>
+    <motion.div onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)} whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 400, damping: 22 }} style={{ display: "inline-flex" }}>
+      {href ? <a href={href} target={target} rel={target ? "noopener noreferrer" : undefined} style={btnStyle}>{inner}</a>
+             : <button onClick={onClick} style={btnStyle}>{inner}</button>}
+    </motion.div>
   )
 }
 
@@ -420,10 +410,10 @@ function DateTimeWidget() {
   const date = now.getDate()
   const mon = new Intl.DateTimeFormat("en", { month: "short" }).format(now).toUpperCase()
   return (
-    <div aria-label="Local time" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", alignItems: "center", gap: 10, padding: "5px 14px 5px 8px", borderRadius: 100, background: "rgba(255,255,255,0.04)", backdropFilter: "blur(22px) saturate(1.6)", WebkitBackdropFilter: "blur(22px) saturate(1.6)", border: "1px solid rgba(255,255,255,0.09)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 14px rgba(0,0,0,0.22)", whiteSpace: "nowrap", userSelect: "none", pointerEvents: "none", zIndex: 10 } as React.CSSProperties}>
+    <div className="abt-datetime" aria-label="Local time" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", alignItems: "center", gap: 10, padding: "5px 14px 5px 8px", borderRadius: 100, background: "rgba(255,255,255,0.04)", backdropFilter: "blur(22px) saturate(1.6)", WebkitBackdropFilter: "blur(22px) saturate(1.6)", border: "1px solid rgba(255,255,255,0.09)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 14px rgba(0,0,0,0.22)", whiteSpace: "nowrap", userSelect: "none", pointerEvents: "none", zIndex: 10 } as React.CSSProperties}>
       <svg width="22" height="22" viewBox="0 0 22 22" style={{ flexShrink: 0 }}>
         <circle cx="11" cy="11" r="8.5" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" />
-        <motion.circle cx="11" cy="11" r="8.5" fill="none" stroke="#BB5C3F" strokeWidth="1.5" strokeLinecap="round" transform="rotate(-90 11 11)" animate={{ pathLength: ss / 60 }} transition={{ duration: 0.85, ease: "easeOut" }} />
+        <motion.circle cx="11" cy="11" r="8.5" fill="none" stroke="#B04A38" strokeWidth="1.5" strokeLinecap="round" transform="rotate(-90 11 11)" animate={{ pathLength: ss / 60 }} transition={{ duration: 0.85, ease: "easeOut" }} />
       </svg>
       <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.06em", color: "rgba(255,255,255,0.92)", display: "inline-flex", alignItems: "baseline", gap: 1 }}>
         {hh}
@@ -472,45 +462,19 @@ function AuroraBackground() {
   return (
     <>
       <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
-
-        {/* Rotating graphite aurora */}
-        <div style={{ position: "absolute", top: "50%", left: "50%", width: "165vmax", height: "165vmax", transform: "translate(-50%,-50%)" }}>
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
-            style={{
-              width: "100%", height: "100%", borderRadius: "50%", willChange: "transform",
-              background: "conic-gradient(from 0deg at 50% 50%, rgba(200,210,228,0.055) 0deg, rgba(255,255,255,0.03) 70deg, rgba(150,160,178,0.05) 138deg, rgba(146,61,43,0.07) 200deg, rgba(180,190,208,0.045) 250deg, rgba(255,255,255,0.03) 320deg, rgba(200,210,228,0.055) 360deg)",
-              filter: "blur(120px)", opacity: 0.85,
-            }}
-          />
-        </div>
-
-        {/* Ambient glow — 2 vermillion spots */}
-        <motion.div
-          animate={{ x: [0, 60, -40, 50, 0], y: [0, -70, 80, -40, 0] }}
-          transition={{ duration: 38, repeat: Infinity, ease: "easeInOut" }}
-          style={{ position: "absolute", top: "8%", left: "-12%", width: 960, height: 960, borderRadius: "50%", background: "radial-gradient(circle, rgba(146,61,43,0.09) 0%, rgba(130,45,28,0.04) 50%, transparent 72%)", filter: "blur(180px)", willChange: "transform" }}
-        />
-        <motion.div
-          animate={{ x: [0, -80, 55, -60, 0], y: [0, 90, -60, 70, 0] }}
-          transition={{ duration: 46, repeat: Infinity, ease: "easeInOut", delay: 8 }}
-          style={{ position: "absolute", top: "-20%", right: "-16%", width: 1100, height: 1100, borderRadius: "50%", background: "radial-gradient(circle, rgba(146,61,43,0.07) 0%, rgba(170,72,50,0.03) 48%, transparent 70%)", filter: "blur(200px)", willChange: "transform" }}
-        />
-        {/* Silver cool bloom */}
-        <motion.div animate={{ x: [0, 50, -30, 40, 0], y: [0, -40, 50, -25, 0] }}
-          transition={{ duration: 34, repeat: Infinity, ease: "easeInOut" }}
-          style={{ position: "absolute", top: "-18%", left: "-8%", width: 720, height: 720, borderRadius: "50%", background: "radial-gradient(circle, rgba(214,222,238,0.08) 0%, rgba(150,162,185,0.03) 44%, transparent 70%)", filter: "blur(120px)", willChange: "transform" }} />
-
-        {/* Grid — radial mask */}
+        <div style={{ position: "absolute", inset: 0, background: "#161B22" }} />
+        <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "42%", background: "#1E2530", borderRight: "1px solid rgba(255,255,255,0.06)" }} />
+        <div style={{ position: "absolute", top: 0, bottom: 0, left: "34%", width: "16%", background: "linear-gradient(90deg, #1E2530, #161B22)" }} />
+        <div style={{ position: "absolute", top: "-10%", left: "-8%", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(13,120,180,0.11) 0%, rgba(10,90,140,0.05) 50%, transparent 72%)", filter: "blur(90px)", pointerEvents: "none" }} />
         <div style={{
           position: "absolute", inset: 0,
           backgroundImage: "linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px)",
           backgroundSize: "64px 64px",
-          WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 50% 38%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.2) 68%, transparent 88%)",
-          maskImage: "radial-gradient(ellipse 70% 60% at 50% 38%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.2) 68%, transparent 88%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, #000 4%, #000 96%, transparent 100%), linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, transparent 0%, #000 4%, #000 96%, transparent 100%), linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%)",
+          WebkitMaskComposite: "source-in",
+          maskComposite: "intersect",
         }} />
-        {/* Fine dot layer */}
         <div style={{
           position: "absolute", inset: 0,
           backgroundImage: "radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1.4px)",
@@ -518,19 +482,8 @@ function AuroraBackground() {
           WebkitMaskImage: "radial-gradient(ellipse 52% 48% at 50% 36%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 52%, transparent 76%)",
           maskImage: "radial-gradient(ellipse 52% 48% at 50% 36%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 52%, transparent 76%)",
         }} />
-
-        {/* Cool top spotlight */}
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle 780px at 50% -6%, rgba(222,230,244,0.07), transparent 56%)" }} />
-        {/* Hard vignette */}
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 100% 80% at 50% 44%, transparent 20%, rgba(4,5,7,0.97) 100%)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 108% 86% at 50% 42%, transparent 30%, rgba(10,10,13,0.80) 100%)" }} />
       </div>
-
-      {/* Interactive cursor spotlight */}
-      <div aria-hidden style={{
-        position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", mixBlendMode: "screen",
-        background: "radial-gradient(480px circle at calc(var(--x,-9999) * 1px) calc(var(--y,-9999) * 1px), rgba(222,230,244,0.07) 0%, rgba(146,61,43,0.04) 40%, transparent 62%)",
-      }} />
-
       <GrainOverlay />
     </>
   )
@@ -547,8 +500,8 @@ function ScrollProgress() {
       style={{
         position: "fixed", top: 0, left: 0, right: 0, height: 2, zIndex: 500,
         transformOrigin: "0% 50%", scaleX,
-        background: "linear-gradient(90deg, rgba(115,38,22,1), #923D2B, #BB5C3F)",
-        boxShadow: "0 0 12px rgba(146,61,43,0.7)",
+        background: "linear-gradient(90deg, rgba(100,35,22,1), #8C3525, #B04A38)",
+        boxShadow: "0 0 12px rgba(140,53,37,0.7)",
       }}
     />
   )
@@ -577,7 +530,7 @@ function Logo3D({ onClick }: { onClick: () => void }) {
           <motion.span aria-hidden
             animate={{ opacity: h ? 1 : 0 }}
             transition={{ duration: 0.30 }}
-            style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(146,61,43,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }}
+            style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(140,53,37,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }}
           />
         </span>
         <span aria-hidden style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
@@ -646,9 +599,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
   ]
 
   const GLASS = {
-    background: "rgba(255,255,255,0.055)",
-    backdropFilter: "blur(72px) saturate(2.2)",
-    WebkitBackdropFilter: "blur(72px) saturate(2.2)",
+    background: "rgba(22,27,34,0.82)",
+    backdropFilter: "blur(72px) brightness(1.08) saturate(0.80)",
+    WebkitBackdropFilter: "blur(72px) brightness(1.08) saturate(0.80)",
   } as React.CSSProperties
 
   const menuFooter = (
@@ -672,7 +625,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         {MENU_SOCIALS.map(({ label, href }) => (
           <a key={label} href={href} target="_blank" rel="noopener noreferrer"
             style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: "rgba(255,255,255,0.55)", background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", textDecoration: "none", transition: "all 0.18s" }}
-            onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color="#fff"; el.style.borderColor="rgba(146,61,43,0.55)"; el.style.background="rgba(146,61,43,0.14)" }}
+            onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color="#fff"; el.style.borderColor="rgba(140,53,37,0.55)"; el.style.background="rgba(140,53,37,0.14)" }}
             onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.color="rgba(255,255,255,0.55)"; el.style.borderColor="rgba(255,255,255,0.12)"; el.style.background="rgba(255,255,255,0.07)" }}
           >{label}</a>
         ))}
@@ -688,11 +641,11 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         style={{ position: "fixed", inset: 0, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 28px", overflow: "hidden", ...GLASS }}
       >
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(146,61,43,0.70), rgba(187,92,63,0.45), transparent)", flexShrink: 0 }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(140,53,37,0.70), rgba(176,74,56,0.45), transparent)", flexShrink: 0 }} />
         <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
           <NMmark size={26} id="nm-abt-menu-mob" hover={false} />
         </div>
-        <div aria-hidden style={{ position: "absolute", bottom: "12%", left: "50%", transform: "translateX(-50%)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,32vw,160px)", letterSpacing: "-0.05em", color: "rgba(255,236,220,0.04)", filter: "blur(1px)", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none", zIndex: 0 }}>MAAR</div>
+        <div aria-hidden style={{ position: "absolute", bottom: "12%", left: "50%", transform: "translateX(-50%)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,32vw,160px)", letterSpacing: "-0.05em", color: "rgba(75,85,105,0.13)", filter: "blur(1px)", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none", zIndex: 0 }}>MAAR</div>
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 20 }}>
           {NAV.map((item, i) => (
             <MenuNavItem key={item.key} num={item.num} label={item.label} onClick={item.action} index={i} active={isAboutPage ? item.key === "About Me" : item.key === "Home"} />
@@ -716,14 +669,14 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         transition={{ type: "spring", stiffness: 320, damping: 36 }}
         style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: 460, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 40px", borderLeft: "1px solid rgba(255,255,255,0.14)", ...GLASS }}
       >
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(146,61,43,0.70) 40%, rgba(187,92,63,0.45) 70%, transparent)", flexShrink: 0 }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(140,53,37,0.70) 40%, rgba(176,74,56,0.45) 70%, transparent)", flexShrink: 0 }} />
         <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
           <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.26em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.36)" }}>Navigation</span>
         </div>
         <div aria-hidden style={{ position: "absolute", right: -8, top: 0, bottom: 0, display: "flex", alignItems: "center", pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
-          <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,9vw,130px)", letterSpacing: "-0.04em", color: "rgba(255,236,220,0.05)", filter: "blur(0.8px) drop-shadow(0 0 30px rgba(146,61,43,0.10))", userSelect: "none", lineHeight: 0.82 }}>MAAR</span>
+          <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,9vw,130px)", letterSpacing: "-0.04em", color: "rgba(75,85,105,0.13)", filter: "blur(0.8px)", userSelect: "none", lineHeight: 0.82 }}>MAAR</span>
         </div>
-        <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(146,61,43,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
+        <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(140,53,37,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 4 }}>
           {NAV.map((item, i) => (
             <MenuNavItem key={item.key} num={item.num} label={item.label} onClick={item.action} index={i} active={isAboutPage ? item.key === "About Me" : item.key === "Home"} />
@@ -746,7 +699,7 @@ function Navbar() {
   return (
     <>
       <motion.header initial={{ y: -70, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.7, ease }}
-        style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 400, height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px", backdropFilter: scrolled ? "blur(30px) saturate(1.9)" : "none", WebkitBackdropFilter: scrolled ? "blur(30px) saturate(1.9)" : "none", background: scrolled ? "rgba(5,5,10,0.72)" : "transparent", borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.07)" : "transparent"}`, transition: "background 0.4s, border-color 0.4s" } as React.CSSProperties}>
+        style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 400, height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px", backdropFilter: scrolled ? "blur(32px) saturate(0.85)" : "none", WebkitBackdropFilter: scrolled ? "blur(32px) saturate(0.85)" : "none", background: scrolled ? "rgba(22,27,34,0.78)" : "transparent", borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.07)" : "transparent"}`, transition: "background 0.4s, border-color 0.4s" } as React.CSSProperties}>
         <Logo3D onClick={() => { window.location.href = "/" }} />
         <DateTimeWidget />
         <motion.button onClick={() => setMenuOpen(o => !o)} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
@@ -799,7 +752,7 @@ function LiveTerminal() {
       minHeight: 190,
     }}>
       <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
-        {["#FF5F57", "#FEBC2E", "#28C840"].map(c => <div key={c} style={{ width: 10, height: 10, borderRadius: "50%", background: c, opacity: 0.7 }} />)}
+        {["#FF5F57", "#FEBC2E", "#10B981"].map(c => <div key={c} style={{ width: 10, height: 10, borderRadius: "50%", background: c, opacity: 0.7 }} />)}
         <span style={{ marginLeft: "auto", fontSize: 9.5, letterSpacing: "0.14em", color: "rgba(255,255,255,0.24)", textTransform: "uppercase" as const }}>zsh — nadia@dev</span>
       </div>
       {TERMINAL_LINES.map((ln, i) => {
@@ -847,10 +800,10 @@ function HeroSection() {
               }}
             >
               <ScrambleLine text="DIGITAL" delay={280} /><br />
-              <ScrambleLine text="ARCHITECT" delay={430} style={gradText(96)} /><br />
+              <ScrambleLine text="ARCHITECT" delay={430} style={{ color: "#FFFFFF" }} /><br />
               <ScrambleLine text="&" delay={560} style={{ color: "rgba(255,255,255,0.24)", fontWeight: 300 }} />{" "}
               <ScrambleLine text="E-COM" delay={620} style={{ color: T.muted }} /><br />
-              <ScrambleLine text="DEVELOPER" delay={760} style={gradText(96)} />
+              <ScrambleLine text="DEVELOPER" delay={760} style={{ color: "#FFFFFF" }} />
             </motion.h1>
 
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.22, ease }}
@@ -1000,7 +953,7 @@ function StatCard({ s, i }: { s: typeof STATS[number]; i: number }) {
       initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
       transition={{ duration: 0.6, delay: i * 0.08, ease }}
       style={{ borderRadius: 20, padding: "30px 28px", background: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${G.bd}`, borderTop: "1px solid rgba(255,255,255,0.24)", boxShadow: G.shadow }}>
-      <div style={{ fontFamily: DISPLAY, fontSize: "clamp(52px, 6vw, 82px)", fontWeight: 900, lineHeight: 0.9, letterSpacing: "-0.05em", ...gradText(150) }}>{display}</div>
+      <div style={{ fontFamily: DISPLAY, fontSize: "clamp(52px, 6vw, 82px)", fontWeight: 900, lineHeight: 0.9, letterSpacing: "-0.05em", color: "#FFFFFF" }}>{display}</div>
       <div style={{ marginTop: 16, fontSize: 13.5, color: T.muted, lineHeight: 1.6, fontWeight: 300, maxWidth: 220 }}>{s.sub}</div>
     </motion.div>
   )
@@ -1063,7 +1016,7 @@ function PhilosophySection() {
             className="abt-philosophy-sticky" style={{ position: "sticky", top: 100 }}>
             <ChipLabel text="The Approach" />
             <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(32px, 3.8vw, 56px)", fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-              THE<br /><span style={gradText(96)}>APPROACH</span>
+              THE<br /><span style={{ color: "#FFFFFF" }}>APPROACH</span>
             </h2>
             <div style={{ width: 48, height: 3, marginTop: 32, borderRadius: 2, background: `linear-gradient(90deg, ${OR(1)}, ${T.accentLt})` }} />
           </motion.div>
@@ -1108,7 +1061,7 @@ function ProcessSection() {
           <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, ease }}
             style={{ fontFamily: DISPLAY, fontSize: "clamp(28px, 4vw, 52px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: T.text, margin: "0 auto", maxWidth: 780 }}>
             Il tuo prossimo prodotto parte da qui:{" "}
-            <span style={gradText(96)}>strategico, elegante, redditizio.</span>
+            <span style={{ color: "#FFFFFF" }}>strategico, elegante, redditizio.</span>
           </motion.h2>
         </div>
 
@@ -1199,7 +1152,7 @@ function ToolkitSection() {
           </motion.div>
           <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.75, delay: 0.08, ease }}
             style={{ fontFamily: DISPLAY, fontSize: "clamp(30px, 4vw, 60px)", fontWeight: 900, lineHeight: 1.02, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-            TECH <span style={gradText(96)}>TOOLKIT</span>
+            TECH <span style={{ color: "#FFFFFF" }}>TOOLKIT</span>
           </motion.h2>
         </div>
         <div className="abt-bento">
@@ -1229,7 +1182,7 @@ function NowSection() {
             <ChipLabel text="Now" />
             <motion.h2 initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease }}
               style={{ fontFamily: DISPLAY, fontSize: "clamp(26px, 3vw, 44px)", fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-              COSA STO FACENDO <span style={gradText(96)}>ORA</span>
+              COSA STO FACENDO <span style={{ color: "#FFFFFF" }}>ORA</span>
             </motion.h2>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -1313,7 +1266,7 @@ function FAQSection() {
             className="abt-faq-sticky" style={{ position: "sticky", top: 100 }}>
             <ChipLabel text="FAQ" />
             <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px, 3vw, 44px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-              LOGICA&<br /><span style={gradText(96)}>TRASPARENZA</span>
+              LOGICA&<br /><span style={{ color: "#FFFFFF" }}>TRASPARENZA</span>
             </h2>
             <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.75, marginTop: 20, fontWeight: 300, maxWidth: 240 }}>
               Risposte dirette alle domande che contano davvero.
@@ -1392,9 +1345,8 @@ function ContactModal({ onClose }: { onClose: () => void }) {
       onClick={e => { if (e.target === overlayRef.current) onClose() }}
       style={{ position: "fixed", inset: 0, zIndex: 500, display: "flex", alignItems: "flex-start", justifyContent: "center", overflowY: "auto", padding: "16px", background: "rgba(0,0,0,0.75)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" } as React.CSSProperties}>
       <motion.div initial={{ opacity: 0, scale: 0.93, y: 28 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.93, y: 16 }} transition={{ duration: 0.38, ease }}
-        style={{ width: "100%", maxWidth: 600, marginTop: "auto", marginBottom: "auto", flexShrink: 0, position: "relative", borderRadius: 24, background: "rgba(18,12,7,0.85)", backdropFilter: "blur(44px) saturate(2)", WebkitBackdropFilter: "blur(44px) saturate(2)", borderTop: "1px solid rgba(255,255,255,0.55)", borderRight: "1px solid rgba(255,255,255,0.16)", borderBottom: "1px solid rgba(255,255,255,0.08)", borderLeft: "1px solid rgba(255,255,255,0.16)", boxShadow: `0 0 0 1px rgba(255,255,255,0.03), 0 40px 100px rgba(0,0,0,0.80), 0 0 100px ${OR(0.22)}, inset 0 1px 0 rgba(255,255,255,0.28)` } as React.CSSProperties}>
+        style={{ width: "100%", maxWidth: 600, marginTop: "auto", marginBottom: "auto", flexShrink: 0, position: "relative", borderRadius: 20, background: "rgba(30,37,50,0.88)", backdropFilter: "blur(72px) brightness(1.12) saturate(0.80)", WebkitBackdropFilter: "blur(72px) brightness(1.12) saturate(0.80)", border: "1px solid rgba(255,255,255,0.14)", boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.22), inset 1px 0 0 rgba(255,255,255,0.08), 0 40px 100px rgba(0,0,0,0.65)", overflow: "hidden" } as React.CSSProperties}>
         <div style={{ height: 2, background: `linear-gradient(90deg, transparent, ${OR(1)} 28%, ${T.accentLt} 72%, transparent)`, borderRadius: "24px 24px 0 0" }} />
-        <div aria-hidden style={{ position: "absolute", top: -50, left: "50%", transform: "translateX(-50%)", width: 360, height: 160, borderRadius: "50%", background: `radial-gradient(circle, ${OR(0.20)} 0%, transparent 70%)`, filter: "blur(30px)", pointerEvents: "none" }} />
         <div className="contact-modal-content" style={{ padding: "30px 34px 34px", position: "relative" }}>
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 26 }}>
             <div>
@@ -1419,8 +1371,9 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               <GlassSelect label="Cosa dobbiamo risolvere?" value={fields.area} onChange={set("area")} />
               <GlassTextarea label="Messaggio" placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={set("msg")} />
               <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 380, damping: 18 }}
-                style={{ marginTop: 4, width: "100%", padding: "15px 32px", borderRadius: 9999, cursor: "pointer", border: "none", background: "linear-gradient(100deg, #923D2B, #923D2B)", boxShadow: `0 10px 34px ${OR(0.32)}, inset 0 1px 0 rgba(255,255,255,0.25)`, color: "#1c0d02", fontFamily: DISPLAY, fontSize: 14, fontWeight: 800, letterSpacing: "-0.01em" }}>
-                Invia Richiesta →
+                style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(176,74,56,0.80)", background: "linear-gradient(90deg, rgba(140,53,37,0.55) 0%, rgba(176,74,56,0.28) 100%)", backdropFilter: "blur(20px)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
+                <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,220,200,0.80)" }}>[→]</span>
+                <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF", padding: "14px 0" }}>Invia Richiesta →</span>
               </motion.button>
             </form>
           ) : (
@@ -1457,30 +1410,36 @@ const FOOTER_SOCIALS_FULL = [
 ]
 
 function SiteFooter() {
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth <= 768)
+  useEffect(() => {
+    const fn = () => setIsMobile(window.innerWidth <= 768)
+    window.addEventListener("resize", fn, { passive: true })
+    return () => window.removeEventListener("resize", fn)
+  }, [])
   return (
-    <footer style={{ position: "relative", overflow: "hidden", background: "linear-gradient(180deg, transparent 0%, rgba(4,2,1,0.60) 22%, rgba(2,1,0,0.95) 100%)" }}>
-      <div style={{ height: 1, background: "linear-gradient(90deg, transparent 0%, rgba(146,61,43,0.55) 28%, rgba(187,92,63,0.80) 50%, rgba(146,61,43,0.55) 72%, transparent 100%)" }} />
-      <div className="abt-wrap" style={{ position: "relative", zIndex: 2, paddingTop: 52, paddingBottom: 40 }}>
+    <footer style={{ position: "relative", overflow: "hidden", background: "linear-gradient(180deg, transparent 0%, rgba(16,16,20,0.55) 22%, rgba(11,11,14,0.94) 100%)" }}>
+      <div style={{ height: 1, background: "linear-gradient(90deg, transparent 0%, rgba(140,53,37,0.55) 28%, rgba(176,74,56,0.80) 50%, rgba(140,53,37,0.55) 72%, transparent 100%)" }} />
+      <div className="abt-wrap" style={{ position: "relative", zIndex: 2, paddingTop: isMobile ? 120 : 52, paddingBottom: isMobile ? 120 : 40 }}>
         <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr", gap: 48, alignItems: "start" }} className="abt-footer-main-grid">
           {/* col 1 — brand */}
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <div>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 11, marginBottom: 14 }}>
-                <NMmark size={28} id="nm-abt-footer" hover={false} />
-                <span aria-hidden style={{ width: 1, height: 13, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
-                <span style={{ fontFamily: MONO, fontWeight: 600, fontSize: 11.5, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.78)" }}>Nadia Maar</span>
+                <NMmark size={30} id="nm-abt-footer" hover={false} />
+                <span aria-hidden style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
+                <span style={{ fontFamily: MONO, fontWeight: 600, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.78)" }}>Nadia Maar</span>
               </div>
-              <p style={{ fontFamily: MONO, fontSize: 11, color: T.faint, lineHeight: 1.8, maxWidth: 280, letterSpacing: "0.04em" }}>
+              <p className="abt-footer-brand-desc" style={{ fontFamily: MONO, fontSize: 11, color: T.faint, lineHeight: 1.8, maxWidth: 280, letterSpacing: "0.04em" }}>
                 E-commerce, Web Apps, AI e Performance Marketing. Architettura digitale ad alte prestazioni.
               </p>
             </div>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "8px 14px", borderRadius: 9999, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.22)", width: "fit-content" }}>
+            <div className="abt-footer-brand-desc" style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "8px 14px", borderRadius: 9999, background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.22)", width: "fit-content" }}>
               <PingDot color={T.green} size={7} />
               <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "rgba(190,245,220,0.90)" }}>Disponibile · 2026</span>
             </div>
           </div>
           {/* col 2 — nav */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <div className="abt-footer-nav-col" style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.30)", marginBottom: 16 }}>Navigazione</div>
             {FOOTER_NAV_ABT.map(({ label, href }) => (
               <motion.a key={label} href={href}
@@ -1489,27 +1448,27 @@ function SiteFooter() {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "#fff" }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = T.faint }}
               >
-                <span style={{ width: 14, height: 1, background: "rgba(146,61,43,0.60)", display: "inline-block" }} aria-hidden />
+                <span style={{ width: 14, height: 1, background: "rgba(140,53,37,0.60)", display: "inline-block" }} aria-hidden />
                 {label}
               </motion.a>
             ))}
           </div>
           {/* col 3 — contact */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <div className="abt-footer-contact-col" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.30)", marginBottom: 4 }}>Contatti</div>
             <a href="mailto:nadiamaar.dev@gmail.com"
               style={{ fontFamily: MONO, fontSize: 11.5, color: T.faint, textDecoration: "none", letterSpacing: "0.04em", transition: "color 0.2s" }}
               onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
               onMouseLeave={e => (e.currentTarget.style.color = T.faint)}
             >nadiamaar.dev@gmail.com</a>
-            <div style={{ padding: "12px 16px", borderRadius: 12, background: "rgba(146,61,43,0.08)", border: "1px solid rgba(146,61,43,0.24)", display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ padding: "12px 16px", borderRadius: 12, background: "rgba(140,53,37,0.08)", border: "1px solid rgba(140,53,37,0.24)", display: "flex", flexDirection: "column", gap: 4 }}>
               <span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 700, color: "#fff", letterSpacing: "0.02em" }}>50+</span>
-              <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(187,92,63,0.80)" }}>Progetti Completati</span>
+              <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(176,74,56,0.80)" }}>Progetti Completati</span>
             </div>
           </div>
         </div>
         {/* bottom row */}
-        <div style={{ marginTop: 44, paddingTop: 22, borderTop: `1px solid ${T.border}`, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 18 }}>
+        <div style={{ marginTop: isMobile ? 16 : 44, paddingTop: 22, borderTop: `1px solid ${T.border}`, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 18 }}>
           <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.24)" }}>© NADIA MAAR 2026 — Digital Architecture Studio</span>
           <div style={{ display: "flex", gap: 8 }}>
             {FOOTER_SOCIALS_FULL.map(({ label, href, Icon }) => (
@@ -1517,7 +1476,7 @@ function SiteFooter() {
                 whileHover={{ y: -3, scale: 1.08 }} whileTap={{ scale: 0.92 }}
                 transition={{ type: "spring", stiffness: 400, damping: 16 }}
                 style={{ width: 38, height: 38, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: T.faint, border: `1px solid ${T.border}`, backgroundColor: "rgba(255,255,255,0.03)", backdropFilter: "blur(12px)", textDecoration: "none", flexShrink: 0, transition: "all 0.18s" } as React.CSSProperties}
-                onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color=T.accentLt; el.style.borderColor="rgba(146,61,43,0.55)"; el.style.backgroundColor="rgba(146,61,43,0.12)"; el.style.boxShadow="0 0 16px rgba(146,61,43,0.25)" }}
+                onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color=T.accentLt; el.style.borderColor="rgba(140,53,37,0.55)"; el.style.backgroundColor="rgba(140,53,37,0.12)"; el.style.boxShadow="0 0 16px rgba(140,53,37,0.25)" }}
                 onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.color=T.faint; el.style.borderColor=T.border; el.style.backgroundColor="rgba(255,255,255,0.03)"; el.style.boxShadow="none" }}
               >
                 <Icon />
@@ -1528,7 +1487,7 @@ function SiteFooter() {
       </div>
       {/* giant wordmark */}
       <div aria-hidden style={{ position: "absolute", bottom: 0, left: 0, right: 0, textAlign: "center", lineHeight: 0.85, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
-        <span style={{ display: "block", fontFamily: DISPLAY, fontWeight: 900, letterSpacing: "-0.04em", fontSize: "clamp(88px, 20vw, 300px)", color: "rgba(255,236,220,0.065)", filter: "blur(1px) drop-shadow(0 0 60px rgba(146,61,43,0.18)) drop-shadow(0 0 120px rgba(146,61,43,0.08))", userSelect: "none" as const, transform: "translateY(28%)", WebkitMaskImage: "linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%)", maskImage: "linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%)" }}>MAAR</span>
+        <span style={{ display: "block", fontFamily: DISPLAY, fontWeight: 900, letterSpacing: "-0.04em", fontSize: "clamp(88px, 20vw, 300px)", color: "rgba(75,85,105,0.16)", filter: "blur(1px)", userSelect: "none" as const, transform: "translateY(28%)", WebkitMaskImage: "linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%)", maskImage: "linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%)" }}>MAAR</span>
       </div>
     </footer>
   )
@@ -1539,16 +1498,22 @@ function SiteFooter() {
 ══════════════════════════════════════════════════════════════════════════ */
 function FinalCTA() {
   const [modalOpen, setModalOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth <= 768)
+  useEffect(() => {
+    const fn = () => setIsMobile(window.innerWidth <= 768)
+    window.addEventListener("resize", fn, { passive: true })
+    return () => window.removeEventListener("resize", fn)
+  }, [])
   return (
     <>
     <section style={{ position: "relative", borderTop: `1px solid ${T.border}`, overflow: "hidden" }}>
       <motion.div aria-hidden animate={{ scale: [1, 1.15, 0.92, 1.1, 1], opacity: [0.6, 0.95, 0.45, 0.8, 0.6] }} transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         style={{ position: "absolute", top: "40%", left: "50%", transform: "translate(-50%,-50%)", width: 760, height: 760, borderRadius: "50%", background: `radial-gradient(circle, ${OR(0.16)} 0%, ${RD(0.08)} 40%, transparent 66%)`, filter: "blur(90px)", pointerEvents: "none" }} />
 
-      <div className="abt-wrap" style={{ paddingTop: 120, paddingBottom: 60, position: "relative", zIndex: 1, textAlign: "center" }}>
+      <div className="abt-wrap abt-cta-section" style={{ paddingTop: isMobile ? 150 : 120, paddingBottom: isMobile ? 200 : 60, position: "relative", zIndex: 1, textAlign: "center" }}>
         <motion.h2 className="abt-cta-h2" initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.90, ease }}
           style={{ fontFamily: DISPLAY, fontSize: "clamp(44px, 7vw, 100px)", fontWeight: 900, lineHeight: 0.94, letterSpacing: "-0.045em", color: T.text, margin: "0 auto 52px", maxWidth: 920 }}>
-          HAI QUALCOSA<br /><span style={gradText(96)}>DA COSTRUIRE?</span>
+          HAI QUALCOSA<br /><span style={{ color: "#FFFFFF" }}>DA COSTRUIRE?</span>
         </motion.h2>
 
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.70, delay: 0.18, ease }}
@@ -1561,6 +1526,47 @@ function FinalCTA() {
 
     <AnimatePresence>{modalOpen && <ContactModal onClose={() => setModalOpen(false)} />}</AnimatePresence>
     </>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MAAR WATERMARK — центральный, как на главной
+══════════════════════════════════════════════════════════════════════════ */
+function MaarWatermark() {
+  const { scrollYProgress } = useScroll()
+  const opacity = useTransform(scrollYProgress, [0.04, 0.14, 0.86, 0.96], [0, 1, 1, 0])
+  const y = useTransform(scrollYProgress, [0.04, 0.96], ["3%", "-3%"])
+  return (
+    <motion.div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", display: "flex", alignItems: "center", justifyContent: "center", opacity }}>
+      <motion.span style={{ y, fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(110px, 30vw, 460px)", letterSpacing: "-0.05em", lineHeight: 1, color: "rgba(75,85,105,0.13)", filter: "blur(1px)", userSelect: "none", whiteSpace: "nowrap" }}>MAAR</motion.span>
+    </motion.div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   GEO DECORATION — мелкие фигуры и надписи как на главной
+══════════════════════════════════════════════════════════════════════════ */
+function GeoDecoration() {
+  return (
+    <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
+      <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} preserveAspectRatio="none">
+        {/* большой круг — левый верх */}
+        <circle cx="9%" cy="18%" r="160" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
+        <circle cx="9%" cy="18%" r="52" fill="none" stroke="rgba(8,10,13,0.45)" strokeWidth="1"/>
+        {/* диагональная линия */}
+        <line x1="70%" y1="0%" x2="100%" y2="50%" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
+        {/* повёрнутый квадрат — правый низ */}
+        <rect x="80%" y="65%" width="100" height="100" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1" transform="rotate(18,850,720)"/>
+        {/* крестик */}
+        <line x1="86%" y1="28%" x2="86%" y2="35%" stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
+        <line x1="83%" y1="31.5%" x2="89%" y2="31.5%" stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
+        {/* горизонтальная метка слева */}
+        <line x1="0%" y1="55%" x2="14%" y2="55%" stroke="rgba(8,10,13,0.45)" strokeWidth="1"/>
+      </svg>
+      {/* мелкие mono-надписи */}
+      <span style={{ position: "absolute", left: 18, top: "14%", fontFamily: "'JetBrains Mono',monospace", fontSize: 8, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.12)", writingMode: "vertical-rl", transform: "rotate(180deg)" }}>About / Studio · 2026</span>
+      <span style={{ position: "absolute", right: 18, top: "22%", fontFamily: "'JetBrains Mono',monospace", fontSize: 8, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.10)", writingMode: "vertical-rl" }}>Digital Architect · NM</span>
+    </div>
   )
 }
 
@@ -1582,12 +1588,14 @@ export default function NadiaMaarAbout() {
 
   return (
     <div style={{
-      background: T.bg, color: T.text,
+      background: "#161B22", color: T.text,
       fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
       overflowX: "clip", minHeight: "100vh", position: "relative",
     }}>
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_CSS }} />
       <AuroraBackground />
+      <MaarWatermark />
+      <GeoDecoration />
       <ScrollProgress />
       <CursorRing />
       <Navbar />
