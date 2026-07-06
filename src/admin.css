@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --color-copper:      #B04A38;
+  --color-copper-lt:   #D4695A;
+  --color-copper-dim:  rgba(176, 74, 56, 0.14);
+  --color-emerald:     #10B981;
+  --color-steel:       rgba(255, 255, 255, 0.06);
+  --color-border:      rgba(255, 255, 255, 0.09);
+  --color-border-hi:   rgba(255, 255, 255, 0.16);
+  --color-surface:     rgba(30, 37, 48, 0.55);
+  --color-surface-low: rgba(22, 27, 34, 0.70);
+  --font-display:      "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-mono:         "JetBrains Mono", monospace;
+}
+
+/* Admin-scoped resets that don't bleed into the public site */
+.admin-root * {
+  box-sizing: border-box;
+}
+.admin-root input,
+.admin-root textarea,
+.admin-root select,
+.admin-root button {
+  font-family: inherit;
+}
