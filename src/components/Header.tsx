@@ -11,6 +11,8 @@
 
 import React, { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { useBlueprint } from "../context/BlueprintContext"
+import { supabase } from "../lib/supabase"
 
 /* ── tokens ── */
 const T = {
@@ -114,6 +116,91 @@ function MenuNavItem({ num, label, onClick, index, active = false }: {
   )
 }
 
+/* ── Auth section inside the menu ── */
+function MenuAuthSection({ onClose }: { onClose: () => void }) {
+  const { user, openAuthModal } = useBlueprint()
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    window.location.href = "/"
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.52, duration: 0.36 }}
+      style={{ paddingBottom: 16, paddingTop: 18 }}>
+      {user ? (
+        <div style={{ display: "flex", gap: 8 }}>
+          <a
+            href="/dashboard"
+            onClick={onClose}
+            style={{
+              flex: 1, padding: "11px 16px",
+              background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.20)",
+              borderRadius: 10, textDecoration: "none", cursor: "pointer",
+              fontFamily: DISPLAY, fontSize: 13, fontWeight: 700,
+              color: "rgba(255,255,255,0.88)",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+              transition: "background 0.18s, border-color 0.18s",
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.12)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.32)" }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.07)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.20)" }}
+          >
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+              <rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
+              <rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
+              <rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
+              <rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
+            </svg>
+            Dashboard
+          </a>
+          <button
+            onClick={handleSignOut}
+            title="Esci"
+            style={{
+              padding: "11px 16px",
+              background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)",
+              borderRadius: 10, cursor: "pointer",
+              fontFamily: MONO, fontSize: 11, fontWeight: 600,
+              color: "rgba(255,255,255,0.40)",
+              display: "flex", alignItems: "center", gap: 6,
+              transition: "all 0.18s",
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.75)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.22)" }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.40)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)" }}
+          >
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+              <path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M11 11l3-3-3-3M14 8H6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Esci
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={() => { openAuthModal(); onClose() }}
+          style={{
+            width: "100%", padding: "13px 20px",
+            background: "rgba(140,53,37,0.12)", border: "1px solid rgba(140,53,37,0.38)",
+            borderRadius: 10, cursor: "pointer",
+            fontFamily: DISPLAY, fontSize: 13, fontWeight: 700,
+            color: "#D4695A",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+            transition: "background 0.18s, border-color 0.18s",
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.20)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.60)" }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.12)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.38)" }}
+        >
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+            <rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
+            <path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+          </svg>
+          Accedi · Area Clienti
+        </button>
+      )}
+    </motion.div>
+  )
+}
+
 /* ── MenuOverlay (main-page style) ── */
 function MenuOverlay({ onClose }: { onClose: () => void }) {
   const isHome = typeof window !== "undefined" && window.location.pathname === "/"
@@ -155,11 +242,12 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
   }
 
   const NAV = [
-    { num: "01", label: "Home",      sectionId: "s1", href: "/",      action: () => nav("s1", "/") },
-    { num: "02", label: "About",     sectionId: "",   href: "/about", action: () => { window.location.href = "/about" } },
-    { num: "03", label: "Soluzioni", sectionId: "s3", href: "/#s3",   action: () => nav("s3", "/#s3") },
-    { num: "04", label: "Portfolio", sectionId: "s6", href: "/#s6",   action: () => nav("s6", "/#s6") },
-    { num: "05", label: "Contatti",  sectionId: "s9", href: "/#s9",   action: () => nav("s9", "/#s9") },
+    { num: "01", label: "Home",      sectionId: "s1", href: "/",         action: () => nav("s1", "/") },
+    { num: "02", label: "About",     sectionId: "",   href: "/about",    action: () => { window.location.href = "/about" } },
+    { num: "03", label: "Soluzioni", sectionId: "s3", href: "/#s3",      action: () => nav("s3", "/#s3") },
+    { num: "04", label: "Foundry",   sectionId: "",   href: "/foundry",  action: () => { window.location.href = "/foundry" } },
+    { num: "05", label: "Portfolio", sectionId: "s6", href: "/#s6",      action: () => nav("s6", "/#s6") },
+    { num: "06", label: "Contatti",  sectionId: "s9", href: "/#s9",      action: () => nav("s9", "/#s9") },
   ]
 
   const MENU_SOCIALS = [
@@ -220,6 +308,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
           {NAV.map((item, i) => (
             <MenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} active={!!item.sectionId && activeId === item.sectionId} />
           ))}
+          <MenuAuthSection onClose={onClose} />
         </div>
         {menuFooter}
       </motion.div>
@@ -252,6 +341,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
           {NAV.map((item, i) => (
             <MenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} active={!!item.sectionId && activeId === item.sectionId} />
           ))}
+          <MenuAuthSection onClose={onClose} />
         </div>
         {menuFooter}
       </motion.div>
@@ -266,12 +356,18 @@ export default function Header() {
   const [scrolled,  setScrolled]  = useState(false)
   const [menuOpen,  setMenuOpen]  = useState(false)
   const [logoHover, setLogoHover] = useState(false)
+  const { user, openAuthModal }   = useBlueprint()
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 48)
     window.addEventListener("scroll", fn, { passive: true })
     return () => window.removeEventListener("scroll", fn)
   }, [])
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    window.location.href = "/"
+  }
 
   return (
     <>
@@ -315,8 +411,82 @@ export default function Header() {
           </motion.span>
         </motion.a>
 
-        {/* ── right: hamburger ── */}
-        <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+        {/* ── right: auth pill + hamburger ── */}
+        <div style={{ flex: 1, display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 12 }}>
+
+          {/* Auth button */}
+          <AnimatePresence mode="wait">
+            {user ? (
+              <motion.div key="auth-in"
+                initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 8 }}
+                transition={{ duration: 0.22 }}
+                style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <motion.a
+                  href="/dashboard"
+                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  style={{
+                    padding: "6px 13px",
+                    background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.20)",
+                    borderRadius: 8, textDecoration: "none", cursor: "pointer",
+                    fontFamily: DISPLAY, fontSize: 12, fontWeight: 600,
+                    color: "rgba(255,255,255,0.85)", whiteSpace: "nowrap" as const,
+                    display: "flex", alignItems: "center", gap: 6,
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.11)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.32)" }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.20)" }}
+                >
+                  <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+                    <rect x="1" y="1" width="5" height="5" rx="1.2" stroke="currentColor" strokeWidth="1.3"/>
+                    <rect x="8" y="1" width="5" height="5" rx="1.2" stroke="currentColor" strokeWidth="1.3"/>
+                    <rect x="1" y="8" width="5" height="5" rx="1.2" stroke="currentColor" strokeWidth="1.3"/>
+                    <rect x="8" y="8" width="5" height="5" rx="1.2" stroke="currentColor" strokeWidth="1.3"/>
+                  </svg>
+                  Dashboard
+                </motion.a>
+                <motion.button
+                  onClick={handleSignOut}
+                  whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  title="Esci"
+                  style={{
+                    width: 30, height: 30,
+                    background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)",
+                    borderRadius: 7, cursor: "pointer",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    color: "rgba(255,255,255,0.38)",
+                    transition: "color 0.18s, border-color 0.18s, background 0.18s",
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.70)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.22)" }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.38)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)" }}
+                >
+                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                    <path d="M5 2H2.5A1 1 0 001.5 3v8a1 1 0 001 1H5M9.5 10l3-3-3-3M12.5 7H5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </motion.button>
+              </motion.div>
+            ) : (
+              <motion.button key="auth-out"
+                initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 8 }}
+                transition={{ duration: 0.22 }}
+                onClick={openAuthModal}
+                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }}
+                style={{
+                  padding: "6px 14px",
+                  background: "rgba(140,53,37,0.10)", border: "1px solid rgba(140,53,37,0.38)",
+                  borderRadius: 8, cursor: "pointer",
+                  fontFamily: DISPLAY, fontSize: 12, fontWeight: 600,
+                  color: "#D4695A", whiteSpace: "nowrap" as const,
+                  transition: "background 0.18s, border-color 0.18s",
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.20)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.60)" }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.10)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.38)" }}
+              >
+                Accedi
+              </motion.button>
+            )}
+          </AnimatePresence>
+
           <motion.button
             onClick={() => setMenuOpen(o => !o)}
             whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
@@ -330,6 +500,7 @@ export default function Header() {
             <motion.span animate={{ rotate: menuOpen ? -45 : 0, y: menuOpen ? -7 : 0 }} transition={{ duration: 0.26 }}
               style={{ display: "block", width: 22, height: 1.8, background: menuOpen ? "#fff" : "rgba(255,255,255,0.80)", borderRadius: 2, transformOrigin: "center" }} />
           </motion.button>
+
         </div>
       </motion.header>
 
