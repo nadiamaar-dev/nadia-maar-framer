@@ -117,7 +117,10 @@ export default function AuthModal() {
       if (err) { setError(err.message); setBusy("") }
       else setBusy("success")
     } else {
-      const { error: err } = await supabase.auth.signUp({ email, password })
+      const { error: err } = await supabase.auth.signUp({
+        email, password,
+        options: { emailRedirectTo: `${window.location.origin}/` },
+      })
       if (err) { setError(err.message); setBusy("") }
       else setBusy("success")
     }
