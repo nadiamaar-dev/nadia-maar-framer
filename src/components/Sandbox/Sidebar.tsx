@@ -103,28 +103,60 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
 
   if (isMobile) {
     return (
-      <div style={{ padding: "0 20px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
-        {/* Category pills horizontal scroll */}
-        <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" }}>
+      /* No extra horizontal padding — parent (.nm-foundry-content) already has 16px */
+      <div style={{ paddingBottom: 20, display: "flex", flexDirection: "column", gap: 10 }}>
+
+        {/* Blueprint badge — mobile */}
+        <a href="/cabinet" className="nm-blueprint-badge" style={{ marginBottom: 4 }}>
+          <div style={{
+            width: 28, height: 28, borderRadius: 6,
+            background: "rgba(176,74,56,0.22)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontFamily: MONO, fontSize: 10, fontWeight: 700,
+            color: "#D4695A", flexShrink: 0,
+          }}>
+            {items.length}
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: DISPLAY, fontSize: 12, fontWeight: 600, color: "#fff" }}>
+              Blueprint
+            </div>
+            <div style={{ fontFamily: MONO, fontSize: 10, color: "rgba(255,255,255,0.60)", letterSpacing: "0.06em" }}>
+              {items.length === 0 ? "vuoto" : `${items.length} element${items.length > 1 ? "i" : "o"}`}
+            </div>
+          </div>
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" style={{ color: "rgba(255,255,255,0.30)", flexShrink: 0 }}>
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </a>
+
+        {/* Category pills — horizontal scroll, no outer margin */}
+        <div style={{
+          display: "flex", gap: 6, overflowX: "auto", paddingBottom: 4,
+          scrollbarWidth: "none", WebkitOverflowScrolling: "touch" as const,
+          /* negative margin trick to allow scroll flush to screen edges */
+          margin: "0 -16px", padding: "0 16px 4px",
+        } as React.CSSProperties}>
           {CATEGORIES.map(c => (
             <button
               key={c}
               className={`nm-sb-cat${activeCategory === c ? " active" : ""}`}
               onClick={() => onCategoryChange(c)}
-              style={{ whiteSpace: "nowrap", flex: "0 0 auto" }}
+              style={{ whiteSpace: "nowrap", flex: "0 0 auto", fontSize: 12, padding: "7px 12px" }}
             >
               {c}
             </button>
           ))}
         </div>
+
         {/* Type toggle */}
         <div style={{
           display: "flex", background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: 3,
+          border: "1px solid rgba(255,255,255,0.18)", borderRadius: 8, padding: 3,
         }}>
           {(["all", "full-site", "component"] as const).map(t => (
             <button key={t} className={`nm-sb-type${activeType === t ? " active" : ""}`} onClick={() => onTypeChange(t)}>
-              {t === "all" ? "Tutti" : t === "full-site" ? "Full Site" : "Component"}
+              {t === "all" ? "Tutti" : t === "full-site" ? "Full Site" : "Comp."}
             </button>
           ))}
         </div>

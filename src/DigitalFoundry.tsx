@@ -21,7 +21,7 @@ const CSS = `
   .nm-foundry-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 640px) {
-  .nm-foundry-grid { grid-template-columns: 1fr; }
+  .nm-foundry-grid { grid-template-columns: 1fr; gap: 14px; }
 }
 .nm-foundry-layout {
   display: flex;
@@ -30,6 +30,36 @@ const CSS = `
 }
 @media (max-width: 767px) {
   .nm-foundry-layout { flex-direction: column; gap: 0; }
+}
+/* Mobile hero */
+.nm-foundry-hero {
+  max-width: 1160px; margin: 0 auto; padding: 0 32px 60px;
+}
+@media (max-width: 767px) {
+  .nm-foundry-hero { padding: 0 16px 36px; }
+}
+/* Mobile content wrapper */
+.nm-foundry-content {
+  max-width: 1160px; margin: 0 auto; padding: 0 32px;
+}
+@media (max-width: 767px) {
+  .nm-foundry-content { padding: 0 16px; }
+}
+/* Mobile main offset */
+.nm-foundry-main {
+  position: relative; z-index: 2; padding-top: 120px; padding-bottom: 80px;
+}
+@media (max-width: 767px) {
+  .nm-foundry-main { padding-top: 88px; padding-bottom: 56px; }
+}
+/* Result count */
+.nm-foundry-count {
+  font-family: 'JetBrains Mono',monospace; font-size: 10px;
+  letter-spacing: 0.16em; color: rgba(255,255,255,0.28);
+  text-transform: uppercase; margin-bottom: 20px;
+}
+@media (max-width: 767px) {
+  .nm-foundry-count { margin-bottom: 14px; }
 }
 `
 
@@ -59,10 +89,10 @@ export default function DigitalFoundry() {
       <Header />
       <FloatingContact />
 
-      <main style={{ position: "relative", zIndex: 2, paddingTop: 120, paddingBottom: 80 }}>
+      <main className="nm-foundry-main">
 
         {/* Hero header */}
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 32px 60px" }}>
+        <div className="nm-foundry-hero">
           <div style={{
             fontFamily: MONO, fontSize: 10, letterSpacing: "0.26em", textTransform: "uppercase",
             color: "#B04A38", marginBottom: 16,
@@ -86,7 +116,7 @@ export default function DigitalFoundry() {
         </div>
 
         {/* Layout: Sidebar + Grid */}
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 32px" }}>
+        <div className="nm-foundry-content">
           <div className="nm-foundry-layout">
             <Sidebar
               activeCategory={category}
@@ -97,11 +127,7 @@ export default function DigitalFoundry() {
 
             <div style={{ flex: 1, minWidth: 0 }}>
               {/* Result count */}
-              <div style={{
-                fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em",
-                color: "rgba(255,255,255,0.28)", textTransform: "uppercase",
-                marginBottom: 20,
-              }}>
+              <div className="nm-foundry-count">
                 {filtered.length} soluzioni
               </div>
 
