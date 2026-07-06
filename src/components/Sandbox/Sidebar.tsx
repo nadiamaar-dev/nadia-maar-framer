@@ -102,12 +102,26 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
   }, [])
 
   if (isMobile) {
+    /* Abbreviated labels for compact segments */
+    const CAT_LABELS: Record<string, string> = {
+      "All":                   "Tutti",
+      "B2B Portals":           "B2B",
+      "E-commerce & Shopify":  "E-com",
+      "Landing Pages":         "Landing",
+      "UI Components":         "UI",
+    }
+    const TYPE_OPTIONS = [
+      { value: "all",        label: "Tutti"     },
+      { value: "full-site",  label: "Full Site" },
+      { value: "component",  label: "Comp."     },
+    ] as const
+    const typeIndex = TYPE_OPTIONS.findIndex(t => t.value === activeType)
+
     return (
-      /* No extra horizontal padding — parent (.nm-foundry-content) already has 16px */
       <div style={{ paddingBottom: 20, display: "flex", flexDirection: "column", gap: 10 }}>
 
-        {/* Blueprint badge — mobile */}
-        <a href="/cabinet" className="nm-blueprint-badge" style={{ marginBottom: 4 }}>
+        {/* Blueprint badge */}
+        <a href="/cabinet" className="nm-blueprint-badge">
           <div style={{
             width: 28, height: 28, borderRadius: 6,
             background: "rgba(176,74,56,0.22)",
@@ -118,9 +132,7 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
             {items.length}
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontFamily: DISPLAY, fontSize: 12, fontWeight: 600, color: "#fff" }}>
-              Blueprint
-            </div>
+            <div style={{ fontFamily: DISPLAY, fontSize: 12, fontWeight: 600, color: "#fff" }}>Blueprint</div>
             <div style={{ fontFamily: MONO, fontSize: 10, color: "rgba(255,255,255,0.60)", letterSpacing: "0.06em" }}>
               {items.length === 0 ? "vuoto" : `${items.length} element${items.length > 1 ? "i" : "o"}`}
             </div>
@@ -130,35 +142,98 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
           </svg>
         </a>
 
-        {/* Category pills — horizontal scroll, no outer margin */}
+        {/* ── Unified segmented control ── */}
         <div style={{
-          display: "flex", gap: 6, overflowX: "auto", paddingBottom: 4,
-          scrollbarWidth: "none", WebkitOverflowScrolling: "touch" as const,
-          /* negative margin trick to allow scroll flush to screen edges */
-          margin: "0 -16px", padding: "0 16px 4px",
-        } as React.CSSProperties}>
-          {CATEGORIES.map(c => (
-            <button
-              key={c}
-              className={`nm-sb-cat${activeCategory === c ? " active" : ""}`}
-              onClick={() => onCategoryChange(c)}
-              style={{ whiteSpace: "nowrap", flex: "0 0 auto", fontSize: 12, padding: "7px 12px" }}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-
-        {/* Type toggle */}
-        <div style={{
-          display: "flex", background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.18)", borderRadius: 8, padding: 3,
+          background: "rgba(18,22,30,0.72)",
+          backdropFilter: "blur(24px) saturate(140%)",
+          WebkitBackdropFilter: "blur(24px) saturate(140%)",
+          border: "1px solid rgba(255,255,255,0.12)",
+          borderRadius: 16,
+          padding: 4,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
         }}>
-          {(["all", "full-site", "component"] as const).map(t => (
-            <button key={t} className={`nm-sb-type${activeType === t ? " active" : ""}`} onClick={() => onTypeChange(t)}>
-              {t === "all" ? "Tutti" : t === "full-site" ? "Full Site" : "Comp."}
-            </button>
-          ))}
+
+          {/* — Row 1: Categories — */}
+          <div style={{
+            display: "flex",
+            gap: 2,
+            overflowX: "auto",
+            scrollbarWidth: "none",
+          } as React.CSSProperties}>
+            {CATEGORIES.map(c => {
+              const active = activeCategory === c
+              return (
+                <button
+                  key={c}
+                  onClick={() => onCategoryChange(c)}
+                  style={{
+                    flex: "0 0 auto",
+                    padding: "8px 13px",
+                    borderRadius: 11,
+                    border: "1px solid " + (active ? "rgba(176,74,56,0.55)" : "transparent"),
+                    background: active ? "rgba(176,74,56,0.20)" : "transparent",
+                    fontFamily: DISPLAY,
+                    fontSize: 12,
+                    fontWeight: active ? 700 : 500,
+                    color: active ? "#E88070" : "rgba(255,255,255,0.52)",
+                    whiteSpace: "nowrap" as const,
+                    cursor: "pointer",
+                    transition: "all 0.18s ease",
+                  }}
+                >
+                  {CAT_LABELS[c] ?? c}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* — Divider — */}
+          <div style={{ height: 1, background: "rgba(255,255,255,0.07)", margin: "0 2px" }} />
+
+          {/* — Row 2: Type — sliding indicator — */}
+          <div style={{ position: "relative", display: "flex", padding: 0 }}>
+            {/* Sliding copper pill */}
+            <div style={{
+              position: "absolute",
+              top: 2, bottom: 2,
+              left: 2,
+              width: "calc((100% - 4px) / 3)",
+              background: "rgba(176,74,56,0.22)",
+              border: "1px solid rgba(176,74,56,0.52)",
+              borderRadius: 10,
+              transform: `translateX(calc(${typeIndex} * 100%))`,
+              transition: "transform 0.22s cubic-bezier(0.16,1,0.3,1)",
+              pointerEvents: "none",
+            }} />
+            {TYPE_OPTIONS.map((t, i) => (
+              <button
+                key={t.value}
+                onClick={() => onTypeChange(t.value)}
+                style={{
+                  flex: 1,
+                  padding: "9px 0",
+                  background: "transparent",
+                  border: "none",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                  fontFamily: MONO,
+                  fontSize: 10,
+                  fontWeight: 600,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase" as const,
+                  color: activeType === t.value ? "#E07060" : "rgba(255,255,255,0.40)",
+                  transition: "color 0.18s ease",
+                  position: "relative",
+                  zIndex: 1,
+                }}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
         </div>
       </div>
     )
