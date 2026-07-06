@@ -1556,6 +1556,7 @@ const SOLUZIONI = [
     title: "E-commerce ad Alta Conversione",
     desc: "Negozi online veloci, stabili e scalabili. Automazione totale di magazzini, cataloghi massivi e logistica.",
     cta: "Ottimizza il tuo E-commerce",
+    href: "/ecommerce",
   },
   {
     num: "02",
@@ -1569,6 +1570,7 @@ const SOLUZIONI = [
     title: "Siti Corporate & Lead Generation",
     desc: "Identità digitale d'élite per aziende e professionisti. Design esclusivo focalizzato sull'acquisizione di clienti qualificati.",
     cta: "Potenzia il tuo Brand",
+    href: "/corporate",
   },
   {
     num: "03",
@@ -1582,6 +1584,7 @@ const SOLUZIONI = [
     title: "Applicazioni Web & Automazione Custom",
     desc: "Software e strumenti di produttività su misura. Connettiamo i tuoi sistemi (CRM/ERP) per eliminare l'errore umano.",
     cta: "Automatizza i tuoi Processi",
+    href: "/web-app",
   },
   {
     num: "04",
@@ -1595,6 +1598,7 @@ const SOLUZIONI = [
     title: "SEO Strategico & Performance Marketing",
     desc: "Posizionamento organico integrato nel codice fin dal primo giorno. Scaliamo Google per intercettare traffico pronto a comprare.",
     cta: "Scala le Classifiche",
+    href: "/seo",
   },
   {
     num: "05",
@@ -1609,6 +1613,7 @@ const SOLUZIONI = [
     title: "Integrazione AI & Sistemi Intelligenti",
     desc: "Soluzioni pratiche basate su Intelligenza Artificiale (Agenti AI, LLM). Abbattiamo i costi di gestione e ottimizziamo la routine.",
     cta: "Innova con l'AI",
+    href: "/ai",
   },
 ]
 
@@ -1706,7 +1711,8 @@ function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: t
 function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
   const [hover, setHover] = useState(false)
   return (
-    <div
+    <a
+      href={s.href}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
@@ -1727,6 +1733,8 @@ function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
         transition: "background .35s ease, border-color .35s ease, transform .35s ease, box-shadow .35s ease",
         transform: hover ? "translateY(-3px)" : "none",
         boxSizing: "border-box" as const,
+        textDecoration: "none",
+        cursor: "pointer",
       }}
     >
       {/* rim-light shimmer */}
@@ -1749,7 +1757,7 @@ function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
       <span style={{ position: "relative", fontFamily: MONO, fontSize: 12, letterSpacing: ".06em", color: T.accentLt, fontWeight: 600 }}>
         {s.cta} →
       </span>
-    </div>
+    </a>
   )
 }
 
