@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react"
 import { User } from "@supabase/supabase-js"
-import { supabase } from "../lib/supabase"
+import { supabase, SUPABASE_READY } from "../lib/supabase"
 import { SandboxItem } from "../data/sandboxData"
 
 interface BlueprintContextValue {
@@ -59,16 +59,26 @@ export function BlueprintProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     mountedRef.current = true
 
-    supabase.auth.getSession().then(async ({ data }) => {
-      const u = data.session?.user ?? null
-      if (!mountedRef.current) return
-      setUser(u)
-      if (u) {
-        const saved = await fetchUserBlueprints(u.id)
-        if (mountedRef.current) setItems(saved)
-      }
+    /* Skip all Supabase calls if credentials are not configured */
+    if (!SUPABASE_READY) {
       setLoading(false)
-    })
+      return () => { mountedRef.current = false }
+    }
+
+    supabase.auth.getSession()
+      .then(async ({ data }) => {
+        const u = data.session?.user ?? null
+        if (!mountedRef.current) return
+        setUser(u)
+        if (u) {
+          const saved = await fetchUserBlueprints(u.id)
+          if (mountedRef.current) setItems(saved)
+        }
+        setLoading(false)
+      })
+      .catch(() => {
+        if (mountedRef.current) setLoading(false)
+      })
 
     const { data: sub } = supabase.auth.onAuthStateChange(async (_event, session) => {
       const u = session?.user ?? null
@@ -76,9 +86,9 @@ export function BlueprintProvider({ children }: { children: React.ReactNode }) {
       setUser(u)
       if (u) {
         setLoading(true)
-        const saved = await fetchUserBlueprints(u.id)
+        const saved = await fetchUserBlueprints(u.id).catch(() => [] as SandboxItem[])
         if (mountedRef.current) { setItems(saved); setLoading(false) }
-        setAuthModal(false) // close modal on successful login
+        setAuthModal(false)
       } else {
         setItems([])
         setLoading(false)
