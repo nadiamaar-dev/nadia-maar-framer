@@ -155,24 +155,22 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
           boxSizing: "border-box",
         }}>
 
-          {/* — Row 1: Categories (horizontal scroll) — */}
-          <div style={{
-            display: "flex", gap: 2,
-            overflowX: "auto", scrollbarWidth: "none",
-          } as React.CSSProperties}>
+          {/* — Row 1: Categories (equal-width, full stretch) — */}
+          <div style={{ display: "flex", gap: 2 }}>
             {CATEGORIES.map(c => {
               const active = activeCategory === c
               return (
                 <button key={c} onClick={() => onCategoryChange(c)} style={{
-                  flex: "0 0 auto", padding: "8px 13px",
+                  flex: 1, minWidth: 0, padding: "8px 4px",
                   borderRadius: 11,
                   border: "1px solid " + (active ? "rgba(176,74,56,0.55)" : "transparent"),
                   background: active ? "rgba(176,74,56,0.20)" : "transparent",
-                  fontFamily: DISPLAY, fontSize: 12,
+                  fontFamily: DISPLAY, fontSize: 11,
                   fontWeight: active ? 700 : 500,
                   color: active ? "#E88070" : "rgba(255,255,255,0.52)",
-                  whiteSpace: "nowrap" as const,
+                  textAlign: "center" as const,
                   cursor: "pointer", transition: "all 0.18s ease",
+                  overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const,
                 }}>
                   {CAT_SHORT[c] ?? c}
                 </button>
