@@ -1415,8 +1415,7 @@ const FOOTER_SOCIALS_FULL = [
 /* ══════════════════════════════════════════════════════════════════════════
    §8  FINAL CTA
 ══════════════════════════════════════════════════════════════════════════ */
-function FinalCTA() {
-  const [modalOpen, setModalOpen] = useState(false)
+function FinalCTA({ onOpenModal }: { onOpenModal: () => void }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth <= 768)
   useEffect(() => {
     const fn = () => setIsMobile(window.innerWidth <= 768)
@@ -1424,7 +1423,6 @@ function FinalCTA() {
     return () => window.removeEventListener("resize", fn)
   }, [])
   return (
-    <>
     <section style={{ position: "relative", borderTop: `1px solid ${T.border}`, overflow: "hidden" }}>
       <motion.div aria-hidden animate={{ scale: [1, 1.15, 0.92, 1.1, 1], opacity: [0.6, 0.95, 0.45, 0.8, 0.6] }} transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         style={{ position: "absolute", top: "40%", left: "50%", transform: "translate(-50%,-50%)", width: 760, height: 760, borderRadius: "50%", background: `radial-gradient(circle, ${OR(0.16)} 0%, ${RD(0.08)} 40%, transparent 66%)`, filter: "blur(90px)", pointerEvents: "none" }} />
@@ -1437,14 +1435,10 @@ function FinalCTA() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.70, delay: 0.18, ease }}
           style={{ display: "flex", justifyContent: "center" }}>
-          <PillCTA label="Iniziamo a parlarne" onClick={() => setModalOpen(true)} />
+          <PillCTA label="Iniziamo a parlarne" onClick={onOpenModal} />
         </motion.div>
       </div>
-
     </section>
-
-    <AnimatePresence>{modalOpen && <ContactModal onClose={() => setModalOpen(false)} />}</AnimatePresence>
-    </>
   )
 }
 
@@ -1529,7 +1523,7 @@ export default function NadiaMaarAbout() {
         <ToolkitSection />
         <NowSection />
         <FAQSection />
-        <FinalCTA />
+        <FinalCTA onOpenModal={() => setModalOpen(true)} />
       </div>
       <Footer onContact={() => setModalOpen(true)} />
     </div>
