@@ -23,6 +23,10 @@ import {
   useTransform,
   useInView,
 } from "framer-motion"
+import Footer from "./components/Footer"
+import FloatingContact from "./components/FloatingContact"
+import Header from "./components/Header"
+import Background from "./components/Background"
 
 /* ══════════════════════════════════════════════════════════════════════════
    ICONS
@@ -1408,93 +1412,8 @@ const FOOTER_SOCIALS_FULL = [
   { label: "Instagram", href: "https://instagram.com/nadiamaar.dev",       Icon: InstagramIcon },
   { label: "Discord",   href: "https://discord.gg/nadiamaar",              Icon: DiscordIcon   },
 ]
-
-function SiteFooter() {
-  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth <= 768)
-  useEffect(() => {
-    const fn = () => setIsMobile(window.innerWidth <= 768)
-    window.addEventListener("resize", fn, { passive: true })
-    return () => window.removeEventListener("resize", fn)
-  }, [])
-  return (
-    <footer style={{ position: "relative", overflow: "hidden", background: "linear-gradient(180deg, transparent 0%, rgba(16,16,20,0.55) 22%, rgba(11,11,14,0.94) 100%)" }}>
-      <div style={{ height: 1, background: "linear-gradient(90deg, transparent 0%, rgba(140,53,37,0.55) 28%, rgba(176,74,56,0.80) 50%, rgba(140,53,37,0.55) 72%, transparent 100%)" }} />
-      <div className="abt-wrap" style={{ position: "relative", zIndex: 2, paddingTop: isMobile ? 120 : 52, paddingBottom: isMobile ? 120 : 40 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr", gap: 48, alignItems: "start" }} className="abt-footer-main-grid">
-          {/* col 1 — brand */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            <div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 11, marginBottom: 14 }}>
-                <NMmark size={30} id="nm-abt-footer" hover={false} />
-                <span aria-hidden style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
-                <span style={{ fontFamily: MONO, fontWeight: 600, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.78)" }}>Nadia Maar</span>
-              </div>
-              <p className="abt-footer-brand-desc" style={{ fontFamily: MONO, fontSize: 11, color: T.faint, lineHeight: 1.8, maxWidth: 280, letterSpacing: "0.04em" }}>
-                E-commerce, Web Apps, AI e Performance Marketing. Architettura digitale ad alte prestazioni.
-              </p>
-            </div>
-            <div className="abt-footer-brand-desc" style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "8px 14px", borderRadius: 9999, background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.22)", width: "fit-content" }}>
-              <PingDot color={T.green} size={7} />
-              <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "rgba(190,245,220,0.90)" }}>Disponibile · 2026</span>
-            </div>
-          </div>
-          {/* col 2 — nav */}
-          <div className="abt-footer-nav-col" style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.30)", marginBottom: 16 }}>Navigazione</div>
-            {FOOTER_NAV_ABT.map(({ label, href }) => (
-              <motion.a key={label} href={href}
-                whileHover={{ x: 4 }} transition={{ duration: 0.18 }}
-                style={{ textDecoration: "none", padding: "5px 0", display: "flex", alignItems: "center", gap: 10, fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.10em", color: T.faint, transition: "color 0.2s" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "#fff" }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = T.faint }}
-              >
-                <span style={{ width: 14, height: 1, background: "rgba(140,53,37,0.60)", display: "inline-block" }} aria-hidden />
-                {label}
-              </motion.a>
-            ))}
-          </div>
-          {/* col 3 — contact */}
-          <div className="abt-footer-contact-col" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.30)", marginBottom: 4 }}>Contatti</div>
-            <a href="mailto:nadiamaar.dev@gmail.com"
-              style={{ fontFamily: MONO, fontSize: 11.5, color: T.faint, textDecoration: "none", letterSpacing: "0.04em", transition: "color 0.2s" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={e => (e.currentTarget.style.color = T.faint)}
-            >nadiamaar.dev@gmail.com</a>
-            <div style={{ padding: "12px 16px", borderRadius: 12, background: "rgba(140,53,37,0.08)", border: "1px solid rgba(140,53,37,0.24)", display: "flex", flexDirection: "column", gap: 4 }}>
-              <span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 700, color: "#fff", letterSpacing: "0.02em" }}>50+</span>
-              <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(176,74,56,0.80)" }}>Progetti Completati</span>
-            </div>
-          </div>
-        </div>
-        {/* bottom row */}
-        <div style={{ marginTop: isMobile ? 16 : 44, paddingTop: 22, borderTop: `1px solid ${T.border}`, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 18 }}>
-          <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.24)" }}>© NADIA MAAR 2026 — Digital Architecture Studio</span>
-          <div style={{ display: "flex", gap: 8 }}>
-            {FOOTER_SOCIALS_FULL.map(({ label, href, Icon }) => (
-              <motion.a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                whileHover={{ y: -3, scale: 1.08 }} whileTap={{ scale: 0.92 }}
-                transition={{ type: "spring", stiffness: 400, damping: 16 }}
-                style={{ width: 38, height: 38, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: T.faint, border: `1px solid ${T.border}`, backgroundColor: "rgba(255,255,255,0.03)", backdropFilter: "blur(12px)", textDecoration: "none", flexShrink: 0, transition: "all 0.18s" } as React.CSSProperties}
-                onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color=T.accentLt; el.style.borderColor="rgba(140,53,37,0.55)"; el.style.backgroundColor="rgba(140,53,37,0.12)"; el.style.boxShadow="0 0 16px rgba(140,53,37,0.25)" }}
-                onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.color=T.faint; el.style.borderColor=T.border; el.style.backgroundColor="rgba(255,255,255,0.03)"; el.style.boxShadow="none" }}
-              >
-                <Icon />
-              </motion.a>
-            ))}
-          </div>
-        </div>
-      </div>
-      {/* giant wordmark */}
-      <div aria-hidden style={{ position: "absolute", bottom: 0, left: 0, right: 0, textAlign: "center", lineHeight: 0.85, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
-        <span style={{ display: "block", fontFamily: DISPLAY, fontWeight: 900, letterSpacing: "-0.04em", fontSize: "clamp(88px, 20vw, 300px)", color: "rgba(75,85,105,0.16)", filter: "blur(1px)", userSelect: "none" as const, transform: "translateY(28%)", WebkitMaskImage: "linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%)", maskImage: "linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%)" }}>MAAR</span>
-      </div>
-    </footer>
-  )
-}
-
 /* ══════════════════════════════════════════════════════════════════════════
-   §8  FINAL CTA + GIANT WORDMARK FOOTER
+   §8  FINAL CTA
 ══════════════════════════════════════════════════════════════════════════ */
 function FinalCTA() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -1574,6 +1493,8 @@ function GeoDecoration() {
    ROOT EXPORT
 ══════════════════════════════════════════════════════════════════════════ */
 export default function NadiaMaarAbout() {
+  const [modalOpen, setModalOpen] = useState(false)
+
   useEffect(() => {
     const sync = (e: PointerEvent) => {
       const r = document.documentElement
@@ -1593,12 +1514,12 @@ export default function NadiaMaarAbout() {
       overflowX: "clip", minHeight: "100vh", position: "relative",
     }}>
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_CSS }} />
-      <AuroraBackground />
-      <MaarWatermark />
-      <GeoDecoration />
+      <Background />
       <ScrollProgress />
       <CursorRing />
-      <Navbar />
+      <FloatingContact />
+      <Header />
+      <AnimatePresence>{modalOpen && <ContactModal onClose={() => setModalOpen(false)} />}</AnimatePresence>
       <div style={{ position: "relative", zIndex: 1 }}>
         <HeroSection />
         <MarqueeStrip />
@@ -1610,7 +1531,7 @@ export default function NadiaMaarAbout() {
         <FAQSection />
         <FinalCTA />
       </div>
-      <SiteFooter />
+      <Footer onContact={() => setModalOpen(true)} />
     </div>
   )
 }

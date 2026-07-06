@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "framer-motion"
+import Footer from "./components/Footer"
+import FloatingContact from "./components/FloatingContact"
+import Header from "./components/Header"
+import Background from "./components/Background"
 
 /* ── tokens ── */
 const T = {
@@ -365,76 +369,6 @@ function createPortalIfNeeded(node: React.ReactNode) {
   return createPortal(node, document.body)
 }
 
-/* ── SiteFooter ── */
-function SiteFooter({onContact}:{onContact:()=>void}) {
-  return (
-    <footer style={{position:"relative",overflow:"hidden",background:"linear-gradient(180deg,transparent 0%,rgba(16,16,20,0.55) 22%,rgba(11,11,14,0.94) 100%)"}}>
-      <div style={{height:1,background:"linear-gradient(90deg,transparent 0%,rgba(140,53,37,0.55) 28%,rgba(176,74,56,0.80) 50%,rgba(140,53,37,0.55) 72%,transparent 100%)"}} />
-      <div style={{...WRAP,position:"relative",zIndex:2,paddingTop:52,paddingBottom:40}} className="svc-wrap">
-        <div style={{display:"grid",gridTemplateColumns:"1.4fr 1fr 1fr",gap:48,alignItems:"start"}}>
-          <div style={{display:"flex",flexDirection:"column",gap:20}}>
-            <div>
-              <div style={{display:"inline-flex",alignItems:"center",gap:11,marginBottom:14}}>
-                <NMmark size={30} id="nm-svc-footer" hover={false} />
-                <span aria-hidden style={{width:1,height:14,background:"rgba(255,255,255,0.16)",flexShrink:0}} />
-                <span style={{fontFamily:MONO,fontWeight:600,fontSize:11,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.78)"}}>Nadia Maar</span>
-              </div>
-              <p className="svc-footer-cols" style={{fontFamily:MONO,fontSize:11,color:T.faint,lineHeight:1.8,maxWidth:280,letterSpacing:"0.04em"}}>
-                E-commerce, Web Apps, AI e Performance Marketing. Architettura digitale ad alte prestazioni.
-              </p>
-            </div>
-            <div className="svc-footer-cols" style={{display:"inline-flex",alignItems:"center",gap:10,padding:"8px 14px",borderRadius:9999,background:"rgba(16,185,129,0.08)",border:"1px solid rgba(16,185,129,0.22)",width:"fit-content"}}>
-              <PingDot color={T.green} size={7} />
-              <span style={{fontFamily:MONO,fontSize:9.5,letterSpacing:"0.16em",textTransform:"uppercase" as const,color:"rgba(190,245,220,0.90)"}}>Disponibile · 2026</span>
-            </div>
-          </div>
-          <div className="svc-footer-cols" style={{display:"flex",flexDirection:"column",gap:4}}>
-            <div style={{fontFamily:MONO,fontSize:9,letterSpacing:"0.24em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.30)",marginBottom:16}}>Navigazione</div>
-            {[{l:"Home",h:"/"},{l:"About",h:"/about"},{l:"Soluzioni",h:"/#soluzioni"},{l:"Portfolio",h:"/#portfolio"},{l:"Contatti",h:"/#contatti"}].map(({l,h})=>(
-              <motion.a key={l} href={h} whileHover={{x:4}} transition={{duration:0.18}}
-                style={{textDecoration:"none",padding:"5px 0",display:"flex",alignItems:"center",gap:10,fontFamily:MONO,fontSize:11.5,letterSpacing:"0.10em",color:T.faint}}
-                onMouseEnter={e=>(e.currentTarget.style.color="#fff")} onMouseLeave={e=>(e.currentTarget.style.color=T.faint)}>
-                <span style={{width:14,height:1,background:"rgba(140,53,37,0.60)",display:"inline-block"}} aria-hidden />{l}
-              </motion.a>
-            ))}
-          </div>
-          <div className="svc-footer-cols" style={{display:"flex",flexDirection:"column",gap:16}}>
-            <div style={{fontFamily:MONO,fontSize:9,letterSpacing:"0.24em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.30)",marginBottom:4}}>Contatti</div>
-            <a href="mailto:nadiamaar.dev@gmail.com"
-              style={{fontFamily:MONO,fontSize:11.5,color:T.faint,textDecoration:"none",letterSpacing:"0.04em"}}
-              onMouseEnter={e=>(e.currentTarget.style.color="#fff")} onMouseLeave={e=>(e.currentTarget.style.color=T.faint)}>
-              nadiamaar.dev@gmail.com
-            </a>
-            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={onContact}
-              style={{display:"flex",alignItems:"stretch",borderRadius:10,border:"1px solid rgba(176,74,56,0.60)",background:"linear-gradient(90deg,rgba(140,53,37,0.40) 0%,rgba(176,74,56,0.20) 100%)",cursor:"pointer",overflow:"hidden",width:"fit-content"}}>
-              <span style={{padding:"9px 12px 9px 14px",borderRight:"1px solid rgba(140,53,37,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8,letterSpacing:"0.22em",color:"rgba(255,180,150,0.70)",flexShrink:0}}>[→]</span>
-              <span style={{display:"flex",alignItems:"center",padding:"9px 16px",fontFamily:MONO,fontSize:10,letterSpacing:"0.16em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.85)"}}>Scrivimi</span>
-            </motion.button>
-          </div>
-        </div>
-        <div style={{marginTop:44,paddingTop:22,borderTop:`1px solid ${T.border}`,display:"flex",flexWrap:"wrap",alignItems:"center",justifyContent:"space-between",gap:18}}>
-          <span style={{fontFamily:MONO,fontSize:9.5,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.24)"}}>© NADIA MAAR 2026 — Digital Architecture Studio</span>
-          <div style={{display:"flex",gap:8}}>
-            {SOCIALS.map(({label,href,Icon})=>(
-              <motion.a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                data-glow="" whileHover={{y:-3,scale:1.08}} whileTap={{scale:0.92}}
-                transition={{type:"spring",stiffness:400,damping:16}}
-                style={{"--base":"28","--spread":"36","--radius":"10","--border":"1","--size":"130",width:38,height:38,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",color:T.faint,border:`1px solid ${T.border}`,backgroundColor:"rgba(255,255,255,0.03)",backdropFilter:"blur(12px)",textDecoration:"none",flexShrink:0} as React.CSSProperties}
-                onMouseEnter={e=>{const el=e.currentTarget as HTMLElement;el.style.color=T.accentLt;el.style.borderColor="rgba(140,53,37,0.55)";el.style.backgroundColor="rgba(140,53,37,0.12)";el.style.boxShadow="0 0 16px rgba(140,53,37,0.25)"}}
-                onMouseLeave={e=>{const el=e.currentTarget as HTMLElement;el.style.color=T.faint;el.style.borderColor=T.border;el.style.backgroundColor="rgba(255,255,255,0.03)";el.style.boxShadow="none"}}>
-                <Icon />
-              </motion.a>
-            ))}
-          </div>
-        </div>
-      </div>
-      <div aria-hidden style={{position:"absolute",bottom:0,left:0,right:0,textAlign:"center",lineHeight:0.85,zIndex:0,pointerEvents:"none",overflow:"hidden"}}>
-        <span style={{display:"block",fontFamily:DISPLAY,fontWeight:900,letterSpacing:"-0.04em",fontSize:"clamp(88px,20vw,300px)",color:"rgba(75,85,105,0.13)",filter:"blur(1px)",userSelect:"none" as const,transform:"translateY(28%)",WebkitMaskImage:"linear-gradient(180deg,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.5) 60%,transparent 100%)",maskImage:"linear-gradient(180deg,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.5) 60%,transparent 100%)"}}>MAAR</span>
-      </div>
-    </footer>
-  )
-}
-
 /* ══════════════════════════════════════════════════════════════════════════
    SERVICE PAGE CONTENT TYPES & DATA
 ══════════════════════════════════════════════════════════════════════════ */
@@ -716,8 +650,9 @@ function ServicePage({data}:{data:ServiceData}) {
     <div style={{background:T.bg,color:T.text,fontFamily:"'Inter','SF Pro Display',-apple-system,BlinkMacSystemFont,system-ui,sans-serif",minHeight:"100vh",position:"relative"}}>
       <style dangerouslySetInnerHTML={{__html:SVC_CSS}} />
       <ScrollProgress />
-      <AnimatedBackground />
-      <Navbar />
+      <Background />
+      <FloatingContact />
+      <Header />
       <AnimatePresence>{modalOpen && <ContactModal onClose={()=>setModalOpen(false)} />}</AnimatePresence>
 
       <div style={{position:"relative",zIndex:1,paddingTop:64}}>
@@ -905,7 +840,7 @@ function ServicePage({data}:{data:ServiceData}) {
           </div>
         </section>
 
-        <SiteFooter onContact={()=>setModalOpen(true)} />
+        <Footer onContact={()=>setModalOpen(true)} />
       </div>
     </div>
   )
