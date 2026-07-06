@@ -65,7 +65,13 @@ function PingDot({ color = T.green, size = 5 }: { color?: string; size?: number 
   )
 }
 
-const HDR_STYLE = `@keyframes hdr-colon-blink{0%,100%{opacity:.55}50%{opacity:.15}}`
+const HDR_STYLE = `
+@keyframes hdr-colon-blink{0%,100%{opacity:.55}50%{opacity:.15}}
+@media(max-width:767px){
+  .nm-hdr-dt      { display:none; }
+  .nm-hdr-divider { display:none; }
+  .nm-hdr-wordmark{ display:none; }
+}`
 
 /* ── DateTimeWidget — minimal, no border ── */
 function DateTimeWidget() {
@@ -385,8 +391,8 @@ export default function Header() {
           transition: "background 0.4s, border-color 0.4s",
         } as React.CSSProperties}
       >
-        {/* ── left: datetime ── */}
-        <div style={{ flex: 1 }}>
+        {/* ── left: datetime (hidden on mobile) ── */}
+        <div className="nm-hdr-dt" style={{ flex: 1 }}>
           <DateTimeWidget />
         </div>
 
@@ -403,8 +409,8 @@ export default function Header() {
               animate={{ opacity: logoHover ? 1 : 0 }} transition={{ duration: 0.30 }}
               style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(140,53,37,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }} />
           </span>
-          <span aria-hidden style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
-          <motion.span
+          <span aria-hidden className="nm-hdr-divider" style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
+          <motion.span className="nm-hdr-wordmark"
             animate={{ opacity: logoHover ? 1 : 0.70 }} transition={{ duration: 0.25 }}
             style={{ fontFamily: MONO, fontWeight: 600, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#fff", whiteSpace: "nowrap" as const }}>
             Nadia Maar
