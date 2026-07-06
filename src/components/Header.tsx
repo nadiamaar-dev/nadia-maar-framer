@@ -299,17 +299,43 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
     </motion.div>
   )
 
-  /* Mobile — full-screen overlay */
+  /* Mobile — full-screen overlay (covers header) */
   if (isMobile) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.35, ease }}
-        style={{ position: "fixed", inset: 0, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 28px", overflow: "hidden", ...GLASS }}>
+        initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}
+        transition={{ duration: 0.32, ease }}
+        style={{ position: "fixed", inset: 0, zIndex: 500, display: "flex", flexDirection: "column", padding: "0 28px", overflow: "hidden", ...GLASS }}>
+
+        {/* Accent top line */}
         <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(140,53,37,0.70), rgba(176,74,56,0.45), transparent)", flexShrink: 0 }} />
-        <div style={{ height: 64, flexShrink: 0 }} />
+
+        {/* Top row — mirrors the header: NM logo left, X close right */}
+        <div style={{ height: 64, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <a href="/" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}>
+            <NMmark size={28} id="nm-mob-menu-logo" />
+          </a>
+          <motion.button
+            onClick={onClose}
+            whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            aria-label="Chiudi menu"
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.13)",
+              borderRadius: 9, width: 36, height: 36,
+              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              color: "rgba(255,255,255,0.75)", flexShrink: 0,
+            }}>
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+              <path d="M1 1l11 11M12 1L1 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+            </svg>
+          </motion.button>
+        </div>
+
         {/* ghost MAAR */}
         <div aria-hidden style={{ position: "absolute", bottom: "12%", left: "50%", transform: "translateX(-50%)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,32vw,160px)", letterSpacing: "-0.05em", color: "rgba(75,85,105,0.13)", filter: "blur(1px)", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none", zIndex: 0 }}>MAAR</div>
+
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 20 }}>
           {NAV.map((item, i) => (
             <MenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} active={!!item.sectionId && activeId === item.sectionId} />
