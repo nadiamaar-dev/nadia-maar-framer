@@ -3,6 +3,7 @@ import NadiaMaarAbout from "./NadiaMaar_About"
 import { EcommercePage, CorporatePage, WebAppPage, SeoPage, AiPage } from "./NadiaMaar_ServicePage"
 import DigitalFoundry from "./DigitalFoundry"
 import Cabinet from "./Cabinet"
+import DashboardGate from "./DashboardGate"
 
 export default function App() {
   const path = window.location.pathname
@@ -14,5 +15,6 @@ export default function App() {
   if (path === "/ai")         return <AiPage />
   if (path === "/foundry")    return <DigitalFoundry />
   if (path === "/cabinet")    return <Cabinet />
+  if (path === "/dashboard")  return <DashboardGate />
   return <NadiaMaar />
 }
