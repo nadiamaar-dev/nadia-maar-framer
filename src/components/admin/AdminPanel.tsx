@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react"
-import KpiCards         from "./KpiCards"
-import ClientTable      from "./ClientTable"
-import TaskManager      from "./TaskManager"
-import DocumentManager  from "./DocumentManager"
-import SupportCenter    from "./SupportCenter"
-import MeetingManager   from "./MeetingManager"
+import React, { useEffect, useRef, useState } from "react"
+import KpiCards          from "./KpiCards"
+import ClientTable       from "./ClientTable"
+import TaskManager       from "./TaskManager"
+import ProjectManager    from "./ProjectManager"
+import DocumentManager   from "./DocumentManager"
+import SupportCenter     from "./SupportCenter"
+import MeetingManager    from "./MeetingManager"
 import { MOCK_CLIENTS, MOCK_KPI, type ClientRecord, type AdminKpi } from "../../data/adminData"
-import { fetchClients, fetchKpi } from "../../lib/adminApi"
-import { supabase } from "../../lib/supabase"
+import { fetchClients, fetchKpi, countPendingProjects } from "../../lib/adminApi"
+import { supabase, SUPABASE_READY } from "../../lib/supabase"
 
 interface AdminPanelProps {
   userEmail?: string
@@ -78,18 +79,36 @@ export default function AdminPanel({ userEmail }: AdminPanelProps) {
   const [clients,         setClients]         = useState<ClientRecord[]>(MOCK_CLIENTS)
   const [kpi,             setKpi]             = useState<AdminKpi>(MOCK_KPI)
   const [crmLoading,      setCrmLoading]      = useState(true)
+  const [pendingCount,    setPendingCount]    = useState(0)
+  const realtimeRef = useRef<ReturnType<typeof supabase.channel> | null>(null)
 
   useEffect(() => {
     let cancelled = false
-    Promise.all([fetchClients(), fetchKpi()])
-      .then(([c, k]) => {
+    Promise.all([fetchClients(), fetchKpi(), countPendingProjects()])
+      .then(([c, k, pending]) => {
         if (cancelled) return
         setClients(c)
         setKpi(k)
+        setPendingCount(pending)
       })
       .catch(() => { /* keep mock fallback on error */ })
       .finally(() => { if (!cancelled) setCrmLoading(false) })
     return () => { cancelled = true }
+  }, [])
+
+  // Realtime: update pending badge when a client submits a new project
+  useEffect(() => {
+    if (!SUPABASE_READY) return
+    const ch = supabase
+      .channel("admin-pending-projects")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "client_projects" },
+        () => { countPendingProjects().then(setPendingCount) }
+      )
+      .subscribe()
+    realtimeRef.current = ch
+    return () => { supabase.removeChannel(ch) }
   }, [])
 
   async function handleSignOut() {
@@ -138,6 +157,7 @@ export default function AdminPanel({ userEmail }: AdminPanelProps) {
         <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
           {NAV_ITEMS.map(item => {
             const isActive = activeSection === item.id
+            const badge = item.id === "projects" && pendingCount > 0 ? pendingCount : 0
             return (
               <button
                 key={item.id}
@@ -150,7 +170,15 @@ export default function AdminPanel({ userEmail }: AdminPanelProps) {
                 }}
               >
                 <span>{item.icon}</span>
-                <span className="font-display text-[13px] font-semibold">{item.label}</span>
+                <span className="flex-1 font-display text-[13px] font-semibold">{item.label}</span>
+                {badge > 0 && (
+                  <span
+                    className="flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 font-mono text-[9px] font-bold"
+                    style={{ background: "rgba(200,185,110,0.90)", color: "#1a1400" }}
+                  >
+                    {badge}
+                  </span>
+                )}
               </button>
             )
           })}
@@ -296,7 +324,7 @@ export default function AdminPanel({ userEmail }: AdminPanelProps) {
               </>
             )}
 
-            {activeSection === "projects"  && <TaskManager />}
+            {activeSection === "projects"  && <ProjectManager />}
             {activeSection === "invoices"  && <DocumentManager />}
             {activeSection === "meetings"  && <MeetingManager />}
             {activeSection === "support"   && <SupportCenter />}

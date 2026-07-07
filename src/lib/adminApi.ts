@@ -135,6 +135,12 @@ export interface ClientProject {
   updatedAt: string
 }
 
+/** Extended version with joined client info — used in the admin panel. */
+export interface AdminProject extends ClientProject {
+  clientName: string
+  clientEmail: string
+}
+
 /* ═══════════════════════════════════════════════════════════════
    MOCK DATA  (returned when SUPABASE_READY = false)
 ═══════════════════════════════════════════════════════════════ */
@@ -570,6 +576,68 @@ export async function createProject(payload: {
     createdAt:   data.created_at,
     updatedAt:   data.updated_at,
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PROJECT ADMIN API  (admin only)
+   Fetch all projects across all clients + approve/reject
+═══════════════════════════════════════════════════════════════ */
+
+const MOCK_ADMIN_PROJECTS: AdminProject[] = MOCK_PROJECTS.map(p => ({
+  ...p,
+  clientName:  p.clientId === "c1" ? "Nexus Italia S.r.l." : p.clientId === "c3" ? "Meridia Consulting" : p.clientId,
+  clientEmail: p.clientId === "c1" ? "m.ferretti@nexusitalia.it" : "l.amendola@meridia.com",
+}))
+
+/** Fetch all projects for the admin panel, with client name/email joined from profiles. */
+export async function fetchAllProjects(): Promise<AdminProject[]> {
+  if (!SUPABASE_READY) return MOCK_ADMIN_PROJECTS
+  const { data, error } = await supabase
+    .from("client_projects")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .select("*, profiles!client_id(company_name, email)" as any)
+    .order("created_at", { ascending: false })
+  if (error) throw error
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (data ?? []).map((r: any) => ({
+    id:          r.id,
+    clientId:    r.client_id,
+    clientName:  r.profiles?.company_name ?? r.client_id,
+    clientEmail: r.profiles?.email ?? "",
+    name:        r.name,
+    description: r.description ?? "",
+    status:      r.status as ProjectStatus,
+    adminNote:   r.admin_note ?? undefined,
+    createdAt:   r.created_at,
+    updatedAt:   r.updated_at,
+  }))
+}
+
+/**
+ * Approve, reject, pause or complete a project.
+ * Admin-only — enforced by RLS policy admin_update_all_projects.
+ */
+export async function updateProjectStatus(
+  id: string,
+  status: ProjectStatus,
+  adminNote?: string,
+): Promise<void> {
+  if (!SUPABASE_READY) return
+  const patch: Record<string, unknown> = { status, updated_at: new Date().toISOString() }
+  if (adminNote !== undefined) patch.admin_note = adminNote
+  const { error } = await supabase.from("client_projects").update(patch).eq("id", id)
+  if (error) throw error
+}
+
+/** Count projects waiting for admin approval — used for the nav badge. */
+export async function countPendingProjects(): Promise<number> {
+  if (!SUPABASE_READY) return MOCK_ADMIN_PROJECTS.filter(p => p.status === "pending_approval").length
+  const { count, error } = await supabase
+    .from("client_projects")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "pending_approval")
+  if (error) return 0
+  return count ?? 0
 }
 
 /* ═══════════════════════════════════════════════════════════════
