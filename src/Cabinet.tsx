@@ -220,8 +220,12 @@ function EmptyState() {
 }
 
 export default function Cabinet() {
-  const { items, clearBlueprint } = useBlueprint()
+  const { items, clearBlueprint, user } = useBlueprint()
   const [activeTab, setActiveTab] = useState<Tab>("progress")
+
+  /* When Supabase is live, user.id maps to client_tasks.client_id via profiles.
+     In demo/offline mode, fetchTasksForClient falls back to the first mock client. */
+  const clientId = user?.id ?? "demo"
 
   useEffect(() => {
     if (!document.getElementById(STYLE_ID)) {
@@ -371,7 +375,7 @@ export default function Cabinet() {
           )}
 
           {/* Tab: Avanzamento Progetto */}
-          {activeTab === "progress" && <ProjectProgress />}
+          {activeTab === "progress" && <ProjectProgress clientId={clientId} />}
 
           {/* Tab: Finanze & Fatturazione */}
           {activeTab === "invoices" && <InvoiceTable />}

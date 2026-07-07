@@ -75,19 +75,104 @@ export interface SupportTicket {
    MOCK DATA
 ═══════════════════════════════════════════════════════════════ */
 
+/**
+ * MOCK_TASKS — universal descriptions: suitable for websites, apps, ads, any digital project.
+ * Admin updates status/progress via the admin panel; clients see the result in their cabinet.
+ *
+ * Supabase table: client_tasks
+ * Columns: id, client_id, title, description, category, phase,
+ *          status (todo|in-progress|review|done), progress 0-100,
+ *          due_date, created_at, updated_at
+ */
 export const MOCK_TASKS: AdminTask[] = [
-  { id: "t1",  clientId: "c1", title: "Architettura del sito",       description: "Mappa delle pagine e struttura URL.", category: "Strategia", phase: "strategia", status: "done",        progress: 100, dueDate: "Gen 2025",  createdAt: "2025-01-05", updatedAt: "2025-01-20" },
-  { id: "t2",  clientId: "c1", title: "Design System tokens",        description: "Colori, tipografia e spaziature.",    category: "Design",    phase: "design",     status: "done",        progress: 100, dueDate: "Feb 2025",  createdAt: "2025-01-21", updatedAt: "2025-02-28" },
-  { id: "t3",  clientId: "c1", title: "Homepage React",              description: "Hero, servizi, CTA sections.",        category: "Frontend",  phase: "sviluppo",   status: "in-progress", progress: 72,  dueDate: "Lug 2025",  createdAt: "2025-03-01", updatedAt: "2025-07-01" },
-  { id: "t4",  clientId: "c1", title: "Ottimizzazione SEO on-page",  description: "Meta, schema markup, sitemap.",       category: "SEO",       phase: "sviluppo",   status: "todo",        progress: 0,   dueDate: "Ago 2025",  createdAt: "2025-06-01", updatedAt: "2025-06-01" },
-  { id: "t5",  clientId: "c2", title: "Wireframe brand identity",    description: "Logo variants e brand guidelines.",   category: "Branding",  phase: "design",     status: "done",        progress: 100, dueDate: "Feb 2025",  createdAt: "2025-02-01", updatedAt: "2025-02-25" },
-  { id: "t6",  clientId: "c2", title: "Dashboard Web App",           description: "UI componenti e stato globale.",      category: "Frontend",  phase: "sviluppo",   status: "in-progress", progress: 48,  dueDate: "Ago 2025",  createdAt: "2025-03-10", updatedAt: "2025-07-03" },
-  { id: "t7",  clientId: "c2", title: "Test cross-browser",         description: "Chrome, Safari, Firefox, Edge.",      category: "QA",        phase: "testing",    status: "todo",        progress: 0,   dueDate: "Set 2025",  createdAt: "2025-06-15", updatedAt: "2025-06-15" },
-  { id: "t8",  clientId: "c3", title: "Workshop requisiti",         description: "3 sessioni da 2h con il team.",       category: "Strategia", phase: "strategia", status: "in-progress",  progress: 60,  dueDate: "Lug 2025",  createdAt: "2025-05-20", updatedAt: "2025-07-04" },
-  { id: "t9",  clientId: "c3", title: "Setup Analytics pipeline",   description: "GA4, BigQuery, dashboard Looker.",    category: "Analytics", phase: "sviluppo",   status: "review",      progress: 85,  dueDate: "Ago 2025",  createdAt: "2025-06-01", updatedAt: "2025-07-05" },
-  { id: "t10", clientId: "c6", title: "Architettura microservizi",   description: "API gateway e schema del DB.",        category: "Backend",   phase: "strategia",  status: "done",        progress: 100, dueDate: "Feb 2025",  createdAt: "2025-01-15", updatedAt: "2025-02-20" },
-  { id: "t11", clientId: "c6", title: "AI Integration layer",       description: "OpenAI API wrapper e retry logic.",   category: "AI",        phase: "sviluppo",   status: "in-progress", progress: 55,  dueDate: "Ago 2025",  createdAt: "2025-05-01", updatedAt: "2025-07-05" },
-  { id: "t12", clientId: "c6", title: "Deploy Vercel + CI/CD",      description: "Pipeline GitHub Actions.",            category: "DevOps",    phase: "deploy",     status: "todo",        progress: 0,   dueDate: "Ott 2025",  createdAt: "2025-06-20", updatedAt: "2025-06-20" },
+  /* ── Client c1 ────────────────────────────────────────────── */
+  {
+    id: "t1", clientId: "c1",
+    title: "Analisi & Briefing",
+    description: "Raccolta degli obiettivi, analisi del mercato di riferimento e definizione della roadmap operativa.",
+    category: "Strategia", phase: "strategia", status: "done", progress: 100,
+    dueDate: "Gen 2025", createdAt: "2025-01-05", updatedAt: "2025-01-20",
+  },
+  {
+    id: "t2", clientId: "c1",
+    title: "Design System & Identità Visiva",
+    description: "Palette cromatica, tipografia, iconografia e libreria di componenti UI riutilizzabili.",
+    category: "Design", phase: "design", status: "done", progress: 100,
+    dueDate: "Feb 2025", createdAt: "2025-01-21", updatedAt: "2025-02-28",
+  },
+  {
+    id: "t3", clientId: "c1",
+    title: "Sviluppo Interfaccia Principale",
+    description: "Codice delle sezioni chiave, animazioni, interazioni e ottimizzazione delle performance.",
+    category: "Frontend", phase: "sviluppo", status: "in-progress", progress: 72,
+    dueDate: "Lug 2025", createdAt: "2025-03-01", updatedAt: "2025-07-01",
+  },
+  {
+    id: "t4", clientId: "c1",
+    title: "Visibilità & Distribuzione",
+    description: "Ottimizzazione per i motori di ricerca, struttura URL canonici e integrazione canali di distribuzione.",
+    category: "Marketing", phase: "sviluppo", status: "todo", progress: 0,
+    dueDate: "Ago 2025", createdAt: "2025-06-01", updatedAt: "2025-06-01",
+  },
+  /* ── Client c2 ────────────────────────────────────────────── */
+  {
+    id: "t5", clientId: "c2",
+    title: "Identità di Marca",
+    description: "Concept del marchio, declinazioni del logo, palette e manuale di stile applicativo.",
+    category: "Branding", phase: "design", status: "done", progress: 100,
+    dueDate: "Feb 2025", createdAt: "2025-02-01", updatedAt: "2025-02-25",
+  },
+  {
+    id: "t6", clientId: "c2",
+    title: "Sviluppo Applicativo",
+    description: "Funzionalità core, gestione dello stato globale e integrazione con le API di terze parti.",
+    category: "Frontend", phase: "sviluppo", status: "in-progress", progress: 48,
+    dueDate: "Ago 2025", createdAt: "2025-03-10", updatedAt: "2025-07-03",
+  },
+  {
+    id: "t7", clientId: "c2",
+    title: "Controllo Qualità & Compatibilità",
+    description: "Test funzionali, verifica cross-browser, accessibilità WCAG e stress test sulle performance.",
+    category: "QA", phase: "testing", status: "todo", progress: 0,
+    dueDate: "Set 2025", createdAt: "2025-06-15", updatedAt: "2025-06-15",
+  },
+  /* ── Client c3 ────────────────────────────────────────────── */
+  {
+    id: "t8", clientId: "c3",
+    title: "Pianificazione Strategica",
+    description: "Workshop collaborativi, definizione dei KPI di progetto e scelta dello stack tecnologico.",
+    category: "Strategia", phase: "strategia", status: "in-progress", progress: 60,
+    dueDate: "Lug 2025", createdAt: "2025-05-20", updatedAt: "2025-07-04",
+  },
+  {
+    id: "t9", clientId: "c3",
+    title: "Pipeline Dati & Reportistica",
+    description: "Configurazione del tracciamento, costruzione delle dashboard e automazione dei report periodici.",
+    category: "Analytics", phase: "sviluppo", status: "review", progress: 85,
+    dueDate: "Ago 2025", createdAt: "2025-06-01", updatedAt: "2025-07-05",
+  },
+  /* ── Client c6 ────────────────────────────────────────────── */
+  {
+    id: "t10", clientId: "c6",
+    title: "Architettura di Sistema",
+    description: "Progettazione dello schema dati, struttura delle API e scelte infrastrutturali.",
+    category: "Backend", phase: "strategia", status: "done", progress: 100,
+    dueDate: "Feb 2025", createdAt: "2025-01-15", updatedAt: "2025-02-20",
+  },
+  {
+    id: "t11", clientId: "c6",
+    title: "Integrazione Servizi Intelligenti",
+    description: "Connessione con provider AI/ML, gestione dei prompt, caching e logica di fallback.",
+    category: "AI", phase: "sviluppo", status: "in-progress", progress: 55,
+    dueDate: "Ago 2025", createdAt: "2025-05-01", updatedAt: "2025-07-05",
+  },
+  {
+    id: "t12", clientId: "c6",
+    title: "Deploy & Rilascio Continuo",
+    description: "Pipeline di CI/CD, configurazione ambienti di staging/produzione e monitoraggio post-lancio.",
+    category: "DevOps", phase: "deploy", status: "todo", progress: 0,
+    dueDate: "Ott 2025", createdAt: "2025-06-20", updatedAt: "2025-06-20",
+  },
 ]
 
 export const MOCK_DOCUMENTS: ClientDocument[] = [
@@ -174,6 +259,76 @@ export async function deleteTask(id: string): Promise<void> {
   if (!SUPABASE_READY) return
   /* ── Live mutation ─────────────────────────────────────────
   const { error } = await supabase.from("client_tasks").delete().eq("id", id)
+  if (error) throw error
+  ─────────────────────────────────────────────────────────── */
+}
+
+/**
+ * fetchTasksForClient — called from the CLIENT cabinet (ProjectProgress).
+ *
+ * When Supabase is live, the row-level security policy on client_tasks
+ * ensures the authenticated user only sees rows where client_id matches
+ * their profile. The clientId param is used only in the mock fallback.
+ *
+ * Supabase RLS policy (example):
+ *   CREATE POLICY "client_sees_own_tasks" ON client_tasks
+ *     FOR SELECT USING (client_id = auth.uid()::text);
+ */
+export async function fetchTasksForClient(clientId: string): Promise<AdminTask[]> {
+  if (!SUPABASE_READY) {
+    const tasks = MOCK_TASKS.filter(t => t.clientId === clientId)
+    return tasks.length > 0 ? tasks : MOCK_TASKS.filter(t => t.clientId === "c1")
+  }
+  /* ── Live query ────────────────────────────────────────────
+  const { data, error } = await supabase
+    .from("client_tasks")
+    .select("id, client_id, title, description, category, phase, status, progress, due_date, updated_at")
+    .order("created_at", { ascending: true })
+  if (error) throw error
+  return (data ?? []).map(row => ({
+    id:          row.id,
+    clientId:    row.client_id,
+    title:       row.title,
+    description: row.description,
+    category:    row.category,
+    phase:       row.phase as TaskPhase,
+    status:      row.status as TaskStatus,
+    progress:    row.progress,
+    dueDate:     row.due_date ?? undefined,
+    createdAt:   row.created_at,
+    updatedAt:   row.updated_at,
+  }))
+  ─────────────────────────────────────────────────────────── */
+  const tasks = MOCK_TASKS.filter(t => t.clientId === clientId)
+  return tasks.length > 0 ? tasks : MOCK_TASKS.filter(t => t.clientId === "c1")
+}
+
+/**
+ * updateTaskProgress — targeted mutation called from the ADMIN panel
+ * to update only the progress % and status of a task.
+ * More focused than updateTask (which patches any field).
+ *
+ * Supabase RLS policy (example):
+ *   CREATE POLICY "admin_updates_tasks" ON client_tasks
+ *     FOR UPDATE USING (
+ *       EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+ *     );
+ */
+export async function updateTaskProgress(
+  taskId: string,
+  progress: number,
+  status: TaskStatus,
+): Promise<void> {
+  if (!SUPABASE_READY) return
+  /* ── Live mutation ─────────────────────────────────────────
+  const { error } = await supabase
+    .from("client_tasks")
+    .update({
+      progress,
+      status,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", taskId)
   if (error) throw error
   ─────────────────────────────────────────────────────────── */
 }
