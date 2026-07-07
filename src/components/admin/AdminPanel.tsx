@@ -1,9 +1,10 @@
 import React, { useState } from "react"
-import KpiCards       from "./KpiCards"
-import ClientTable    from "./ClientTable"
-import TaskManager    from "./TaskManager"
-import DocumentManager from "./DocumentManager"
-import SupportCenter  from "./SupportCenter"
+import KpiCards         from "./KpiCards"
+import ClientTable      from "./ClientTable"
+import TaskManager      from "./TaskManager"
+import DocumentManager  from "./DocumentManager"
+import SupportCenter    from "./SupportCenter"
+import MeetingManager   from "./MeetingManager"
 import { MOCK_CLIENTS, MOCK_KPI, type ClientRecord } from "../../data/adminData"
 import { supabase } from "../../lib/supabase"
 
@@ -11,7 +12,7 @@ interface AdminPanelProps {
   userEmail?: string
 }
 
-type NavSection = "crm" | "projects" | "invoices" | "support" | "settings"
+type NavSection = "crm" | "projects" | "invoices" | "meetings" | "support" | "settings"
 
 interface NavItem { id: NavSection; label: string; icon: React.ReactNode }
 
@@ -30,6 +31,11 @@ const NAV_ITEMS: NavItem[] = [
     id: "invoices",
     label: "Fatturazione",
     icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 13h6M9 17h4"/></svg>,
+  },
+  {
+    id: "meetings",
+    label: "Riunioni",
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>,
   },
   {
     id: "support",
@@ -275,6 +281,7 @@ export default function AdminPanel({ userEmail }: AdminPanelProps) {
 
             {activeSection === "projects"  && <TaskManager />}
             {activeSection === "invoices"  && <DocumentManager />}
+            {activeSection === "meetings"  && <MeetingManager />}
             {activeSection === "support"   && <SupportCenter />}
             {activeSection === "settings"  && <ComingSoon label="Impostazioni" />}
 

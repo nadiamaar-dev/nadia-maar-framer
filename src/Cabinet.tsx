@@ -5,6 +5,9 @@ import Background from "./components/Background"
 import FloatingContact from "./components/FloatingContact"
 import { useBlueprint } from "./context/BlueprintContext"
 import { SandboxItem } from "./data/sandboxData"
+import ProjectTab      from "./components/cabinet/ProjectTab"
+import CalendarTab    from "./components/cabinet/CalendarTab"
+import ChatTab        from "./components/cabinet/ChatTab"
 import ProjectProgress from "./components/cabinet/ProjectProgress"
 import InvoiceTable    from "./components/cabinet/InvoiceTable"
 import ReportCenter    from "./components/cabinet/ReportCenter"
@@ -14,9 +17,19 @@ const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const MONO    = "'JetBrains Mono',monospace"
 const ACCENT  = "#B04A38"
 
-type Tab = "blueprint" | "progress" | "invoices" | "reports" | "support"
+type Tab = "project" | "calendar" | "messages" | "blueprint" | "progress" | "invoices" | "reports" | "support"
 
 const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
+  {
+    id: "project",
+    label: "Progetto",
+    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>,
+  },
+  {
+    id: "calendar",
+    label: "Prenota",
+    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>,
+  },
   {
     id: "progress",
     label: "Avanzamento",
@@ -33,9 +46,14 @@ const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
     icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,
   },
   {
-    id: "support",
-    label: "Supporto",
+    id: "messages",
+    label: "Messaggi",
     icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>,
+  },
+  {
+    id: "support",
+    label: "Urgenze",
+    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>,
   },
   {
     id: "blueprint",
@@ -221,7 +239,7 @@ function EmptyState() {
 
 export default function Cabinet() {
   const { items, clearBlueprint, user } = useBlueprint()
-  const [activeTab, setActiveTab] = useState<Tab>("progress")
+  const [activeTab, setActiveTab] = useState<Tab>("project")
 
   /* When Supabase is live, user.id maps to client_tasks.client_id via profiles.
      In demo/offline mode, fetchTasksForClient falls back to the first mock client. */
@@ -374,6 +392,12 @@ export default function Cabinet() {
             </>
           )}
 
+          {/* Tab: Progetto */}
+          {activeTab === "project"  && <ProjectTab   clientId={clientId} />}
+
+          {/* Tab: Prenota Chiamata */}
+          {activeTab === "calendar" && <CalendarTab  clientId={clientId} />}
+
           {/* Tab: Avanzamento Progetto */}
           {activeTab === "progress" && <ProjectProgress clientId={clientId} />}
 
@@ -383,7 +407,10 @@ export default function Cabinet() {
           {/* Tab: Centro Report */}
           {activeTab === "reports" && <ReportCenter />}
 
-          {/* Tab: Comunicazione / Supporto */}
+          {/* Tab: Centro Messaggi */}
+          {activeTab === "messages" && <ChatTab clientId={clientId} />}
+
+          {/* Tab: Urgenze / Supporto critico */}
           {activeTab === "support" && <SupportForm />}
 
         </div>
