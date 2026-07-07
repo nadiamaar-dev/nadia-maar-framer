@@ -1,11 +1,12 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import KpiCards         from "./KpiCards"
 import ClientTable      from "./ClientTable"
 import TaskManager      from "./TaskManager"
 import DocumentManager  from "./DocumentManager"
 import SupportCenter    from "./SupportCenter"
 import MeetingManager   from "./MeetingManager"
-import { MOCK_CLIENTS, MOCK_KPI, type ClientRecord } from "../../data/adminData"
+import { MOCK_CLIENTS, MOCK_KPI, type ClientRecord, type AdminKpi } from "../../data/adminData"
+import { fetchClients, fetchKpi } from "../../lib/adminApi"
 import { supabase } from "../../lib/supabase"
 
 interface AdminPanelProps {
@@ -74,6 +75,22 @@ export default function AdminPanel({ userEmail }: AdminPanelProps) {
   const [activeSection,   setActiveSection]   = useState<NavSection>("crm")
   const [selectedClient,  setSelectedClient]  = useState<ClientRecord | null>(null)
   const [sidebarOpen,     setSidebarOpen]     = useState(false)
+  const [clients,         setClients]         = useState<ClientRecord[]>(MOCK_CLIENTS)
+  const [kpi,             setKpi]             = useState<AdminKpi>(MOCK_KPI)
+  const [crmLoading,      setCrmLoading]      = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+    Promise.all([fetchClients(), fetchKpi()])
+      .then(([c, k]) => {
+        if (cancelled) return
+        setClients(c)
+        setKpi(k)
+      })
+      .catch(() => { /* keep mock fallback on error */ })
+      .finally(() => { if (!cancelled) setCrmLoading(false) })
+    return () => { cancelled = true }
+  }, [])
 
   async function handleSignOut() {
     await supabase.auth.signOut()
@@ -256,23 +273,23 @@ export default function AdminPanel({ userEmail }: AdminPanelProps) {
                     Panoramica Agenzia
                   </h2>
                   <p className="mt-1 font-display text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>
-                    {MOCK_KPI.activeClients} clienti attivi · {MOCK_KPI.projectsInProgress} progetti in corso
+                    {crmLoading ? "Caricamento…" : `${kpi.activeClients} clienti attivi · ${kpi.projectsInProgress} progetti in corso`}
                   </p>
                 </div>
 
-                <KpiCards kpi={MOCK_KPI} />
+                <KpiCards kpi={kpi} />
 
                 {/* Divider */}
                 <div className="flex items-center gap-4 pt-2">
                   <div className="font-display text-base font-bold text-white">Lista Clienti</div>
                   <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.06)" }} />
                   <span className="rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-wide" style={{ background: "rgba(176,74,56,0.12)", color: "#D4695A", border: "1px solid rgba(176,74,56,0.25)" }}>
-                    {MOCK_CLIENTS.length} clienti
+                    {crmLoading ? "…" : `${clients.length} clienti`}
                   </span>
                 </div>
 
                 <ClientTable
-                  clients={MOCK_CLIENTS}
+                  clients={clients}
                   selectedClient={selectedClient}
                   onSelectClient={setSelectedClient}
                 />

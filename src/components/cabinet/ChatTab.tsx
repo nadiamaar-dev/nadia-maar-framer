@@ -17,6 +17,7 @@ import {
   type Conversation, type Message, type ConversationStatus, type Attachment,
   fmtBytes,
 } from "../../lib/adminApi"
+import { supabase, SUPABASE_READY } from "../../lib/supabase"
 import { useToast } from "../../context/ToastContext"
 
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
@@ -266,6 +267,38 @@ function ConvItem({
       fetchMessages(conv.id).then(msgs => { setMessages(msgs); setLoaded(true) })
     }
   }, [isOpen, loaded, conv.id])
+
+  // Realtime: push new messages from admin without a page reload
+  useEffect(() => {
+    if (!isOpen || !SUPABASE_READY) return
+    const channel = supabase
+      .channel(`conv-messages-${conv.id}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${conv.id}` },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (payload: { new: any }) => {
+          const r = payload.new
+          const incoming: Message = {
+            id:             r.id,
+            conversationId: r.conversation_id,
+            authorId:       r.author_id,
+            authorRole:     r.author_role as "admin" | "client",
+            content:        r.content ?? "",
+            attachments:    r.attachments ?? [],
+            isDeleted:      r.is_deleted ?? false,
+            editedAt:       r.edited_at ?? undefined,
+            createdAt:      r.created_at,
+            updatedAt:      r.updated_at,
+          }
+          setMessages(prev =>
+            prev.some(m => m.id === incoming.id) ? prev : [...prev, incoming]
+          )
+        }
+      )
+      .subscribe()
+    return () => { supabase.removeChannel(channel) }
+  }, [isOpen, conv.id])
 
   useEffect(() => {
     if (isOpen) bottomRef.current?.scrollIntoView({ behavior: "smooth" })

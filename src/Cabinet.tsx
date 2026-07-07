@@ -9,9 +9,10 @@ import ProjectTab      from "./components/cabinet/ProjectTab"
 import CalendarTab    from "./components/cabinet/CalendarTab"
 import ChatTab        from "./components/cabinet/ChatTab"
 import ProjectProgress from "./components/cabinet/ProjectProgress"
-import InvoiceTable    from "./components/cabinet/InvoiceTable"
+import InvoiceTable, { type Invoice }    from "./components/cabinet/InvoiceTable"
 import ReportCenter    from "./components/cabinet/ReportCenter"
 import SupportForm     from "./components/cabinet/SupportForm"
+import { fetchInvoices, type AdminInvoice } from "./lib/adminApi"
 
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const MONO    = "'JetBrains Mono',monospace"
@@ -237,9 +238,26 @@ function EmptyState() {
   )
 }
 
+function toInvoice(a: AdminInvoice): Invoice {
+  const statusMap: Record<string, Invoice["status"]> = {
+    paid: "paid", sent: "pending", draft: "pending", overdue: "overdue",
+  }
+  return {
+    id:          a.id,
+    number:      a.number,
+    description: a.description,
+    issuedAt:    a.issuedAt,
+    amount:      a.amount,
+    currency:    a.currency,
+    status:      statusMap[a.status] ?? "pending",
+    pdfUrl:      a.pdfPath,
+  }
+}
+
 export default function Cabinet() {
   const { items, clearBlueprint, user } = useBlueprint()
   const [activeTab, setActiveTab] = useState<Tab>("project")
+  const [invoices,  setInvoices]  = useState<Invoice[]>([])
 
   /* When Supabase is live, user.id maps to client_tasks.client_id via profiles.
      In demo/offline mode, fetchTasksForClient falls back to the first mock client. */
@@ -252,6 +270,14 @@ export default function Cabinet() {
       document.head.appendChild(el)
     }
   }, [])
+
+  useEffect(() => {
+    let cancelled = false
+    fetchInvoices(clientId !== "demo" ? clientId : undefined)
+      .then(data => { if (!cancelled) setInvoices(data.map(toInvoice)) })
+      .catch(() => { /* InvoiceTable falls back to its own mock on empty array */ })
+    return () => { cancelled = true }
+  }, [clientId])
 
   const mailBody = encodeURIComponent(
     `Ciao Nadia,\n\nHo selezionato le seguenti soluzioni per il mio progetto:\n\n${items.map(i => `• ${i.title} (${i.category})`).join("\n")}\n\nVorrei discutere i dettagli.\n\nGrazie`
@@ -402,7 +428,7 @@ export default function Cabinet() {
           {activeTab === "progress" && <ProjectProgress clientId={clientId} />}
 
           {/* Tab: Finanze & Fatturazione */}
-          {activeTab === "invoices" && <InvoiceTable />}
+          {activeTab === "invoices" && <InvoiceTable invoices={invoices.length > 0 ? invoices : undefined} />}
 
           {/* Tab: Centro Report */}
           {activeTab === "reports" && <ReportCenter />}
