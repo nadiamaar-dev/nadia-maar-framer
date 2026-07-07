@@ -33,25 +33,25 @@ function GrainOverlay() {
   )
 }
 
-/* ── MAAR watermark — fades in after hero, fades before footer ── */
+/* ── MAAR watermark — fixed, fades in after hero, fades before footer ── */
 function MaarWatermark() {
   const { scrollYProgress } = useScroll()
   const opacity = useTransform(scrollYProgress, [0.04, 0.14, 0.86, 0.96], [0, 1, 1, 0])
-  const y       = useTransform(scrollYProgress, [0.04, 0.96], ["3%", "-3%"])
   return (
     <motion.div aria-hidden style={{
-      position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
+      position: "fixed", top: 0, left: 0,
+      width: "100vw", height: "100vh",
+      zIndex: -1, pointerEvents: "none",
       display: "flex", alignItems: "center", justifyContent: "center",
       opacity,
     }}>
-      <motion.span style={{
-        y,
+      <span style={{
         fontFamily: DISPLAY, fontWeight: 900,
         fontSize: "clamp(110px, 30vw, 460px)",
         letterSpacing: "-0.05em", lineHeight: 1,
         color: "rgba(75,85,105,0.13)", filter: "blur(1px)",
         userSelect: "none", whiteSpace: "nowrap",
-      }}>MAAR</motion.span>
+      }}>MAAR</span>
     </motion.div>
   )
 }

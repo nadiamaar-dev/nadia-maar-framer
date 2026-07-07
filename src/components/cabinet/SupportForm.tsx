@@ -7,6 +7,23 @@ const GREEN   = "#10B981"
 
 const STYLE_ID = "nm-support-styles"
 const CSS = `
+.nm-sup-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .nm-sup-grid {
+    grid-template-columns: 1fr;
+  }
+  .nm-sup-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 0;
+  }
+}
 .nm-sup-input {
   width: 100%; padding: 12px 16px;
   background: rgba(255,255,255,0.045);
@@ -142,7 +159,7 @@ export default function SupportForm({ onSubmit, adminEmail = "marchenkonadiia84@
         </p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 24, alignItems: "start" }}>
+      <div className="nm-sup-grid">
 
         {/* Form card */}
         <div style={{
@@ -305,7 +322,7 @@ export default function SupportForm({ onSubmit, adminEmail = "marchenkonadiia84@
         </div>
 
         {/* Info sidebar */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div className="nm-sup-sidebar" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
 
           {/* SLA card */}
           <div style={{
