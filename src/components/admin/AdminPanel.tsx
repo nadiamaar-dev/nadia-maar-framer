@@ -6,8 +6,10 @@ import ProjectManager    from "./ProjectManager"
 import DocumentManager   from "./DocumentManager"
 import SupportCenter     from "./SupportCenter"
 import MeetingManager    from "./MeetingManager"
+import ClientWorkspace   from "./ClientWorkspace"
+import ProjectDossier    from "./ProjectDossier"
 import { MOCK_CLIENTS, MOCK_KPI, type ClientRecord, type AdminKpi } from "../../data/adminData"
-import { fetchClients, fetchKpi, countPendingProjects } from "../../lib/adminApi"
+import { fetchClients, fetchKpi, countPendingProjects, type ClientProject } from "../../lib/adminApi"
 import { supabase, SUPABASE_READY } from "../../lib/supabase"
 
 interface AdminPanelProps {
@@ -74,7 +76,8 @@ function ComingSoon({ label }: { label: string }) {
 /* ─── Main component ─────────────────────────────────────────── */
 export default function AdminPanel({ userEmail }: AdminPanelProps) {
   const [activeSection,   setActiveSection]   = useState<NavSection>("crm")
-  const [selectedClient,  setSelectedClient]  = useState<ClientRecord | null>(null)
+  const [wsClient,        setWsClient]        = useState<ClientRecord | null>(null)
+  const [wsProject,       setWsProject]       = useState<ClientProject | null>(null)
   const [sidebarOpen,     setSidebarOpen]     = useState(false)
   const [clients,         setClients]         = useState<ClientRecord[]>(MOCK_CLIENTS)
   const [kpi,             setKpi]             = useState<AdminKpi>(MOCK_KPI)
@@ -291,6 +294,21 @@ export default function AdminPanel({ userEmail }: AdminPanelProps) {
           <div className="mx-auto max-w-[1280px] space-y-6">
 
             {activeSection === "crm" && (
+              wsProject && wsClient ? (
+                <ProjectDossier
+                  project={wsProject}
+                  client={wsClient}
+                  onBack={() => setWsProject(null)}
+                  onBackToClients={() => { setWsProject(null); setWsClient(null) }}
+                />
+              ) : wsClient ? (
+                <ClientWorkspace
+                  client={wsClient}
+                  onBack={() => setWsClient(null)}
+                  onOpenProject={setWsProject}
+                  onClientUpdated={c => { setClients(prev => prev.map(x => x.id === c.id ? c : x)); setWsClient(c) }}
+                />
+              ) : (
               <>
                 {/* Section label */}
                 <div>
@@ -318,11 +336,12 @@ export default function AdminPanel({ userEmail }: AdminPanelProps) {
 
                 <ClientTable
                   clients={clients}
-                  selectedClient={selectedClient}
-                  onSelectClient={setSelectedClient}
+                  selectedClient={null}
+                  onSelectClient={c => { if (c) setWsClient(c) }}
                   onClientUpdated={c => setClients(prev => prev.map(x => x.id === c.id ? c : x))}
                 />
               </>
+              )
             )}
 
             {activeSection === "projects"  && <ProjectManager />}

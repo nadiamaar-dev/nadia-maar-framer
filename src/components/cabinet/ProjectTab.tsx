@@ -4,6 +4,7 @@ import {
   type ClientProject, type ProjectStatus,
 } from "../../lib/adminApi"
 import { supabase, SUPABASE_READY } from "../../lib/supabase"
+import ClientStages from "./ClientStages"
 
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const MONO    = "'JetBrains Mono',monospace"
@@ -632,10 +633,15 @@ export default function ProjectTab({ clientId }: ProjectTabProps) {
       {loading ? (
         <Skeleton />
       ) : project ? (
-        <ProjectCard
-          project={project}
-          onNewProject={() => setShowModal(true)}
-        />
+        <>
+          <ProjectCard
+            project={project}
+            onNewProject={() => setShowModal(true)}
+          />
+          {(project.status === "active" || project.status === "completed") && (
+            <ClientStages projectId={project.id} clientId={clientId} />
+          )}
+        </>
       ) : (
         <EmptyState onNew={() => setShowModal(true)} />
       )}

@@ -48,6 +48,7 @@ export interface ClientDocument {
 export interface AdminInvoice {
   id: string
   clientId: string
+  projectId?: string
   number: string
   description: string
   amount: number
@@ -79,6 +80,7 @@ export interface Meeting {
   id: string
   clientId: string
   clientName?: string
+  projectId?: string
   proposedBy: MeetingProposer
   /** ISO local datetime string: "YYYY-MM-DDTHH:mm" */
   datetime: string
@@ -139,6 +141,22 @@ export interface ClientProject {
 export interface AdminProject extends ClientProject {
   clientName: string
   clientEmail: string
+}
+
+/* ── Project stages (the "dossier" lifecycle) ───────────────── */
+export type StageStatus = "locked" | "active" | "done"
+
+export interface ProjectStage {
+  id: string
+  projectId: string
+  key: string
+  title: string
+  orderIndex: number
+  status: StageStatus
+  startedAt?: string
+  completedAt?: string
+  createdAt: string
+  updatedAt: string
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -261,6 +279,7 @@ function mapInvoice(r: any): AdminInvoice {
   return {
     id:          r.id,
     clientId:    r.client_id,
+    projectId:   r.project_id ?? undefined,
     number:      r.number,
     description: r.description ?? "",
     amount:      r.amount,
@@ -470,6 +489,7 @@ export async function createInvoice(payload: Omit<AdminInvoice, "id">): Promise<
     .from("client_invoices")
     .insert({
       client_id:   payload.clientId,
+      project_id:  payload.projectId ?? null,
       number:      payload.number,
       description: payload.description,
       amount:      payload.amount,
@@ -481,6 +501,16 @@ export async function createInvoice(payload: Omit<AdminInvoice, "id">): Promise<
     .select().single()
   if (error) throw error
   return mapInvoice(data)
+}
+
+/** Invoices for a single project (dossier → Fatture tab). */
+export async function fetchInvoicesByProject(projectId: string): Promise<AdminInvoice[]> {
+  if (!SUPABASE_READY) return MOCK_ADMIN_INVOICES.filter(i => i.clientId === projectId)
+  const { data, error } = await supabase
+    .from("client_invoices").select("*").eq("project_id", projectId)
+    .order("issued_at", { ascending: false })
+  if (error) throw error
+  return (data ?? []).map(mapInvoice)
 }
 
 export async function updateInvoiceStatus(id: string, status: InvoiceAdminStatus): Promise<void> {
@@ -672,6 +702,134 @@ export async function countPendingProjects(): Promise<number> {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   MULTI-PROJECT API
+   A client can have several projects. Each is a "dossier".
+═══════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapProject(r: any): ClientProject {
+  return {
+    id:          r.id,
+    clientId:    r.client_id,
+    name:        r.name,
+    description: r.description ?? "",
+    status:      r.status as ProjectStatus,
+    adminNote:   r.admin_note ?? undefined,
+    createdAt:   r.created_at,
+    updatedAt:   r.updated_at,
+  }
+}
+
+/** All projects for a client (admin picks a client → sees their projects). */
+export async function fetchProjectsByClient(clientId: string): Promise<ClientProject[]> {
+  if (!SUPABASE_READY) return MOCK_PROJECTS.filter(p => p.clientId === clientId)
+  const { data, error } = await supabase
+    .from("client_projects")
+    .select("id, client_id, name, description, status, admin_note, created_at, updated_at")
+    .eq("client_id", clientId)
+    .order("created_at", { ascending: false })
+  if (error) throw error
+  return (data ?? []).map(mapProject)
+}
+
+export async function fetchProjectById(id: string): Promise<ClientProject | null> {
+  if (!SUPABASE_READY) return MOCK_PROJECTS.find(p => p.id === id) ?? null
+  const { data, error } = await supabase
+    .from("client_projects")
+    .select("id, client_id, name, description, status, admin_note, created_at, updated_at")
+    .eq("id", id).maybeSingle()
+  if (error) throw error
+  return data ? mapProject(data) : null
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PROJECT STAGES API  (Fasi)
+   Ordered, gated lifecycle. Admin controls progression; client reads.
+═══════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapStage(r: any): ProjectStage {
+  return {
+    id:          r.id,
+    projectId:   r.project_id,
+    key:         r.key,
+    title:       r.title,
+    orderIndex:  r.order_index,
+    status:      r.status as StageStatus,
+    startedAt:   r.started_at ?? undefined,
+    completedAt: r.completed_at ?? undefined,
+    createdAt:   r.created_at,
+    updatedAt:   r.updated_at,
+  }
+}
+
+export async function fetchProjectStages(projectId: string): Promise<ProjectStage[]> {
+  if (!SUPABASE_READY) return []
+  const { data, error } = await supabase
+    .from("project_stages")
+    .select("*")
+    .eq("project_id", projectId)
+    .order("order_index", { ascending: true })
+  if (error) throw error
+  return (data ?? []).map(mapStage)
+}
+
+export async function createStage(projectId: string, title: string, orderIndex: number): Promise<ProjectStage> {
+  const now = new Date().toISOString()
+  const key = title.toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "fase"
+  const optimistic: ProjectStage = {
+    id: `st${Date.now()}`, projectId, key, title: title.trim(),
+    orderIndex, status: "locked", createdAt: now, updatedAt: now,
+  }
+  if (!SUPABASE_READY) return optimistic
+  const { data, error } = await supabase
+    .from("project_stages")
+    .insert({ project_id: projectId, key, title: title.trim(), order_index: orderIndex, status: "locked" })
+    .select().single()
+  if (error) throw error
+  return mapStage(data)
+}
+
+export async function updateStage(
+  id: string,
+  patch: Partial<Pick<ProjectStage, "title" | "status" | "orderIndex">>,
+): Promise<void> {
+  if (!SUPABASE_READY) return
+  const db: Record<string, unknown> = { updated_at: new Date().toISOString() }
+  if (patch.title      !== undefined) db.title       = patch.title
+  if (patch.orderIndex !== undefined) db.order_index = patch.orderIndex
+  if (patch.status     !== undefined) {
+    db.status = patch.status
+    if (patch.status === "active") db.started_at   = new Date().toISOString()
+    if (patch.status === "done")   db.completed_at = new Date().toISOString()
+  }
+  const { error } = await supabase.from("project_stages").update(db).eq("id", id)
+  if (error) throw error
+}
+
+export async function deleteStage(id: string): Promise<void> {
+  if (!SUPABASE_READY) return
+  const { error } = await supabase.from("project_stages").delete().eq("id", id)
+  if (error) throw error
+}
+
+/**
+ * advanceStage — mark the given stage 'done' and unlock the next (by order).
+ * Returns the refreshed stage list. Admin-only via RLS.
+ */
+export async function advanceStage(projectId: string, stageId: string): Promise<ProjectStage[]> {
+  if (!SUPABASE_READY) return []
+  const stages = await fetchProjectStages(projectId)
+  const current = stages.find(s => s.id === stageId)
+  await updateStage(stageId, { status: "done" })
+  const next = stages
+    .filter(s => s.orderIndex > (current?.orderIndex ?? -1) && s.status === "locked")
+    .sort((a, b) => a.orderIndex - b.orderIndex)[0]
+  if (next) await updateStage(next.id, { status: "active" })
+  return fetchProjectStages(projectId)
+}
+
+/* ═══════════════════════════════════════════════════════════════
    CRM API  (admin only)
    Queries: profiles + aggregates from other tables
 ═══════════════════════════════════════════════════════════════ */
@@ -857,10 +1015,11 @@ export async function adminProposeMeeting(payload: {
   clientId: string
   datetime: string
   adminNote?: string
+  projectId?: string
 }): Promise<Meeting> {
   const now = new Date().toISOString().slice(0, 10)
   const optimistic: Meeting = {
-    id: `m${Date.now()}`, clientId: payload.clientId,
+    id: `m${Date.now()}`, clientId: payload.clientId, projectId: payload.projectId,
     proposedBy: "admin", datetime: payload.datetime,
     durationMin: 30, status: "pending",
     adminNote: payload.adminNote, createdAt: now, updatedAt: now,
@@ -868,10 +1027,32 @@ export async function adminProposeMeeting(payload: {
   if (!SUPABASE_READY) return optimistic
   const { data, error } = await supabase
     .from("meetings")
-    .insert({ client_id: payload.clientId, proposed_by: "admin", datetime: payload.datetime, admin_note: payload.adminNote ?? null })
+    .insert({ client_id: payload.clientId, project_id: payload.projectId ?? null, proposed_by: "admin", datetime: payload.datetime, admin_note: payload.adminNote ?? null })
     .select().single()
   if (error) throw error
   return { ...optimistic, id: data.id }
+}
+
+/** Meetings for a single project (dossier → Riunioni tab). */
+export async function fetchMeetingsByProject(projectId: string): Promise<Meeting[]> {
+  if (!SUPABASE_READY) return []
+  const { data, error } = await supabase
+    .from("meetings").select("*").eq("project_id", projectId)
+    .order("datetime", { ascending: true })
+  if (error) throw error
+  return (data ?? []).map(r => ({
+    id:          r.id,
+    clientId:    r.client_id,
+    projectId:   r.project_id ?? undefined,
+    proposedBy:  r.proposed_by as MeetingProposer,
+    datetime:    (r.datetime as string).slice(0, 16),
+    durationMin: r.duration_min,
+    status:      r.status as MeetingStatus,
+    adminNote:   r.admin_note ?? undefined,
+    clientNote:  r.client_note ?? undefined,
+    createdAt:   r.created_at,
+    updatedAt:   r.updated_at,
+  }))
 }
 
 export async function updateMeetingStatus(
@@ -898,6 +1079,7 @@ export async function fetchConversations(clientId?: string): Promise<Conversatio
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let q = supabase.from("conversations").select("*, profiles!client_id(company_name, email)" as any)
+    .is("stage_id", null)   // stage discussions live inside the project dossier, not the general inbox
     .order("last_message_at", { ascending: false })
   if (clientId) q = q.eq("client_id", clientId)
   const { data, error } = await q
@@ -944,6 +1126,42 @@ export async function createConversation(payload: { clientId: string; subject: s
     lastMessageAt: data.last_message_at,
     createdAt:     data.created_at,
     updatedAt:     data.updated_at,
+  }
+}
+
+/**
+ * getOrCreateStageConversation — one discussion thread per project stage.
+ * Returns the existing thread for the stage, or creates it (client_id is the
+ * project owner; admin creates via admin RLS, client via own-row RLS).
+ */
+export async function getOrCreateStageConversation(payload: {
+  projectId: string
+  stageId: string
+  clientId: string
+  subject: string
+}): Promise<Conversation> {
+  const now = new Date().toISOString()
+  if (!SUPABASE_READY) {
+    return {
+      id: `conv${Date.now()}`, clientId: payload.clientId, subject: payload.subject,
+      status: "open", lastMessageAt: now, createdAt: now, updatedAt: now,
+    }
+  }
+  const { data: existing, error: findErr } = await supabase
+    .from("conversations").select("*").eq("stage_id", payload.stageId).limit(1).maybeSingle()
+  if (findErr) throw findErr
+  const row = existing ?? (await supabase
+    .from("conversations")
+    .insert({ client_id: payload.clientId, project_id: payload.projectId, stage_id: payload.stageId, subject: payload.subject })
+    .select().single()).data
+  return {
+    id:            row.id,
+    clientId:      row.client_id,
+    subject:       row.subject,
+    status:        row.status as ConversationStatus,
+    lastMessageAt: row.last_message_at,
+    createdAt:     row.created_at,
+    updatedAt:     row.updated_at,
   }
 }
 

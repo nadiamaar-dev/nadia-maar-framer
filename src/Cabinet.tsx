@@ -8,7 +8,6 @@ import { SandboxItem } from "./data/sandboxData"
 import ProjectTab      from "./components/cabinet/ProjectTab"
 import CalendarTab    from "./components/cabinet/CalendarTab"
 import ChatTab        from "./components/cabinet/ChatTab"
-import ProjectProgress from "./components/cabinet/ProjectProgress"
 import InvoiceTable, { type Invoice }    from "./components/cabinet/InvoiceTable"
 import ReportCenter    from "./components/cabinet/ReportCenter"
 import SupportForm     from "./components/cabinet/SupportForm"
@@ -19,7 +18,7 @@ const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const MONO    = "'JetBrains Mono',monospace"
 const ACCENT  = "#B04A38"
 
-type Tab = "project" | "calendar" | "messages" | "blueprint" | "progress" | "invoices" | "reports" | "support"
+type Tab = "project" | "calendar" | "messages" | "blueprint" | "invoices" | "reports" | "support"
 
 const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
   {
@@ -31,11 +30,6 @@ const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
     id: "calendar",
     label: "Prenota",
     icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>,
-  },
-  {
-    id: "progress",
-    label: "Avanzamento",
-    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>,
   },
   {
     id: "invoices",
@@ -470,9 +464,6 @@ export default function Cabinet() {
 
           {/* Tab: Prenota Chiamata */}
           {activeTab === "calendar" && <CalendarTab  clientId={clientId} />}
-
-          {/* Tab: Avanzamento Progetto */}
-          {activeTab === "progress" && <ProjectProgress clientId={clientId} />}
 
           {/* Tab: Finanze & Fatturazione */}
           {activeTab === "invoices" && <InvoiceTable invoices={invoices.length > 0 ? invoices : undefined} />}
