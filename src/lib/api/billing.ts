@@ -1,4 +1,4 @@
-import { supabase } from "./core"
+import { safeStorageName, supabase } from "./core"
 import type { ClientDocument, DocType, Invoice, InvoiceStatus } from "./types"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -109,7 +109,7 @@ export async function fetchDocuments(clientId?: string): Promise<ClientDocument[
 }
 
 export async function uploadDocument(clientId: string, file: File, type: DocType): Promise<ClientDocument> {
-  const storagePath = `${clientId}/${type}s/${Date.now()}-${file.name}`
+  const storagePath = `${clientId}/${type}s/${Date.now()}-${safeStorageName(file.name)}`
   const { error: storageErr } = await supabase.storage
     .from("client-documents")
     .upload(storagePath, file, { upsert: false })

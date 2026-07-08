@@ -1,4 +1,4 @@
-import { supabase } from "./core"
+import { safeStorageName, supabase } from "./core"
 import type { Attachment, Conversation, ConversationStatus, Message } from "./types"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -173,7 +173,7 @@ export async function deleteMessage(id: string): Promise<void> {
 }
 
 export async function uploadAttachment(conversationId: string, file: File): Promise<Attachment> {
-  const path = `${conversationId}/${Date.now()}-${file.name}`
+  const path = `${conversationId}/${Date.now()}-${safeStorageName(file.name)}`
   const { error } = await supabase.storage.from("message-attachments").upload(path, file)
   if (error) throw error
   const { data } = supabase.storage.from("message-attachments").getPublicUrl(path)

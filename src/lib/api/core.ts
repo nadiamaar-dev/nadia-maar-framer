@@ -2,6 +2,26 @@ import { supabase, SUPABASE_READY } from "../supabase"
 
 export { supabase, SUPABASE_READY }
 
+/**
+ * Storage object keys reject non-ASCII characters (e.g. accented Italian
+ * filenames fail with "Invalid key"). Display names stay untouched — only
+ * the storage path uses the sanitized form.
+ */
+export function safeStorageName(name: string): string {
+  const dot = name.lastIndexOf(".")
+  const base = dot > 0 ? name.slice(0, dot) : name
+  const ext = dot > 0 ? name.slice(dot + 1) : ""
+  const clean = (s: string) =>
+    s.normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^\w-]+/g, "-")
+      .replace(/-{2,}/g, "-")
+      .replace(/^-+|-+$/g, "")
+  const b = clean(base) || "file"
+  const e = clean(ext)
+  return e ? `${b}.${e}` : b
+}
+
 type DbEvent = "INSERT" | "UPDATE" | "DELETE" | "*"
 
 /**

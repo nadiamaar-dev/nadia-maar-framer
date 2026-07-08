@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
+import { useToast } from "../context/ToastContext"
 import {
   deleteMessage, editMessage, fetchMessages, fmtBytes, fmtDateTime, markConversationRead,
   sendMessage, subscribe, updateConversationStatus, uploadAttachment,
@@ -16,6 +17,7 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
   height?: number | string
   onChanged?: () => void
 }) {
+  const toast = useToast()
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
   const [text, setText] = useState("")
@@ -62,6 +64,8 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
       if (conversation.status !== flip) await updateConversationStatus(conversation.id, flip).catch(() => {})
       await load()
       onChanged?.()
+    } catch (e) {
+      toast.error(`Invio non riuscito: ${(e as Error)?.message ?? "riprova"}`)
     } finally {
       setBusy(false)
     }
@@ -75,6 +79,8 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
         const att = await uploadAttachment(conversation.id, file)
         setPending(p => [...p, att])
       }
+    } catch (e) {
+      toast.error(`Allegato non caricato: ${(e as Error)?.message ?? "riprova"}`)
     } finally {
       setUploading(false)
       if (fileRef.current) fileRef.current.value = ""
