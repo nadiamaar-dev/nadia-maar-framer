@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react"
 import {
-  fetchAllMeetings, adminProposeMeeting, updateMeetingStatus,
+  fetchAllMeetings, adminProposeMeeting, updateMeetingStatus, fetchClients,
   type Meeting, type MeetingStatus,
 } from "../../lib/adminApi"
-import { MOCK_CLIENTS } from "../../data/adminData"
+import type { ClientRecord } from "../../data/adminData"
 import { SLOT_TIMES, toLocalDate } from "../../hooks/useMeetingAvailability"
 
 const COPPER = "#B04A38"
@@ -46,8 +46,8 @@ function ProposerBadge({ proposedBy }: { proposedBy: "admin" | "client" }) {
 }
 
 /* ─── Propose meeting form (slide-in panel) ──────────────────── */
-function ProposePanel({ onProposed, onClose }: { onProposed: (m: Meeting) => void; onClose: () => void }) {
-  const [clientId, setClientId] = useState(MOCK_CLIENTS[0].id)
+function ProposePanel({ clients, onProposed, onClose }: { clients: ClientRecord[]; onProposed: (m: Meeting) => void; onClose: () => void }) {
+  const [clientId, setClientId] = useState(clients[0]?.id ?? "")
   const [date,     setDate]     = useState("")
   const [time,     setTime]     = useState("")
   const [note,     setNote]     = useState("")
@@ -98,7 +98,8 @@ function ProposePanel({ onProposed, onClose }: { onProposed: (m: Meeting) => voi
           <div>
             <label className="mb-1.5 block font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.30)" }}>Cliente *</label>
             <select className={inputCls} style={inputStyle} value={clientId} onChange={e => setClientId(e.target.value)}>
-              {MOCK_CLIENTS.filter(c => c.status === "active" || c.status === "onboarding").map(c => (
+              {clients.length === 0 && <option value="">— Nessun cliente —</option>}
+              {clients.map(c => (
                 <option key={c.id} value={c.id}>{c.company}</option>
               ))}
             </select>
@@ -140,7 +141,7 @@ function ProposePanel({ onProposed, onClose }: { onProposed: (m: Meeting) => voi
           {err && <p className="font-display text-[12px]" style={{ color: "rgba(224,80,80,0.80)" }}>{err}</p>}
 
           <div className="flex gap-3">
-            <button type="submit" disabled={!date || !time || saving}
+            <button type="submit" disabled={!clientId || !date || !time || saving}
               className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-display text-[13px] font-bold text-white disabled:opacity-40"
               style={{ background: "linear-gradient(135deg, rgba(176,74,56,0.88), rgba(140,53,37,0.78))", border: "1px solid rgba(176,74,56,0.55)" }}>
               {saving ? "Invio…" : "Invia Proposta"}
@@ -160,6 +161,7 @@ function ProposePanel({ onProposed, onClose }: { onProposed: (m: Meeting) => voi
 /* ─── Main component ─────────────────────────────────────────── */
 export default function MeetingManager() {
   const [meetings,    setMeetings]    = useState<Meeting[]>([])
+  const [clients,     setClients]     = useState<ClientRecord[]>([])
   const [loading,     setLoading]     = useState(true)
   const [filter,      setFilter]      = useState<MeetingStatus | "all">("all")
   const [showPropose, setShowPropose] = useState(false)
@@ -167,6 +169,7 @@ export default function MeetingManager() {
   useEffect(() => {
     setLoading(true)
     fetchAllMeetings().then(data => { setMeetings(data); setLoading(false) })
+    fetchClients().then(setClients).catch(() => {})
   }, [])
 
   const counts = {
@@ -329,7 +332,7 @@ export default function MeetingManager() {
         </div>
       </div>
 
-      {showPropose && <ProposePanel onProposed={handleProposed} onClose={() => setShowPropose(false)} />}
+      {showPropose && <ProposePanel clients={clients} onProposed={handleProposed} onClose={() => setShowPropose(false)} />}
     </div>
   )
 }

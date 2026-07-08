@@ -3,6 +3,7 @@ import {
   fetchClientProject, createProject,
   type ClientProject, type ProjectStatus,
 } from "../../lib/adminApi"
+import { supabase, SUPABASE_READY } from "../../lib/supabase"
 
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const MONO    = "'JetBrains Mono',monospace"
@@ -584,6 +585,19 @@ export default function ProjectTab({ clientId }: ProjectTabProps) {
       .catch(() => { if (!cancelled) setError("Impossibile caricare il progetto.") })
       .finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
+  }, [clientId])
+
+  /* Realtime: reflect admin approval / status changes without a reload.
+     RLS scopes client_projects to the authenticated client's own rows. */
+  useEffect(() => {
+    if (!SUPABASE_READY) return
+    const ch = supabase
+      .channel(`client-project-${clientId}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "client_projects" }, () => {
+        fetchClientProject(clientId).then(setProject).catch(() => {})
+      })
+      .subscribe()
+    return () => { supabase.removeChannel(ch) }
   }, [clientId])
 
   function handleCreated(newProject: ClientProject) {

@@ -320,6 +320,7 @@ export default function AdminPanel({ userEmail }: AdminPanelProps) {
                   clients={clients}
                   selectedClient={selectedClient}
                   onSelectClient={setSelectedClient}
+                  onClientUpdated={c => setClients(prev => prev.map(x => x.id === c.id ? c : x))}
                 />
               </>
             )}

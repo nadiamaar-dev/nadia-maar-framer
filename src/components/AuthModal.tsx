@@ -92,6 +92,8 @@ export default function AuthModal() {
   const [mode, setMode]     = useState<Mode>("login")
   const [email, setEmail]   = useState("")
   const [password, setPass] = useState("")
+  const [fullName, setFullName] = useState("")
+  const [company,  setCompany]  = useState("")
   const [error, setError]   = useState("")
   const [busy, setBusy]     = useState("")   // "loading" | "success" | ""
   const backdropRef         = useRef<HTMLDivElement>(null)
@@ -119,14 +121,21 @@ export default function AuthModal() {
     } else {
       const { error: err } = await supabase.auth.signUp({
         email, password,
-        options: { emailRedirectTo: `${window.location.origin}/` },
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            full_name:    fullName.trim(),
+            contact_name: fullName.trim(),
+            company_name: company.trim(),
+          },
+        },
       })
       if (err) { setError(err.message); setBusy("") }
       else setBusy("success")
     }
   }
 
-  const switchMode = (m: Mode) => { setMode(m); setError(""); setBusy("") }
+  const switchMode = (m: Mode) => { setMode(m); setError(""); setBusy(""); setFullName(""); setCompany("") }
 
   return (
     <div
@@ -229,6 +238,22 @@ export default function AuthModal() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {mode === "register" && (
+              <>
+                <input
+                  className="nm-auth-input"
+                  type="text" required autoComplete="name"
+                  placeholder="Nome e cognome"
+                  value={fullName} onChange={e => setFullName(e.target.value)}
+                />
+                <input
+                  className="nm-auth-input"
+                  type="text" autoComplete="organization"
+                  placeholder="Azienda (facoltativo)"
+                  value={company} onChange={e => setCompany(e.target.value)}
+                />
+              </>
+            )}
             <input
               className="nm-auth-input"
               type="email" required autoComplete="email"

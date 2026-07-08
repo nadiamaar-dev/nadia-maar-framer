@@ -7,6 +7,7 @@ import {
   useMeetingAvailability, toLocalDate, toSlotKey,
   SLOT_TIMES, isWeekend, isTodayOrFuture,
 } from "../../hooks/useMeetingAvailability"
+import { supabase, SUPABASE_READY } from "../../lib/supabase"
 
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const MONO    = "'JetBrains Mono',monospace"
@@ -261,6 +262,19 @@ export default function CalendarTab({ clientId }: CalendarTabProps) {
       .finally(() => { if (!cancelled) setMeetsLoading(false) })
     return () => { cancelled = true }
   }, [clientId, refreshKey])
+
+  /* Realtime: admin proposals / confirmations land live + free-up slots.
+     RLS scopes meetings to the authenticated client's own rows. */
+  useEffect(() => {
+    if (!SUPABASE_READY) return
+    const ch = supabase
+      .channel(`client-meetings-${clientId}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "meetings" }, () => {
+        setRefreshKey(k => k + 1)
+      })
+      .subscribe()
+    return () => { supabase.removeChannel(ch) }
+  }, [clientId])
 
   /* Month navigation */
   function prevMonth() {

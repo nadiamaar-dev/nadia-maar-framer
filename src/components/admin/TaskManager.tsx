@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react"
 import {
-  fetchTasks, createTask, updateTask, deleteTask,
+  fetchTasks, createTask, updateTask, deleteTask, fetchClients,
   type AdminTask, type TaskStatus, type TaskPhase,
 } from "../../lib/adminApi"
-import { MOCK_CLIENTS } from "../../data/adminData"
+import type { ClientRecord } from "../../data/adminData"
 
 /* ─── Design tokens ──────────────────────────────────────────── */
 const COPPER  = "#B04A38"
@@ -57,12 +57,13 @@ function ProgressBar({ value, status }: { value: number; status: TaskStatus }) {
 /* ─── Add / Edit Task Drawer ─────────────────────────────────── */
 interface TaskDrawerProps {
   initialClientId: string
+  clients: ClientRecord[]
   editTask?: AdminTask | null
   onSave: (task: AdminTask) => void
   onClose: () => void
 }
 
-function TaskDrawer({ initialClientId, editTask, onSave, onClose }: TaskDrawerProps) {
+function TaskDrawer({ initialClientId, clients, editTask, onSave, onClose }: TaskDrawerProps) {
   const [clientId,    setClientId]    = useState(editTask?.clientId    ?? initialClientId)
   const [title,       setTitle]       = useState(editTask?.title       ?? "")
   const [description, setDescription] = useState(editTask?.description ?? "")
@@ -133,7 +134,7 @@ function TaskDrawer({ initialClientId, editTask, onSave, onClose }: TaskDrawerPr
               disabled={!!editTask}
             >
               <option value="">— Seleziona cliente —</option>
-              {MOCK_CLIENTS.map(c => <option key={c.id} value={c.id}>{c.company}</option>)}
+              {clients.map(c => <option key={c.id} value={c.id}>{c.company}</option>)}
             </select>
           </div>
 
@@ -246,10 +247,11 @@ function TaskDrawer({ initialClientId, editTask, onSave, onClose }: TaskDrawerPr
 
 /* ─── Kanban Column ──────────────────────────────────────────── */
 function KanbanColumn({
-  status, tasks, onEdit, onMoveStatus, onDelete,
+  status, tasks, clients, onEdit, onMoveStatus, onDelete,
 }: {
   status: TaskStatus
   tasks: AdminTask[]
+  clients: ClientRecord[]
   onEdit: (t: AdminTask) => void
   onMoveStatus: (t: AdminTask, next: TaskStatus) => void
   onDelete: (id: string) => void
@@ -279,7 +281,7 @@ function KanbanColumn({
       {/* Cards */}
       <div className="flex flex-col gap-2.5">
         {tasks.map(task => {
-          const clientName = MOCK_CLIENTS.find(c => c.id === task.clientId)?.company ?? task.clientId
+          const clientName = clients.find(c => c.id === task.clientId)?.company ?? task.clientId
           return (
             <div
               key={task.id}
@@ -405,6 +407,7 @@ function KanbanColumn({
 /* ─── Main Component ─────────────────────────────────────────── */
 export default function TaskManager() {
   const [tasks,          setTasks]          = useState<AdminTask[]>([])
+  const [clients,        setClients]        = useState<ClientRecord[]>([])
   const [selectedClient, setSelectedClient] = useState<string>("all")
   const [phaseFilter,    setPhaseFilter]    = useState<TaskPhase | "all">("all")
   const [showDrawer,     setShowDrawer]     = useState(false)
@@ -419,6 +422,7 @@ export default function TaskManager() {
   }, [selectedClient])
 
   useEffect(() => { load() }, [load])
+  useEffect(() => { fetchClients().then(setClients).catch(() => {}) }, [])
 
   const filtered = tasks.filter(t =>
     (selectedClient === "all" || t.clientId === selectedClient) &&
@@ -481,7 +485,7 @@ export default function TaskManager() {
           style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)", color: "rgba(255,255,255,0.70)" }}
         >
           <option value="all">Tutti i clienti</option>
-          {MOCK_CLIENTS.map(c => <option key={c.id} value={c.id}>{c.company}</option>)}
+          {clients.map(c => <option key={c.id} value={c.id}>{c.company}</option>)}
         </select>
 
         {/* Phase filter */}
@@ -528,6 +532,7 @@ export default function TaskManager() {
               key={s}
               status={s}
               tasks={tasksByStatus(s)}
+              clients={clients}
               onEdit={t => { setEditingTask(t); setShowDrawer(true) }}
               onMoveStatus={handleMoveStatus}
               onDelete={handleDelete}
@@ -539,7 +544,8 @@ export default function TaskManager() {
       {/* Drawer */}
       {showDrawer && (
         <TaskDrawer
-          initialClientId={selectedClient === "all" ? MOCK_CLIENTS[0].id : selectedClient}
+          initialClientId={selectedClient === "all" ? (clients[0]?.id ?? "") : selectedClient}
+          clients={clients}
           editTask={editingTask}
           onSave={handleSave}
           onClose={() => { setShowDrawer(false); setEditingTask(null) }}

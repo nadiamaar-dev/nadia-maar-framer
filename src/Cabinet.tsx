@@ -12,7 +12,8 @@ import ProjectProgress from "./components/cabinet/ProjectProgress"
 import InvoiceTable, { type Invoice }    from "./components/cabinet/InvoiceTable"
 import ReportCenter    from "./components/cabinet/ReportCenter"
 import SupportForm     from "./components/cabinet/SupportForm"
-import { fetchInvoices, type AdminInvoice } from "./lib/adminApi"
+import { fetchInvoices, createTicket, type AdminInvoice, type TicketPriority } from "./lib/adminApi"
+import { SUPABASE_READY } from "./lib/supabase"
 
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const MONO    = "'JetBrains Mono',monospace"
@@ -255,7 +256,7 @@ function toInvoice(a: AdminInvoice): Invoice {
 }
 
 export default function Cabinet() {
-  const { items, clearBlueprint, user } = useBlueprint()
+  const { items, clearBlueprint, user, loading: authLoading, openAuthModal } = useBlueprint()
   const [activeTab, setActiveTab] = useState<Tab>("project")
   const [invoices,  setInvoices]  = useState<Invoice[]>([])
 
@@ -279,10 +280,56 @@ export default function Cabinet() {
     return () => { cancelled = true }
   }, [clientId])
 
+  /* Client urgent ticket → support_tickets (admin SupportCenter). Falls back
+     to mailto for demo/unauthenticated sessions via SupportForm's own default. */
+  const handleTicketSubmit = user
+    ? async (data: { subject: string; message: string; priority: TicketPriority }) => {
+        await createTicket({ clientId, subject: data.subject, message: data.message, priority: data.priority })
+      }
+    : undefined
+
   const mailBody = encodeURIComponent(
     `Ciao Nadia,\n\nHo selezionato le seguenti soluzioni per il mio progetto:\n\n${items.map(i => `• ${i.title} (${i.category})`).join("\n")}\n\nVorrei discutere i dettagli.\n\nGrazie`
   )
   const mailSubject = encodeURIComponent(`Blueprint — ${items.length} soluzioni selezionate`)
+
+  /* Auth gate — a logged-in session is required for the real cabinet.
+     Skipped when Supabase isn't configured (offline/preview demo mode). */
+  if (SUPABASE_READY && !authLoading && !user) {
+    return (
+      <div style={{ minHeight: "100vh", background: "#161B22", position: "relative" }}>
+        <Background />
+        <Header />
+        <main style={{ position: "relative", zIndex: 2, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+          <div style={{
+            maxWidth: 440, textAlign: "center",
+            background: "rgba(30,37,48,0.55)", backdropFilter: "blur(24px)",
+            border: "1px solid rgba(255,255,255,0.09)", borderRadius: 20, padding: "48px 40px",
+          }}>
+            <div style={{
+              width: 64, height: 64, borderRadius: 18, margin: "0 auto 24px",
+              background: "rgba(176,74,56,0.10)", border: "1px solid rgba(176,74,56,0.22)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={ACCENT} strokeWidth="1.6">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+              </svg>
+            </div>
+            <h1 style={{ fontFamily: DISPLAY, fontSize: 24, fontWeight: 800, color: "#fff", margin: "0 0 10px", letterSpacing: "-0.02em" }}>
+              Accedi al tuo Cabinet
+            </h1>
+            <p style={{ fontFamily: DISPLAY, fontSize: 14, color: "rgba(255,255,255,0.42)", margin: "0 0 28px", lineHeight: 1.6 }}>
+              Effettua l'accesso per gestire i tuoi progetti, prenotare chiamate e comunicare con il team.
+            </p>
+            <button onClick={openAuthModal} className="nm-send-btn" style={{ margin: "0 auto" }}>
+              Accedi / Registrati
+            </button>
+          </div>
+        </main>
+        <div style={{ position: "relative", zIndex: 2 }}><Footer /></div>
+      </div>
+    )
+  }
 
   return (
     <div style={{ minHeight: "100vh", background: "#161B22", position: "relative" }}>
@@ -437,7 +484,7 @@ export default function Cabinet() {
           {activeTab === "messages" && <ChatTab clientId={clientId} />}
 
           {/* Tab: Urgenze / Supporto critico */}
-          {activeTab === "support" && <SupportForm />}
+          {activeTab === "support" && <SupportForm onSubmit={handleTicketSubmit} />}
 
         </div>
       </main>

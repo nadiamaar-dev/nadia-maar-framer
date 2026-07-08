@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react"
 import {
   fetchDocuments, uploadDocument, deleteDocument, getDocumentDownloadUrl,
-  fetchInvoices, createInvoice, updateInvoiceStatus,
+  fetchInvoices, createInvoice, updateInvoiceStatus, fetchClients,
   type ClientDocument, type AdminInvoice, type DocType, type InvoiceAdminStatus,
   fmtBytes, fmtEur,
 } from "../../lib/adminApi"
-import { MOCK_CLIENTS } from "../../data/adminData"
+import type { ClientRecord } from "../../data/adminData"
 
 const COPPER = "#B04A38"
 const GREEN  = "#10B981"
@@ -33,7 +33,7 @@ const glassPanel = {
 }
 
 /* ─── Documents Tab ──────────────────────────────────────────── */
-function DocumentsTab({ clientId }: { clientId: string }) {
+function DocumentsTab({ clientId, clients }: { clientId: string; clients: ClientRecord[] }) {
   const [docs,        setDocs]        = useState<ClientDocument[]>([])
   const [loading,     setLoading]     = useState(true)
   const [dragging,    setDragging]    = useState(false)
@@ -52,7 +52,9 @@ function DocumentsTab({ clientId }: { clientId: string }) {
     setUploading(true)
     try {
       for (const file of Array.from(files)) {
-        const uploaded = await uploadDocument(clientId === "all" ? "c1" : clientId, file, docType)
+        const targetClient = clientId === "all" ? (clients[0]?.id ?? "") : clientId
+        if (!targetClient) break
+        const uploaded = await uploadDocument(targetClient, file, docType)
         setDocs(prev => [uploaded, ...prev])
       }
     } finally {
@@ -136,7 +138,7 @@ function DocumentsTab({ clientId }: { clientId: string }) {
         ) : (
           docs.map((doc, idx) => {
             const cfg = DOC_TYPE_CFG[doc.type]
-            const clientName = MOCK_CLIENTS.find(c => c.id === doc.clientId)?.company ?? doc.clientId
+            const clientName = clients.find(c => c.id === doc.clientId)?.company ?? doc.clientId
             const url = getDocumentDownloadUrl(doc)
             return (
               <div
@@ -224,12 +226,12 @@ function DocumentsTab({ clientId }: { clientId: string }) {
 }
 
 /* ─── Invoices Tab ───────────────────────────────────────────── */
-function InvoicesTab({ clientId }: { clientId: string }) {
+function InvoicesTab({ clientId, clients }: { clientId: string; clients: ClientRecord[] }) {
   const [invoices, setInvoices] = useState<AdminInvoice[]>([])
   const [loading,  setLoading]  = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({
-    clientId: clientId === "all" ? MOCK_CLIENTS[0].id : clientId,
+    clientId: clientId === "all" ? "" : clientId,
     number: "", description: "", amount: "", dueDate: "", status: "draft" as InvoiceAdminStatus,
   })
   const [saving, setSaving] = useState(false)
@@ -241,11 +243,12 @@ function InvoicesTab({ clientId }: { clientId: string }) {
 
   useEffect(() => {
     if (clientId !== "all") setForm(f => ({ ...f, clientId }))
-  }, [clientId])
+    else setForm(f => (f.clientId ? f : { ...f, clientId: clients[0]?.id ?? "" }))
+  }, [clientId, clients])
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault()
-    if (!form.number.trim() || !form.description.trim() || !form.amount) return
+    if (!form.clientId || !form.number.trim() || !form.description.trim() || !form.amount) return
     setSaving(true)
     try {
       const now = new Date().toISOString().slice(0, 10)
@@ -316,7 +319,8 @@ function InvoicesTab({ clientId }: { clientId: string }) {
             <div className="col-span-2">
               <label className="mb-1.5 block font-mono text-[9px] uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.30)" }}>Cliente *</label>
               <select className={inputCls} style={inputStyle} value={form.clientId} onChange={e => setForm(f => ({ ...f, clientId: e.target.value }))}>
-                {MOCK_CLIENTS.map(c => <option key={c.id} value={c.id}>{c.company}</option>)}
+                {clients.length === 0 && <option value="">— Nessun cliente —</option>}
+                {clients.map(c => <option key={c.id} value={c.id}>{c.company}</option>)}
               </select>
             </div>
             {/* Number */}
@@ -374,7 +378,7 @@ function InvoicesTab({ clientId }: { clientId: string }) {
                 <tr><td colSpan={6} className="py-10 text-center font-mono text-sm" style={{ color: "rgba(255,255,255,0.22)" }}>Nessuna fattura</td></tr>
               ) : invoices.map((inv, idx) => {
                 const cfg = INV_STATUS[inv.status]
-                const clientName = MOCK_CLIENTS.find(c => c.id === inv.clientId)?.company ?? inv.clientId
+                const clientName = clients.find(c => c.id === inv.clientId)?.company ?? inv.clientId
                 return (
                   <tr key={inv.id}
                     className="transition-colors"
@@ -415,6 +419,9 @@ function InvoicesTab({ clientId }: { clientId: string }) {
 export default function DocumentManager() {
   const [activeTab,      setActiveTab]      = useState<"docs" | "invoices">("docs")
   const [selectedClient, setSelectedClient] = useState<string>("all")
+  const [clients,        setClients]        = useState<ClientRecord[]>([])
+
+  useEffect(() => { fetchClients().then(setClients).catch(() => {}) }, [])
 
   const tabs = [
     { id: "docs"     as const, label: "Documenti",   count: null },
@@ -438,7 +445,7 @@ export default function DocumentManager() {
           style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)", color: "rgba(255,255,255,0.70)" }}
         >
           <option value="all">Tutti i clienti</option>
-          {MOCK_CLIENTS.map(c => <option key={c.id} value={c.id}>{c.company}</option>)}
+          {clients.map(c => <option key={c.id} value={c.id}>{c.company}</option>)}
         </select>
       </div>
 
@@ -460,8 +467,8 @@ export default function DocumentManager() {
       </div>
 
       {/* Content */}
-      {activeTab === "docs"     && <DocumentsTab clientId={selectedClient} />}
-      {activeTab === "invoices" && <InvoicesTab  clientId={selectedClient} />}
+      {activeTab === "docs"     && <DocumentsTab clientId={selectedClient} clients={clients} />}
+      {activeTab === "invoices" && <InvoicesTab  clientId={selectedClient} clients={clients} />}
     </div>
   )
 }

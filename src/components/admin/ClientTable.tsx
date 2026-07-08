@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from "react"
 import type { ClientRecord, ClientStatus, ClientPlan } from "../../data/adminData"
+import { updateClientProfile } from "../../lib/adminApi"
 
 interface ClientTableProps {
   clients: ClientRecord[]
   onSelectClient: (client: ClientRecord | null) => void
   selectedClient: ClientRecord | null
+  onClientUpdated?: (client: ClientRecord) => void
 }
 
 /* ─── Config maps ─────────────────────────────────────────────── */
@@ -80,7 +82,110 @@ function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
 }
 
 /* ─── Detail Drawer ──────────────────────────────────────────── */
-function ClientDrawer({ client, onClose }: { client: ClientRecord; onClose: () => void }) {
+function ClientDrawer({
+  client, onClose, onSaved,
+}: {
+  client: ClientRecord
+  onClose: () => void
+  onSaved?: (c: ClientRecord) => void
+}) {
+  const [editing, setEditing] = useState(false)
+  const [saving,  setSaving]  = useState(false)
+  const [form, setForm] = useState({
+    company: client.company === "—" ? "" : client.company,
+    contact: client.contact === "—" ? "" : client.contact,
+    plan:    client.plan,
+    status:  client.status,
+    tags:    client.tags.join(", "),
+  })
+
+  async function handleSave() {
+    setSaving(true)
+    const tags = form.tags.split(",").map(t => t.trim()).filter(Boolean)
+    try {
+      await updateClientProfile(client.id, {
+        company: form.company.trim(), contact: form.contact.trim(),
+        plan: form.plan, status: form.status, tags,
+      })
+      onSaved?.({ ...client, company: form.company.trim() || "—", contact: form.contact.trim() || "—", plan: form.plan, status: form.status, tags })
+      setEditing(false)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const inputCls  = "w-full rounded-xl px-3.5 py-2.5 font-mono text-[12px] outline-none"
+  const inputStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)", color: "rgba(255,255,255,0.85)" }
+  const labelCls  = "mb-1.5 block font-mono text-[9px] uppercase tracking-[0.18em]"
+  const labelStyle = { color: "rgba(255,255,255,0.30)" }
+
+  if (editing) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-start justify-end" onClick={onClose}>
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+        <div
+          className="relative z-10 flex h-full w-full max-w-md flex-col overflow-y-auto"
+          style={{ background: "rgba(18,22,30,0.95)", backdropFilter: "blur(40px)", borderLeft: "1px solid rgba(255,255,255,0.09)", boxShadow: "-20px 0 60px rgba(0,0,0,0.50)" }}
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between border-b p-6" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+            <div>
+              <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.22em]" style={{ color: "#B04A38" }}>Modifica Profilo</p>
+              <h2 className="font-display text-lg font-extrabold text-white">{client.email}</h2>
+            </div>
+            <button onClick={() => setEditing(false)} className="rounded-lg p-2" style={{ color: "rgba(255,255,255,0.35)", background: "rgba(255,255,255,0.06)" }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <div className="flex flex-1 flex-col gap-5 p-6">
+            <div>
+              <label className={labelCls} style={labelStyle}>Azienda</label>
+              <input className={inputCls} style={inputStyle} value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} placeholder="Nome azienda" />
+            </div>
+            <div>
+              <label className={labelCls} style={labelStyle}>Referente</label>
+              <input className={inputCls} style={inputStyle} value={form.contact} onChange={e => setForm(f => ({ ...f, contact: e.target.value }))} placeholder="Nome e cognome" />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={labelCls} style={labelStyle}>Piano</label>
+                <select className={inputCls} style={inputStyle} value={form.plan} onChange={e => setForm(f => ({ ...f, plan: e.target.value as ClientPlan }))}>
+                  {(["starter", "pro", "enterprise"] as ClientPlan[]).map(p => <option key={p} value={p}>{PLAN_CFG[p].label}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className={labelCls} style={labelStyle}>Stato</label>
+                <select className={inputCls} style={inputStyle} value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value as ClientStatus }))}>
+                  {(["active", "onboarding", "paused"] as ClientStatus[]).map(s => <option key={s} value={s}>{STATUS_CFG[s].label}</option>)}
+                </select>
+              </div>
+            </div>
+            <div>
+              <label className={labelCls} style={labelStyle}>Tag (separati da virgola)</label>
+              <input className={inputCls} style={inputStyle} value={form.tags} onChange={e => setForm(f => ({ ...f, tags: e.target.value }))} placeholder="E-commerce, SEO" />
+            </div>
+          </div>
+
+          <div className="border-t p-6" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+            <div className="flex gap-3">
+              <button onClick={handleSave} disabled={saving}
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-display text-[13px] font-bold text-white disabled:opacity-40"
+                style={{ background: "linear-gradient(135deg, rgba(176,74,56,0.88), rgba(140,53,37,0.78))", border: "1px solid rgba(176,74,56,0.55)" }}>
+                {saving ? "Salvataggio…" : "Salva modifiche"}
+              </button>
+              <button onClick={() => setEditing(false)}
+                className="rounded-xl border px-4 py-3 font-display text-[13px] font-semibold"
+                style={{ borderColor: "rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.40)", background: "rgba(255,255,255,0.04)" }}>
+                Annulla
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-start justify-end"
@@ -205,6 +310,7 @@ function ClientDrawer({ client, onClose }: { client: ClientRecord; onClose: () =
               Invia Email
             </a>
             <button
+              onClick={() => setEditing(true)}
               className="flex items-center justify-center gap-2 rounded-xl border py-3 font-display text-[13px] font-semibold transition-colors"
               style={{
                 borderColor: "rgba(255,255,255,0.10)",
@@ -226,7 +332,7 @@ function ClientDrawer({ client, onClose }: { client: ClientRecord; onClose: () =
 }
 
 /* ─── Main table ─────────────────────────────────────────────── */
-export default function ClientTable({ clients, onSelectClient, selectedClient }: ClientTableProps) {
+export default function ClientTable({ clients, onSelectClient, selectedClient, onClientUpdated }: ClientTableProps) {
   const [search,  setSearch]  = useState("")
   const [sortKey, setSortKey] = useState<SortKey>("company")
   const [sortDir, setSortDir] = useState<SortDir>("asc")
@@ -473,7 +579,11 @@ export default function ClientTable({ clients, onSelectClient, selectedClient }:
 
       {/* Drawer */}
       {selectedClient && (
-        <ClientDrawer client={selectedClient} onClose={() => onSelectClient(null)} />
+        <ClientDrawer
+          client={selectedClient}
+          onClose={() => onSelectClient(null)}
+          onSaved={c => { onClientUpdated?.(c); onSelectClient(c) }}
+        />
       )}
     </div>
   )

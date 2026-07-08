@@ -505,6 +505,37 @@ export async function fetchTickets(status?: TicketStatus): Promise<SupportTicket
   return (data ?? []).map(mapTicket)
 }
 
+/**
+ * createTicket — client cabinet (SupportForm / Urgenze).
+ * Inserts into support_tickets; RLS enforces client_id = auth.uid().
+ * client_name is filled server-side by trigger set_ticket_client_name.
+ */
+export async function createTicket(payload: {
+  clientId: string
+  subject: string
+  message: string
+  priority: TicketPriority
+}): Promise<SupportTicket> {
+  const now = new Date().toISOString()
+  const optimistic: SupportTicket = {
+    id: `tk${Date.now()}`, clientId: payload.clientId, clientName: "",
+    subject: payload.subject, message: payload.message,
+    priority: payload.priority, status: "new", createdAt: now,
+  }
+  if (!SUPABASE_READY) return optimistic
+  const { data, error } = await supabase
+    .from("support_tickets")
+    .insert({
+      client_id: payload.clientId,
+      subject:   payload.subject,
+      message:   payload.message,
+      priority:  payload.priority,
+    })
+    .select().single()
+  if (error) throw error
+  return mapTicket(data)
+}
+
 export async function updateTicket(
   id: string,
   patch: { status?: TicketStatus; adminNote?: string }
@@ -602,7 +633,7 @@ export async function fetchAllProjects(): Promise<AdminProject[]> {
   return (data ?? []).map((r: any) => ({
     id:          r.id,
     clientId:    r.client_id,
-    clientName:  r.profiles?.company_name ?? r.client_id,
+    clientName:  r.profiles?.company_name || r.profiles?.email || r.client_id,
     clientEmail: r.profiles?.email ?? "",
     name:        r.name,
     description: r.description ?? "",
@@ -651,7 +682,7 @@ export async function fetchClients(): Promise<ClientRecord[]> {
   const [profilesRes, projectsRes, invoicesRes, ticketsRes] = await Promise.all([
     supabase
       .from("profiles")
-      .select("id, company_name, contact_name, email, plan, status, joined_at, tags, updated_at")
+      .select("id, company_name, contact_name, full_name, email, plan, status, joined_at, tags, updated_at")
       .eq("role", "client")
       .order("company_name"),
     supabase
@@ -680,8 +711,8 @@ export async function fetchClients(): Promise<ClientRecord[]> {
     const pi = invoices.filter((i: any) => i.client_id === p.id)
     return {
       id:                   p.id,
-      company:              (p as Record<string, unknown>).company_name as string ?? "—",
-      contact:              (p as Record<string, unknown>).contact_name as string ?? "—",
+      company:              ((p as Record<string, unknown>).company_name as string) || ((p as Record<string, unknown>).email as string) || "—",
+      contact:              ((p as Record<string, unknown>).contact_name as string) || ((p as Record<string, unknown>).full_name as string) || "—",
       email:                (p as Record<string, unknown>).email as string ?? "",
       plan:                 ((p as Record<string, unknown>).plan ?? "starter") as ClientPlan,
       status:               ((p as Record<string, unknown>).status ?? "active") as ClientStatus,
@@ -701,6 +732,25 @@ export async function fetchClients(): Promise<ClientRecord[]> {
         : [],
     }
   })
+}
+
+/**
+ * updateClientProfile — admin edits a client's CRM profile.
+ * Writes to public.profiles (admin_update RLS policy).
+ */
+export async function updateClientProfile(
+  clientId: string,
+  patch: Partial<Pick<ClientRecord, "company" | "contact" | "plan" | "status" | "tags">>,
+): Promise<void> {
+  if (!SUPABASE_READY) return
+  const dbPatch: Record<string, unknown> = { updated_at: new Date().toISOString() }
+  if (patch.company !== undefined) dbPatch.company_name = patch.company
+  if (patch.contact !== undefined) dbPatch.contact_name = patch.contact
+  if (patch.plan    !== undefined) dbPatch.plan         = patch.plan
+  if (patch.status  !== undefined) dbPatch.status       = patch.status
+  if (patch.tags    !== undefined) dbPatch.tags         = patch.tags
+  const { error } = await supabase.from("profiles").update(dbPatch).eq("id", clientId)
+  if (error) throw error
 }
 
 export async function fetchKpi(): Promise<AdminKpi> {
@@ -752,14 +802,14 @@ export async function fetchAllMeetings(): Promise<Meeting[]> {
   const { data, error } = await supabase
     .from("meetings")
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .select("*, profiles!client_id(company_name)" as any)
+    .select("*, profiles!client_id(company_name, email)" as any)
     .order("datetime", { ascending: true })
   if (error) throw error
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (data ?? []).map((r: any) => ({
     id:          r.id,
     clientId:    r.client_id,
-    clientName:  r.profiles?.company_name ?? r.client_id,
+    clientName:  r.profiles?.company_name || r.profiles?.email || r.client_id,
     proposedBy:  r.proposed_by as MeetingProposer,
     datetime:    (r.datetime as string).slice(0, 16),
     durationMin: r.duration_min,
@@ -847,7 +897,7 @@ export async function fetchConversations(clientId?: string): Promise<Conversatio
     return sortConversations(list)
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let q = supabase.from("conversations").select("*, profiles!client_id(company_name)" as any)
+  let q = supabase.from("conversations").select("*, profiles!client_id(company_name, email)" as any)
     .order("last_message_at", { ascending: false })
   if (clientId) q = q.eq("client_id", clientId)
   const { data, error } = await q
@@ -856,7 +906,7 @@ export async function fetchConversations(clientId?: string): Promise<Conversatio
   return sortConversations((data ?? []).map((r: any) => ({
     id:            r.id,
     clientId:      r.client_id,
-    clientName:    r.profiles?.company_name ?? undefined,
+    clientName:    r.profiles?.company_name || r.profiles?.email || undefined,
     subject:       r.subject,
     status:        r.status as ConversationStatus,
     lastMessageAt: r.last_message_at,
