@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useBlueprint } from "./context/BlueprintContext"
 import { supabase, SUPABASE_READY } from "./lib/supabase"
-import AdminPanel from "./components/admin/AdminPanel"
+import AdminApp from "./portal/admin/AdminApp"
 
 const MONO    = "'JetBrains Mono',monospace"
 
@@ -65,5 +65,5 @@ export default function DashboardGate() {
   }
 
   /* Admin panel */
-  return <AdminPanel userEmail={user?.email} />
+  return <AdminApp />
 }

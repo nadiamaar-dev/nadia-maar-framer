@@ -9,7 +9,7 @@
  * increments after a successful booking to update the calendar.
  */
 import { useState, useEffect, useCallback } from "react"
-import { fetchConfirmedSlots } from "../lib/adminApi"
+import { fetchConfirmedSlots } from "../lib/api"
 
 /* ─── Time slot configuration ────────────────────────────────── */
 export const SLOT_TIMES: string[] = [

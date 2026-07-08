@@ -2,7 +2,7 @@ import NadiaMaar from "./NadiaMaar_Framer"
 import NadiaMaarAbout from "./NadiaMaar_About"
 import { EcommercePage, CorporatePage, WebAppPage, SeoPage, AiPage } from "./NadiaMaar_ServicePage"
 import DigitalFoundry from "./DigitalFoundry"
-import Cabinet from "./Cabinet"
+import CabinetApp from "./portal/cabinet/CabinetApp"
 import DashboardGate from "./DashboardGate"
 
 export default function App() {
@@ -14,7 +14,7 @@ export default function App() {
   if (path === "/seo")        return <SeoPage />
   if (path === "/ai")         return <AiPage />
   if (path === "/foundry")    return <DigitalFoundry />
-  if (path === "/cabinet")    return <Cabinet />
+  if (path === "/cabinet")    return <CabinetApp />
   if (path === "/dashboard")  return <DashboardGate />
   return <NadiaMaar />
 }
