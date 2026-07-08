@@ -166,15 +166,11 @@ export function Icon({ name, size = 16, strokeWidth = 1.8, style, className }: {
    PRIMITIVES
 ══════════════════════════════════════════════════════════════ */
 
-export function Btn({
-  variant = "ghost", size = "md", busy = false, icon, children, className = "", style, ...rest
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "ghost" | "outline" | "danger" | "copper"
-  size?: "sm" | "md"
-  busy?: boolean
-  icon?: IconName
-}) {
-  const base: React.CSSProperties = {
+type BtnVariant = "primary" | "ghost" | "outline" | "danger" | "copper"
+type BtnSize = "sm" | "md"
+
+function btnBase(size: BtnSize): React.CSSProperties {
+  return {
     display: "inline-flex", alignItems: "center", justifyContent: "center",
     gap: size === "sm" ? 6 : 8,
     borderRadius: size === "sm" ? 9 : 11,
@@ -183,50 +179,116 @@ export function Btn({
     fontSize: size === "sm" ? 12 : 13,
     letterSpacing: "0.01em",
   }
-  const variants: Record<string, React.CSSProperties> = {
-    primary: {
-      background: "linear-gradient(135deg, #C25640, #9E3F2E)",
-      border: "1px solid rgba(224,120,96,0.55)",
-      color: "#FFF1ED",
-      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.28), 0 4px 14px rgba(0,0,0,0.35)",
-    },
-    ghost: {
-      background: "rgba(255,255,255,0.055)",
-      border: "1px solid rgba(255,255,255,0.12)",
-      color: "rgba(255,255,255,0.72)",
-    },
-    outline: {
-      background: "transparent",
-      border: "1px solid rgba(255,255,255,0.18)",
-      color: "rgba(255,255,255,0.80)",
-    },
-    danger: {
-      background: "rgba(224,82,82,0.10)",
-      border: "1px solid rgba(224,82,82,0.32)",
-      color: "#E88",
-    },
-    copper: {
-      background: "rgba(176,74,56,0.13)",
-      border: "1px solid rgba(176,74,56,0.34)",
-      color: "#D4695A",
-    },
-  }
+}
+
+const BTN_VARIANTS: Record<BtnVariant, React.CSSProperties> = {
+  primary: {
+    background: "linear-gradient(135deg, #C25640, #9E3F2E)",
+    border: "1px solid rgba(224,120,96,0.55)",
+    color: "#FFF1ED",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.28), 0 4px 14px rgba(0,0,0,0.35)",
+  },
+  ghost: {
+    background: "rgba(255,255,255,0.055)",
+    border: "1px solid rgba(255,255,255,0.12)",
+    color: "rgba(255,255,255,0.72)",
+  },
+  outline: {
+    background: "transparent",
+    border: "1px solid rgba(255,255,255,0.18)",
+    color: "rgba(255,255,255,0.80)",
+  },
+  danger: {
+    background: "rgba(224,82,82,0.10)",
+    border: "1px solid rgba(224,82,82,0.32)",
+    color: "#E88",
+  },
+  copper: {
+    background: "rgba(176,74,56,0.13)",
+    border: "1px solid rgba(176,74,56,0.34)",
+    color: "#D4695A",
+  },
+}
+
+function BtnSpinner() {
+  return (
+    <span style={{
+      width: 13, height: 13, borderRadius: "50%",
+      border: "2px solid rgba(255,255,255,0.25)", borderTopColor: "currentColor",
+      animation: "portal-spin 0.7s linear infinite",
+    }} />
+  )
+}
+
+export function Btn({
+  variant = "ghost", size = "md", busy = false, icon, children, className = "", style, ...rest
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: BtnVariant
+  size?: BtnSize
+  busy?: boolean
+  icon?: IconName
+}) {
   return (
     <button
       className={`portal-btn portal-btn-${variant} ${className}`}
-      style={{ ...base, ...variants[variant], ...style }}
+      style={{ ...btnBase(size), ...BTN_VARIANTS[variant], ...style }}
       disabled={busy || rest.disabled}
       {...rest}
     >
-      {busy
-        ? <span style={{
-            width: 13, height: 13, borderRadius: "50%",
-            border: "2px solid rgba(255,255,255,0.25)", borderTopColor: "currentColor",
-            animation: "portal-spin 0.7s linear infinite",
-          }} />
-        : icon && <Icon name={icon} size={size === "sm" ? 13 : 15} />}
+      {busy ? <BtnSpinner /> : icon && <Icon name={icon} size={size === "sm" ? 13 : 15} />}
       {children}
     </button>
+  )
+}
+
+/**
+ * File-picker button rendered as a <label> wrapping its own <input type="file">:
+ * label activation opens the picker natively, without the programmatic
+ * input.click() that Safari gesture-gates and can silently ignore.
+ */
+export function FileBtn({
+  variant = "ghost", size = "md", busy = false, icon, multiple = true, accept, onFiles, title, style, children,
+}: {
+  variant?: BtnVariant
+  size?: BtnSize
+  busy?: boolean
+  icon?: IconName
+  multiple?: boolean
+  accept?: string
+  onFiles: (files: File[]) => void
+  title?: string
+  style?: React.CSSProperties
+  children?: React.ReactNode
+}) {
+  return (
+    <label
+      className={`portal-btn portal-btn-${variant}`}
+      title={title}
+      style={{
+        ...btnBase(size), ...BTN_VARIANTS[variant],
+        cursor: busy ? "not-allowed" : "pointer",
+        opacity: busy ? 0.45 : undefined,
+        pointerEvents: busy ? "none" : undefined,
+        position: "relative", overflow: "hidden",
+        ...style,
+      }}
+    >
+      <input
+        type="file"
+        multiple={multiple}
+        accept={accept}
+        disabled={busy}
+        tabIndex={-1}
+        onChange={e => {
+          const files = Array.from(e.currentTarget.files ?? [])
+          e.currentTarget.value = ""
+          if (files.length) onFiles(files)
+        }}
+        style={{ position: "absolute", width: 1, height: 1, opacity: 0, pointerEvents: "none" }}
+      />
+      {busy ? <BtnSpinner /> : icon && <Icon name={icon} size={size === "sm" ? 13 : 15} />}
+      {children}
+    </label>
   )
 }
 

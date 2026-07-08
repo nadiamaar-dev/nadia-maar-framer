@@ -14,7 +14,10 @@
       "Bash(python3 -)",
       "Bash(node -e ' *)",
       "Bash(npx vite *)",
-      "mcp__claude_ai_Supabase__list_migrations"
+      "mcp__claude_ai_Supabase__list_migrations",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({k: \\(v[:28]+'…' if isinstance\\(v,str\\) and len\\(v\\)>28 else v\\) for k,v in d.items\\(\\) if k in \\('access_token','error','error_description','msg','code','id','email','confirmation_sent_at','role'\\)}, indent=1\\)\\)\")",
+      "mcp__claude_ai_Supabase__get_logs",
+      "Bash(curl -s https://nadia-maar-framer.vercel.app/)"
     ]
   }
 }

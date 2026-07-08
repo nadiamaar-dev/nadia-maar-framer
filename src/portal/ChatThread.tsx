@@ -5,7 +5,7 @@ import {
   sendMessage, subscribe, updateConversationStatus, uploadAttachment,
 } from "../lib/api"
 import type { Attachment, Conversation, Message } from "../lib/api"
-import { Btn, DISPLAY, Icon, Loading, MONO, T } from "./ui"
+import { Btn, DISPLAY, FileBtn, Icon, Loading, MONO, T } from "./ui"
 
 const EDIT_WINDOW_MS = 15 * 60_000
 
@@ -27,7 +27,6 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editText, setEditText] = useState("")
   const scrollRef = useRef<HTMLDivElement>(null)
-  const fileRef = useRef<HTMLInputElement>(null)
 
   const load = useCallback(async () => {
     try {
@@ -71,11 +70,11 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
     }
   }
 
-  async function handleFiles(files: FileList | null) {
-    if (!files?.length) return
+  async function handleFiles(files: File[]) {
+    if (!files.length) return
     setUploading(true)
     try {
-      for (const file of Array.from(files)) {
+      for (const file of files) {
         const att = await uploadAttachment(conversation.id, file)
         setPending(p => [...p, att])
       }
@@ -83,7 +82,6 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
       toast.error(`Allegato non caricato: ${(e as Error)?.message ?? "riprova"}`)
     } finally {
       setUploading(false)
-      if (fileRef.current) fileRef.current.value = ""
     }
   }
 
@@ -242,16 +240,15 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
             </div>
           )}
           <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
-            <input ref={fileRef} type="file" multiple style={{ display: "none" }} onChange={e => handleFiles(e.target.files)} />
-            <Btn
+            <FileBtn
               variant="ghost"
-              onClick={() => fileRef.current?.click()}
+              onFiles={handleFiles}
               busy={uploading}
               title="Allega file"
               style={{ padding: "10px 12px" }}
             >
               {!uploading && <Icon name="paperclip" size={14} />}
-            </Btn>
+            </FileBtn>
             <textarea
               className="portal-input"
               placeholder="Scrivi un messaggio…"

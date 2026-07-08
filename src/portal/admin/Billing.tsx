@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { useToast } from "../../context/ToastContext"
 import type { AdminHome, ClientDocument, ClientRecord, DocType, InvoiceStatus } from "../../lib/api"
 import {
@@ -6,7 +6,7 @@ import {
   getDocumentDownloadUrl, nextInvoiceNumber, updateInvoiceStatus, uploadDocument,
 } from "../../lib/api"
 import {
-  Badge, Btn, Empty, Field, Glass, Input, INVOICE_STATUS, Loading, Modal, MONO, Row,
+  Badge, Btn, Empty, Field, FileBtn, Glass, Input, INVOICE_STATUS, Loading, Modal, MONO, Row,
   SectionTitle, Select, Stat, T, Tabs, Textarea,
 } from "../ui"
 
@@ -80,7 +80,6 @@ export default function Billing({ home, clients, reload }: {
   const [docs, setDocs] = useState<ClientDocument[] | null>(null)
   const [docType, setDocType] = useState<DocType>("report")
   const [uploading, setUploading] = useState(false)
-  const fileRef = useRef<HTMLInputElement>(null)
 
   const loadDocs = useCallback(async (cid: string) => {
     setDocs(null)
@@ -89,18 +88,17 @@ export default function Billing({ home, clients, reload }: {
 
   useEffect(() => { if (docClient) loadDocs(docClient) }, [docClient, loadDocs])
 
-  async function handleUpload(files: FileList | null) {
-    if (!files?.length || !docClient) return
+  async function handleUpload(files: File[]) {
+    if (!files.length || !docClient) return
     setUploading(true)
     try {
-      for (const f of Array.from(files)) await uploadDocument(docClient, f, docType)
+      for (const f of files) await uploadDocument(docClient, f, docType)
       toast.success("Documento caricato")
       loadDocs(docClient)
     } catch {
       toast.error("Caricamento non riuscito.")
     } finally {
       setUploading(false)
-      if (fileRef.current) fileRef.current.value = ""
     }
   }
 
@@ -201,8 +199,7 @@ export default function Billing({ home, clients, reload }: {
                 <Select value={docType} onChange={e => setDocType(e.target.value as DocType)} style={{ width: 150 }}>
                   {(Object.keys(DOC_TYPES) as DocType[]).map(t => <option key={t} value={t}>{DOC_TYPES[t]}</option>)}
                 </Select>
-                <input ref={fileRef} type="file" multiple style={{ display: "none" }} onChange={e => handleUpload(e.target.files)} />
-                <Btn variant="primary" icon="plus" busy={uploading} onClick={() => fileRef.current?.click()}>Carica</Btn>
+                <FileBtn variant="primary" icon="plus" busy={uploading} onFiles={handleUpload}>Carica</FileBtn>
               </>
             )}
           </div>

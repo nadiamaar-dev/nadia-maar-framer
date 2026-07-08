@@ -12,7 +12,7 @@ import {
 import ChatThread from "../ChatThread"
 import {
   Avatar, Badge, Btn, CLIENT_PLAN, CLIENT_STATUS, CONVO_STATUS, DISPLAY, Empty, Field,
-  Glass, Icon, Input, INVOICE_STATUS, Loading, Modal, MONO, PROJECT_STATUS, Row,
+  FileBtn, Glass, Icon, Input, INVOICE_STATUS, Loading, Modal, MONO, PROJECT_STATUS, Row,
   Select, T, Tabs, Textarea,
 } from "../ui"
 
@@ -116,7 +116,6 @@ export default function ClientWorkspace({ client, home, adminId, onBack, reload,
   const [docs, setDocs] = useState<ClientDocument[] | null>(null)
   const [docType, setDocType] = useState<DocType>("report")
   const [uploading, setUploading] = useState(false)
-  const fileRef = React.useRef<HTMLInputElement>(null)
 
   const loadDocs = useCallback(async () => {
     try { setDocs(await fetchDocuments(client.id)) } catch { setDocs([]) }
@@ -124,18 +123,17 @@ export default function ClientWorkspace({ client, home, adminId, onBack, reload,
 
   useEffect(() => { if (tab === "documenti" && docs === null) loadDocs() }, [tab, docs, loadDocs])
 
-  async function handleUpload(files: FileList | null) {
-    if (!files?.length) return
+  async function handleUpload(files: File[]) {
+    if (!files.length) return
     setUploading(true)
     try {
-      for (const f of Array.from(files)) await uploadDocument(client.id, f, docType)
+      for (const f of files) await uploadDocument(client.id, f, docType)
       toast.success("Documento caricato")
       loadDocs()
     } catch {
       toast.error("Caricamento non riuscito.")
     } finally {
       setUploading(false)
-      if (fileRef.current) fileRef.current.value = ""
     }
   }
 
@@ -291,8 +289,7 @@ export default function ClientWorkspace({ client, home, adminId, onBack, reload,
             <Select value={docType} onChange={e => setDocType(e.target.value as DocType)} style={{ width: 150 }}>
               {(Object.keys(DOC_TYPES) as DocType[]).map(t => <option key={t} value={t}>{DOC_TYPES[t]}</option>)}
             </Select>
-            <input ref={fileRef} type="file" multiple style={{ display: "none" }} onChange={e => handleUpload(e.target.files)} />
-            <Btn variant="primary" icon="plus" busy={uploading} onClick={() => fileRef.current?.click()}>Carica</Btn>
+            <FileBtn variant="primary" icon="plus" busy={uploading} onFiles={handleUpload}>Carica</FileBtn>
           </div>
           {docs === null ? (
             <Loading label="Apro i documenti" />
