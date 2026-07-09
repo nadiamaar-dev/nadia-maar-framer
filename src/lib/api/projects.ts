@@ -27,6 +27,7 @@ function mapStage(r: any): ProjectStage {
     orderIndex: r.order_index,
     status: r.status as StageStatus,
     approvalState: r.approval_state ?? "none",
+    progress: r.status === "done" ? 100 : Math.max(0, Math.min(100, r.progress ?? 0)),
     deliverableUrl: r.deliverable_url ?? undefined,
     deliverableNote: r.deliverable_note ?? undefined,
     startedAt: r.started_at ?? undefined,
@@ -146,11 +147,13 @@ export async function createStage(projectId: string, title: string, orderIndex: 
 
 export async function updateStage(
   id: string,
-  patch: Partial<Pick<ProjectStage, "title" | "status" | "orderIndex">>,
+  patch: Partial<Pick<ProjectStage, "title" | "status" | "orderIndex" | "progress" | "deliverableNote">>,
 ): Promise<void> {
   const db: Record<string, unknown> = { updated_at: new Date().toISOString() }
   if (patch.title !== undefined) db.title = patch.title
   if (patch.orderIndex !== undefined) db.order_index = patch.orderIndex
+  if (patch.progress !== undefined) db.progress = Math.max(0, Math.min(100, Math.round(patch.progress)))
+  if (patch.deliverableNote !== undefined) db.deliverable_note = patch.deliverableNote.trim() || null
   if (patch.status !== undefined) {
     db.status = patch.status
     if (patch.status === "active") db.started_at = new Date().toISOString()

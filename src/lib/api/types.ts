@@ -65,6 +65,7 @@ export interface ProjectStage {
   orderIndex: number
   status: StageStatus
   approvalState: ApprovalState
+  progress: number
   deliverableUrl?: string
   deliverableNote?: string
   startedAt?: string

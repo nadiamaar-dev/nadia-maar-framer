@@ -11,16 +11,72 @@ import StageGrid from "../StageGrid"
 import { stageProgress } from "../StageRail"
 import {
   Badge, Btn, DISPLAY, Empty, Glass, Icon, INVOICE_STATUS, Loading, MEETING_STATUS,
-  Modal, MONO, Note, PROJECT_STATUS, Ring, Row, T, Tabs, Timeline,
+  Modal, MONO, Note, PROJECT_STATUS, Ring, Row, T, Tabs, Timeline, TONE,
 } from "../ui"
 
 type TabId = "fasi" | "diario" | "fatture" | "riunioni"
 
-export default function Dossier({ projectId, home, userId, onBack, reload }: {
+/** Top-of-view project switcher — pill tabs when the client has >1 project,
+ *  plus a persistent "Nuovo progetto" affordance. */
+function ProjectSwitcher({ projects, currentId, onSwitch, onNew }: {
+  projects: ClientHome["projects"]
+  currentId: string
+  onSwitch: (id: string) => void
+  onNew: () => void
+}) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", justifyContent: "space-between" }}>
+      {projects.length > 1 ? (
+        <div
+          role="tablist"
+          aria-label="Seleziona progetto"
+          style={{
+            display: "flex", gap: 4, padding: 4, borderRadius: 14, maxWidth: "100%",
+            overflowX: "auto", background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`,
+          }}
+        >
+          {projects.map(p => {
+            const active = p.id === currentId
+            const ps = PROJECT_STATUS[p.status]
+            return (
+              <button
+                key={p.id}
+                role="tab"
+                aria-selected={active}
+                onClick={() => onSwitch(p.id)}
+                className="portal-btn"
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 8,
+                  padding: "9px 15px", borderRadius: 10, border: "1px solid transparent",
+                  background: active ? "rgba(255,255,255,0.10)" : "transparent",
+                  borderColor: active ? "rgba(255,255,255,0.16)" : "transparent",
+                  boxShadow: active ? "inset 0 1px 0 rgba(255,255,255,0.22)" : "none",
+                  color: active ? T.text : T.faint,
+                  fontFamily: DISPLAY, fontSize: 14, fontWeight: 700, whiteSpace: "nowrap", maxWidth: 240,
+                }}
+              >
+                <span style={{ width: 7, height: 7, borderRadius: 99, background: TONE[ps.tone].fg, flexShrink: 0 }} />
+                <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</span>
+              </button>
+            )
+          })}
+        </div>
+      ) : (
+        <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.2em", textTransform: "uppercase", color: T.ghost }}>
+          Dossier progetto
+        </span>
+      )}
+      <Btn variant="outline" size="sm" icon="plus" onClick={onNew}>Nuovo progetto</Btn>
+    </div>
+  )
+}
+
+export default function Dossier({ projectId, home, userId, onSwitchProject, onNewProject, reload }: {
   projectId: string
   home: ClientHome
   userId: string
-  onBack: () => void
+  onSwitchProject: (id: string) => void
+  onNewProject: () => void
   reload: () => void
 }) {
   const toast = useToast()
@@ -64,7 +120,7 @@ export default function Dossier({ projectId, home, userId, onBack, reload }: {
   if (!project) {
     return (
       <Glass variant="panel" style={{ padding: 20 }}>
-        <Empty icon="folder" title="Progetto non trovato" action={<Btn variant="ghost" icon="arrowL" onClick={onBack}>Torna ai progetti</Btn>} />
+        <Empty icon="folder" title="Progetto non trovato" action={<Btn variant="primary" icon="plus" onClick={onNewProject}>Nuovo progetto</Btn>} />
       </Glass>
     )
   }
@@ -111,33 +167,29 @@ export default function Dossier({ projectId, home, userId, onBack, reload }: {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      <ProjectSwitcher
+        projects={home.projects}
+        currentId={project.id}
+        onSwitch={onSwitchProject}
+        onNew={onNewProject}
+      />
+
       {/* Header */}
-      <Glass variant="panel" style={{ padding: 22 }}>
+      <Glass variant="panel" style={{ padding: 24 }}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
           <div style={{ minWidth: 0, flex: 1 }}>
-            <button
-              onClick={onBack}
-              className="portal-link"
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 6, background: "none", border: "none",
-                padding: 0, marginBottom: 10, fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em",
-                textTransform: "uppercase", color: T.ghost, cursor: "pointer",
-              }}
-            >
-              <Icon name="arrowL" size={11} /> Progetti
-            </button>
             <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-              <h2 style={{ fontFamily: DISPLAY, fontSize: 20, fontWeight: 800, color: T.text, margin: 0, letterSpacing: "-0.02em" }}>
+              <h2 style={{ fontFamily: DISPLAY, fontSize: 24, fontWeight: 800, color: T.text, margin: 0, letterSpacing: "-0.02em" }}>
                 {project.name}
               </h2>
               <Badge tone={st.tone} dot>{st.label}</Badge>
             </div>
             {project.description && (
-              <p style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6, color: T.faint, margin: "8px 0 0", maxWidth: 640, whiteSpace: "pre-wrap" }}>
+              <p style={{ fontFamily: DISPLAY, fontSize: 14.5, lineHeight: 1.65, color: T.faint, margin: "10px 0 0", maxWidth: 640, whiteSpace: "pre-wrap" }}>
                 {project.description}
               </p>
             )}
-            <p style={{ fontFamily: MONO, fontSize: 9.5, color: T.ghost, margin: "10px 0 0", letterSpacing: "0.05em" }}>
+            <p style={{ fontFamily: MONO, fontSize: 10.5, color: T.ghost, margin: "12px 0 0", letterSpacing: "0.05em" }}>
               Avviato {fmtDate(project.createdAt)}
             </p>
           </div>
@@ -181,11 +233,12 @@ export default function Dossier({ projectId, home, userId, onBack, reload }: {
       ) : (
         <>
           {tab === "fasi" && (
-            <Glass variant="panel" style={{ padding: 22 }}>
-              {stages.length === 0 ? (
+            stages.length === 0 ? (
+              <Glass variant="panel" style={{ padding: 22 }}>
                 <Empty icon="layers" title="Fasi in definizione" hint="Il piano di lavoro apparirà qui appena il progetto è attivo." />
-              ) : (
-                <StageGrid
+              </Glass>
+            ) : (
+              <StageGrid
                   stages={stages}
                   renderAction={s => {
                     if (s.status === "locked") return null
@@ -216,9 +269,8 @@ export default function Dossier({ projectId, home, userId, onBack, reload }: {
                     )
                   }}
                 />
-              )}
-            </Glass>
-          )}
+              )
+            )}
 
           {tab === "diario" && (
             <Glass variant="panel" style={{ padding: 22 }}>

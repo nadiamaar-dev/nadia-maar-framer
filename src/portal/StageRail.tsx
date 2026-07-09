@@ -1,7 +1,7 @@
 import React from "react"
 import type { ProjectStage } from "../lib/api"
 import { fmtDate } from "../lib/api"
-import { APPROVAL_STATE, Badge, DISPLAY, Icon, MONO, STAGE_STATUS, T } from "./ui"
+import { APPROVAL_STATE, Badge, Bar, DISPLAY, Icon, MONO, STAGE_STATUS, T } from "./ui"
 
 export function stageProgress(stages: ProjectStage[]): number {
   if (stages.length === 0) return 0
@@ -68,6 +68,16 @@ export default function StageRail({ stages, renderAction }: {
                   {s.startedAt && s.completedAt ? " · " : ""}
                   {s.completedAt ? `Chiusa ${fmtDate(s.completedAt)}` : ""}
                 </p>
+              )}
+
+              {s.status !== "locked" && (
+                <div style={{ marginTop: 8, maxWidth: 320 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.14em", textTransform: "uppercase", color: T.ghost }}>Avanzamento</span>
+                    <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: s.status === "done" ? T.green : T.copperLt }}>{s.progress}%</span>
+                  </div>
+                  <Bar value={s.progress} tone={s.status === "done" ? "green" : "copper"} height={4} />
+                </div>
               )}
 
               {(s.deliverableUrl || s.deliverableNote) && (

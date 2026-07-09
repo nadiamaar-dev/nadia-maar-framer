@@ -1,9 +1,9 @@
 import React from "react"
 import type { ProjectStage } from "../lib/api"
 import { fmtDate } from "../lib/api"
-import { APPROVAL_STATE, Badge, Btn, DISPLAY, Icon, MONO, STAGE_STATUS, T } from "./ui"
+import { APPROVAL_STATE, Badge, DISPLAY, Icon, MONO, T } from "./ui"
 
-/* ── Inline icon paths ────────────────────────────────────── */
+/* ── Inline status-icon paths ─────────────────────────────── */
 const LOCK_CLOSED = (
   <>
     <rect x="3" y="11" width="18" height="11" rx="2" />
@@ -25,86 +25,88 @@ const CHECK_CIRCLE = (
 
 function StatusIcon({ status }: { status: ProjectStage["status"] }) {
   const configs = {
-    locked: { paths: LOCK_CLOSED, color: "rgba(255,255,255,0.28)", bg: "rgba(255,255,255,0.06)", border: "rgba(255,255,255,0.10)" },
-    active: { paths: LOCK_OPEN, color: "#D4695A", bg: "rgba(176,74,56,0.18)", border: "rgba(176,74,56,0.38)" },
-    done: { paths: CHECK_CIRCLE, color: "#3DBE8B", bg: "rgba(61,190,139,0.13)", border: "rgba(61,190,139,0.30)" },
+    locked: { paths: LOCK_CLOSED, color: "rgba(255,255,255,0.34)", bg: "rgba(255,255,255,0.06)", border: "rgba(255,255,255,0.11)", label: "Fase bloccata" },
+    active: { paths: LOCK_OPEN, color: "#E0836A", bg: "rgba(176,74,56,0.20)", border: "rgba(176,74,56,0.42)", label: "Fase in corso" },
+    done: { paths: CHECK_CIRCLE, color: "#4BD39B", bg: "rgba(61,190,139,0.16)", border: "rgba(61,190,139,0.36)", label: "Fase completata" },
   }
   const c = configs[status]
   return (
-    <div style={{
-      width: 32, height: 32, borderRadius: 10,
+    <div role="img" aria-label={c.label} style={{
+      width: 38, height: 38, borderRadius: 12,
       display: "flex", alignItems: "center", justifyContent: "center",
       background: c.bg, border: `1px solid ${c.border}`, color: c.color, flexShrink: 0,
       boxShadow: status === "active"
-        ? "0 0 18px rgba(176,74,56,0.28), inset 0 1px 0 rgba(255,255,255,0.18)"
-        : status === "done"
-          ? "inset 0 1px 0 rgba(255,255,255,0.14)"
-          : "inset 0 1px 0 rgba(255,255,255,0.06)",
+        ? "0 0 20px rgba(176,74,56,0.30), inset 0 1px 0 rgba(255,255,255,0.20)"
+        : "inset 0 1px 0 rgba(255,255,255,0.10)",
     }}>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7}
-        strokeLinecap="round" strokeLinejoin="round" width={15} height={15}>
+        strokeLinecap="round" strokeLinejoin="round" width={18} height={18} aria-hidden="true">
         {c.paths}
       </svg>
     </div>
   )
 }
 
-/* Thin horizontal arrow connector between cards in a row */
-function ArrowH({ lit }: { lit: boolean }) {
-  const color = lit ? "rgba(212,105,90,0.55)" : "rgba(255,255,255,0.14)"
+/* Real progress bar — filled to `value`%. Active stages get a subtle sheen
+   overlay (disabled under prefers-reduced-motion). */
+function ProgressBar({ value, tone }: { value: number; tone: "copper" | "green" }) {
+  const pct = Math.max(0, Math.min(100, value))
+  const fill = tone === "green"
+    ? "linear-gradient(90deg, #2E9E70, #4BD39B)"
+    : "linear-gradient(90deg, #9E3F2E, #E0836A)"
+  const glow = tone === "green" ? "rgba(61,190,139,0.35)" : "rgba(212,105,90,0.40)"
   return (
-    <div style={{
-      display: "flex", alignItems: "center", justifyContent: "center",
-      flexShrink: 0, width: 32, pointerEvents: "none",
-    }}>
-      <svg width="28" height="16" viewBox="0 0 28 16" fill="none">
-        <line x1="2" y1="8" x2="22" y2="8" stroke={color} strokeWidth="1.5" strokeDasharray="3 2" />
-        <path d="M19 4.5L23.5 8 19 11.5" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
+        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: T.ghost }}>
+          Avanzamento
+        </span>
+        <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: tone === "green" ? "#4BD39B" : "#E0836A" }}>
+          {Math.round(pct)}%
+        </span>
+      </div>
+      <div style={{ height: 8, borderRadius: 99, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+        <div className={tone === "copper" ? "stage-progress-fill" : undefined} style={{
+          width: `${pct}%`, height: "100%", borderRadius: 99,
+          background: fill, boxShadow: `0 0 12px ${glow}`,
+          transition: "width 0.6s cubic-bezier(0.16,1,0.3,1)",
+        }} />
+      </div>
+    </div>
+  )
+}
+
+/* Horizontal arrow connector between cards in a row */
+function ArrowH({ lit }: { lit: boolean }) {
+  const color = lit ? "rgba(224,131,106,0.65)" : "rgba(255,255,255,0.16)"
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, width: 34, pointerEvents: "none" }}>
+      <svg width="30" height="16" viewBox="0 0 30 16" fill="none" aria-hidden="true">
+        <line x1="2" y1="8" x2="23" y2="8" stroke={color} strokeWidth="1.6" strokeDasharray="3 2.5" />
+        <path d="M20 4.5L24.5 8 20 11.5" stroke={color} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
       </svg>
     </div>
   )
 }
 
-/* Right-side wrap connector between row 1 end and row 2 start */
+/* Right-side wrap connector between row 1 and row 2 (straight L→R reading in both rows) */
 function RowWrap({ lit }: { lit: boolean }) {
-  const color = lit ? "rgba(212,105,90,0.45)" : "rgba(255,255,255,0.12)"
+  const color = lit ? "rgba(224,131,106,0.55)" : "rgba(255,255,255,0.14)"
   return (
-    <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", padding: "0 4px", margin: "4px 0" }}>
-      <svg width="52" height="36" viewBox="0 0 52 36" fill="none" style={{ display: "block" }}>
-        {/* Right edge → curves down → points right (into next row start) */}
-        <path
-          d="M2 4 L2 18 Q2 32 16 32 L50 32"
-          stroke={color} strokeWidth="1.5" strokeDasharray="3.5 2.5"
-          fill="none" strokeLinecap="round"
-        />
-        {/* Arrowhead pointing right at the end */}
-        <path d="M46 27.5L50.5 32 46 36.5" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", padding: "0 6px", margin: "6px 0" }}>
+      <svg width="54" height="38" viewBox="0 0 54 38" fill="none" style={{ display: "block" }} aria-hidden="true">
+        <path d="M2 4 L2 20 Q2 34 16 34 L52 34" stroke={color} strokeWidth="1.6" strokeDasharray="3.5 2.5" fill="none" strokeLinecap="round" />
+        <path d="M48 29.5L52.5 34 48 38.5" stroke={color} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
       </svg>
-      <span style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.12em", textTransform: "uppercase", color, marginLeft: 4 }}>
+      <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color, marginLeft: 5 }}>
         continua
       </span>
     </div>
   )
 }
 
-/* Animated shimmer bar for active stages */
-function ActiveBar() {
-  return (
-    <div style={{ height: 3, borderRadius: 99, background: "rgba(255,255,255,0.06)", overflow: "hidden", position: "relative" }}>
-      <div style={{
-        position: "absolute", inset: 0, borderRadius: 99,
-        background: "linear-gradient(90deg, transparent 0%, #D4695A 40%, #B04A38 70%, transparent 100%)",
-        backgroundSize: "200% 100%",
-        animation: "stageBarPulse 2s ease-in-out infinite",
-      }} />
-    </div>
-  )
-}
-
 /* ── Card ─────────────────────────────────────────────────── */
-function StageCard({
-  stage, index, renderAction,
-}: {
+function StageCard({ stage, index, renderAction }: {
   stage: ProjectStage
   index: number
   renderAction?: (s: ProjectStage) => React.ReactNode
@@ -113,136 +115,100 @@ function StageCard({
   const isDone = stage.status === "done"
   const isLocked = stage.status === "locked"
 
-  /* Matte solid card — no backdrop-blur, float shadow */
-  const cardBg = isActive
-    ? "#1F1C1B"
-    : isDone
-      ? "#191E1B"
-      : "#1C1D23"
-  const cardBorder = isActive
-    ? "rgba(176,74,56,0.32)"
-    : isDone
-      ? "rgba(61,190,139,0.22)"
-      : "rgba(255,255,255,0.08)"
-  const cardShadow = isActive
-    ? "0 6px 32px rgba(176,74,56,0.14), 0 2px 8px rgba(0,0,0,0.52), inset 0 1px 0 rgba(255,255,255,0.09)"
-    : isDone
-      ? "0 4px 24px rgba(0,0,0,0.44), 0 1px 4px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.08)"
-      : "0 4px 20px rgba(0,0,0,0.38), 0 1px 3px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06)"
+  /* Opaque, matte, LIGHTER than the page — cards read as physical tiles. */
+  const surface = isActive ? "#2b2421" : isDone ? "#23271f" : "#262730"
+  const borderCol = isActive ? "rgba(176,74,56,0.42)" : isDone ? "rgba(61,190,139,0.30)" : "rgba(255,255,255,0.10)"
+  const shadow = isActive
+    ? "0 8px 30px rgba(176,74,56,0.16), 0 2px 8px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.10)"
+    : "0 6px 22px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.07)"
 
-  const titleColor = isLocked ? "rgba(255,255,255,0.36)" : T.text
+  const titleColor = isLocked ? "rgba(255,255,255,0.50)" : T.text
   const action = renderAction?.(stage)
 
   return (
-    /* Outer bezel — thin ring + slightly elevated bg */
     <div style={{
       flex: 1, minWidth: 0,
-      padding: 1.5,
-      border: `1px solid ${cardBorder}`,
+      background: surface,
+      border: `1px solid ${borderCol}`,
       borderRadius: 18,
-      background: isActive
-        ? "linear-gradient(145deg, rgba(176,74,56,0.08), transparent)"
-        : "rgba(255,255,255,0.025)",
-      boxShadow: cardShadow,
+      padding: "20px 20px 18px",
+      boxShadow: shadow,
+      display: "flex", flexDirection: "column", gap: 13,
+      opacity: isLocked ? 0.82 : 1,
       transition: "box-shadow 0.3s cubic-bezier(0.32,0.72,0,1)",
     }}>
-      {/* Inner core */}
-      <div style={{
-        background: cardBg,
-        borderRadius: 16,
-        padding: "18px 18px 16px",
-        height: "100%",
-        display: "flex", flexDirection: "column", gap: 12,
-        boxSizing: "border-box",
-      }}>
-        {/* Top row: number + status icon */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{
-            fontFamily: MONO, fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase",
-            color: isActive ? T.copperLt : "rgba(255,255,255,0.28)",
-            padding: "3px 8px", borderRadius: 99,
-            background: isActive ? "rgba(176,74,56,0.12)" : "rgba(255,255,255,0.04)",
-            border: `1px solid ${isActive ? "rgba(176,74,56,0.24)" : "rgba(255,255,255,0.08)"}`,
-          }}>
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          <StatusIcon status={stage.status} />
-        </div>
+      {/* Top: number pill + status icon */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <span style={{
+          fontFamily: MONO, fontSize: 10.5, fontWeight: 700, letterSpacing: "0.12em",
+          color: isActive ? "#E0836A" : "rgba(255,255,255,0.40)",
+          padding: "4px 9px", borderRadius: 99,
+          background: isActive ? "rgba(176,74,56,0.14)" : "rgba(255,255,255,0.05)",
+          border: `1px solid ${isActive ? "rgba(176,74,56,0.28)" : "rgba(255,255,255,0.09)"}`,
+        }}>
+          FASE {String(index + 1).padStart(2, "0")}
+        </span>
+        <StatusIcon status={stage.status} />
+      </div>
 
-        {/* Title + badge row */}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 8, flexWrap: "wrap" }}>
-          <h4 style={{
-            fontFamily: DISPLAY, fontSize: 15, fontWeight: 700,
-            letterSpacing: "-0.01em", lineHeight: 1.3,
-            color: titleColor, margin: 0, flex: 1, minWidth: 0,
-          }}>
-            {stage.title}
-          </h4>
-          {stage.approvalState !== "none" && (
-            <Badge tone={APPROVAL_STATE[stage.approvalState].tone}>
-              {APPROVAL_STATE[stage.approvalState].label}
-            </Badge>
-          )}
-        </div>
+      {/* Title + approval badge */}
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 8, flexWrap: "wrap" }}>
+        <h4 style={{
+          fontFamily: DISPLAY, fontSize: 17, fontWeight: 700, letterSpacing: "-0.01em",
+          lineHeight: 1.3, color: titleColor, margin: 0, flex: 1, minWidth: 0,
+        }}>
+          {stage.title}
+        </h4>
+        {stage.approvalState !== "none" && (
+          <Badge tone={APPROVAL_STATE[stage.approvalState].tone}>
+            {APPROVAL_STATE[stage.approvalState].label}
+          </Badge>
+        )}
+      </div>
 
-        {/* Admin note / description */}
-        {stage.deliverableNote && (
-          <p style={{
-            fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6,
-            color: isLocked ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.56)",
-            margin: 0, whiteSpace: "pre-wrap",
-            display: "-webkit-box", WebkitLineClamp: 3,
-            WebkitBoxOrient: "vertical", overflow: "hidden",
-          }}>
-            {stage.deliverableNote}
+      {/* Admin description */}
+      {stage.deliverableNote && (
+        <p style={{
+          fontFamily: DISPLAY, fontSize: 14, lineHeight: 1.6,
+          color: isLocked ? "rgba(255,255,255,0.42)" : "rgba(255,255,255,0.72)",
+          margin: 0, whiteSpace: "pre-wrap",
+          display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden",
+        }}>
+          {stage.deliverableNote}
+        </p>
+      )}
+
+      {/* Deliverable link */}
+      {stage.deliverableUrl && (
+        <a href={stage.deliverableUrl} target="_blank" rel="noreferrer" className="portal-link" style={{
+          display: "inline-flex", alignItems: "center", gap: 6,
+          fontFamily: MONO, fontSize: 11.5, color: T.copperLt, textDecoration: "none",
+        }}>
+          <Icon name="external" size={13} /> Apri deliverable
+        </a>
+      )}
+
+      {/* Action slot */}
+      {action && <div>{action}</div>}
+
+      {/* Footer: progress bar + dates, pinned to bottom */}
+      <div style={{ marginTop: "auto", paddingTop: 4, display: "flex", flexDirection: "column", gap: 10 }}>
+        {(isActive || isDone) && (
+          <ProgressBar value={stage.progress} tone={isDone ? "green" : "copper"} />
+        )}
+        {(stage.startedAt || stage.completedAt) && (
+          <p style={{ fontFamily: MONO, fontSize: 10, color: "rgba(255,255,255,0.34)", margin: 0, letterSpacing: "0.04em" }}>
+            {stage.startedAt ? `Avviata ${fmtDate(stage.startedAt)}` : ""}
+            {stage.startedAt && stage.completedAt ? " · " : ""}
+            {stage.completedAt ? `Chiusa ${fmtDate(stage.completedAt)}` : ""}
           </p>
         )}
-
-        {/* Deliverable link */}
-        {stage.deliverableUrl && (
-          <a
-            href={stage.deliverableUrl}
-            target="_blank" rel="noreferrer"
-            className="portal-link"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 5,
-              fontFamily: MONO, fontSize: 10, color: T.copperLt,
-              textDecoration: "none", marginTop: -4,
-            }}
-          >
-            <Icon name="external" size={11} />
-            Apri deliverable
-          </a>
-        )}
-
-        {/* Action slot */}
-        {action && (
-          <div style={{ marginTop: "auto" }}>
-            {action}
-          </div>
-        )}
-
-        {/* Footer: progress bar (active) or date */}
-        <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 8 }}>
-          {isActive && <ActiveBar />}
-
-          {(stage.startedAt || stage.completedAt) && (
-            <p style={{
-              fontFamily: MONO, fontSize: 9, color: "rgba(255,255,255,0.24)",
-              margin: 0, letterSpacing: "0.04em",
-            }}>
-              {stage.startedAt ? `Avviata ${fmtDate(stage.startedAt)}` : ""}
-              {stage.startedAt && stage.completedAt ? " · " : ""}
-              {stage.completedAt ? `Chiusa ${fmtDate(stage.completedAt)}` : ""}
-            </p>
-          )}
-        </div>
       </div>
     </div>
   )
 }
 
-/* ── Main export ─────────────────────────────────────────── */
+/* ── Grid ─────────────────────────────────────────────────── */
 export default function StageGrid({ stages, renderAction }: {
   stages: ProjectStage[]
   renderAction?: (s: ProjectStage) => React.ReactNode
@@ -252,23 +218,25 @@ export default function StageGrid({ stages, renderAction }: {
   const sorted = [...stages].sort((a, b) => a.orderIndex - b.orderIndex)
   const COLS = 3
   const rows: ProjectStage[][] = []
-  for (let i = 0; i < sorted.length; i += COLS) {
-    rows.push(sorted.slice(i, i + COLS))
-  }
+  for (let i = 0; i < sorted.length; i += COLS) rows.push(sorted.slice(i, i + COLS))
 
-  /* Find last "lit" (non-locked) stage to know where to color arrows */
-  const lastActiveDoneIdx = sorted.reduce(
-    (acc, s, i) => (s.status !== "locked" ? i : acc), -1,
-  )
+  const lastLitIdx = sorted.reduce((acc, s, i) => (s.status !== "locked" ? i : acc), -1)
 
   return (
     <>
       <style>{`
-        @keyframes stageBarPulse {
-          0%   { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
+        @keyframes stageFillSheen { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .stage-progress-fill { position: relative; }
+        .stage-progress-fill::after {
+          content: ""; position: absolute; inset: 0; border-radius: 99px;
+          background: linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.28) 50%, transparent 70%);
+          background-size: 200% 100%;
+          animation: stageFillSheen 2.4s ease-in-out infinite;
         }
-        @media (max-width: 640px) {
+        @media (prefers-reduced-motion: reduce) {
+          .stage-progress-fill::after { animation: none; display: none; }
+        }
+        @media (max-width: 680px) {
           .stage-grid-row { flex-direction: column !important; }
           .stage-grid-arrow { display: none !important; }
           .stage-grid-wrap { display: none !important; }
@@ -287,13 +255,12 @@ export default function StageGrid({ stages, renderAction }: {
               <div className="stage-grid-row" style={{ display: "flex", alignItems: "stretch", gap: 0 }}>
                 {row.map((stage, colIdx) => {
                   const globalIdx = rowStartIdx + colIdx
-                  const arrowLit = globalIdx < lastActiveDoneIdx
                   return (
                     <React.Fragment key={stage.id}>
                       <StageCard stage={stage} index={globalIdx} renderAction={renderAction} />
                       {colIdx < row.length - 1 && (
                         <div className="stage-grid-arrow">
-                          <ArrowH lit={arrowLit} />
+                          <ArrowH lit={globalIdx < lastLitIdx} />
                         </div>
                       )}
                     </React.Fragment>

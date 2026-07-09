@@ -89,6 +89,8 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
   const [addBusy, setAddBusy] = useState(false)
   const [renaming, setRenaming] = useState<ProjectStage | null>(null)
   const [renameText, setRenameText] = useState("")
+  const [editNote, setEditNote] = useState("")
+  const [editProgress, setEditProgress] = useState(0)
   const [deleting, setDeleting] = useState<ProjectStage | null>(null)
   const [advancing, setAdvancing] = useState<ProjectStage | null>(null)
   const [requesting, setRequesting] = useState<ProjectStage | null>(null)
@@ -278,7 +280,9 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
                             )}
                           </span>
                         )}
-                        <Btn size="sm" variant="ghost" icon="edit" onClick={() => { setRenameText(s.title); setRenaming(s) }} title="Rinomina" />
+                        <Btn size="sm" variant="ghost" icon="edit" onClick={() => { setRenameText(s.title); setEditNote(s.deliverableNote ?? ""); setEditProgress(s.progress); setRenaming(s) }} title="Modifica">
+                          Modifica
+                        </Btn>
                         {s.status === "locked" && (
                           <Btn size="sm" variant="danger" icon="trash" onClick={() => setDeleting(s)} title="Elimina" />
                         )}
@@ -438,25 +442,50 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
         </p>
       </Modal>
 
-      {/* Rename stage */}
+      {/* Edit stage — title, description, progress */}
       <Modal
         open={!!renaming}
         onClose={() => !opBusy && setRenaming(null)}
         kicker="Fasi"
-        title="Rinomina fase"
+        title="Modifica fase"
         footer={
           <>
             <Btn variant="ghost" onClick={() => setRenaming(null)} disabled={opBusy}>Annulla</Btn>
             <Btn variant="primary" icon="check" busy={opBusy} disabled={!renameText.trim()}
-              onClick={() => renaming && stageOp(() => updateStage(renaming.id, { title: renameText.trim() }), "Fase rinominata", () => setRenaming(null))}>
+              onClick={() => renaming && stageOp(
+                () => updateStage(renaming.id, { title: renameText.trim(), deliverableNote: editNote, progress: editProgress }),
+                "Fase aggiornata", () => setRenaming(null),
+              )}>
               Salva
             </Btn>
           </>
         }
       >
-        <Field label="Titolo">
-          <Input value={renameText} onChange={e => setRenameText(e.target.value)} autoFocus />
-        </Field>
+        <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
+          <Field label="Titolo">
+            <Input value={renameText} onChange={e => setRenameText(e.target.value)} autoFocus />
+          </Field>
+          <Field label="Descrizione per il cliente" hint="Cosa succede in questa fase — visibile nella card del dossier.">
+            <Textarea value={editNote} onChange={e => setEditNote(e.target.value)} rows={4} placeholder="Es. Progettazione UI delle schermate principali e revisione con il cliente…" style={{ resize: "vertical" }} />
+          </Field>
+          <Field label={`Avanzamento — ${editProgress}%`} hint="Regola la barra di progresso che il cliente vede su questa fase.">
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <input
+                type="range" min={0} max={100} step={5}
+                value={editProgress}
+                onChange={e => setEditProgress(Number(e.target.value))}
+                className="portal-range"
+                style={{ flex: 1 }}
+              />
+              <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 700, color: T.copperLt, minWidth: 44, textAlign: "right" }}>
+                {editProgress}%
+              </span>
+            </div>
+          </Field>
+          {renaming?.status === "done" && (
+            <Note tone="silver">La fase è chiusa: il cliente la vede comunque al 100%.</Note>
+          )}
+        </div>
       </Modal>
 
       {/* Delete stage confirm */}

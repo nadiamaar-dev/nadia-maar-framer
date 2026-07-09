@@ -10,6 +10,7 @@ import Dossier from "./Dossier"
 import Invoices from "./Invoices"
 import Meetings from "./Meetings"
 import Messages from "./Messages"
+import NewProjectModal from "./NewProjectModal"
 import Overview from "./Overview"
 import Projects from "./Projects"
 import Support from "./Support"
@@ -48,6 +49,7 @@ export default function CabinetApp() {
   const [failed, setFailed] = useState(false)
   const [section, setSection] = useState("panoramica")
   const [projectId, setProjectId] = useState<string | null>(null)
+  const [wizardOpen, setWizardOpen] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout>>()
 
   const userId = user?.id ?? null
@@ -94,19 +96,25 @@ export default function CabinetApp() {
     }
   }, [userId, reload])
 
+  // Default project when entering Progetti: the active one, else the most recent.
+  const defaultProjectId = home
+    ? home.projects.find(p => p.status === "active")?.id ?? home.projects[0]?.id ?? null
+    : null
+
   function handleAction(a: PortalAction) {
     if (a.kind === "start_project") {
-      setSection("progetti")
-      setProjectId(null)
+      setWizardOpen(true)
       return
     }
     setSection(a.section)
-    setProjectId(a.section === "progetti" ? a.projectId ?? null : null)
+    if (a.section === "progetti") setProjectId(a.projectId ?? defaultProjectId)
+    else setProjectId(null)
   }
 
   function handleSelect(id: string) {
     setSection(id)
-    if (id !== "progetti") setProjectId(null)
+    if (id === "progetti") setProjectId(prev => prev ?? defaultProjectId)
+    else setProjectId(null)
   }
 
   /* ── Gates ─────────────────────────────────────────────── */
@@ -216,14 +224,29 @@ export default function CabinetApp() {
         <Overview home={home} onAction={handleAction} onOpenProject={id => { setSection("progetti"); setProjectId(id) }} />
       )}
       {section === "progetti" && (
-        projectId
-          ? <Dossier projectId={projectId} home={home} userId={user.id} onBack={() => setProjectId(null)} reload={reload} />
-          : <Projects home={home} profile={profile} userId={user.id} onOpenProject={setProjectId} reload={reload} />
+        home.projects.length === 0
+          ? <Projects onNewProject={() => setWizardOpen(true)} />
+          : <Dossier
+              projectId={projectId ?? defaultProjectId!}
+              home={home}
+              userId={user.id}
+              onSwitchProject={setProjectId}
+              onNewProject={() => setWizardOpen(true)}
+              reload={reload}
+            />
       )}
       {section === "riunioni" && <Meetings home={home} userId={user.id} reload={reload} />}
       {section === "fatture" && <Invoices home={home} />}
       {section === "messaggi" && <Messages home={home} userId={user.id} reload={reload} />}
       {section === "supporto" && <Support home={home} userId={user.id} reload={reload} />}
+
+      <NewProjectModal
+        open={wizardOpen}
+        onClose={() => setWizardOpen(false)}
+        userId={user.id}
+        profile={profile}
+        reload={reload}
+      />
     </Shell>
   )
 }
