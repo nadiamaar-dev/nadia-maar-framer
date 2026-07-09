@@ -7,7 +7,8 @@ import {
   isUnreadFor, subscribe,
 } from "../../lib/api"
 import ChatThread from "../ChatThread"
-import StageRail, { stageProgress } from "../StageRail"
+import StageGrid from "../StageGrid"
+import { stageProgress } from "../StageRail"
 import {
   Badge, Btn, DISPLAY, Empty, Glass, Icon, INVOICE_STATUS, Loading, MEETING_STATUS,
   Modal, MONO, Note, PROJECT_STATUS, Ring, Row, T, Tabs, Timeline,
@@ -184,10 +185,18 @@ export default function Dossier({ projectId, home, userId, onBack, reload }: {
               {stages.length === 0 ? (
                 <Empty icon="layers" title="Fasi in definizione" hint="Il piano di lavoro apparirà qui appena il progetto è attivo." />
               ) : (
-                <StageRail
+                <StageGrid
                   stages={stages}
                   renderAction={s => {
                     if (s.status === "locked") return null
+                    const hasAction = s.approvalState === "requested"
+                    if (!hasAction && !stageUnread(s)) {
+                      return (
+                        <Btn size="sm" variant="ghost" icon="chat" onClick={() => openStageChat(s)}>
+                          Discussione
+                        </Btn>
+                      )
+                    }
                     return (
                       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                         {s.approvalState === "requested" && (
