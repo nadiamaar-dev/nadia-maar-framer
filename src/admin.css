@@ -96,6 +96,16 @@ input.portal-input[type="date"]::-webkit-calendar-picker-indicator { filter: inv
 .portal-link { transition: color 0.15s ease; cursor: pointer; }
 .portal-link:hover { color: #D4695A !important; }
 
+/* Project switcher / segmented pills — hover feedback on inactive segments */
+.portal-pill:not(.is-active):hover { background: rgba(255,255,255,0.06) !important; color: rgba(255,255,255,0.90) !important; }
+
+/* Touch ergonomics — on touch devices enforce 44px tap targets and 16px inputs
+   (the latter also stops iOS Safari from zooming the viewport on focus). */
+@media (pointer: coarse) {
+  .portal-btn, .portal-pill { min-height: 44px; }
+  .portal-input { font-size: 16px; }
+}
+
 @keyframes portal-spin { to { transform: rotate(360deg); } }
 @keyframes portal-shimmer {
   0% { background-position: -400px 0; }

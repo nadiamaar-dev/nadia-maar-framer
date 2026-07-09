@@ -50,14 +50,14 @@ const GLASS_BLUR = "blur(30px) brightness(1.14) saturate(0.72)"
    backdrop-blur (better contrast + GPU cost). Background layers stay untouched. */
 export const GLASS: Record<"panel" | "raised" | "outline" | "accent", React.CSSProperties> = {
   panel: {
-    background: "#212228",
-    border: "1px solid rgba(255,255,255,0.08)",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.38)",
+    background: "#25262e",
+    border: "1px solid rgba(255,255,255,0.10)",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 10px 30px rgba(0,0,0,0.36)",
   },
   raised: {
-    background: "#282a31",
-    border: "1px solid rgba(255,255,255,0.11)",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.09), 0 16px 44px rgba(0,0,0,0.48)",
+    background: "#2c2e37",
+    border: "1px solid rgba(255,255,255,0.13)",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 16px 44px rgba(0,0,0,0.46)",
   },
   outline: {
     background: "#1c1d22",
@@ -154,6 +154,24 @@ export function Icon({ name, size = 16, strokeWidth = 1.8, style, className }: {
       width={size} height={size} style={{ flexShrink: 0, ...style }} className={className}
     >
       {P[name]}
+    </svg>
+  )
+}
+
+/** The site's "NM" monogram (from NadiaMaar_Framer › NMmark), static + solid. */
+export function PortalLogo({ size = 34, id = "nm-portal" }: { size?: number; id?: string }) {
+  return (
+    <svg viewBox="0 2 28 22" width={size} height={Math.round(size * 22 / 28)} fill="none"
+      strokeLinecap="square" strokeLinejoin="miter" aria-hidden style={{ flexShrink: 0 }}>
+      <defs>
+        <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="rgba(255,255,255,0.92)" />
+          <stop offset="46%" stopColor="rgba(255,255,255,0.92)" />
+          <stop offset="58%" stopColor="#B04A38" />
+          <stop offset="100%" stopColor="#8C3525" />
+        </linearGradient>
+      </defs>
+      <path d="M 2,22 L 2,2 L 13,22 L 13,2 L 19.5,12 L 26,2 L 26,22" stroke={`url(#${id})`} strokeWidth="2" />
     </svg>
   )
 }
@@ -384,7 +402,7 @@ export function Tabs<Id extends string>({ items, value, onChange }: {
           <button
             key={it.id}
             onClick={() => onChange(it.id)}
-            className="portal-btn"
+            className={`portal-btn portal-pill ${active ? "is-active" : ""}`}
             style={{
               display: "inline-flex", alignItems: "center", gap: 7,
               padding: "9px 16px", borderRadius: 9, border: "1px solid transparent",

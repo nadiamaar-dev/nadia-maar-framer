@@ -100,7 +100,6 @@ export default function AdminApp() {
 
   return (
     <Shell
-      brandMark="NM"
       brandName="Nadia Maar"
       roleTag="Studio Admin"
       items={items}

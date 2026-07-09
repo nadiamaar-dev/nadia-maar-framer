@@ -44,7 +44,7 @@ function ProjectSwitcher({ projects, currentId, onSwitch, onNew }: {
                 role="tab"
                 aria-selected={active}
                 onClick={() => onSwitch(p.id)}
-                className="portal-btn"
+                className={`portal-btn portal-pill ${active ? "is-active" : ""}`}
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 8,
                   padding: "9px 15px", borderRadius: 10, border: "1px solid transparent",

@@ -5,7 +5,7 @@ import {
   fetchClientHome, fetchOwnProfile, subscribe, supabase, SUPABASE_READY,
 } from "../../lib/api"
 import Shell, { type ShellNavItem } from "../Shell"
-import { Btn, DISPLAY, Glass, Icon, Loading, MONO, T } from "../ui"
+import { Btn, DISPLAY, Glass, Icon, Loading, MONO, PortalLogo, T } from "../ui"
 import Dossier from "./Dossier"
 import Invoices from "./Invoices"
 import Meetings from "./Meetings"
@@ -139,15 +139,8 @@ export default function CabinetApp() {
     return (
       <FullScreen>
         <Glass variant="panel" style={{ padding: "36px 34px", maxWidth: 400, width: "100%", textAlign: "center" }}>
-          <div style={{
-            width: 46, height: 46, borderRadius: 13, margin: "0 auto 16px",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            background: "linear-gradient(135deg, rgba(176,74,56,0.30), rgba(176,74,56,0.10))",
-            border: "1px solid rgba(176,74,56,0.40)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.22)",
-            fontFamily: MONO, fontSize: 14, fontWeight: 700, color: T.copperLt,
-          }}>
-            NM
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 18 }}>
+            <PortalLogo size={48} id="nm-gate" />
           </div>
           <h1 style={{ fontFamily: DISPLAY, fontSize: 19, fontWeight: 800, color: T.text, margin: 0, letterSpacing: "-0.02em" }}>
             Area Clienti
@@ -195,7 +188,6 @@ export default function CabinetApp() {
 
   return (
     <Shell
-      brandMark="NM"
       brandName="Nadia Maar"
       roleTag="Area Clienti"
       items={items}
