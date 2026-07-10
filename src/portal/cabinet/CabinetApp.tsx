@@ -28,10 +28,10 @@ function FullScreen({ children }: { children: React.ReactNode }) {
   return (
     <div className="portal-root" style={{
       minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-      padding: 24, background: T.bg, fontFamily: DISPLAY,
+      padding: 24, background: "#233D4D", fontFamily: DISPLAY,
     }}>
       <div aria-hidden style={{ position: "fixed", inset: 0, pointerEvents: "none" }}>
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, #131316 0%, #141418 60%, #161412 100%)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, #233D4D 0%, #233D4D 55%, #1E3544 100%)" }} />
         <div style={{ position: "absolute", top: "-20%", left: "-10%", width: "55%", height: "60%", background: "radial-gradient(ellipse, rgba(226,230,238,0.05) 0%, transparent 65%)" }} />
         <div style={{ position: "absolute", bottom: "-25%", right: "-12%", width: "60%", height: "70%", background: "radial-gradient(ellipse, rgba(176,74,56,0.08) 0%, transparent 62%)" }} />
       </div>

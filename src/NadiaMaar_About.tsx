@@ -348,7 +348,7 @@ function PillCTA({ label, href, onClick, target }: { label: string; href?: strin
     display: "inline-flex", alignItems: "stretch",
     borderRadius: 12, cursor: "pointer",
     border: `1px solid ${h ? "rgba(176,74,56,0.90)" : "rgba(176,74,56,0.65)"}`,
-    background: "linear-gradient(90deg, rgba(140,53,37,0.55) 0%, rgba(176,74,56,0.28) 100%)",
+    background: "linear-gradient(90deg, rgba(140,53,37,0.78) 0%, rgba(176,74,56,0.64) 100%)",
     backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
     boxShadow: h ? "0 0 56px rgba(140,53,37,0.38), 0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18)" : "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
     textDecoration: "none", overflow: "hidden",
@@ -466,9 +466,9 @@ function AuroraBackground() {
   return (
     <>
       <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
-        <div style={{ position: "absolute", inset: 0, background: "#161B22" }} />
-        <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "42%", background: "#1E2530", borderRight: "1px solid rgba(255,255,255,0.06)" }} />
-        <div style={{ position: "absolute", top: 0, bottom: 0, left: "34%", width: "16%", background: "linear-gradient(90deg, #1E2530, #161B22)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "#233D4D" }} />
+        <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "42%", background: "#2E4C5F", borderRight: "1px solid rgba(255,255,255,0.06)" }} />
+        <div style={{ position: "absolute", top: 0, bottom: 0, left: "34%", width: "16%", background: "linear-gradient(90deg, #2E4C5F, #233D4D)" }} />
         <div style={{ position: "absolute", top: "-10%", left: "-8%", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(13,120,180,0.11) 0%, rgba(10,90,140,0.05) 50%, transparent 72%)", filter: "blur(90px)", pointerEvents: "none" }} />
         <div style={{
           position: "absolute", inset: 0,
@@ -649,7 +649,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
           <NMmark size={26} id="nm-abt-menu-mob" hover={false} />
         </div>
-        <div aria-hidden style={{ position: "absolute", bottom: "12%", left: "50%", transform: "translateX(-50%)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,32vw,160px)", letterSpacing: "-0.05em", color: "rgba(75,85,105,0.13)", filter: "blur(1px)", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none", zIndex: 0 }}>MAAR</div>
+        <div aria-hidden style={{ position: "absolute", bottom: "12%", left: "50%", transform: "translateX(-50%)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,32vw,160px)", letterSpacing: "-0.05em", color: "rgba(74,94,118,0.15)", filter: "blur(1px)", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none", zIndex: 0 }}>MAAR</div>
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 20 }}>
           {NAV.map((item, i) => (
             <MenuNavItem key={item.key} num={item.num} label={item.label} onClick={item.action} index={i} active={isAboutPage ? item.key === "About Me" : item.key === "Home"} />
@@ -678,7 +678,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
           <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.26em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.36)" }}>Navigation</span>
         </div>
         <div aria-hidden style={{ position: "absolute", right: -8, top: 0, bottom: 0, display: "flex", alignItems: "center", pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
-          <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,9vw,130px)", letterSpacing: "-0.04em", color: "rgba(75,85,105,0.13)", filter: "blur(0.8px)", userSelect: "none", lineHeight: 0.82 }}>MAAR</span>
+          <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,9vw,130px)", letterSpacing: "-0.04em", color: "rgba(74,94,118,0.15)", filter: "blur(0.8px)", userSelect: "none", lineHeight: 0.82 }}>MAAR</span>
         </div>
         <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(140,53,37,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 4 }}>
@@ -1375,7 +1375,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               <GlassSelect label="Cosa dobbiamo risolvere?" value={fields.area} onChange={set("area")} />
               <GlassTextarea label="Messaggio" placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={set("msg")} />
               <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 380, damping: 18 }}
-                style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(176,74,56,0.80)", background: "linear-gradient(90deg, rgba(140,53,37,0.55) 0%, rgba(176,74,56,0.28) 100%)", backdropFilter: "blur(20px)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
+                style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(176,74,56,0.80)", background: "linear-gradient(90deg, rgba(140,53,37,0.78) 0%, rgba(176,74,56,0.64) 100%)", backdropFilter: "blur(20px)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
                 <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,220,200,0.80)" }}>[→]</span>
                 <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF", padding: "14px 0" }}>Invia Richiesta →</span>
               </motion.button>
@@ -1451,7 +1451,7 @@ function MaarWatermark() {
   const y = useTransform(scrollYProgress, [0.04, 0.96], ["3%", "-3%"])
   return (
     <motion.div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", display: "flex", alignItems: "center", justifyContent: "center", opacity }}>
-      <motion.span style={{ y, fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(110px, 30vw, 460px)", letterSpacing: "-0.05em", lineHeight: 1, color: "rgba(75,85,105,0.13)", filter: "blur(1px)", userSelect: "none", whiteSpace: "nowrap" }}>MAAR</motion.span>
+      <motion.span style={{ y, fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(110px, 30vw, 460px)", letterSpacing: "-0.05em", lineHeight: 1, color: "rgba(74,94,118,0.15)", filter: "blur(1px)", userSelect: "none", whiteSpace: "nowrap" }}>MAAR</motion.span>
     </motion.div>
   )
 }
@@ -1503,7 +1503,7 @@ export default function NadiaMaarAbout() {
 
   return (
     <div style={{
-      background: "#161B22", color: T.text,
+      background: "#233D4D", color: T.text,
       fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
       overflowX: "clip", minHeight: "100vh", position: "relative",
     }}>

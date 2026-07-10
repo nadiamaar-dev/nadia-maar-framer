@@ -186,15 +186,15 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
           onClick={() => { openAuthModal(); onClose() }}
           style={{
             width: "100%", padding: "13px 20px",
-            background: "rgba(140,53,37,0.12)", border: "1px solid rgba(140,53,37,0.38)",
+            background: "rgba(140,53,37,0.56)", border: "1px solid rgba(140,53,37,0.38)",
             borderRadius: 10, cursor: "pointer",
             fontFamily: DISPLAY, fontSize: 13, fontWeight: 700,
-            color: "#D4695A",
+            color: "#fff",
             display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
             transition: "background 0.18s, border-color 0.18s",
           }}
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.20)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.60)" }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.12)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.38)" }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.60)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.60)" }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.56)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.38)" }}
         >
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
             <rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
@@ -505,14 +505,14 @@ export default function Header() {
                 whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }}
                 style={{
                   padding: "6px 14px",
-                  background: "rgba(140,53,37,0.10)", border: "1px solid rgba(140,53,37,0.38)",
+                  background: "rgba(140,53,37,0.55)", border: "1px solid rgba(140,53,37,0.38)",
                   borderRadius: 8, cursor: "pointer",
                   fontFamily: DISPLAY, fontSize: 12, fontWeight: 600,
-                  color: "#D4695A", whiteSpace: "nowrap" as const,
+                  color: "#fff", whiteSpace: "nowrap" as const,
                   transition: "background 0.18s, border-color 0.18s",
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.20)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.60)" }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.10)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.38)" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.60)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.60)" }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.55)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.38)" }}
               >
                 Accedi
               </motion.button>

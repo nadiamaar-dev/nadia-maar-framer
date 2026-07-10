@@ -84,7 +84,7 @@ export default function DigitalFoundry() {
   }, [category, type])
 
   return (
-    <div style={{ minHeight: "100vh", background: "#161B22", position: "relative" }}>
+    <div style={{ minHeight: "100vh", background: "#233D4D", position: "relative" }}>
       <Background />
       <Header />
       <FloatingContact />

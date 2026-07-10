@@ -11,10 +11,10 @@ export interface ShellNavItem {
 /* Layered graphite backdrop: neutral base, one silver bloom, one copper ember, technical grid. */
 function Backdrop() {
   return (
-    <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", background: T.bg }}>
+    <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", background: "#233D4D" }}>
       <div style={{
         position: "absolute", inset: 0,
-        background: "linear-gradient(180deg, #131316 0%, #141418 60%, #161412 100%)",
+        background: "linear-gradient(180deg, #233D4D 0%, #233D4D 55%, #1E3544 100%)",
       }} />
       <div style={{
         position: "absolute", top: "-20%", left: "-10%", width: "55%", height: "60%",

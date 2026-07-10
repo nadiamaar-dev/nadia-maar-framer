@@ -7,7 +7,7 @@ import Background from "./components/Background"
 
 /* ── tokens ── */
 const T = {
-  bg: "#161B22", text: "#FFFFFF", muted: "rgba(255,255,255,0.78)",
+  bg: "#233D4D", text: "#FFFFFF", muted: "rgba(255,255,255,0.78)",
   faint: "rgba(255,255,255,0.58)", border: "rgba(255,255,255,0.11)",
   accent: "#8C3525", accentLt: "#B04A38", green: "#10B981",
   surface: "rgba(255,255,255,0.055)", surfaceHi: "rgba(255,255,255,0.10)",
@@ -27,7 +27,7 @@ const SVC_CSS = `
   #root { overflow-x: clip; }
   p, li { font-weight: 300; line-height: 1.75; }
   ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: #161B22; }
+  ::-webkit-scrollbar-track { background: #233D4D; }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); border-radius: 4px; }
   ::placeholder { color: rgba(255,255,255,0.22) !important; }
   :root { --x:-9999; --y:-9999; }
@@ -185,9 +185,9 @@ function AnimatedBackground() {
   return (
     <>
       <div aria-hidden style={{position:"fixed",inset:0,zIndex:0,overflow:"hidden",pointerEvents:"none"}}>
-        <div style={{position:"absolute",inset:0,background:"#161B22"}} />
-        <div style={{position:"absolute",top:0,left:0,bottom:0,width:"42%",background:"#1E2530",borderRight:"1px solid rgba(255,255,255,0.06)"}} />
-        <div style={{position:"absolute",top:0,bottom:0,left:"34%",width:"16%",background:"linear-gradient(90deg,#1E2530,#161B22)"}} />
+        <div style={{position:"absolute",inset:0,background:"#233D4D"}} />
+        <div style={{position:"absolute",top:0,left:0,bottom:0,width:"42%",background:"#2E4C5F",borderRight:"1px solid rgba(255,255,255,0.06)"}} />
+        <div style={{position:"absolute",top:0,bottom:0,left:"34%",width:"16%",background:"linear-gradient(90deg,#2E4C5F,#233D4D)"}} />
         <div style={{position:"absolute",top:"-10%",left:"-8%",width:700,height:700,borderRadius:"50%",background:"radial-gradient(circle,rgba(13,120,180,0.11) 0%,rgba(10,90,140,0.05) 50%,transparent 72%)",filter:"blur(90px)",pointerEvents:"none"}} />
         <div style={{position:"absolute",inset:0,backgroundImage:"linear-gradient(rgba(255,255,255,0.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.055) 1px,transparent 1px)",backgroundSize:"64px 64px",WebkitMaskImage:"linear-gradient(to bottom,transparent 0%,#000 4%,#000 96%,transparent 100%),linear-gradient(to right,transparent 0%,#000 4%,#000 96%,transparent 100%)",maskImage:"linear-gradient(to bottom,transparent 0%,#000 4%,#000 96%,transparent 100%),linear-gradient(to right,transparent 0%,#000 4%,#000 96%,transparent 100%)",WebkitMaskComposite:"source-in",maskComposite:"intersect"}} />
         <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(255,255,255,0.04) 1px,transparent 1.4px)",backgroundSize:"26px 26px",WebkitMaskImage:"radial-gradient(ellipse 52% 48% at 50% 36%,rgba(0,0,0,1) 0%,rgba(0,0,0,0.5) 52%,transparent 76%)",maskImage:"radial-gradient(ellipse 52% 48% at 50% 36%,rgba(0,0,0,1) 0%,rgba(0,0,0,0.5) 52%,transparent 76%)"}} />

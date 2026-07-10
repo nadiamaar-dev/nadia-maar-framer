@@ -49,14 +49,14 @@ const CSS = `
   transition: all 0.18s ease;
 }
 .nm-auth-tab.active {
-  background: rgba(176,74,56,0.18);
+  background: rgba(176,74,56,0.59);
   border: 1px solid rgba(176,74,56,0.45);
   color: #fff;
 }
 .nm-auth-tab:not(.active):hover { color: rgba(255,255,255,0.80); }
 .nm-auth-submit {
   width: 100%; padding: 14px;
-  background: linear-gradient(135deg, rgba(176,74,56,0.90), rgba(140,53,37,0.80));
+  background: linear-gradient(135deg, rgba(176,74,56,0.95), rgba(140,53,37,0.90));
   border: 1px solid rgba(176,74,56,0.60);
   border-radius: 10px; cursor: pointer;
   font-family: ${DISPLAY}; font-size: 14px; font-weight: 700;
