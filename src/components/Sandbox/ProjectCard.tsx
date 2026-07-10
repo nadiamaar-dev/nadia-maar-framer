@@ -9,7 +9,7 @@ const STYLE_ID = "nm-project-card-styles"
 const CSS = `
 .nm-card {
   position: relative; overflow: hidden;
-  background: rgba(30,37,48,0.65);
+  background: rgba(30,37,48,0.83);
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
   border: 1px solid rgba(255,255,255,0.18);
@@ -58,24 +58,24 @@ const CSS = `
   border-color: rgba(255,255,255,0.40);
 }
 .nm-card-btn-primary {
-  background: rgba(176,74,56,0.18);
+  background: rgba(176,74,56,0.59);
   border-color: rgba(176,74,56,0.55);
-  color: #E07060;
+  color: #fff;
 }
 .nm-card-btn-primary:hover {
-  background: rgba(176,74,56,0.32);
+  background: rgba(176,74,56,0.66);
   border-color: rgba(176,74,56,0.80);
-  color: #F08878;
+  color: #fff;
 }
 .nm-card-btn-remove {
-  background: rgba(176,74,56,0.10);
+  background: rgba(176,74,56,0.55);
   border-color: rgba(176,74,56,0.40);
-  color: #D4695A;
+  color: #fff;
 }
 .nm-card-btn-remove:hover {
-  background: rgba(176,74,56,0.24);
+  background: rgba(176,74,56,0.62);
   border-color: rgba(176,74,56,0.65);
-  color: #E07060;
+  color: #fff;
 }
 `
 

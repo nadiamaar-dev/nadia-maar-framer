@@ -46,7 +46,7 @@ export default function DashboardGate() {
     return (
       <div style={{
         minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-        background: "#161B22",
+        background: "#233D4D",
       }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
           <div style={{

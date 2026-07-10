@@ -228,16 +228,16 @@ export default function Footer({ onContact }: FooterProps) {
             >nadiamaar.dev@gmail.com</a>
 
             {/* stat card */}
-            <div style={{ padding: "12px 16px", borderRadius: 12, background: "rgba(140,53,37,0.08)", border: "1px solid rgba(140,53,37,0.24)", display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ padding: "12px 16px", borderRadius: 12, background: "rgba(140,53,37,0.54)", border: "1px solid rgba(140,53,37,0.24)", display: "flex", flexDirection: "column", gap: 4 }}>
               <span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 700, color: "#fff", letterSpacing: "0.02em" }}>50+</span>
-              <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em", textTransform: "uppercase", color: "rgba(176,74,56,0.80)" }}>Progetti Completati</span>
+              <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em", textTransform: "uppercase", color: "rgba(255,255,255,0.85)" }}>Progetti Completati</span>
             </div>
 
             {/* contact button — only shown when onContact prop is provided */}
             {onContact && (
               <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onContact}
-                style={{ display: "flex", alignItems: "stretch", borderRadius: 10, border: "1px solid rgba(176,74,56,0.60)", background: "linear-gradient(90deg,rgba(140,53,37,0.40) 0%,rgba(176,74,56,0.20) 100%)", cursor: "pointer", overflow: "hidden", width: "fit-content" }}>
-                <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(140,53,37,0.35)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "rgba(255,180,150,0.70)", flexShrink: 0 }}>[→]</span>
+                style={{ display: "flex", alignItems: "stretch", borderRadius: 10, border: "1px solid rgba(176,74,56,0.60)", background: "linear-gradient(90deg,rgba(140,53,37,0.70) 0%,rgba(176,74,56,0.60) 100%)", cursor: "pointer", overflow: "hidden", width: "fit-content" }}>
+                <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(140,53,37,0.35)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[→]</span>
                 <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.85)" }}>Scrivimi</span>
               </motion.button>
             )}

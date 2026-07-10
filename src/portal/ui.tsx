@@ -15,7 +15,7 @@ export const MONO = "'JetBrains Mono', ui-monospace, monospace"
 export const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 export const T = {
-  bg: "#131316",
+  bg: "#233D4D",
   bgRaised: "#1A1A1F",
   border: "rgba(255,255,255,0.09)",
   borderHi: "rgba(255,255,255,0.17)",
@@ -218,9 +218,9 @@ const BTN_VARIANTS: Record<BtnVariant, React.CSSProperties> = {
     color: "#E88",
   },
   copper: {
-    background: "rgba(176,74,56,0.13)",
-    border: "1px solid rgba(176,74,56,0.34)",
-    color: "#D4695A",
+    background: "rgba(176,74,56,0.57)",
+    border: "1px solid rgba(176,74,56,0.67)",
+    color: "#fff",
   },
 }
 
@@ -784,7 +784,7 @@ export function Timeline({ events, showProject = false, showClient = false, limi
                 width: 29, height: 29, borderRadius: "50%", flexShrink: 0,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 background: "#1D1D22", border: `1px solid ${t.bd}`, color: t.fg,
-                boxShadow: "0 0 0 3px #131316",
+                boxShadow: "0 0 0 3px #233D4D",
               }}>
                 <Icon name={meta.icon} size={12.5} />
               </span>

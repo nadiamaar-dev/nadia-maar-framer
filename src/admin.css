@@ -47,7 +47,7 @@
 .portal-btn:focus-visible,
 .portal-glass-hover:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(19,19,22,1), 0 0 0 4px rgba(212,105,90,0.75);
+  box-shadow: 0 0 0 2px rgba(35,61,77,1), 0 0 0 4px rgba(212,105,90,0.75);
 }
 .portal-btn-primary:hover:not(:disabled) { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 8px 22px rgba(176,74,56,0.30); }
 .portal-btn-ghost:hover:not(:disabled) { background: rgba(255,255,255,0.09) !important; color: rgba(255,255,255,0.88) !important; border-color: rgba(255,255,255,0.20) !important; }
@@ -74,7 +74,7 @@
 .portal-range { -webkit-appearance: none; appearance: none; height: 8px; border-radius: 99px; background: rgba(255,255,255,0.10); outline: none; cursor: pointer; }
 .portal-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #E0836A, #B04A38); border: 2px solid rgba(255,255,255,0.85); box-shadow: 0 2px 8px rgba(176,74,56,0.45); cursor: pointer; }
 .portal-range::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #E0836A, #B04A38); border: 2px solid rgba(255,255,255,0.85); box-shadow: 0 2px 8px rgba(176,74,56,0.45); cursor: pointer; }
-.portal-range:focus-visible { box-shadow: 0 0 0 2px rgba(19,19,22,1), 0 0 0 4px rgba(212,105,90,0.75); }
+.portal-range:focus-visible { box-shadow: 0 0 0 2px rgba(35,61,77,1), 0 0 0 4px rgba(212,105,90,0.75); }
 .portal-input:focus {
   border-color: rgba(176,74,56,0.55);
   background: rgba(255,255,255,0.06);

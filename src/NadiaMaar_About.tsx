@@ -140,8 +140,8 @@ const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
 const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&/*+<>{}[]"
 
 const G = {
-  bg:        "rgba(255,255,255,0.10)",
-  bgHov:     "rgba(255,255,255,0.16)",
+  bg:        "rgba(138,143,149,0.7)",
+  bgHov:     "rgba(138,143,149,0.8)",
   bd:        "rgba(255,255,255,0.28)",
   bdHov:     "rgba(255,255,255,0.55)",
   blur:      "blur(52px) saturate(2.2)",
@@ -165,7 +165,7 @@ const GLOBAL_CSS = `
   html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; scroll-behavior: smooth; }
   p, li { font-weight: 300; line-height: 1.8; }
   ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: #1A1815; }
+  ::-webkit-scrollbar-track { background: #233D4D; }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
   :root { --x:-9999; --y:-9999; --xp:0; --yp:0; }
 
@@ -356,10 +356,10 @@ function PillCTA({ label, href, onClick, target }: { label: string; href?: strin
   }
   const inner = (
     <>
-      <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,220,200,0.80)", flexShrink: 0 }}>[01]</span>
+      <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[01]</span>
       <span style={{ padding: "14px 20px", display: "flex", alignItems: "center", gap: 12, fontFamily: MONO, fontSize: 12, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
         {label}
-        <motion.span animate={{ x: h ? [0,4,0] : 0 }} transition={{ duration: 0.55, repeat: h ? Infinity : 0, ease: "easeInOut" }} style={{ fontSize: 14, color: "rgba(255,220,200,0.90)" }}>→</motion.span>
+        <motion.span animate={{ x: h ? [0,4,0] : 0 }} transition={{ duration: 0.55, repeat: h ? Infinity : 0, ease: "easeInOut" }} style={{ fontSize: 14, color: "rgba(255,255,255,0.92)" }}>→</motion.span>
       </span>
     </>
   )
@@ -1376,7 +1376,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               <GlassTextarea label="Messaggio" placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={set("msg")} />
               <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 380, damping: 18 }}
                 style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(176,74,56,0.80)", background: "linear-gradient(90deg, rgba(140,53,37,0.78) 0%, rgba(176,74,56,0.64) 100%)", backdropFilter: "blur(20px)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
-                <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,220,200,0.80)" }}>[→]</span>
+                <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[→]</span>
                 <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF", padding: "14px 0" }}>Invia Richiesta →</span>
               </motion.button>
             </form>

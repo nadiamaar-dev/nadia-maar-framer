@@ -95,9 +95,9 @@ export default function Background() {
       {/* ── Split panel base ── */}
       <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
 
-        <div style={{ position: "absolute", inset: 0, background: "#161B22" }} />
-        <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "42%", background: "#1E2530", borderRight: "1px solid rgba(255,255,255,0.06)" }} />
-        <div style={{ position: "absolute", top: 0, bottom: 0, left: "34%", width: "16%", background: "linear-gradient(90deg, #1E2530, #161B22)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "#233D4D" }} />
+        <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "42%", background: "#2E4C5F", borderRight: "1px solid rgba(255,255,255,0.06)" }} />
+        <div style={{ position: "absolute", top: 0, bottom: 0, left: "34%", width: "16%", background: "linear-gradient(90deg, #2E4C5F, #233D4D)" }} />
 
         {/* Blue Lagoon bloom */}
         <div style={{ position: "absolute", top: "-10%", left: "-8%", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(13,120,180,0.11) 0%, rgba(10,90,140,0.05) 50%, transparent 72%)", filter: "blur(90px)", pointerEvents: "none" }} />

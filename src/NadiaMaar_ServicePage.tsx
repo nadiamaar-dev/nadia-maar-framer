@@ -351,8 +351,8 @@ function ContactModal({onClose}:{onClose:()=>void}) {
                 onFocus={e=>(e.target.style.borderColor="rgba(140,53,37,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                 onClick={()=>setSent(true)}
-                style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(176,74,56,0.80)",background:"linear-gradient(90deg,rgba(140,53,37,0.55) 0%,rgba(176,74,56,0.28) 100%)",cursor:"pointer",overflow:"hidden",marginTop:4}}>
-                <span style={{padding:"12px 14px 12px 16px",borderRight:"1px solid rgba(140,53,37,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,180,150,0.70)",flexShrink:0}}>[→]</span>
+                style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(176,74,56,0.80)",background:"linear-gradient(90deg,rgba(140,53,37,0.78) 0%,rgba(176,74,56,0.64) 100%)",cursor:"pointer",overflow:"hidden",marginTop:4}}>
+                <span style={{padding:"12px 14px 12px 16px",borderRight:"1px solid rgba(140,53,37,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[→]</span>
                 <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 20px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.90)",fontWeight:500}}>Invia Messaggio</span>
               </motion.button>
             </div>
@@ -695,8 +695,8 @@ function ServicePage({data}:{data:ServiceData}) {
               <div style={{display:"flex",gap:12,flexWrap:"wrap" as const,alignItems:"center"}}>
                 <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                   onClick={()=>setModalOpen(true)}
-                  style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(176,74,56,0.80)",background:"linear-gradient(90deg,rgba(140,53,37,0.55) 0%,rgba(176,74,56,0.28) 100%)",cursor:"pointer",overflow:"hidden"}}>
-                  <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(140,53,37,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,180,150,0.70)",flexShrink:0}}>[{data.num}]</span>
+                  style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(176,74,56,0.80)",background:"linear-gradient(90deg,rgba(140,53,37,0.78) 0%,rgba(176,74,56,0.64) 100%)",cursor:"pointer",overflow:"hidden"}}>
+                  <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(140,53,37,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
                   <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 22px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.92)",fontWeight:500}}>
                     {data.cta.btn} <ArrowRightIcon size={11} />
                   </span>
@@ -821,8 +821,8 @@ function ServicePage({data}:{data:ServiceData}) {
                   <div style={{display:"flex",justifyContent:"center",gap:12,flexWrap:"wrap" as const}}>
                     <motion.button whileHover={{scale:1.03}} whileTap={{scale:0.97}}
                       onClick={()=>setModalOpen(true)}
-                      style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(176,74,56,0.80)",background:"linear-gradient(90deg,rgba(140,53,37,0.55) 0%,rgba(176,74,56,0.28) 100%)",cursor:"pointer",overflow:"hidden"}}>
-                      <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(140,53,37,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,180,150,0.70)",flexShrink:0}}>[{data.num}]</span>
+                      style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(176,74,56,0.80)",background:"linear-gradient(90deg,rgba(140,53,37,0.78) 0%,rgba(176,74,56,0.64) 100%)",cursor:"pointer",overflow:"hidden"}}>
+                      <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(140,53,37,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
                       <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 24px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.92)",fontWeight:500}}>
                         {data.cta.btn} <ArrowRightIcon size={11} />
                       </span>

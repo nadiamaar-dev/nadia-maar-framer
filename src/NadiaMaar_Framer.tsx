@@ -915,10 +915,10 @@ function Hero() {
                 whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
                 style={{ flex: "1.5 1 0", minHeight: 54, padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(176,74,56,0.80)", background: "linear-gradient(90deg, rgba(140,53,37,0.78) 0%, rgba(176,74,56,0.64) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
               >
-                <span style={{ padding: "0 14px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,220,200,0.80)" }}>[01]</span>
+                <span style={{ padding: "0 14px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[01]</span>
                 <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
                   <span>Avvia il tuo Progetto</span>
-                  <span style={{ fontSize: 14, color: "rgba(255,220,200,0.90)" }}>→</span>
+                  <span style={{ fontSize: 14, color: "rgba(255,255,255,0.92)" }}>→</span>
                 </span>
               </motion.button>
               <motion.a
