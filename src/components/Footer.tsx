@@ -34,7 +34,7 @@ const FOOTER_CSS = `
     overflow: hidden;
     width: 100%;
     box-sizing: border-box;
-    background: linear-gradient(180deg, transparent 0%, rgba(16,16,20,0.55) 22%, rgba(11,11,14,0.94) 100%);
+    background: linear-gradient(180deg, transparent 0%, rgba(14,25,32,0.10) 8%, rgba(14,25,32,0.32) 22%, rgba(12,21,28,0.60) 42%, rgba(10,18,24,0.82) 65%, rgba(10,18,24,0.99) 100%);
   }
   .nm-footer-wrap {
     max-width: 1120px;
@@ -228,7 +228,7 @@ export default function Footer({ onContact }: FooterProps) {
             >nadiamaar.dev@gmail.com</a>
 
             {/* stat card */}
-            <div style={{ padding: "12px 16px", borderRadius: 12, background: "rgba(140,53,37,0.54)", border: "1px solid rgba(140,53,37,0.24)", display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ padding: "12px 16px", borderRadius: 12, background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)", border: "1px solid rgba(176,74,56,0.80)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", flexDirection: "column", gap: 4 }}>
               <span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 700, color: "#fff", letterSpacing: "0.02em" }}>50+</span>
               <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em", textTransform: "uppercase", color: "rgba(255,255,255,0.85)" }}>Progetti Completati</span>
             </div>
@@ -236,7 +236,7 @@ export default function Footer({ onContact }: FooterProps) {
             {/* contact button — only shown when onContact prop is provided */}
             {onContact && (
               <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onContact}
-                style={{ display: "flex", alignItems: "stretch", borderRadius: 10, border: "1px solid rgba(176,74,56,0.60)", background: "linear-gradient(90deg,rgba(140,53,37,0.70) 0%,rgba(176,74,56,0.60) 100%)", cursor: "pointer", overflow: "hidden", width: "fit-content" }}>
+                style={{ display: "flex", alignItems: "stretch", borderRadius: 10, border: "1px solid rgba(176,74,56,0.80)", background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", cursor: "pointer", overflow: "hidden", width: "fit-content" }}>
                 <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(140,53,37,0.35)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[→]</span>
                 <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.85)" }}>Scrivimi</span>
               </motion.button>

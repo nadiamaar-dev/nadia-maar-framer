@@ -49,15 +49,20 @@ const CSS = `
   transition: all 0.18s ease;
 }
 .nm-auth-tab.active {
-  background: rgba(176,74,56,0.59);
-  border: 1px solid rgba(176,74,56,0.45);
+  background: linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%);
+  border: 1px solid rgba(176,74,56,0.80);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   color: #fff;
 }
 .nm-auth-tab:not(.active):hover { color: rgba(255,255,255,0.80); }
 .nm-auth-submit {
   width: 100%; padding: 14px;
-  background: linear-gradient(135deg, rgba(176,74,56,0.95), rgba(140,53,37,0.90));
-  border: 1px solid rgba(176,74,56,0.60);
+  background: linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%);
+  border: 1px solid rgba(176,74,56,0.80);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12);
   border-radius: 10px; cursor: pointer;
   font-family: ${DISPLAY}; font-size: 14px; font-weight: 700;
   color: #fff; letter-spacing: 0.01em;
@@ -65,8 +70,8 @@ const CSS = `
   position: relative; overflow: hidden;
 }
 .nm-auth-submit:hover:not(:disabled) {
-  background: linear-gradient(135deg, rgba(200,90,66,0.95), rgba(160,62,42,0.90));
-  box-shadow: 0 6px 24px rgba(176,74,56,0.40);
+  background: linear-gradient(90deg, rgba(160,62,42,0.85) 0%, rgba(196,84,66,0.72) 100%);
+  box-shadow: 0 6px 24px rgba(176,74,56,0.40), inset 0 1px 0 rgba(255,255,255,0.18);
   transform: translateY(-1px);
 }
 .nm-auth-submit:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }

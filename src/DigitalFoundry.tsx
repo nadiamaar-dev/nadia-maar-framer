@@ -105,7 +105,7 @@ export default function DigitalFoundry() {
           }}>
             Costruisci il tuo
             <br />
-            <span style={{ color: "#fff" }}>progetto ideale.</span>
+            <span style={{ color: "#fff" }}>progetto ideale</span>
           </h1>
           <p style={{
             fontFamily: DISPLAY, fontSize: 16, lineHeight: 1.7,

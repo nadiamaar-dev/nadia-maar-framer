@@ -31,6 +31,11 @@ const SVC_CSS = `
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); border-radius: 4px; }
   ::placeholder { color: rgba(255,255,255,0.22) !important; }
   :root { --x:-9999; --y:-9999; }
+  /* brick text glow — подложка */
+  [style*="color: #B04A38"],
+  [style*="color: #8C3525"] {
+    text-shadow: 0 0 22px rgba(176,74,56,0.58), 0 0 8px rgba(140,53,37,0.42);
+  }
   [data-glow] {
     --border-size: calc(var(--border,1.5) * 1px);
     --spotlight-size: calc(var(--size,260) * 1px);
@@ -351,7 +356,7 @@ function ContactModal({onClose}:{onClose:()=>void}) {
                 onFocus={e=>(e.target.style.borderColor="rgba(140,53,37,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                 onClick={()=>setSent(true)}
-                style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(176,74,56,0.80)",background:"linear-gradient(90deg,rgba(140,53,37,0.78) 0%,rgba(176,74,56,0.64) 100%)",cursor:"pointer",overflow:"hidden",marginTop:4}}>
+                style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(176,74,56,0.80)",background:"linear-gradient(90deg,rgba(176,74,56,0.78) 0%,rgba(176,74,56,0.60) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden",marginTop:4}}>
                 <span style={{padding:"12px 14px 12px 16px",borderRight:"1px solid rgba(140,53,37,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[→]</span>
                 <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 20px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.90)",fontWeight:500}}>Invia Messaggio</span>
               </motion.button>
@@ -674,7 +679,7 @@ function ServicePage({data}:{data:ServiceData}) {
 
             <Reveal delay={0.04}>
               <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.38)",marginBottom:20}}>
-                <span style={{color:T.accent}}>//</span>
+                <span style={{color:T.accentLt}}>//</span>
                 <span>[ {data.num} · Servizio ]</span>
               </div>
             </Reveal>
@@ -695,7 +700,7 @@ function ServicePage({data}:{data:ServiceData}) {
               <div style={{display:"flex",gap:12,flexWrap:"wrap" as const,alignItems:"center"}}>
                 <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                   onClick={()=>setModalOpen(true)}
-                  style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(176,74,56,0.80)",background:"linear-gradient(90deg,rgba(140,53,37,0.78) 0%,rgba(176,74,56,0.64) 100%)",cursor:"pointer",overflow:"hidden"}}>
+                  style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(176,74,56,0.80)",background:"linear-gradient(90deg,rgba(176,74,56,0.78) 0%,rgba(176,74,56,0.60) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
                   <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(140,53,37,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
                   <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 22px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.92)",fontWeight:500}}>
                     {data.cta.btn} <ArrowRightIcon size={11} />
@@ -721,7 +726,7 @@ function ServicePage({data}:{data:ServiceData}) {
               <div>
                 <Reveal>
                   <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.38)",marginBottom:20}}>
-                    <span style={{color:T.accent}}>//</span><span>[ Cosa Facciamo ]</span>
+                    <span style={{color:T.accentLt}}>//</span><span>[ Cosa Facciamo ]</span>
                   </div>
                   <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:28}}>
                     {data.whatWeDo.heading}
@@ -756,7 +761,7 @@ function ServicePage({data}:{data:ServiceData}) {
           <div style={{...WRAP}} className="svc-wrap">
             <Reveal>
               <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.38)",marginBottom:20}}>
-                <span style={{color:T.accent}}>//</span><span>[ Cosa Offriamo ]</span>
+                <span style={{color:T.accentLt}}>//</span><span>[ Cosa Offriamo ]</span>
               </div>
               <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:48}}>
                 {data.whatWeOffer.heading}
@@ -777,7 +782,7 @@ function ServicePage({data}:{data:ServiceData}) {
           <div style={{...WRAP}} className="svc-wrap">
             <Reveal>
               <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.38)",marginBottom:20}}>
-                <span style={{color:T.accent}}>//</span><span>[ Come lo Realizziamo ]</span>
+                <span style={{color:T.accentLt}}>//</span><span>[ Come lo Realizziamo ]</span>
               </div>
               <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:56}}>
                 {data.howWeDoIt.heading}
@@ -821,7 +826,7 @@ function ServicePage({data}:{data:ServiceData}) {
                   <div style={{display:"flex",justifyContent:"center",gap:12,flexWrap:"wrap" as const}}>
                     <motion.button whileHover={{scale:1.03}} whileTap={{scale:0.97}}
                       onClick={()=>setModalOpen(true)}
-                      style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(176,74,56,0.80)",background:"linear-gradient(90deg,rgba(140,53,37,0.78) 0%,rgba(176,74,56,0.64) 100%)",cursor:"pointer",overflow:"hidden"}}>
+                      style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(176,74,56,0.80)",background:"linear-gradient(90deg,rgba(176,74,56,0.78) 0%,rgba(176,74,56,0.60) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
                       <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(140,53,37,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
                       <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 24px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.92)",fontWeight:500}}>
                         {data.cta.btn} <ArrowRightIcon size={11} />

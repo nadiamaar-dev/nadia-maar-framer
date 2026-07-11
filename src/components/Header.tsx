@@ -186,15 +186,18 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
           onClick={() => { openAuthModal(); onClose() }}
           style={{
             width: "100%", padding: "13px 20px",
-            background: "rgba(140,53,37,0.56)", border: "1px solid rgba(140,53,37,0.38)",
+            background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)",
+            border: "1px solid rgba(176,74,56,0.80)",
+            backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+            boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
             borderRadius: 10, cursor: "pointer",
             fontFamily: DISPLAY, fontSize: 13, fontWeight: 700,
             color: "#fff",
             display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
             transition: "background 0.18s, border-color 0.18s",
           }}
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.60)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.60)" }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.56)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.38)" }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(90deg, rgba(196,84,66,0.85) 0%, rgba(196,84,66,0.70) 100%)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(196,84,66,0.90)" }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(176,74,56,0.80)" }}
         >
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
             <rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
@@ -264,9 +267,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
   ]
 
   const GLASS = {
-    background: "rgba(22,27,34,0.82)",
-    backdropFilter: "blur(72px) brightness(1.08) saturate(0.80)",
-    WebkitBackdropFilter: "blur(72px) brightness(1.08) saturate(0.80)",
+    background: "rgba(20,35,45,0.94)",
+    backdropFilter: "blur(72px) brightness(0.92) saturate(1.10)",
+    WebkitBackdropFilter: "blur(72px) brightness(0.92) saturate(1.10)",
   } as React.CSSProperties
 
   const menuFooter = (
@@ -412,7 +415,7 @@ export default function Header() {
           padding: "0 32px",
           backdropFilter: scrolled ? "blur(32px) saturate(0.85)" : "none",
           WebkitBackdropFilter: scrolled ? "blur(32px) saturate(0.85)" : "none",
-          background: scrolled ? "rgba(22,27,34,0.78)" : "transparent",
+          background: scrolled ? "rgba(20,35,45,0.88)" : "transparent",
           borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.07)" : "transparent"}`,
           transition: "background 0.4s, border-color 0.4s",
         } as React.CSSProperties}
@@ -505,14 +508,17 @@ export default function Header() {
                 whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }}
                 style={{
                   padding: "6px 14px",
-                  background: "rgba(140,53,37,0.55)", border: "1px solid rgba(140,53,37,0.38)",
+                  background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)",
+                  border: "1px solid rgba(176,74,56,0.80)",
+                  backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+                  boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
                   borderRadius: 8, cursor: "pointer",
                   fontFamily: DISPLAY, fontSize: 12, fontWeight: 600,
                   color: "#fff", whiteSpace: "nowrap" as const,
                   transition: "background 0.18s, border-color 0.18s",
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.60)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.60)" }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(140,53,37,0.55)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,53,37,0.38)" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(90deg, rgba(196,84,66,0.85) 0%, rgba(196,84,66,0.70) 100%)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(196,84,66,0.90)" }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(176,74,56,0.80)" }}
               >
                 Accedi
               </motion.button>

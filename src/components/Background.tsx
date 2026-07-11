@@ -63,7 +63,7 @@ function GeoDecoration() {
       <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} preserveAspectRatio="none">
         {/* large circle — top left */}
         <circle cx="9%" cy="18%" r="160" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-        <circle cx="9%" cy="18%" r="52"  fill="none" stroke="rgba(8,10,13,0.45)"    strokeWidth="1"/>
+        <circle cx="9%" cy="18%" r="52"  fill="none" stroke="rgba(255,255,255,0.06)"    strokeWidth="1"/>
         {/* diagonal line */}
         <line x1="70%" y1="0%"   x2="100%" y2="50%" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
         {/* rotated square — bottom right */}
@@ -72,7 +72,7 @@ function GeoDecoration() {
         <line x1="86%" y1="28%"   x2="86%" y2="35%"   stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
         <line x1="83%" y1="31.5%" x2="89%" y2="31.5%" stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
         {/* left horizontal mark */}
-        <line x1="0%"  y1="55%"   x2="14%" y2="55%"   stroke="rgba(8,10,13,0.45)"    strokeWidth="1"/>
+        <line x1="0%"  y1="55%"   x2="14%" y2="55%"   stroke="rgba(255,255,255,0.06)"    strokeWidth="1"/>
       </svg>
       {/* mono labels */}
       <span style={{ position: "absolute", left: 18, top: "14%", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.12)", writingMode: "vertical-rl", transform: "rotate(180deg)" }}>

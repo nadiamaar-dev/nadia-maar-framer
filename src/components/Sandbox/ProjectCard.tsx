@@ -9,20 +9,22 @@ const STYLE_ID = "nm-project-card-styles"
 const CSS = `
 .nm-card {
   position: relative; overflow: hidden;
-  background: rgba(30,37,48,0.83);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(28,52,68,0.80);
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-top: 1px solid rgba(255,255,255,0.16);
   border-radius: 14px;
   padding: 22px;
   display: flex; flex-direction: column; gap: 14px;
   cursor: default;
-  transition: border-color 0.24s ease, transform 0.22s ease, box-shadow 0.24s ease;
+  transition: border-color 0.24s ease, transform 0.22s ease, box-shadow 0.24s ease, background 0.24s ease;
 }
 .nm-card:hover {
+  background: rgba(28,52,68,0.88);
   transform: translateY(-2px);
-  border-color: rgba(255,255,255,0.32);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.28);
+  border-color: rgba(255,255,255,0.22);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.10);
 }
 .nm-card-glow {
   position: absolute; top: -60%; left: -40%;

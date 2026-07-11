@@ -169,6 +169,12 @@ const GLOBAL_CSS = `
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
   :root { --x:-9999; --y:-9999; --xp:0; --yp:0; }
 
+  /* brick text glow — подложка */
+  [style*="color: #B04A38"],
+  [style*="color: #8C3525"] {
+    text-shadow: 0 0 22px rgba(176,74,56,0.58), 0 0 8px rgba(140,53,37,0.42);
+  }
+
   [data-glow] {
     --border-size: calc(var(--border,1.5) * 1px);
     --spotlight-size: calc(var(--size,260) * 1px);
@@ -219,6 +225,10 @@ const GLOBAL_CSS = `
 
   @keyframes abt-bar { 0%,100% { transform: scaleY(0.35); opacity:0.5; } 50% { transform: scaleY(1); opacity:1; } }
 
+  /* interactive capability tag */
+  .abt-tag { display: inline-block; padding: 5px 11px; border-radius: 9999px; font-weight: 400; line-height: 1.4; color: rgba(255,255,255,0.78); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); letter-spacing: 0.01em; cursor: default; transition: background .22s, border-color .22s, color .22s, transform .22s; }
+  .abt-tag:hover { background: rgba(176,74,56,0.20); border-color: rgba(176,74,56,0.48); color: #fff; transform: translateY(-1px); }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   }
@@ -264,7 +274,12 @@ const GLOBAL_CSS = `
     .abt-hero-right { display: none !important; }
     .abt-cursor-ring { display: none !important; }
   }
+  .abt-approach-row { display: grid; grid-template-columns: 96px 1fr; gap: 0 48px; padding: 40px 0 44px; align-items: start; }
+  .abt-process-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+
   @media (max-width: 900px) {
+    .abt-approach-row { grid-template-columns: 64px 1fr; gap: 0 24px; padding: 28px 0 32px; }
+    .abt-process-cards { grid-template-columns: repeat(2, 1fr); gap: 14px; }
     .abt-philosophy-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
     .abt-hero-h1 { font-size: clamp(38px, 9vw, 62px) !important; }
     .abt-hero-actions { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
@@ -281,6 +296,10 @@ const GLOBAL_CSS = `
     .abt-philosophy-sticky { position: static !important; }
     .abt-faq-sticky { position: static !important; margin-bottom: 40px !important; }
     .abt-wordmark { font-size: clamp(90px, 30vw, 200px) !important; }
+  }
+  @media (max-width: 640px) {
+    .abt-approach-row { grid-template-columns: 1fr; gap: 12px 0; padding: 24px 0 28px; }
+    .abt-process-cards { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) {
     .abt-wrap { padding: 0 20px !important; }
@@ -312,11 +331,51 @@ function PingDot({ color = T.accentLt, size = 7 }: { color?: string; size?: numb
   )
 }
 
-function ChipLabel({ text }: { text: string }) {
+/** Big translucent index numeral — editorial watermark behind card content. */
+function GhostNum({ n, size = 116, top = -6, right = 6 }: { n: string | number; size?: number; top?: number; right?: number }) {
   return (
-    <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 20, fontFamily: MONO, fontSize: 11, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.55)" }}>
-      <span style={{ color: T.accent }}>//</span>
-      <span>[ {text} ]</span>
+    <span aria-hidden style={{
+      position: "absolute", top, right, fontFamily: DISPLAY, fontWeight: 900,
+      fontSize: size, lineHeight: 1, letterSpacing: "-0.06em", pointerEvents: "none",
+      color: "transparent", WebkitTextStroke: `1px ${LT(0.15)}`, userSelect: "none",
+    }}>{n}</span>
+  )
+}
+
+/** Warm brick spotlight that fades in from the base of a card on hover. */
+function HoverGlow({ show }: { show: boolean }) {
+  return (
+    <span aria-hidden style={{
+      position: "absolute", inset: 0, borderRadius: "inherit", pointerEvents: "none",
+      background: `radial-gradient(120% 88% at 50% 116%, ${OR(0.30)}, transparent 60%)`,
+      opacity: show ? 1 : 0, transition: "opacity 0.42s ease",
+    }} />
+  )
+}
+
+/** Spotlight-border vars for [data-glow] cards. */
+const glowVars = (radius = 18): React.CSSProperties => ({
+  ['--base' as string]: '28', ['--spread' as string]: '30',
+  ['--radius' as string]: String(radius), ['--border' as string]: '1.5', ['--size' as string]: '300',
+} as React.CSSProperties)
+
+/** Shared refined-glass surface. Pass hover state for the lit variant. */
+const glass = (hov = false): React.CSSProperties => ({
+  background: hov ? G.bgHov : G.bg,
+  backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
+  border: `1px solid ${hov ? LT(0.42) : G.bd}`,
+  borderTop: `1px solid rgba(255,255,255,0.24)`,
+  boxShadow: hov ? `${G.shadowHov}, 0 0 46px ${OR(0.15)}` : G.shadow,
+  transition: "background .3s, border-color .3s, box-shadow .35s",
+})
+
+/** Numbered editorial section kicker — §NN —— EYEBROW. The cohesion backbone. */
+function Kicker({ index, text, center = false }: { index: string; text: string; center?: boolean }) {
+  return (
+    <div style={{ display: "inline-flex", alignItems: "center", gap: 14, marginBottom: 22, justifyContent: center ? "center" : "flex-start" }}>
+      <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", color: T.accentLt }}>§{index}</span>
+      <span aria-hidden style={{ width: 30, height: 1, background: `linear-gradient(90deg, ${LT(0.6)}, ${LT(0.1)})` }} />
+      <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.52)" }}>{text}</span>
     </div>
   )
 }
@@ -348,7 +407,7 @@ function PillCTA({ label, href, onClick, target }: { label: string; href?: strin
     display: "inline-flex", alignItems: "stretch",
     borderRadius: 12, cursor: "pointer",
     border: `1px solid ${h ? "rgba(176,74,56,0.90)" : "rgba(176,74,56,0.65)"}`,
-    background: "linear-gradient(90deg, rgba(140,53,37,0.78) 0%, rgba(176,74,56,0.64) 100%)",
+    background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)",
     backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
     boxShadow: h ? "0 0 56px rgba(140,53,37,0.38), 0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18)" : "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
     textDecoration: "none", overflow: "hidden",
@@ -791,7 +850,7 @@ function HeroSection() {
           {/* LEFT */}
           <div>
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
-              <ChipLabel text="Architecture & Code" />
+              <Kicker index="01" text="Architecture & Code" />
             </motion.div>
 
             <motion.h1
@@ -806,7 +865,7 @@ function HeroSection() {
               <ScrambleLine text="DIGITAL" delay={280} /><br />
               <ScrambleLine text="ARCHITECT" delay={430} style={{ color: "#FFFFFF" }} /><br />
               <ScrambleLine text="&" delay={560} style={{ color: "rgba(255,255,255,0.24)", fontWeight: 300 }} />{" "}
-              <ScrambleLine text="E-COM" delay={620} style={{ color: T.muted }} /><br />
+              <ScrambleLine text="E-COM" delay={620} style={{ color: "#FFFFFF" }} /><br />
               <ScrambleLine text="DEVELOPER" delay={760} style={{ color: "#FFFFFF" }} />
             </motion.h1>
 
@@ -829,13 +888,6 @@ function HeroSection() {
             <motion.div className="abt-hero-actions" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.70, delay: 0.40, ease }}
               style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
               <PillCTA label="Lavoriamo insieme" href="mailto:nadiamaar.dev@gmail.com" />
-              <Magnetic>
-                <motion.a href="#" target="_blank" rel="noopener noreferrer"
-                  whileHover={{ color: T.text }} transition={{ duration: 0.20 }}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 9, color: T.muted, textDecoration: "none", ...MONO_LABEL }}>
-                  VIEW CV <ArrowUpRight size={12} />
-                </motion.a>
-              </Magnetic>
             </motion.div>
           </div>
 
@@ -845,7 +897,8 @@ function HeroSection() {
             {/* glow behind card */}
             <div aria-hidden style={{ position: "absolute", inset: "-30px -20px", borderRadius: 28, background: `radial-gradient(circle at 70% 30%, ${OR(0.28)}, ${RD(0.12)} 45%, transparent 72%)`, filter: "blur(38px)", zIndex: -1 }} />
 
-            <div style={{
+            <div data-glow="" style={{
+              ...glowVars(22), position: "relative",
               borderRadius: 22, padding: "28px 28px 24px",
               background: "rgba(255,255,255,0.06)",
               backdropFilter: "blur(40px) saturate(1.7)", WebkitBackdropFilter: "blur(40px) saturate(1.7)",
@@ -862,12 +915,12 @@ function HeroSection() {
               </div>
               <div style={{ marginBottom: 20 }}>
                 <div style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 800, letterSpacing: "-0.03em", color: T.text, marginBottom: 4 }}>Nadia Maar</div>
-                <div style={{ ...MONO_LABEL, fontSize: 9.5, color: T.accentLt }}>Digital Architect · E-Commerce Dev</div>
+                <div style={{ ...MONO_LABEL, fontSize: 9.5, color: T.faint }}>Digital Architect · E-Commerce Dev</div>
               </div>
               <div style={{ height: 1, background: T.border, margin: "0 0 20px" }} />
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24 }}>
                 {["React / Next.js", "Shopify Custom", "AI Automation", "SEO & Ads", "UI/UX Design"].map(tag => (
-                  <span key={tag} style={{ padding: "5px 12px", borderRadius: 9999, fontSize: 11, fontWeight: 500, background: AM(0.12), border: `1px solid ${LT(0.26)}`, color: T.accentLt, letterSpacing: "0.04em" }}>{tag}</span>
+                  <span key={tag} style={{ padding: "5px 12px", borderRadius: 9999, fontSize: 11, fontWeight: 500, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: T.muted, letterSpacing: "0.04em" }}>{tag}</span>
                 ))}
               </div>
               <div style={{ height: 1, background: T.border, margin: "0 0 20px" }} />
@@ -904,16 +957,16 @@ function MarqueeStrip() {
     <span className="abt-marquee-track">
       {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((it, i) => (
         <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 22, padding: "0 22px" }}>
-          <span style={{ fontFamily: DISPLAY, fontSize: 15, fontWeight: 800, letterSpacing: "-0.01em", color: i % 2 ? T.accentLt : "rgba(255,255,255,0.42)" }}>{it}</span>
-          <span style={{ color: T.accent, fontSize: 8 }}>◆</span>
+          <span style={{ fontFamily: DISPLAY, fontSize: 15, fontWeight: 800, letterSpacing: "-0.01em", color: i % 2 ? T.accentLt : "rgba(255,255,255,0.62)" }}>{it}</span>
+          <span style={{ color: T.accentLt, fontSize: 8 }}>◆</span>
         </span>
       ))}
     </span>
   )
   return (
-    <div className="abt-marquee" style={{ position: "relative", borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}`, overflow: "hidden", padding: "18px 0", background: "rgba(0,0,0,0.22)" }}>
-      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 120, background: `linear-gradient(90deg, ${T.bg}, transparent)`, zIndex: 2, pointerEvents: "none" }} />
-      <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 120, background: `linear-gradient(270deg, ${T.bg}, transparent)`, zIndex: 2, pointerEvents: "none" }} />
+    <div className="abt-marquee" style={{ position: "relative", borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}`, overflow: "hidden", padding: "18px 0", background: "rgba(0,0,0,0.18)" }}>
+      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 140, background: "linear-gradient(90deg, #233D4D, transparent)", zIndex: 2, pointerEvents: "none" }} />
+      <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 140, background: "linear-gradient(270deg, #233D4D, transparent)", zIndex: 2, pointerEvents: "none" }} />
       {row}
     </div>
   )
@@ -951,14 +1004,39 @@ function StatCard({ s, i }: { s: typeof STATS[number]; i: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: "-60px" })
   const val = useCountUp(s.n, inView)
+  const [hov, setHov] = useState(false)
   const display = (s.pad ? String(val).padStart(s.pad, "0") : String(val)) + s.suffix
   return (
     <motion.div ref={ref}
       initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
       transition={{ duration: 0.6, delay: i * 0.08, ease }}
-      style={{ borderRadius: 20, padding: "30px 28px", background: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${G.bd}`, borderTop: "1px solid rgba(255,255,255,0.24)", boxShadow: G.shadow }}>
-      <div style={{ fontFamily: DISPLAY, fontSize: "clamp(52px, 6vw, 82px)", fontWeight: 900, lineHeight: 0.9, letterSpacing: "-0.05em", color: "#FFFFFF" }}>{display}</div>
-      <div style={{ marginTop: 16, fontSize: 13.5, color: T.muted, lineHeight: 1.6, fontWeight: 300, maxWidth: 220 }}>{s.sub}</div>
+      onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
+      animate={{ y: hov ? -5 : 0 }}
+      style={{
+        position: "relative", overflow: "hidden", borderRadius: 16,
+        padding: "28px 28px 28px 32px", minHeight: 196,
+        display: "flex", flexDirection: "column", justifyContent: "space-between",
+        background: hov ? "rgba(255,255,255,0.035)" : "rgba(255,255,255,0.018)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        borderLeft: `3px solid rgba(255,255,255,${hov ? 0.28 : 0.14})`,
+        boxShadow: hov ? "0 20px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07)" : "0 8px 28px rgba(0,0,0,0.38)",
+        transition: "background .3s, border-color .3s, box-shadow .35s",
+      }}>
+      {/* index — top right */}
+      <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.20)", alignSelf: "flex-end" }}>0{i + 1} / 03</span>
+
+      {/* giant number */}
+      <div style={{
+        fontFamily: DISPLAY, fontSize: "clamp(58px, 7vw, 90px)", fontWeight: 900,
+        lineHeight: 0.88, letterSpacing: "-0.055em", color: "#FFFFFF",
+        fontVariantNumeric: "tabular-nums",
+      }}>{display}</div>
+
+      {/* separator + label */}
+      <div>
+        <div style={{ height: 1, background: "rgba(255,255,255,0.08)", marginBottom: 14 }} />
+        <div style={{ fontSize: 13, color: "rgba(255,255,255,0.72)", lineHeight: 1.55, fontWeight: 300 }}>{s.sub}</div>
+      </div>
     </motion.div>
   )
 }
@@ -978,8 +1056,13 @@ function StatBento() {
     <section className="abt-section-pad" style={{ padding: "100px 0", position: "relative", borderTop: `1px solid ${T.border}` }}>
       <div className="abt-wrap">
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 40 }}>
-          <span style={{ ...MONO_LABEL, fontSize: 10.5, color: T.accentLt }}>By The Numbers</span>
-          <span style={{ ...MONO_LABEL, fontSize: 10.5, color: T.faint }}>Impatto misurabile · 2026</span>
+          <div>
+            <Kicker index="02" text="By The Numbers" />
+            <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px, 3vw, 44px)", fontWeight: 900, lineHeight: 1.02, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
+              IMPATTO <span style={{ color: "#FFFFFF" }}>MISURABILE</span>
+            </h2>
+          </div>
+          <span style={{ ...MONO_LABEL, fontSize: 10.5, color: T.faint, paddingBottom: 6 }}>Aggiornato · 2026</span>
         </div>
 
         <div className="abt-stat-grid">
@@ -1005,37 +1088,74 @@ function StatBento() {
 /* ══════════════════════════════════════════════════════════════════════════
    §3  APPROACH / PHILOSOPHY
 ══════════════════════════════════════════════════════════════════════════ */
-const PHILOSOPHY_PARAS = [
-  "Mi bastano poche parole per mappare l'intera struttura del tuo business. Questa lettura immediata, unita a un pensiero creativo profondo, mi permette di decodificare la tua visione commerciale e tradurla subito in un'architettura digitale ad altissime prestazioni.",
-  "Fondo l'eleganza del minimalismo visivo con prestazioni frontend eccezionali. Ogni riga di codice, ogni layout e ogni campagna hanno un solo scopo: eliminare il superfluo, massimizzare la conversione e dominare il posizionamento di mercato.",
-  "Integro l'AI in ogni fase — dallo sviluppo alla SEO. Scrivo codice più pulito, testo più a fondo e consegno infrastrutture complesse a una velocità semplicemente fuori portata per un'agenzia tradizionale.",
+const PHILOSOPHY = [
+  { n: "01", label: "Vision",       text: "Mi bastano poche parole per mappare l'intera struttura del tuo business. Questa lettura immediata, unita a un pensiero creativo profondo, mi permette di decodificare la tua visione commerciale e tradurla subito in un'architettura digitale ad altissime prestazioni." },
+  { n: "02", label: "Performance",  text: "Fondo l'eleganza del minimalismo visivo con prestazioni frontend eccezionali. Ogni riga di codice, ogni layout e ogni campagna hanno un solo scopo: eliminare il superfluo, massimizzare la conversione e dominare il posizionamento di mercato." },
+  { n: "03", label: "AI + Code",    text: "Integro l'AI in ogni fase — dallo sviluppo alla SEO. Scrivo codice più pulito, testo più a fondo e consegno infrastrutture complesse a una velocità semplicemente fuori portata per un'agenzia tradizionale." },
 ]
 
 function PhilosophySection() {
   return (
     <section className="abt-section-pad" style={{ padding: "120px 0", position: "relative", borderTop: `1px solid ${T.border}` }}>
       <div className="abt-wrap">
-        <div className="abt-philosophy-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.6fr", gap: "0 100px", alignItems: "start" }}>
-          <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease }}
-            className="abt-philosophy-sticky" style={{ position: "sticky", top: 100 }}>
-            <ChipLabel text="The Approach" />
-            <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(32px, 3.8vw, 56px)", fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-              THE<br /><span style={{ color: "#FFFFFF" }}>APPROACH</span>
-            </h2>
-            <div style={{ width: 48, height: 3, marginTop: 32, borderRadius: 2, background: `linear-gradient(90deg, ${OR(1)}, ${T.accentLt})` }} />
-          </motion.div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-            {PHILOSOPHY_PARAS.map((text, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.70, delay: i * 0.12, ease }}
-                style={{ padding: i === 0 ? "0 0 48px" : "48px 0", borderBottom: i < PHILOSOPHY_PARAS.length - 1 ? `1px solid ${T.border}` : "none" }}>
-                <span style={{ display: "block", ...MONO_LABEL, fontSize: 10, color: T.accentLt, marginBottom: 20, opacity: 0.75 }}>0{i + 1}</span>
-                <p style={{ fontSize: "clamp(15px, 1.3vw, 17px)", color: T.muted, lineHeight: 1.9, fontWeight: 300, margin: 0 }}>{text}</p>
-              </motion.div>
-            ))}
+        {/* header row */}
+        <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}
+          style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 64, flexWrap: "wrap", gap: 16 }}>
+          <div>
+            <Kicker index="03" text="The Approach" />
+            <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(32px, 3.8vw, 56px)", fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
+              THE APPROACH
+            </h2>
           </div>
-        </div>
+          <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.18em", color: T.faint, paddingBottom: 6 }}>3 principi · Studio NM</span>
+        </motion.div>
+
+        {/* principle rows — §04 style */}
+        {PHILOSOPHY.map((p, i) => {
+          const [hov, setHov] = React.useState(false)
+          return (
+            <motion.div key={i}
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.6, delay: i * 0.1, ease }}
+              onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
+              style={{ position: "relative" }}>
+              <div style={{ height: 1, background: hov ? LT(0.50) : "rgba(255,255,255,0.09)", transition: "background .3s" }} />
+              <div className="abt-approach-row" style={{
+                background: hov
+                  ? "rgba(46,76,95,0.55)"
+                  : "rgba(46,76,95,0.28)",
+                backdropFilter: hov ? "blur(14px)" : "blur(6px)",
+                WebkitBackdropFilter: hov ? "blur(14px)" : "blur(6px)",
+                boxShadow: hov ? "inset 0 1px 0 rgba(255,255,255,0.10), 0 6px 28px rgba(0,0,0,0.22)" : "inset 0 1px 0 rgba(255,255,255,0.04)",
+                transition: "background .35s, box-shadow .35s, backdrop-filter .35s",
+                position: "relative",
+                borderRadius: 2,
+              }}>
+                {/* brick bottom glow */}
+                <span aria-hidden style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg, ${LT(hov ? 0.65 : 0.10)}, transparent 60%)`, transition: "background .4s" }} />
+
+                {/* brick outlined number */}
+                <div style={{
+                  fontFamily: DISPLAY, fontWeight: 900, fontSize: 72, lineHeight: 1,
+                  letterSpacing: "-0.06em", color: "transparent",
+                  WebkitTextStroke: `1.5px ${hov ? T.accentLt : LT(0.55)}`,
+                  transition: "all .35s", userSelect: "none", paddingTop: 2,
+                }}>{p.n}</div>
+
+                {/* label + text */}
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
+                    <h3 style={{ fontFamily: DISPLAY, fontSize: "clamp(20px, 2.2vw, 28px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#FFFFFF", margin: 0, lineHeight: 1.1 }}>{p.label}</h3>
+                    <span aria-hidden style={{ flex: 1, height: 1, maxWidth: 60, background: `linear-gradient(90deg, ${LT(hov ? 0.50 : 0.22)}, transparent)`, transition: "background .3s" }} />
+                  </div>
+                  <p style={{ fontSize: "clamp(14px, 1.2vw, 16px)", color: T.muted, lineHeight: 1.9, fontWeight: 300, margin: 0 }}>{p.text}</p>
+                </div>
+              </div>
+            </motion.div>
+          )
+        })}
+        <div style={{ height: 1, background: "rgba(255,255,255,0.09)" }} />
       </div>
     </section>
   )
@@ -1046,54 +1166,129 @@ function PhilosophySection() {
 ══════════════════════════════════════════════════════════════════════════ */
 //PLACEHOLDER process steps — replace durations/copy with real workflow
 const PROCESS = [
-  { n: "01", title: "Scoping", dur: "3–5 giorni", desc: "Analizziamo obiettivi, target e vincoli. Definisco architettura e roadmap tecnica." },
-  { n: "02", title: "Design", dur: "1–2 sett.", desc: "Concept UI premium in Framer. Scegli la direzione, la rifinisco fino al pixel." },
-  { n: "03", title: "Sviluppo", dur: "2–4 sett.", desc: "Codice frontend pulito, performante e scalabile. Test rigorosi ad ogni step." },
-  { n: "04", title: "Launch & Growth", dur: "Ongoing", desc: "Go-live, SEO tecnica e campagne. Ottimizzazione continua sulla conversione." },
+  { n: "01", title: "Scoping & Strategia",     metric: "3–5",  metricLabel: "giorni di analisi",      dur: "3–5 giorni", desc: "Analizziamo obiettivi, target e vincoli. Definisco architettura e roadmap tecnica prima di scrivere una riga di codice." },
+  { n: "02", title: "UI/UX Design",            metric: "1–2",  metricLabel: "settimane di design",    dur: "1–2 sett.",  desc: "Concept UI premium in Framer. Scegli la direzione, la rifinisco fino al pixel garantendo un'esperienza sartoriale." },
+  { n: "03", title: "Sviluppo & Engineering",  metric: "2–4",  metricLabel: "settimane di sviluppo", dur: "2–4 sett.",  desc: "Codice frontend pulito, performante e scalabile. Test rigorosi ad ogni step per un'infrastruttura solida." },
+  { n: "04", title: "Launch & Growth",         metric: "24/7", metricLabel: "growth continuo",        dur: "Ongoing",    desc: "Go-live, SEO tecnica e campagne. Ottimizzazione continua sulla conversione per scalare il fatturato." },
 ]
+
+function ProcessCard({ p, i }: { p: typeof PROCESS[number]; i: number }) {
+  const [hov, setHov] = useState(false)
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, delay: i * 0.09, ease }}
+      onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
+      animate={{ y: hov ? -3 : 0 }}
+      style={{
+        position: "relative", borderRadius: 16, overflow: "hidden",
+        padding: "26px 24px 24px",
+        borderTop:    `1px solid ${hov ? "rgba(224,224,224,0.55)" : "rgba(224,224,224,0.22)"}`,
+        borderRight:  `1px solid ${hov ? "rgba(140,53,37,.55)" : "rgba(255,255,255,0.12)"}`,
+        borderBottom: `1px solid ${hov ? "rgba(140,53,37,.55)" : "rgba(255,255,255,0.08)"}`,
+        borderLeft:   `1px solid ${hov ? "rgba(140,53,37,.55)" : "rgba(255,255,255,0.12)"}`,
+        background: hov ? "rgba(255,255,255,.58)" : "rgba(255,255,255,.50)",
+        backdropFilter: "blur(36px) saturate(1.1)",
+        WebkitBackdropFilter: "blur(36px) saturate(1.1)",
+        boxShadow: hov
+          ? "inset 0 1.5px 0 rgba(255,255,255,0.95), inset 1px 0 0 rgba(255,255,255,0.35), 0 20px 50px rgba(0,0,0,0.22)"
+          : "inset 0 1.5px 0 rgba(255,255,255,0.80), inset 1px 0 0 rgba(255,255,255,0.22), 0 12px 36px rgba(0,0,0,0.16)",
+        display: "flex", flexDirection: "column",
+        transition: "background .3s, border-color .3s, box-shadow .3s",
+      }}>
+
+      {/* rim-light shimmer */}
+      <span aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 30%, transparent 55%)", pointerEvents: "none" }} />
+
+      {/* corner brackets — brick */}
+      <span aria-hidden style={{ position: "absolute", top: 9, left: 9, width: 10, height: 10, borderTop: "1.5px solid rgba(140,53,37,.55)", borderLeft: "1.5px solid rgba(140,53,37,.55)" }} />
+      <span aria-hidden style={{ position: "absolute", bottom: 9, right: 9, width: 10, height: 10, borderBottom: "1.5px solid rgba(140,53,37,.55)", borderRight: "1.5px solid rgba(140,53,37,.55)" }} />
+
+      {/* [01] tag */}
+      <div style={{ position: "relative", fontFamily: MONO, fontSize: 11, letterSpacing: ".14em", color: T.accentLt, marginBottom: 14 }}>[{p.n}]</div>
+
+      {/* brick metric */}
+      <div style={{ position: "relative", marginBottom: 16 }}>
+        <div style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(34px, 5vw, 50px)", letterSpacing: "-0.04em", color: T.accentLt, lineHeight: 1 }}>{p.metric}</div>
+        <div style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: T.accentLt, marginTop: 8, opacity: 0.80 }}>{p.metricLabel}</div>
+      </div>
+
+      {/* title */}
+      <h3 style={{ position: "relative", fontFamily: DISPLAY, fontWeight: 700, fontSize: 17, lineHeight: 1.25, margin: "0 0 10px", color: "#1A1410" }}>{p.title}</h3>
+
+      {/* body */}
+      <p style={{ position: "relative", fontFamily: MONO, fontSize: 12.5, lineHeight: 1.68, color: "rgba(36,29,24,.68)", margin: 0, flex: 1 }}>{p.desc}</p>
+    </motion.div>
+  )
+}
 
 function ProcessSection() {
   return (
     <section className="abt-section-pad" style={{ padding: "120px 0", position: "relative", borderTop: `1px solid ${T.border}`, overflow: "hidden" }}>
-      <motion.div aria-hidden animate={{ opacity: [0.5, 0.9, 0.5] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+      <motion.div aria-hidden animate={{ opacity: [0.5, 0.9, 0.5], scale: [1, 1.08, 1] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
         style={{ position: "absolute", top: "-10%", right: "8%", width: 520, height: 520, borderRadius: "50%", background: `radial-gradient(circle, ${OR(0.12)} 0%, transparent 66%)`, filter: "blur(80px)", pointerEvents: "none" }} />
       <div className="abt-wrap" style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ textAlign: "center", marginBottom: 64 }}>
-          <div style={{ display: "inline-flex", marginBottom: 20 }}>
-            <span style={{ ...MONO_LABEL, fontSize: 10, color: T.accentLt, padding: "7px 16px", borderRadius: 9999, background: G.bg, border: `1px solid ${G.bd}`, backdropFilter: G.blur, WebkitBackdropFilter: G.blur }}>Il Processo</span>
-          </div>
-          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, ease }}
-            style={{ fontFamily: DISPLAY, fontSize: "clamp(28px, 4vw, 52px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: T.text, margin: "0 auto", maxWidth: 780 }}>
-            Il tuo prossimo prodotto parte da qui:{" "}
-            <span style={{ color: "#FFFFFF" }}>strategico, elegante, redditizio.</span>
-          </motion.h2>
-        </div>
+        <motion.div style={{ marginBottom: 80, position: "relative", overflow: "hidden" }}
+          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
 
-        {/* steps */}
-        <div className="abt-process-steps">
-          {PROCESS.map((p, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.6, delay: i * 0.1, ease }}
-              style={{ borderRadius: 16, padding: "22px 20px", background: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${G.bd}`, borderTop: "1px solid rgba(255,255,255,0.22)", boxShadow: G.shadow }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                <span style={{ ...MONO_LABEL, fontSize: 10, color: T.accentLt }}>{p.n}</span>
-                <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.04em", color: T.accentLt, padding: "3px 9px", borderRadius: 9999, background: AM(0.12), border: `1px solid ${LT(0.24)}` }}>{p.dur}</span>
-              </div>
-              <h3 style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 800, letterSpacing: "-0.02em", color: T.text, margin: "0 0 8px" }}>{p.title}</h3>
-              <p style={{ fontSize: 13.5, color: T.muted, lineHeight: 1.7, fontWeight: 300, margin: 0 }}>{p.desc}</p>
+          {/* background watermark */}
+          <div aria-hidden style={{
+            position: "absolute", top: -20, right: -20, pointerEvents: "none", userSelect: "none",
+            fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(100px, 18vw, 220px)",
+            lineHeight: 1, letterSpacing: "-0.05em", whiteSpace: "nowrap",
+            color: "transparent", WebkitTextStroke: "1px rgba(255,255,255,0.04)",
+          }}>PROCESSO</div>
+
+          <Kicker index="04" text="Il Processo" />
+
+          {/* typographic composition */}
+          <div style={{ position: "relative" }}>
+            <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.26em", color: "rgba(255,255,255,0.50)", marginBottom: 10, textTransform: "uppercase" as const }}>Il tuo</div>
+
+            {/* outlined */}
+            <motion.div
+              initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.08, ease }}
+              style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(50px, 8.5vw, 116px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.50)", userSelect: "none" }}>
+              PROSSIMO
             </motion.div>
-          ))}
-        </div>
 
-        {/* ruler with duration chips */}
-        <motion.div className="abt-ruler" initial={{ opacity: 0, scaleX: 0.96 }} whileInView={{ opacity: 1, scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, ease }}>
-          {PROCESS.map((p, i) => (
-            <div key={i} style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "0 12px" }}>
-              <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 500, color: T.text }}>{p.dur}</span>
-              <span style={{ width: 16, height: 16, borderRadius: 5, background: `linear-gradient(135deg, ${OR(1)}, ${T.accent})`, boxShadow: `0 0 12px ${OR(0.6)}` }} />
-            </div>
-          ))}
+            {/* solid */}
+            <motion.div
+              initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.18, ease }}
+              style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(50px, 8.5vw, 116px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "#FFFFFF", userSelect: "none" }}>
+              PRODOTTO
+            </motion.div>
+
+            {/* "parte da qui" light */}
+            <motion.div
+              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.30, ease }}
+              style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 18, fontFamily: DISPLAY, fontWeight: 300, fontSize: "clamp(20px, 2.4vw, 34px)", color: "rgba(255,255,255,0.68)", letterSpacing: "-0.02em" }}>
+              parte da qui
+              <motion.span animate={{ x: [0, 6, 0] }} transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }} style={{ fontSize: 22, color: "rgba(255,255,255,0.25)" }}>→</motion.span>
+            </motion.div>
+
+            {/* attributes row */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.42, ease }}
+              style={{ display: "flex", alignItems: "center", gap: 0, marginTop: 32, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.09)" }}>
+              {(["strategico", "elegante", "redditizio"] as const).map((w, i) => (
+                <React.Fragment key={w}>
+                  <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: i === 2 ? "rgba(255,255,255,0.88)" : "rgba(255,255,255,0.55)" }}>{w}</span>
+                  {i < 2 && <span aria-hidden style={{ margin: "0 22px", width: 1, height: 12, background: "rgba(255,255,255,0.15)", display: "inline-block" }} />}
+                </React.Fragment>
+              ))}
+            </motion.div>
+          </div>
         </motion.div>
+
+        {/* 2×2 card grid */}
+        <div className="abt-process-cards">
+          {PROCESS.map((p, i) => <ProcessCard key={i} p={p} i={i} />)}
+        </div>
       </div>
     </section>
   )
@@ -1109,38 +1304,73 @@ const TOOLKIT = [
   { num: "04", title: "Acquisition & Growth", items: ["SEO Avanzato & AI SEO Audit", "Google Ads (Search & Pmax)", "Meta Ads (FB & Instagram)", "Funnel Strategy & Growth", "B2B Lead Generation", "Conversion Tracking Advanced"] },
 ]
 
-function BentoCard({ data, i, big }: { data: typeof TOOLKIT[number]; i: number; big?: boolean }) {
+const TOOLKIT_SLUGS = ["design_thinking", "ecommerce_eng", "web_mobile_ai", "acquisition_growth"]
+
+function ToolkitPanel({ data, i }: { data: typeof TOOLKIT[number]; i: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, margin: "-80px" })
   const [hov, setHov] = useState(false)
+  const slug = TOOLKIT_SLUGS[i]
+  const cmd = `cat ${slug}.json`
+
   return (
-    <motion.div className="abt-bento-item" data-glow=""
-      initial={{ opacity: 0, y: 32 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.65, delay: i * 0.08, ease }}
+    <motion.div ref={ref}
+      initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.55, delay: i * 0.08, ease }}
       onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
+      animate={{ y: hov ? -5 : 0 }}
       style={{
-        '--base': '28', '--spread': '30', '--radius': '20', '--border': '1.5', '--size': '300',
-        position: "relative", borderRadius: 20, padding: big ? "32px 30px" : "26px 24px",
-        background: hov ? G.bgHov : G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
-        border: `1px solid ${G.bd}`, borderTop: "1px solid rgba(255,255,255,0.24)",
-        boxShadow: hov ? G.shadowHov : G.shadow,
-        display: "flex", flexDirection: "column", transition: "background 0.25s, box-shadow 0.3s", overflow: "hidden",
-      } as React.CSSProperties}>
-      <div style={{ marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid ${T.border}` }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-          <span style={{ ...MONO_LABEL, fontSize: 10, color: T.accentLt }}>{data.num}</span>
-          <div style={{ width: 28, height: 28, borderRadius: 8, background: AM(0.12), border: `1px solid ${LT(0.26)}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <div style={{ width: 6, height: 6, borderRadius: "50%", background: T.accent, opacity: 0.9 }} />
-          </div>
-        </div>
-        <h3 style={{ fontFamily: DISPLAY, fontSize: big ? 20 : 14, fontWeight: 800, letterSpacing: "-0.01em", color: T.text, textTransform: "uppercase" as const, margin: 0, lineHeight: 1.3 }}>{data.title}</h3>
-      </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-        {data.items.map((item, ii) => (
-          <motion.span key={ii} initial={{ opacity: 0, scale: 0.88 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-            transition={{ duration: 0.35, delay: i * 0.05 + ii * 0.04, ease }}
-            style={{ display: "inline-block", padding: "5px 11px", borderRadius: 9999, fontSize: big ? 12.5 : 11.5, fontWeight: 400, lineHeight: 1.4, color: T.muted, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", letterSpacing: "0.01em", cursor: "default" }}>
-            {item}
-          </motion.span>
+        borderRadius: 16, overflow: "hidden",
+        background: hov ? "rgba(0,0,0,0.50)" : "rgba(0,0,0,0.36)",
+        border: `1px solid rgba(255,255,255,${hov ? 0.13 : 0.07})`,
+        boxShadow: hov
+          ? "0 24px 60px rgba(0,0,0,0.58), inset 0 1px 0 rgba(255,255,255,0.08)"
+          : "0 8px 24px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04)",
+        fontFamily: MONO, display: "flex", flexDirection: "column",
+        transition: "background .3s, border-color .3s, box-shadow .35s",
+      }}>
+
+      {/* title bar */}
+      <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "12px 16px 11px", borderBottom: `1px solid rgba(255,255,255,${hov ? 0.09 : 0.05})`, background: "rgba(255,255,255,0.025)", flexShrink: 0 }}>
+        {["#FF5F57","#FEBC2E","#10B981"].map(c => (
+          <div key={c} style={{ width: 10, height: 10, borderRadius: "50%", background: c, opacity: hov ? 0.88 : 0.52, transition: "opacity .3s" }} />
         ))}
+        <span style={{ marginLeft: "auto", fontSize: 9.5, letterSpacing: "0.14em", color: "rgba(255,255,255,0.26)", textTransform: "uppercase" as const }}>
+          {data.num} -- {slug}
+        </span>
+      </div>
+
+      {/* terminal body */}
+      <div style={{ padding: "16px 18px 20px", flex: 1, fontSize: 12.5, lineHeight: 1.85 }}>
+        {/* command line */}
+        <div style={{ marginBottom: 10 }}>
+          <span style={{ color: "rgba(255,255,255,0.30)" }}>$ </span>
+          <span style={{ color: "rgba(255,255,255,0.85)" }}>{cmd}</span>
+        </div>
+        {/* output — category title */}
+        <motion.div
+          initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.25, delay: 0.1 + i * 0.05 }}
+          style={{ color: hov ? T.accentLt : LT(0.70), fontWeight: 500, marginBottom: 10, transition: "color .3s" }}>
+          {data.title}
+        </motion.div>
+        {/* skills */}
+        {data.items.map((item, ii) => (
+          <motion.div key={item}
+            initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.22, delay: 0.18 + i * 0.05 + ii * 0.07 }}
+            style={{ color: "rgba(255,255,255,0.72)", paddingLeft: 16, lineHeight: 1.75, fontSize: 12 }}>
+            {item}
+          </motion.div>
+        ))}
+        {/* blinking cursor after last item */}
+        {inView && <span className="abt-caret" style={{ marginLeft: 16 }} />}
+      </div>
+
+      {/* footer */}
+      <div style={{ padding: "10px 18px 12px", borderTop: `1px solid rgba(255,255,255,${hov ? 0.08 : 0.04})`, display: "flex", alignItems: "center", justifyContent: "space-between", background: "rgba(255,255,255,0.015)", flexShrink: 0 }}>
+        <span style={{ fontSize: 10, letterSpacing: "0.12em", color: hov ? T.accentLt : LT(0.50), transition: "color .3s" }}>{data.num}</span>
+        <span style={{ fontSize: 10, letterSpacing: "0.12em", color: "rgba(255,255,255,0.28)" }}>{data.items.length} capabilities</span>
       </div>
     </motion.div>
   )
@@ -1150,62 +1380,24 @@ function ToolkitSection() {
   return (
     <section className="abt-section-pad" style={{ padding: "120px 0", position: "relative", borderTop: `1px solid ${T.border}` }}>
       <div className="abt-wrap">
-        <div style={{ marginBottom: 64 }}>
-          <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}>
-            <ChipLabel text="Core Capabilities" />
-          </motion.div>
-          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.75, delay: 0.08, ease }}
-            style={{ fontFamily: DISPLAY, fontSize: "clamp(30px, 4vw, 60px)", fontWeight: 900, lineHeight: 1.02, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-            TECH <span style={{ color: "#FFFFFF" }}>TOOLKIT</span>
-          </motion.h2>
-        </div>
-        <div className="abt-bento">
-          {TOOLKIT.map((data, i) => <BentoCard key={i} data={data} i={i} big={i === 0} />)}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   §6  NOW / CURRENTLY
-══════════════════════════════════════════════════════════════════════════ */
-//PLACEHOLDER "now" content — replace with real facts
-const NOW = [
-  { k: "Building", v: "Piattaforma e-commerce headless per un brand fashion europeo.", tag: "In corso" },
-  { k: "Learning", v: "AI agents applicati all'automazione di workflow di sviluppo e SEO.", tag: "Focus" },
-  { k: "Available", v: "1 slot per nuovi progetti a partire dal Q3 2026.", tag: "Aperto" },
-]
-
-function NowSection() {
-  return (
-    <section className="abt-section-pad" style={{ padding: "100px 0", position: "relative", borderTop: `1px solid ${T.border}` }}>
-      <div className="abt-wrap">
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 40 }}>
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 64 }}>
           <div>
-            <ChipLabel text="Now" />
-            <motion.h2 initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease }}
-              style={{ fontFamily: DISPLAY, fontSize: "clamp(26px, 3vw, 44px)", fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-              COSA STO FACENDO <span style={{ color: "#FFFFFF" }}>ORA</span>
+            <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}>
+              <Kicker index="05" text="Core Capabilities" />
+            </motion.div>
+            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.75, delay: 0.08, ease }}
+              style={{ fontFamily: DISPLAY, fontSize: "clamp(30px, 4vw, 60px)", fontWeight: 900, lineHeight: 1.02, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
+              TECH TOOLKIT
             </motion.h2>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <PingDot color={T.green} size={6} />
-            <span style={{ ...MONO_LABEL, fontSize: 10, color: T.faint }}>UPDATED · LUG 2026</span>
-          </div>
+          <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}
+            style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.18em", color: T.faint, paddingBottom: 6 }}>
+            4 aree · 24 competenze
+          </motion.span>
         </div>
-        <div className="abt-now-grid">
-          {NOW.map((n, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.6, delay: i * 0.1, ease }}
-              style={{ borderRadius: 18, padding: "26px 24px", background: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${G.bd}`, borderTop: "1px solid rgba(255,255,255,0.22)", boxShadow: G.shadow, display: "flex", flexDirection: "column", gap: 14 }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span style={{ ...MONO_LABEL, fontSize: 10, color: T.accentLt }}>{n.k}</span>
-                <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.06em", color: T.accentLt, padding: "3px 9px", borderRadius: 9999, background: AM(0.12), border: `1px solid ${LT(0.22)}` }}>{n.tag}</span>
-              </div>
-              <p style={{ fontSize: 14.5, color: T.muted, lineHeight: 1.75, fontWeight: 300, margin: 0 }}>{n.v}</p>
-            </motion.div>
-          ))}
+
+        <div className="abt-process-cards">
+          {TOOLKIT.map((data, i) => <ToolkitPanel key={i} data={data} i={i} />)}
         </div>
       </div>
     </section>
@@ -1225,35 +1417,40 @@ const FAQS = [
 
 function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
   const [open, setOpen] = useState(false)
-  const [hov, setHov] = useState(false)
   return (
-    <motion.div data-glow=""
-      initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.60, delay: index * 0.07, ease }}
-      onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
-      style={{
-        '--base': '28', '--spread': '30', '--radius': '16', '--border': '1.5', '--size': '280',
-        position: "relative", borderRadius: 16,
-        background: open ? AM(0.07) : hov ? G.bgHov : G.bg,
-        backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
-        border: `1px solid ${open ? LT(0.42) : hov ? G.bdHov : G.bd}`,
-        boxShadow: open ? `0 12px 44px rgba(0,0,0,0.50), 0 0 0 1px ${OR(0.16)}, inset 0 1px 0 rgba(255,255,255,0.10)` : G.shadow,
-        transition: "background 0.25s, border-color 0.25s, box-shadow 0.30s", overflow: "hidden",
-      } as React.CSSProperties}>
-      <div style={{ height: 2, background: open ? `linear-gradient(90deg, ${OR(1)}, ${T.accentLt}, transparent)` : "transparent", transition: "background 0.3s" }} />
-      <button onClick={() => setOpen(o => !o)}
-        style={{ width: "100%", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 24, padding: "28px 32px", background: "none", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit" }}>
-        <span style={{ fontSize: "clamp(14px, 1.2vw, 16px)", fontWeight: 500, lineHeight: 1.45, letterSpacing: "-0.01em", flex: 1 }}>{q}</span>
-        <motion.span animate={{ rotate: open ? 180 : 0, color: open ? T.accentLt : T.faint }} transition={{ duration: 0.30, ease }} style={{ flexShrink: 0, marginTop: 2 }}>
-          <ChevronDown size={16} />
+    <motion.div
+      initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-30px" }}
+      transition={{ duration: 0.50, delay: index * 0.06, ease }}
+      style={{ position: "relative" }}>
+
+      {/* top rule */}
+      <div style={{ height: 1, background: open ? LT(0.45) : "rgba(255,255,255,0.09)", transition: "background .3s" }} />
+
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: "100%", display: "flex", alignItems: "flex-start", justifyContent: "space-between",
+          gap: 32, padding: "24px 0", background: "none", border: "none", cursor: "pointer",
+          color: T.text, textAlign: "left" as const, fontFamily: "inherit",
+        }}>
+        {/* brick accent dot when open */}
+        <span aria-hidden style={{ flexShrink: 0, width: 6, height: 6, borderRadius: "50%", marginTop: 7, background: open ? T.accentLt : "rgba(255,255,255,0.20)", transition: "background .3s" }} />
+        <span style={{ flex: 1, fontSize: "clamp(14px, 1.2vw, 16px)", fontWeight: 500, lineHeight: 1.45, letterSpacing: "-0.01em", color: open ? "#FFFFFF" : T.muted, transition: "color .3s" }}>{q}</span>
+        <motion.span
+          animate={{ rotate: open ? 45 : 0 }}
+          transition={{ duration: 0.28, ease }}
+          style={{ flexShrink: 0, marginTop: 4, fontSize: 20, lineHeight: 1, color: open ? T.accentLt : "rgba(255,255,255,0.35)", transition: "color .3s" }}>
+          +
         </motion.span>
       </button>
+
       <AnimatePresence initial={false}>
         {open && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.38, ease }} style={{ overflow: "hidden" }}>
-            <div style={{ padding: "0 32px 32px", paddingTop: 0 }}>
-              <p style={{ fontSize: "clamp(14px, 1.15vw, 15.5px)", color: T.muted, lineHeight: 1.88, margin: 0, fontWeight: 300 }}>{a}</p>
-            </div>
+          <motion.div
+            initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.36, ease }}
+            style={{ overflow: "hidden" }}>
+            <p style={{ fontSize: "clamp(14px, 1.1vw, 15.5px)", color: T.muted, lineHeight: 1.88, margin: 0, fontWeight: 300, paddingLeft: 38, paddingBottom: 24 }}>{a}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1268,7 +1465,7 @@ function FAQSection() {
         <div className="abt-faq-grid" style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "0 80px", alignItems: "start" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}
             className="abt-faq-sticky" style={{ position: "sticky", top: 100 }}>
-            <ChipLabel text="FAQ" />
+            <Kicker index="07" text="FAQ" />
             <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px, 3vw, 44px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
               LOGICA&<br /><span style={{ color: "#FFFFFF" }}>TRASPARENZA</span>
             </h2>
@@ -1276,8 +1473,9 @@ function FAQSection() {
               Risposte dirette alle domande che contano davvero.
             </p>
           </motion.div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div>
             {FAQS.map((faq, i) => <FAQItem key={i} {...faq} index={i} />)}
+            <div style={{ height: 1, background: "rgba(255,255,255,0.09)" }} />
           </div>
         </div>
       </div>
@@ -1375,7 +1573,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               <GlassSelect label="Cosa dobbiamo risolvere?" value={fields.area} onChange={set("area")} />
               <GlassTextarea label="Messaggio" placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={set("msg")} />
               <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 380, damping: 18 }}
-                style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(176,74,56,0.80)", background: "linear-gradient(90deg, rgba(140,53,37,0.78) 0%, rgba(176,74,56,0.64) 100%)", backdropFilter: "blur(20px)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
+                style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(176,74,56,0.80)", background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
                 <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[→]</span>
                 <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF", padding: "14px 0" }}>Invia Richiesta →</span>
               </motion.button>
@@ -1465,7 +1663,7 @@ function GeoDecoration() {
       <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} preserveAspectRatio="none">
         {/* большой круг — левый верх */}
         <circle cx="9%" cy="18%" r="160" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-        <circle cx="9%" cy="18%" r="52" fill="none" stroke="rgba(8,10,13,0.45)" strokeWidth="1"/>
+        <circle cx="9%" cy="18%" r="52" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
         {/* диагональная линия */}
         <line x1="70%" y1="0%" x2="100%" y2="50%" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
         {/* повёрнутый квадрат — правый низ */}
@@ -1474,7 +1672,7 @@ function GeoDecoration() {
         <line x1="86%" y1="28%" x2="86%" y2="35%" stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
         <line x1="83%" y1="31.5%" x2="89%" y2="31.5%" stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
         {/* горизонтальная метка слева */}
-        <line x1="0%" y1="55%" x2="14%" y2="55%" stroke="rgba(8,10,13,0.45)" strokeWidth="1"/>
+        <line x1="0%" y1="55%" x2="14%" y2="55%" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
       </svg>
       {/* мелкие mono-надписи */}
       <span style={{ position: "absolute", left: 18, top: "14%", fontFamily: "'JetBrains Mono',monospace", fontSize: 8, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.12)", writingMode: "vertical-rl", transform: "rotate(180deg)" }}>About / Studio · 2026</span>
@@ -1521,7 +1719,6 @@ export default function NadiaMaarAbout() {
         <PhilosophySection />
         <ProcessSection />
         <ToolkitSection />
-        <NowSection />
         <FAQSection />
         <FinalCTA onOpenModal={() => setModalOpen(true)} />
       </div>

@@ -112,6 +112,14 @@ const GLOBAL_CSS = `
 
   :root { --x:-9999; --y:-9999; --xp:0; --yp:0; }
 
+  /* brick text glow — подложка */
+  [style*="color: #B04A38"],
+  [style*="color: #8C3525"],
+  [style*='color: "#B04A38"'],
+  [style*='color: "#8C3525"'] {
+    text-shadow: 0 0 22px rgba(176,74,56,0.58), 0 0 8px rgba(140,53,37,0.42);
+  }
+
   [data-glow] {
     --border-size: calc(var(--border,1.5) * 1px);
     --spotlight-size: calc(var(--size,260) * 1px);
@@ -734,9 +742,10 @@ function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
         whileHover={{ y: -2 }} whileTap={{ scale: 0.985 }}
         transition={{ type: "spring", stiffness: 400, damping: 22 }}
         style={{ ...card, borderRadius: 14, padding: 0, display: "flex", alignItems: "stretch",
-          border: "1px solid rgba(176,74,56,0.55)",
-          borderTop: "1px solid rgba(176,74,56,0.70)",
-          background: "linear-gradient(90deg, #8C3525 0%, #B04A38 100%)",
+          border: "1px solid rgba(176,74,56,0.80)",
+          background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)",
+          backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+          boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
         }}
       >
         <span style={{ padding: "14px 12px 14px 16px", borderRight: "1px solid rgba(255,255,255,0.28)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[02]</span>
@@ -855,7 +864,7 @@ function Hero() {
         {/* eyebrow */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }} style={{ marginBottom: 24 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
-            <span style={{ color: T.accent }}>//</span>
+            <span style={{ color: T.accentLt }}>//</span>
             <span>[ Development · AI Automation · Performance Marketing ]</span>
           </div>
         </motion.div>
@@ -913,7 +922,7 @@ function Hero() {
               <motion.button
                 onClick={() => document.getElementById("s9")?.scrollIntoView({ behavior: "smooth" })}
                 whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
-                style={{ flex: "1.5 1 0", minHeight: 54, padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(176,74,56,0.80)", background: "linear-gradient(90deg, rgba(140,53,37,0.78) 0%, rgba(176,74,56,0.64) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
+                style={{ flex: "1.5 1 0", minHeight: 54, padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(176,74,56,0.80)", background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
               >
                 <span style={{ padding: "0 14px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[01]</span>
                 <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
@@ -1005,7 +1014,7 @@ function Hero() {
         `}</style>
         <div id="s3" style={{ marginTop: 64, paddingTop: 64, borderTop: `1px solid ${T.border}` }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
-            <span style={{ color: T.accent }}>//</span>
+            <span style={{ color: T.accentLt }}>//</span>
             <span>[ The All-In-One Advantage ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", marginBottom: 18, maxWidth: 780, color: T.text }}>
@@ -1046,7 +1055,7 @@ function Hero() {
                     {nm.n !== null
                       ? <>{nm.prefix}<StatCountUp target={nm.n} suffix={nm.suffix} /></>
                       : r.value}
-                    {r.symbol && <span style={{ color: T.accent }}>{r.symbol}</span>}
+                    {r.symbol && <span style={{ color: T.accentLt }}>{r.symbol}</span>}
                   </div>
                   <div style={{ fontFamily: MONO, fontSize: 12, lineHeight: 1.6, color: T.muted, marginTop: 14, letterSpacing: ".04em" }}>
                     {r.label}
@@ -1152,7 +1161,7 @@ function CatalogCard({ index, children, style }: { index?: string; children: Rea
       <span style={{ position: "absolute", bottom: 9, right: 9, width: 10, height: 10, borderBottom: "1.5px solid rgba(140,53,37,.55)", borderRight: "1.5px solid rgba(140,53,37,.55)" }} />
       {/* index */}
       {index && (
-        <div style={{ position: "relative", fontFamily: MONO, fontSize: 11, letterSpacing: ".14em", color: "#8C3525", marginBottom: 14 }}>
+        <div style={{ position: "relative", fontFamily: MONO, fontSize: 11, letterSpacing: ".14em", color: T.accentLt, marginBottom: 14 }}>
           [{index}]
         </div>
       )}
@@ -1168,7 +1177,7 @@ function AllInOne() {
         <Reveal>
           {/* V3 eyebrow: // [ The All-In-One Advantage ] */}
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
-            <span style={{ color: T.accent }}>//</span>
+            <span style={{ color: T.accentLt }}>//</span>
             <span>[ The All-In-One Advantage ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", marginBottom: 18, maxWidth: 780, color: T.text }}>
@@ -1376,7 +1385,7 @@ function TechBlock() {
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
-            <span style={{ color: T.accent }}>//</span>
+            <span style={{ color: T.accentLt }}>//</span>
             <span>[ Tecnologia all&apos;Avanguardia ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,46px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 18px", maxWidth: 680, color: T.text }}>
@@ -1750,7 +1759,7 @@ function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
       <span style={{ position: "absolute", top: 9, left: 9, width: 10, height: 10, borderTop: "1.5px solid rgba(140,53,37,.55)", borderLeft: "1.5px solid rgba(140,53,37,.55)" }} />
       <span style={{ position: "absolute", bottom: 9, right: 9, width: 10, height: 10, borderBottom: "1.5px solid rgba(140,53,37,.55)", borderRight: "1.5px solid rgba(140,53,37,.55)" }} />
       {/* index */}
-      <div style={{ position: "relative", fontFamily: MONO, fontSize: 11, letterSpacing: ".14em", color: T.accent, marginBottom: 14 }}>[{s.num}]</div>
+      <div style={{ position: "relative", fontFamily: MONO, fontSize: 11, letterSpacing: ".14em", color: T.accentLt, marginBottom: 14 }}>[{s.num}]</div>
       <h3 style={{ position: "relative", fontFamily: DISPLAY, fontWeight: 700, fontSize: i === 0 ? 22 : 18, lineHeight: 1.25, margin: "0 0 10px", color: T.text }}>
         {s.title}
       </h3>
@@ -1770,7 +1779,7 @@ function SoluzioniMatrix() {
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
-            <span style={{ color: T.accent }}>//</span>
+            <span style={{ color: T.accentLt }}>//</span>
             <span>[ Core Skills &amp; Tech Stack ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.6vw,48px)", fontWeight: 700, lineHeight: 1.06, letterSpacing: "-0.025em", margin: "0 0 40px", maxWidth: 780, color: T.text }}>
@@ -2004,7 +2013,7 @@ function DiagnosiBlock() {
 
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
-            <span style={{ color: T.accent }}>//</span>
+            <span style={{ color: T.accentLt }}>//</span>
             <span>[ Il Problema — La Diagnosi ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,46px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 40px", maxWidth: 680, color: T.text }}>
@@ -2186,7 +2195,7 @@ function PurcheBlock() {
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
-            <span style={{ color: T.accent }}>//</span>
+            <span style={{ color: T.accentLt }}>//</span>
             <span>[ Il Mio Metodo ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.6vw,48px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 40px", maxWidth: 560, color: T.text }}>
@@ -2719,7 +2728,7 @@ function Method() {
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
-            <span style={{ color: T.accent }}>//</span>
+            <span style={{ color: T.accentLt }}>//</span>
             <span>[ Il Metodo di Lavoro ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", marginBottom: 48, maxWidth: 580, color: "#FFFFFF" }}>
@@ -2769,7 +2778,7 @@ function Portfolio() {
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
-            <span style={{ color: T.accent }}>//</span>
+            <span style={{ color: T.accentLt }}>//</span>
             <span>[ Social Proof / Portfolio ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 18px", maxWidth: 680, color: T.text }}>
@@ -2807,7 +2816,7 @@ function Portfolio() {
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
                   {p.tags.map(t => (
-                    <span key={t} style={{ fontFamily: MONO, fontSize: 10.5, color: "#8C3525", border: "1px solid rgba(140,53,37,.3)", borderRadius: 6, padding: "4px 9px" }}>
+                    <span key={t} style={{ fontFamily: MONO, fontSize: 10.5, color: T.accentLt, border: "1px solid rgba(140,53,37,.3)", borderRadius: 6, padding: "4px 9px" }}>
                       {t}
                     </span>
                   ))}
@@ -2997,7 +3006,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 28 }}>
             <div>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.40)", marginBottom: 10 }}>
-                <span style={{ color: T.accent }}>//</span>
+                <span style={{ color: T.accentLt }}>//</span>
                 <span>[ Richiesta Consulenza ]</span>
               </div>
               <h3 style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 700, letterSpacing: "-0.022em", color: "#FFFFFF", margin: 0, lineHeight: 1.2 }}>
@@ -3058,9 +3067,9 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "4px 0" }} />
 
               <button type="submit"
-                style={{ width: "100%", padding: "13px 32px", borderRadius: 10, cursor: "pointer", border: "1px solid rgba(140,53,37,0.45)", background: "rgba(140,53,37,0.59)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10)", color: "#FFFFFF", fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, transition: "all .22s" }}
-                onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(140,53,37,0.30)"; el.style.borderColor="rgba(176,74,56,0.65)" }}
-                onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(140,53,37,0.18)"; el.style.borderColor="rgba(140,53,37,0.45)" }}
+                style={{ width: "100%", padding: "13px 32px", borderRadius: 10, cursor: "pointer", border: "1px solid rgba(176,74,56,0.80)", background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", color: "#FFFFFF", fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, transition: "all .22s" }}
+                onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.background="linear-gradient(90deg, rgba(196,84,66,0.85) 0%, rgba(196,84,66,0.70) 100%)"; el.style.borderColor="rgba(196,84,66,0.90)" }}
+                onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.background="linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)"; el.style.borderColor="rgba(176,74,56,0.80)" }}
               >
                 Invia Richiesta →
               </button>
@@ -3122,7 +3131,7 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
           position: "relative", overflow: "hidden", cursor: "pointer",
           padding: "0 0 0 0", borderRadius: 12,
           border: `1px solid ${hov ? "rgba(176,74,56,0.90)" : "rgba(176,74,56,0.80)"}`,
-          background: "linear-gradient(90deg, rgba(140,53,37,0.78) 0%, rgba(176,74,56,0.64) 100%)",
+          background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)",
           backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
           boxShadow: hov
             ? "0 0 56px rgba(140,53,37,0.38), 0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18)"
@@ -3134,7 +3143,7 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
       >
         {/* index tag */}
         <div style={{ padding: "17px 16px 17px 20px", borderRight: "1px solid rgba(140,53,37,0.40)", display: "flex", alignItems: "center", position: "relative" }}>
-          <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: T.accentLt }}>[01]</span>
+          <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[01]</span>
         </div>
         {/* label */}
         <div style={{ padding: "17px 28px", display: "flex", alignItems: "center", gap: 14, position: "relative", fontSize: 12, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase" as const }}>
@@ -3142,7 +3151,7 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
           <motion.span
             animate={{ x: hov ? [0, 5, 0] : 0 }}
             transition={{ duration: 0.55, repeat: hov ? Infinity : 0, ease: "easeInOut" }}
-            style={{ fontSize: 15, color: T.accentLt, lineHeight: 1 }}
+            style={{ fontSize: 15, color: "#FFFFFF", lineHeight: 1 }}
           >→</motion.span>
         </div>
       </motion.button>
@@ -3157,7 +3166,7 @@ function Contact() {
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
-            <span style={{ color: T.accent }}>//</span>
+            <span style={{ color: T.accentLt }}>//</span>
             <span>[ Call to Action ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.2vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 16px", color: "#FFFFFF" }}>
@@ -3487,7 +3496,7 @@ function MenuNavItem({ num, label, onClick, index, active = false }: { num: stri
         <motion.span
           animate={{ x: lit ? 10 : 0, opacity: lit ? 1 : 0 }}
           transition={{ duration: 0.18 }}
-          style={{ marginLeft: "auto", color: T.accent, fontSize: 20, lineHeight: 1, flexShrink: 0 }}
+          style={{ marginLeft: "auto", color: T.accentLt, fontSize: 20, lineHeight: 1, flexShrink: 0 }}
         >→</motion.span>
       </button>
     </motion.div>
