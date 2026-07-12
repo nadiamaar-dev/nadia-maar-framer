@@ -1,13 +1,30 @@
-import React from "react"
-import type { ClientHome } from "../../lib/api"
-import { fmtDate, fmtEur } from "../../lib/api"
-import { Badge, Btn, Empty, Glass, INVOICE_STATUS, MONO, Row, SectionTitle, Stat, T } from "../ui"
+import React, { useState } from "react"
+import { useToast } from "../../context/ToastContext"
+import type { ClientHome, Invoice } from "../../lib/api"
+import { declareInvoicePaid, fmtDate, fmtEur } from "../../lib/api"
+import { Badge, Btn, DISPLAY, Empty, Glass, INVOICE_STATUS, MONO, Row, SectionTitle, Stat, T } from "../ui"
 
-export default function Invoices({ home }: { home: ClientHome }) {
+export default function Invoices({ home, reload }: { home: ClientHome; reload: () => void }) {
+  const toast = useToast()
+  const [paying, setPaying] = useState<string | null>(null)
   const invoices = home.invoices
   const due = invoices.filter(i => i.status === "sent" || i.status === "overdue")
   const paid = invoices.filter(i => i.status === "paid")
   const projectName = (id?: string) => home.projects.find(p => p.id === id)?.name
+
+  async function declare(i: Invoice) {
+    if (paying) return
+    setPaying(i.id)
+    try {
+      await declareInvoicePaid(i.id)
+      toast.success("Grazie! Confermiamo la ricezione a breve.")
+      reload()
+    } catch {
+      toast.error("Operazione non riuscita.")
+    } finally {
+      setPaying(null)
+    }
+  }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
@@ -27,6 +44,8 @@ export default function Invoices({ home }: { home: ClientHome }) {
             {invoices.map(i => {
               const is = INVOICE_STATUS[i.status]
               const pname = projectName(i.projectId)
+              const payable = (i.status === "sent" || i.status === "overdue")
+              const declared = !!i.clientMarkedPaidAt
               return (
                 <Row
                   key={i.id}
@@ -41,7 +60,14 @@ export default function Invoices({ home }: { home: ClientHome }) {
                   right={
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 9 }}>
                       <span style={{ fontFamily: MONO, fontSize: 12.5, fontWeight: 700, color: T.text }}>{fmtEur(i.amount)}</span>
-                      <Badge tone={is.tone} dot>{is.label}</Badge>
+                      {payable && declared
+                        ? <Badge tone="silver" dot>In verifica</Badge>
+                        : <Badge tone={is.tone} dot>{is.label}</Badge>}
+                      {payable && !declared && (
+                        <Btn size="sm" variant="primary" icon="check" busy={paying === i.id} onClick={() => declare(i)}>
+                          Ho pagato
+                        </Btn>
+                      )}
                       {i.pdfPath?.startsWith("http") && (
                         <a href={i.pdfPath} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()} style={{ textDecoration: "none", display: "inline-flex" }}>
                           <Btn size="sm" variant="ghost" icon="download">PDF</Btn>

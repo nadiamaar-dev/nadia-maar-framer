@@ -17,6 +17,7 @@ function mapInvoice(r: any): Invoice {
     issuedAt: r.issued_at,
     dueDate: r.due_date ?? undefined,
     pdfPath: r.pdf_path ?? undefined,
+    clientMarkedPaidAt: r.client_marked_paid_at ?? undefined,
   }
 }
 
@@ -24,12 +25,15 @@ function mapDocument(r: any): ClientDocument {
   return {
     id: r.id,
     clientId: r.client_id,
+    projectId: r.project_id ?? undefined,
     name: r.name,
     type: r.type as DocType,
     sizeBytes: r.size_bytes,
     uploadedAt: r.uploaded_at,
     storagePath: r.storage_path,
     publicUrl: r.public_url ?? undefined,
+    requiresSignature: r.requires_signature ?? false,
+    signedAt: r.signed_at ?? undefined,
   }
 }
 
@@ -88,6 +92,12 @@ export async function updateInvoiceStatus(id: string, status: InvoiceStatus): Pr
   if (error) throw error
 }
 
+/** Client declares a sent/overdue invoice as paid (RPC guards ownership). */
+export async function declareInvoicePaid(id: string): Promise<void> {
+  const { error } = await supabase.rpc("declare_invoice_paid", { p_invoice: id })
+  if (error) throw error
+}
+
 /** Next progressive number for the current year: "FAT-2026-004". */
 export function nextInvoiceNumber(existing: Invoice[]): string {
   const year = new Date().getFullYear()
@@ -108,7 +118,22 @@ export async function fetchDocuments(clientId?: string): Promise<ClientDocument[
   return (data ?? []).map(mapDocument)
 }
 
-export async function uploadDocument(clientId: string, file: File, type: DocType): Promise<ClientDocument> {
+export async function fetchDocumentsByProject(projectId: string): Promise<ClientDocument[]> {
+  const { data, error } = await supabase
+    .from("client_documents")
+    .select("*")
+    .eq("project_id", projectId)
+    .order("uploaded_at", { ascending: false })
+  if (error) throw error
+  return (data ?? []).map(mapDocument)
+}
+
+export async function uploadDocument(
+  clientId: string,
+  file: File,
+  type: DocType,
+  opts: { projectId?: string; requiresSignature?: boolean } = {},
+): Promise<ClientDocument> {
   const storagePath = `${clientId}/${type}s/${Date.now()}-${safeStorageName(file.name)}`
   const { error: storageErr } = await supabase.storage
     .from("client-documents")
@@ -116,7 +141,15 @@ export async function uploadDocument(clientId: string, file: File, type: DocType
   if (storageErr) throw storageErr
   const { data, error } = await supabase
     .from("client_documents")
-    .insert({ client_id: clientId, name: file.name, type, size_bytes: file.size, storage_path: storagePath })
+    .insert({
+      client_id: clientId,
+      project_id: opts.projectId ?? null,
+      name: file.name,
+      type,
+      size_bytes: file.size,
+      storage_path: storagePath,
+      requires_signature: opts.requiresSignature ?? false,
+    })
     .select()
     .single()
   if (error) throw error
@@ -126,6 +159,12 @@ export async function uploadDocument(clientId: string, file: File, type: DocType
 export async function deleteDocument(doc: ClientDocument): Promise<void> {
   await supabase.storage.from("client-documents").remove([doc.storagePath])
   const { error } = await supabase.from("client_documents").delete().eq("id", doc.id)
+  if (error) throw error
+}
+
+/** Client signs an own document pending signature (RPC guards ownership). */
+export async function signDocument(id: string): Promise<void> {
+  const { error } = await supabase.rpc("sign_document", { p_doc: id })
   if (error) throw error
 }
 

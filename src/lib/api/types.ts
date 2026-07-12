@@ -38,12 +38,22 @@ export interface AdminKpi {
 /* ── Projects & stages ─────────────────────────────────────── */
 export type ProjectStatus = "pending_approval" | "active" | "paused" | "completed"
 
+/** Structured onboarding brief captured when the client submits a project. */
+export interface ProjectBrief {
+  projectType?: string
+  budgetRange?: string
+  deadline?: string
+  goals?: string
+  references?: string
+}
+
 export interface ClientProject {
   id: string
   clientId: string
   name: string
   description: string
   status: ProjectStatus
+  brief: ProjectBrief
   adminNote?: string
   createdAt: string
   updatedAt: string
@@ -78,8 +88,9 @@ export interface ProjectStage {
 export type EventType =
   | "project_submitted" | "project_approved" | "project_paused" | "project_resumed" | "project_completed"
   | "stage_started" | "stage_completed" | "approval_requested" | "approval_granted"
-  | "invoice_issued" | "invoice_paid" | "invoice_overdue"
+  | "invoice_issued" | "invoice_paid" | "invoice_overdue" | "payment_declared"
   | "meeting_proposed" | "meeting_confirmed" | "meeting_cancelled" | "meeting_rescheduled"
+  | "document_shared" | "document_signed" | "credentials_released"
   | "note"
 
 export interface ProjectEvent {
@@ -170,19 +181,24 @@ export interface Invoice {
   issuedAt: string
   dueDate?: string
   pdfPath?: string
+  /** Set when the client declares they have paid; admin confirms → status "paid". */
+  clientMarkedPaidAt?: string
 }
 
-export type DocType = "report" | "contract" | "invoice" | "other"
+export type DocType = "report" | "contract" | "invoice" | "handover" | "other"
 
 export interface ClientDocument {
   id: string
   clientId: string
+  projectId?: string
   name: string
   type: DocType
   sizeBytes: number
   uploadedAt: string
   storagePath: string
   publicUrl?: string
+  requiresSignature: boolean
+  signedAt?: string
 }
 
 /* ── Support tickets ───────────────────────────────────────── */
@@ -200,12 +216,48 @@ export interface SupportTicket {
   createdAt: string
   adminNote?: string
   respondedAt?: string
+  /** Optional quote for the requested work (Fase 6). */
+  estimateAmount?: number
+  estimateHours?: number
+}
+
+/* ── Handover: credentials & resources (Fase 5) ────────────── */
+export type CredentialKind = "access" | "resource"
+
+export interface ProjectCredential {
+  id: string
+  projectId: string
+  clientId: string
+  kind: CredentialKind
+  label: string
+  url?: string
+  username?: string
+  secret?: string
+  note?: string
+  releasedAt?: string
+  createdAt: string
+  updatedAt: string
+}
+
+/* ── Client-supplied assets (materials) ────────────────────── */
+export type AssetUploader = "client" | "admin"
+
+export interface ClientAsset {
+  id: string
+  clientId: string
+  projectId?: string
+  name: string
+  storagePath: string
+  mime?: string
+  sizeBytes: number
+  uploadedBy: AssetUploader
+  createdAt: string
 }
 
 /* ── Action center ─────────────────────────────────────────── */
 export type ActionKind =
-  | "start_project" | "approve_stage" | "pay_invoice" | "confirm_meeting" | "unread_chat"
-  | "review_project" | "reply_ticket" | "answer_chat" | "overdue_invoice"
+  | "start_project" | "approve_stage" | "pay_invoice" | "confirm_meeting" | "unread_chat" | "sign_document"
+  | "review_project" | "reply_ticket" | "answer_chat" | "overdue_invoice" | "confirm_payment"
 
 export interface PortalAction {
   id: string

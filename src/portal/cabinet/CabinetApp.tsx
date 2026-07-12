@@ -6,8 +6,10 @@ import {
 } from "../../lib/api"
 import Shell, { type ShellNavItem } from "../Shell"
 import { Btn, DISPLAY, Glass, Icon, Loading, MONO, PortalLogo, T } from "../ui"
+import Documenti from "./Documenti"
 import Dossier from "./Dossier"
 import Invoices from "./Invoices"
+import Materiali from "./Materiali"
 import Meetings from "./Meetings"
 import Messages from "./Messages"
 import NewProjectModal from "./NewProjectModal"
@@ -18,6 +20,8 @@ import Support from "./Support"
 const SECTIONS: Omit<ShellNavItem, "badge">[] = [
   { id: "panoramica", label: "Panoramica", icon: "home" },
   { id: "progetti", label: "Progetti", icon: "layers" },
+  { id: "documenti", label: "Documenti", icon: "doc" },
+  { id: "materiali", label: "Materiali", icon: "folder" },
   { id: "riunioni", label: "Riunioni", icon: "calendar" },
   { id: "fatture", label: "Fatture", icon: "invoice" },
   { id: "messaggi", label: "Messaggi", icon: "chat" },
@@ -33,7 +37,7 @@ function FullScreen({ children }: { children: React.ReactNode }) {
       <div aria-hidden style={{ position: "fixed", inset: 0, pointerEvents: "none" }}>
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, #233D4D 0%, #233D4D 55%, #1E3544 100%)" }} />
         <div style={{ position: "absolute", top: "-20%", left: "-10%", width: "55%", height: "60%", background: "radial-gradient(ellipse, rgba(226,230,238,0.05) 0%, transparent 65%)" }} />
-        <div style={{ position: "absolute", bottom: "-25%", right: "-12%", width: "60%", height: "70%", background: "radial-gradient(ellipse, rgba(174,83,80,0.08) 0%, transparent 62%)" }} />
+        <div style={{ position: "absolute", bottom: "-25%", right: "-12%", width: "60%", height: "70%", background: "radial-gradient(ellipse, rgba(224,131,106,0.08) 0%, transparent 62%)" }} />
       </div>
       <div style={{ position: "relative", zIndex: 1, width: "100%", display: "flex", justifyContent: "center" }}>
         {children}
@@ -88,6 +92,9 @@ export default function CabinetApp() {
       subscribe("cab-convos", { table: "conversations", filter: mine }, bump),
       subscribe("cab-meetings", { table: "meetings", filter: mine }, bump),
       subscribe("cab-invoices", { table: "client_invoices", filter: mine }, bump),
+      subscribe("cab-documents", { table: "client_documents", filter: mine }, bump),
+      subscribe("cab-assets", { table: "client_assets", filter: mine }, bump),
+      subscribe("cab-credentials", { table: "project_credentials", filter: mine }, bump),
       subscribe("cab-tickets", { table: "support_tickets", filter: mine }, bump),
     ]
     return () => {
@@ -171,7 +178,7 @@ export default function CabinetApp() {
                 <span style={{
                   width: 36, height: 36, borderRadius: 10,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(194,86,64,0.08)", border: "1px solid rgba(194,86,64,0.18)", color: T.copper,
+                  background: "rgba(224,131,106,0.08)", border: "1px solid rgba(224,131,106,0.20)", color: T.copper,
                 }}>
                   <Icon name={item.icon} size={16} />
                 </span>
@@ -224,7 +231,7 @@ export default function CabinetApp() {
           style={{
             display: "inline-flex", alignItems: "center", gap: 7,
             padding: "7px 12px", borderRadius: 99, cursor: "pointer",
-            background: "rgba(174,83,80,0.13)", border: "1px solid rgba(174,83,80,0.32)",
+            background: "rgba(224,131,106,0.14)", border: "1px solid rgba(224,131,106,0.32)",
             fontFamily: MONO, fontSize: 10, fontWeight: 700, color: T.copperLt,
           }}
         >
@@ -253,8 +260,10 @@ export default function CabinetApp() {
               reload={reload}
             />
       )}
+      {section === "documenti" && <Documenti home={home} userId={user.id} reload={reload} />}
+      {section === "materiali" && <Materiali userId={user.id} projects={home.projects} />}
       {section === "riunioni" && <Meetings home={home} userId={user.id} reload={reload} />}
-      {section === "fatture" && <Invoices home={home} />}
+      {section === "fatture" && <Invoices home={home} reload={reload} />}
       {section === "messaggi" && <Messages home={home} userId={user.id} reload={reload} />}
       {section === "supporto" && <Support home={home} userId={user.id} reload={reload} />}
 

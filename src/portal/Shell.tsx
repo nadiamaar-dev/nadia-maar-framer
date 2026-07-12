@@ -22,7 +22,7 @@ function Backdrop() {
       }} />
       <div style={{
         position: "absolute", bottom: "-25%", right: "-12%", width: "60%", height: "70%",
-        background: "radial-gradient(ellipse, rgba(174,83,80,0.075) 0%, transparent 62%)",
+        background: "radial-gradient(ellipse, rgba(224,131,106,0.075) 0%, transparent 62%)",
       }} />
       <div style={{
         position: "absolute", inset: 0, opacity: 0.05,
@@ -89,9 +89,9 @@ export default function Shell({
               style={{
                 display: "flex", alignItems: "center", gap: 12,
                 padding: "11px 14px", borderRadius: 11, textAlign: "left",
-                background: isActive ? "rgba(194,86,64,0.14)" : "transparent",
-                border: `1px solid ${isActive ? "rgba(194,86,64,0.30)" : "transparent"}`,
-                borderLeft: isActive ? "3px solid #D4856A" : "3px solid transparent",
+                background: isActive ? "rgba(224,131,106,0.14)" : "transparent",
+                border: `1px solid ${isActive ? "rgba(224,131,106,0.30)" : "transparent"}`,
+                borderLeft: isActive ? "3px solid #E0836A" : "3px solid transparent",
                 boxShadow: isActive ? "0 2px 8px rgba(0,0,0,0.14)" : "none",
                 color: isActive ? "#F4C5B4" : TL.muted,
                 cursor: "pointer", transition: "all 0.16s ease",

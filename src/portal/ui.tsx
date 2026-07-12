@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { relativeDate } from "../lib/api"
 import type {
   ApprovalState, ClientPlan, ClientStatus, ConversationStatus, EventType, InvoiceStatus,
-  MeetingStatus, ProjectEvent, ProjectStatus, StageStatus, TicketPriority, TicketStatus,
+  MeetingStatus, ProjectBrief, ProjectEvent, ProjectStatus, StageStatus, TicketPriority, TicketStatus,
 } from "../lib/api"
 
 /* ══════════════════════════════════════════════════════════════
@@ -786,11 +786,24 @@ export const EVENT_META: Record<EventType, { icon: IconName; tone: Tone }> = {
   invoice_issued: { icon: "invoice", tone: "silver" },
   invoice_paid: { icon: "euro", tone: "green" },
   invoice_overdue: { icon: "warn", tone: "red" },
+  payment_declared: { icon: "euro", tone: "amber" },
   meeting_proposed: { icon: "calendar", tone: "silver" },
   meeting_confirmed: { icon: "calendar", tone: "green" },
   meeting_cancelled: { icon: "x", tone: "red" },
   meeting_rescheduled: { icon: "clock", tone: "amber" },
+  document_shared: { icon: "doc", tone: "silver" },
+  document_signed: { icon: "checkCircle", tone: "green" },
+  credentials_released: { icon: "lock", tone: "copper" },
   note: { icon: "doc", tone: "steel" },
+}
+
+/* Vocabulary for documents & handover credentials. */
+export const DOC_TYPE: Record<"report" | "contract" | "invoice" | "handover" | "other", { label: string; tone: Tone; icon: IconName }> = {
+  contract: { label: "Contratto", tone: "copper", icon: "doc" },
+  invoice: { label: "Fattura", tone: "amber", icon: "invoice" },
+  report: { label: "Report", tone: "silver", icon: "doc" },
+  handover: { label: "Consegna", tone: "green", icon: "sparkle" },
+  other: { label: "Documento", tone: "steel", icon: "doc" },
 }
 
 /** Project journal / activity feed. */
@@ -841,6 +854,59 @@ export function Timeline({ events, showProject = false, showClient = false, limi
           )
         })}
       </div>
+    </div>
+  )
+}
+
+/** Structured onboarding brief — read-only summary card. */
+export function BriefCard({ brief, description }: { brief?: ProjectBrief; description?: string }) {
+  const fields = [
+    { label: "Tipo", value: brief?.projectType, icon: "layers" as IconName },
+    { label: "Budget", value: brief?.budgetRange, icon: "euro" as IconName },
+    { label: "Tempistiche", value: brief?.deadline, icon: "clock" as IconName },
+  ].filter(f => f.value)
+  const hasRefs = !!brief?.references
+  if (fields.length === 0 && !hasRefs && !description) return null
+  return (
+    <div style={{
+      padding: "16px 18px", borderRadius: 14,
+      background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`,
+      display: "flex", flexDirection: "column", gap: 14,
+    }}>
+      <p style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>
+        <Icon name="briefcase" size={12} /> Brief del progetto
+      </p>
+      {fields.length > 0 && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 10 }}>
+          {fields.map(f => (
+            <div key={f.label} style={{
+              display: "flex", alignItems: "center", gap: 10,
+              padding: "10px 12px", borderRadius: 11,
+              background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`,
+            }}>
+              <span style={{ width: 30, height: 30, borderRadius: 9, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: TONE.copper.bg, border: `1px solid ${TONE.copper.bd}`, color: TONE.copper.fg }}>
+                <Icon name={f.icon} size={14} />
+              </span>
+              <div style={{ minWidth: 0 }}>
+                <p style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.14em", textTransform: "uppercase", color: T.faint, margin: 0 }}>{f.label}</p>
+                <p style={{ fontFamily: DISPLAY, fontSize: 13, fontWeight: 700, color: T.text, margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis" }}>{f.value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      {description && (
+        <div>
+          <p style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.14em", textTransform: "uppercase", color: T.faint, margin: "0 0 5px" }}>Obiettivi</p>
+          <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>{description}</p>
+        </div>
+      )}
+      {hasRefs && (
+        <div>
+          <p style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.14em", textTransform: "uppercase", color: T.faint, margin: "0 0 5px" }}>Riferimenti</p>
+          <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>{brief!.references}</p>
+        </div>
+      )}
     </div>
   )
 }

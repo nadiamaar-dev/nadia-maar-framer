@@ -11,14 +11,16 @@ import {
 } from "../../lib/api"
 import type { AdminHome } from "../../lib/api"
 import ChatThread from "../ChatThread"
+import DossierDocsAdmin from "./DossierDocsAdmin"
+import DossierHandoverAdmin from "./DossierHandoverAdmin"
 import StageRail, { stageProgress } from "../StageRail"
 import {
-  Badge, Btn, DISPLAY, Empty, Field, Glass, Icon, Input, INVOICE_STATUS, Loading,
+  Badge, BriefCard, Btn, DISPLAY, Empty, Field, Glass, Icon, Input, INVOICE_STATUS, Loading,
   MEETING_STATUS, Modal, MONO, Note, PROJECT_STATUS, Ring, Row, T, Tabs, Textarea,
   Timeline,
 } from "../ui"
 
-type TabId = "fasi" | "diario" | "fatture" | "riunioni"
+type TabId = "fasi" | "diario" | "documenti" | "consegna" | "fatture" | "riunioni"
 
 export default function DossierAdmin({ projectId, home, adminId, onBack, reload }: {
   projectId: string
@@ -196,6 +198,11 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
               </p>
             )}
           </div>
+          {(project.brief?.projectType || project.brief?.budgetRange || project.brief?.deadline || project.brief?.references) && (
+            <div style={{ flexBasis: "100%", marginTop: 4 }}>
+              <BriefCard brief={project.brief} />
+            </div>
+          )}
           <div style={{ display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}>
             <Ring value={progress} size={62} stroke={5} tone={project.status === "completed" ? "green" : "copper"} />
             <div>
@@ -238,6 +245,8 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
         items={[
           { id: "fasi", label: "Fasi", badge: stages.filter(s => s.approvalState === "requested").length || undefined },
           { id: "diario", label: "Diario" },
+          { id: "documenti", label: "Documenti" },
+          { id: "consegna", label: "Consegna" },
           { id: "fatture", label: "Fatture" },
           { id: "riunioni", label: "Riunioni" },
         ]}
@@ -312,6 +321,14 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
                 ? <Empty icon="sparkle" title="Diario vuoto" hint="Ogni transizione del progetto viene registrata qui." />
                 : <Timeline events={events} />}
             </Glass>
+          )}
+
+          {tab === "documenti" && (
+            <DossierDocsAdmin projectId={projectId} clientId={project.clientId} />
+          )}
+
+          {tab === "consegna" && (
+            <DossierHandoverAdmin projectId={projectId} clientId={project.clientId} />
           )}
 
           {tab === "fatture" && (

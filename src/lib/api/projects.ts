@@ -1,6 +1,6 @@
 import { supabase } from "./core"
 import type {
-  AdminProject, ClientProject, EventType, ProjectEvent, ProjectStage, ProjectStatus, StageStatus,
+  AdminProject, ClientProject, EventType, ProjectBrief, ProjectEvent, ProjectStage, ProjectStatus, StageStatus,
 } from "./types"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -12,6 +12,7 @@ function mapProject(r: any): ClientProject {
     name: r.name,
     description: r.description ?? "",
     status: r.status as ProjectStatus,
+    brief: (r.brief && typeof r.brief === "object" ? r.brief : {}) as ProjectBrief,
     adminNote: r.admin_note ?? undefined,
     createdAt: r.created_at,
     updatedAt: r.updated_at,
@@ -91,13 +92,18 @@ export async function createProject(payload: {
   clientId: string
   name: string
   description: string
+  brief?: ProjectBrief
 }): Promise<ClientProject> {
+  const brief = payload.brief
+    ? Object.fromEntries(Object.entries(payload.brief).map(([k, v]) => [k, typeof v === "string" ? v.trim() : v]).filter(([, v]) => v))
+    : {}
   const { data, error } = await supabase
     .from("client_projects")
     .insert({
       client_id: payload.clientId,
       name: payload.name.trim(),
       description: payload.description.trim(),
+      brief,
     })
     .select()
     .single()

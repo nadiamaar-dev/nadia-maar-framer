@@ -1,4 +1,4 @@
-import { fetchInvoices } from "./billing"
+import { fetchDocuments, fetchInvoices } from "./billing"
 import { fetchThreads, isUnreadFor } from "./chat"
 import { fetchKpi } from "./clients"
 import { fmtDateTime, fmtEur } from "./format"
@@ -8,7 +8,7 @@ import {
 } from "./projects"
 import { fetchClientTickets, fetchTickets } from "./tickets"
 import type {
-  AdminKpi, AdminProject, ClientProject, Conversation, Invoice, Meeting,
+  AdminKpi, AdminProject, ClientDocument, ClientProject, Conversation, Invoice, Meeting,
   PortalAction, ProjectEvent, ProjectStage, SupportTicket,
 } from "./types"
 
@@ -22,6 +22,7 @@ export interface ClientHome {
   projects: ClientProject[]
   stagesByProject: Record<string, ProjectStage[]>
   invoices: Invoice[]
+  documents: ClientDocument[]
   meetings: Meeting[]
   threads: Conversation[]
   tickets: SupportTicket[]
@@ -41,9 +42,10 @@ export interface AdminHome {
 }
 
 export async function fetchClientHome(clientId: string): Promise<ClientHome> {
-  const [projects, invoices, meetings, threads, tickets, events] = await Promise.all([
+  const [projects, invoices, documents, meetings, threads, tickets, events] = await Promise.all([
     fetchProjectsByClient(clientId),
     fetchInvoices(clientId),
+    fetchDocuments(clientId),
     fetchClientMeetings(clientId),
     fetchThreads(clientId),
     fetchClientTickets(clientId),
@@ -85,13 +87,25 @@ export async function fetchClientHome(clientId: string): Promise<ClientHome> {
   }
 
   for (const i of invoices) {
-    if (i.status === "overdue" || i.status === "sent") {
+    // Skip once the client has already declared payment — awaiting admin confirmation.
+    if ((i.status === "overdue" || i.status === "sent") && !i.clientMarkedPaidAt) {
       actions.push({
         id: `pay_invoice:${i.id}`,
         kind: "pay_invoice",
         label: i.status === "overdue" ? `Fattura ${i.number} scaduta` : `Fattura ${i.number} da saldare`,
         sublabel: fmtEur(i.amount),
         section: "fatture",
+      })
+    }
+  }
+
+  for (const d of documents) {
+    if (d.requiresSignature && !d.signedAt) {
+      actions.push({
+        id: `sign_document:${d.id}`,
+        kind: "sign_document",
+        label: `Firma il documento «${d.name}»`,
+        section: "documenti",
       })
     }
   }
@@ -118,10 +132,10 @@ export async function fetchClientHome(clientId: string): Promise<ClientHome> {
     })
   }
 
-  const order: PortalAction["kind"][] = ["approve_stage", "confirm_meeting", "pay_invoice", "unread_chat", "start_project"]
+  const order: PortalAction["kind"][] = ["approve_stage", "sign_document", "confirm_meeting", "pay_invoice", "unread_chat", "start_project"]
   actions.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind))
 
-  return { projects, stagesByProject, invoices, meetings, threads, tickets, events, actions }
+  return { projects, stagesByProject, invoices, documents, meetings, threads, tickets, events, actions }
 }
 
 export async function fetchAdminHome(): Promise<AdminHome> {
@@ -188,7 +202,15 @@ export async function fetchAdminHome(): Promise<AdminHome> {
   }
 
   for (const i of invoices) {
-    if (i.status === "overdue") {
+    if (i.clientMarkedPaidAt && i.status !== "paid") {
+      actions.push({
+        id: `confirm_payment:${i.id}`,
+        kind: "confirm_payment",
+        label: `Conferma pagamento ${i.number}`,
+        sublabel: fmtEur(i.amount),
+        section: "fatturazione",
+      })
+    } else if (i.status === "overdue") {
       actions.push({
         id: `overdue_invoice:${i.id}`,
         kind: "overdue_invoice",
@@ -199,7 +221,7 @@ export async function fetchAdminHome(): Promise<AdminHome> {
     }
   }
 
-  const order: PortalAction["kind"][] = ["review_project", "confirm_meeting", "reply_ticket", "answer_chat", "overdue_invoice"]
+  const order: PortalAction["kind"][] = ["review_project", "confirm_payment", "confirm_meeting", "reply_ticket", "answer_chat", "overdue_invoice"]
   actions.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind))
 
   return { kpi, projects, invoices, meetings, threads, tickets, events, actions }

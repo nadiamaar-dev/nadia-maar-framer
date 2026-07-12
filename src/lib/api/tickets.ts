@@ -15,6 +15,8 @@ function mapTicket(r: any): SupportTicket {
     createdAt: r.created_at,
     adminNote: r.admin_note ?? undefined,
     respondedAt: r.responded_at ?? undefined,
+    estimateAmount: r.estimate_amount ?? undefined,
+    estimateHours: r.estimate_hours ?? undefined,
   }
 }
 
@@ -57,13 +59,20 @@ export async function createTicket(payload: {
   return mapTicket(data)
 }
 
-export async function updateTicket(id: string, patch: { status?: TicketStatus; adminNote?: string }): Promise<void> {
+export async function updateTicket(id: string, patch: {
+  status?: TicketStatus
+  adminNote?: string
+  estimateAmount?: number | null
+  estimateHours?: number | null
+}): Promise<void> {
   const db: Record<string, unknown> = {}
   if (patch.status !== undefined) db.status = patch.status
   if (patch.adminNote !== undefined) {
     db.admin_note = patch.adminNote
     db.responded_at = new Date().toISOString()
   }
+  if (patch.estimateAmount !== undefined) db.estimate_amount = patch.estimateAmount
+  if (patch.estimateHours !== undefined) db.estimate_hours = patch.estimateHours
   const { error } = await supabase.from("support_tickets").update(db).eq("id", id)
   if (error) throw error
 }

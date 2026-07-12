@@ -11,7 +11,7 @@ import {
 } from "../ui"
 
 const DOC_TYPES: Record<DocType, string> = {
-  report: "Report", contract: "Contratto", invoice: "Fattura", other: "Altro",
+  report: "Report", contract: "Contratto", invoice: "Fattura", handover: "Consegna", other: "Altro",
 }
 
 export default function Billing({ home, clients, reload }: {
@@ -157,24 +157,27 @@ export default function Billing({ home, clients, reload }: {
             <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
               {invoices.map(i => {
                 const is = INVOICE_STATUS[i.status]
+                const declared = !!i.clientMarkedPaidAt && i.status !== "paid"
                 return (
                   <Row
                     key={i.id}
                     icon="invoice"
-                    iconTone={is.tone}
+                    iconTone={declared ? "copper" : is.tone}
                     title={`${i.number} — ${i.description}`}
-                    sub={`${clientName(i.clientId)} · emessa ${fmtDate(i.issuedAt)}${i.dueDate ? ` · scade ${fmtDate(i.dueDate)}` : ""}`}
+                    sub={`${clientName(i.clientId)} · emessa ${fmtDate(i.issuedAt)}${i.dueDate ? ` · scade ${fmtDate(i.dueDate)}` : ""}${declared ? ` · cliente ha dichiarato il pagamento` : ""}`}
                     right={
                       <span style={{ display: "inline-flex", alignItems: "center", gap: 9 }} onClick={e => e.stopPropagation()}>
                         <span style={{ fontFamily: MONO, fontSize: 12.5, fontWeight: 700, color: T.text }}>{fmtEur(i.amount)}</span>
-                        <Badge tone={is.tone} dot>{is.label}</Badge>
+                        {declared ? <Badge tone="copper" dot>Da confermare</Badge> : <Badge tone={is.tone} dot>{is.label}</Badge>}
                         {i.status === "draft" && (
                           <Btn size="sm" variant="copper" icon="send" busy={actingId === i.id} onClick={() => setStatus(i.id, "sent", "Fattura inviata")}>Invia</Btn>
                         )}
                         {(i.status === "sent" || i.status === "overdue") && (
-                          <Btn size="sm" variant="ghost" icon="check" busy={actingId === i.id} onClick={() => setStatus(i.id, "paid", "Fattura incassata")}>Incassata</Btn>
+                          <Btn size="sm" variant={declared ? "primary" : "ghost"} icon="check" busy={actingId === i.id} onClick={() => setStatus(i.id, "paid", "Fattura incassata")}>
+                            {declared ? "Conferma incasso" : "Incassata"}
+                          </Btn>
                         )}
-                        {i.status === "sent" && (
+                        {i.status === "sent" && !declared && (
                           <Btn size="sm" variant="danger" icon="warn" busy={actingId === i.id} onClick={() => setStatus(i.id, "overdue", "Segnata come scaduta")} title="Segna scaduta" />
                         )}
                       </span>

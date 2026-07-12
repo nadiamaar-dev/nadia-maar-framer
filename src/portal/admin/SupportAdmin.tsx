@@ -2,8 +2,9 @@ import React, { useState } from "react"
 import { useToast } from "../../context/ToastContext"
 import type { AdminHome, SupportTicket, TicketStatus } from "../../lib/api"
 import { fmtDateTime, relativeDate, updateTicket } from "../../lib/api"
+import { fmtEur } from "../../lib/api"
 import {
-  Badge, Btn, DISPLAY, Empty, Field, Glass, Icon, Modal, MONO, SectionTitle, Select,
+  Badge, Btn, DISPLAY, Empty, Field, Glass, Icon, Input, Modal, MONO, SectionTitle, Select,
   T, Tabs, Textarea, TICKET_PRIORITY, TICKET_STATUS,
 } from "../ui"
 
@@ -18,6 +19,8 @@ export default function SupportAdmin({ home, reload }: {
   const [replying, setReplying] = useState<SupportTicket | null>(null)
   const [reply, setReply] = useState("")
   const [replyStatus, setReplyStatus] = useState<TicketStatus>("resolved")
+  const [estAmount, setEstAmount] = useState("")
+  const [estHours, setEstHours] = useState("")
   const [busy, setBusy] = useState(false)
 
   const openCount = home.tickets.filter(t => t.status !== "resolved").length
@@ -26,6 +29,8 @@ export default function SupportAdmin({ home, reload }: {
   function openReply(t: SupportTicket) {
     setReply(t.adminNote ?? "")
     setReplyStatus(t.status === "new" ? "in-progress" : t.status)
+    setEstAmount(t.estimateAmount != null ? String(t.estimateAmount) : "")
+    setEstHours(t.estimateHours != null ? String(t.estimateHours) : "")
     setReplying(t)
   }
 
@@ -33,7 +38,14 @@ export default function SupportAdmin({ home, reload }: {
     if (!replying || busy) return
     setBusy(true)
     try {
-      await updateTicket(replying.id, { status: replyStatus, adminNote: reply.trim() || undefined })
+      const amount = estAmount.trim() ? Number(estAmount.replace(",", ".")) : null
+      const hours = estHours.trim() ? Number(estHours.replace(",", ".")) : null
+      await updateTicket(replying.id, {
+        status: replyStatus,
+        adminNote: reply.trim() || undefined,
+        estimateAmount: amount != null && !Number.isNaN(amount) ? amount : null,
+        estimateHours: hours != null && !Number.isNaN(hours) ? hours : null,
+      })
       setReplying(null)
       toast.success("Ticket aggiornato")
       reload()
@@ -77,6 +89,11 @@ export default function SupportAdmin({ home, reload }: {
                     </h4>
                     <Badge tone={tp.tone}>{tp.label}</Badge>
                     <Badge tone={ts.tone} dot>{ts.label}</Badge>
+                    {(t.estimateAmount != null || t.estimateHours != null) && (
+                      <Badge tone="copper">
+                        {[t.estimateAmount != null ? fmtEur(t.estimateAmount) : null, t.estimateHours != null ? `${t.estimateHours}h` : null].filter(Boolean).join(" · ")}
+                      </Badge>
+                    )}
                     <Btn size="sm" variant={t.status === "new" ? "primary" : "outline"} icon="send" onClick={() => openReply(t)}>
                       {t.adminNote ? "Aggiorna risposta" : "Rispondi"}
                     </Btn>
@@ -135,12 +152,20 @@ export default function SupportAdmin({ home, reload }: {
           <Field label="Risposta" hint="Visibile al cliente nella sua area Supporto.">
             <Textarea value={reply} onChange={e => setReply(e.target.value)} rows={5} autoFocus style={{ resize: "vertical" }} />
           </Field>
-          <Field label="Stato">
-            <Select value={replyStatus} onChange={e => setReplyStatus(e.target.value as TicketStatus)}>
-              <option value="in-progress">In lavorazione</option>
-              <option value="resolved">Risolto</option>
-            </Select>
-          </Field>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+            <Field label="Stato">
+              <Select value={replyStatus} onChange={e => setReplyStatus(e.target.value as TicketStatus)}>
+                <option value="in-progress">In lavorazione</option>
+                <option value="resolved">Risolto</option>
+              </Select>
+            </Field>
+            <Field label="Preventivo €">
+              <Input value={estAmount} onChange={e => setEstAmount(e.target.value)} placeholder="0" inputMode="decimal" />
+            </Field>
+            <Field label="Ore stimate">
+              <Input value={estHours} onChange={e => setEstHours(e.target.value)} placeholder="0" inputMode="decimal" />
+            </Field>
+          </div>
         </div>
       </Modal>
     </div>

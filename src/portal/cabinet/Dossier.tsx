@@ -1,20 +1,21 @@
 import React, { useCallback, useEffect, useState } from "react"
 import { useToast } from "../../context/ToastContext"
-import type { ClientHome, Conversation, Invoice, Meeting, ProjectEvent, ProjectStage } from "../../lib/api"
+import type { ClientHome, Conversation, Invoice, Meeting, ProjectCredential, ProjectEvent, ProjectStage } from "../../lib/api"
 import {
-  approveStage, fetchInvoicesByProject, fetchMeetingsByProject, fetchProjectEvents,
+  approveStage, fetchCredentialsByProject, fetchInvoicesByProject, fetchMeetingsByProject, fetchProjectEvents,
   fetchProjectStages, fmtDate, fmtDateTime, fmtEur, getOrCreateStageConversation,
   isUnreadFor, subscribe,
 } from "../../lib/api"
 import ChatThread from "../ChatThread"
+import HandoverPanel from "./HandoverPanel"
 import StageGrid from "../StageGrid"
 import { stageProgress } from "../StageRail"
 import {
-  Badge, Btn, DISPLAY, Empty, Glass, Icon, INVOICE_STATUS, Loading, MEETING_STATUS,
+  Badge, BriefCard, Btn, DISPLAY, Empty, Glass, Icon, INVOICE_STATUS, Loading, MEETING_STATUS,
   Modal, MONO, Note, PROJECT_STATUS, Ring, Row, T, TL, Tabs, Timeline, TONE,
 } from "../ui"
 
-type TabId = "fasi" | "diario" | "fatture" | "riunioni"
+type TabId = "fasi" | "diario" | "fatture" | "riunioni" | "consegna"
 
 /** Top-of-view project switcher — pill tabs when the client has >1 project,
  *  plus a persistent "Nuovo progetto" affordance. */
@@ -87,6 +88,7 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
   const [events, setEvents] = useState<ProjectEvent[]>([])
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [meetings, setMeetings] = useState<Meeting[]>([])
+  const [creds, setCreds] = useState<ProjectCredential[]>([])
   const [loading, setLoading] = useState(true)
 
   const [approving, setApproving] = useState<ProjectStage | null>(null)
@@ -97,13 +99,14 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
 
   const load = useCallback(async () => {
     try {
-      const [s, e, i, m] = await Promise.all([
+      const [s, e, i, m, c] = await Promise.all([
         fetchProjectStages(projectId),
         fetchProjectEvents(projectId),
         fetchInvoicesByProject(projectId),
         fetchMeetingsByProject(projectId),
+        fetchCredentialsByProject(projectId),
       ])
-      setStages(s); setEvents(e); setInvoices(i); setMeetings(m)
+      setStages(s); setEvents(e); setInvoices(i); setMeetings(m); setCreds(c)
     } finally {
       setLoading(false)
     }
@@ -114,7 +117,8 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
     load()
     const un1 = subscribe(`dossier-ev-${projectId}`, { table: "project_events", filter: `project_id=eq.${projectId}` }, load)
     const un2 = subscribe(`dossier-st-${projectId}`, { table: "project_stages", filter: `project_id=eq.${projectId}` }, load)
-    return () => { un1(); un2() }
+    const un3 = subscribe(`dossier-cr-${projectId}`, { table: "project_credentials", filter: `project_id=eq.${projectId}` }, load)
+    return () => { un1(); un2(); un3() }
   }, [projectId, load])
 
   if (!project) {
@@ -217,12 +221,19 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
         )}
       </Glass>
 
+      {(project.brief?.projectType || project.brief?.budgetRange || project.brief?.deadline || project.brief?.references) && (
+        <BriefCard brief={project.brief} />
+      )}
+
       <Tabs<TabId>
         items={[
           { id: "fasi", label: "Fasi", badge: stages.filter(s => s.approvalState === "requested").length || undefined },
           { id: "diario", label: "Diario" },
           { id: "fatture", label: "Fatture", badge: dueInvoices.length || undefined },
           { id: "riunioni", label: "Riunioni" },
+          ...(creds.length > 0 || project.status === "completed"
+            ? [{ id: "consegna" as const, label: "Consegna", badge: creds.length || undefined }]
+            : []),
         ]}
         value={tab}
         onChange={setTab}
@@ -330,6 +341,12 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
                   })}
                 </div>
               )}
+            </Glass>
+          )}
+
+          {tab === "consegna" && (
+            <Glass variant="panel" style={{ padding: 22 }}>
+              <HandoverPanel credentials={creds} completed={project.status === "completed"} />
             </Glass>
           )}
         </>

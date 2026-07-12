@@ -8,6 +8,7 @@ import {
 
 const ACTION_META: Record<string, { icon: IconName; tone: Tone }> = {
   approve_stage: { icon: "flag", tone: "amber" },
+  sign_document: { icon: "edit", tone: "amber" },
   confirm_meeting: { icon: "calendar", tone: "copper" },
   pay_invoice: { icon: "euro", tone: "red" },
   unread_chat: { icon: "chat", tone: "silver" },

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { useToast } from "../../context/ToastContext"
 import type { ClientHome, TicketPriority } from "../../lib/api"
-import { createTicket, fmtDateTime, relativeDate } from "../../lib/api"
+import { createTicket, fmtDateTime, fmtEur, relativeDate } from "../../lib/api"
 import {
   Badge, Btn, DISPLAY, Empty, Field, Glass, Icon, Input, Kicker, MONO,
   SectionTitle, Select, T, Textarea, TICKET_PRIORITY, TICKET_STATUS,
@@ -90,6 +90,19 @@ export default function Support({ home, userId, reload }: {
                     <p style={{ fontFamily: MONO, fontSize: 9, color: T.faint, margin: "9px 0 0", letterSpacing: "0.05em" }}>
                       {relativeDate(t.createdAt)}
                     </p>
+                    {(t.estimateAmount != null || t.estimateHours != null) && (
+                      <div style={{
+                        display: "flex", alignItems: "center", gap: 10, marginTop: 12, padding: "10px 14px", borderRadius: 11,
+                        background: "rgba(224,131,106,0.08)", border: "1px solid rgba(224,131,106,0.24)",
+                      }}>
+                        <Icon name="euro" size={15} style={{ color: T.copperLt }} />
+                        <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: T.copperLt }}>Preventivo</span>
+                        <span style={{ flex: 1 }} />
+                        <span style={{ fontFamily: DISPLAY, fontSize: 14, fontWeight: 800, color: T.text }}>
+                          {[t.estimateAmount != null ? fmtEur(t.estimateAmount) : null, t.estimateHours != null ? `${t.estimateHours} h` : null].filter(Boolean).join(" · ")}
+                        </span>
+                      </div>
+                    )}
                     {t.adminNote && (
                       <div style={{
                         marginTop: 12, padding: "12px 15px", borderRadius: 11,
