@@ -88,8 +88,8 @@ function NMmark({ size = 32, id = "nm-g", hover = false }: { size?: number; id?:
         <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
           <stop offset="44%"  stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
-          <stop offset="56%"  stopColor="#B04A38" />
-          <stop offset="100%" stopColor={hover ? "#A8452C" : "#8C3525"} />
+          <stop offset="56%"  stopColor="#AD4840" />
+          <stop offset="100%" stopColor={hover ? "#943830" : "#852E28"} />
         </linearGradient>
       </defs>
       <motion.path
@@ -114,21 +114,21 @@ const T = {
   text:      "#FFFFFF",
   muted:     "rgba(255,255,255,0.78)",
   faint:     "rgba(255,255,255,0.58)",
-  accent:    "#8C3525",
+  accent:    "#852E28",
   accentGlo: "rgba(196,180,154,0.22)",
-  accentLt:  "#B04A38",
+  accentLt:  "#AD4840",
   green:     "#10B981",
 } as const
 
 // warm rgba helpers
-const AM = (a: number) => `rgba(140,53,37,${a})`
-const LT = (a: number) => `rgba(176,74,56,${a})`
-const OR = (a: number) => `rgba(140,53,37,${a})`
+const AM = (a: number) => `rgba(133,46,40,${a})`
+const LT = (a: number) => `rgba(173,72,64,${a})`
+const OR = (a: number) => `rgba(133,46,40,${a})`
 const RD = (a: number) => `rgba(100,35,22,${a})`
 
 // white -> amber gradient text fill
 const gradText = (deg = 180): React.CSSProperties => ({
-  backgroundImage: `linear-gradient(${deg}deg, #FFFFFF 0%, #D4897A 48%, #8C3525 100%)`,
+  backgroundImage: `linear-gradient(${deg}deg, #FFFFFF 0%, #D4897A 48%, #852E28 100%)`,
   WebkitBackgroundClip: "text",
   backgroundClip: "text",
   WebkitTextFillColor: "transparent",
@@ -170,9 +170,9 @@ const GLOBAL_CSS = `
   :root { --x:-9999; --y:-9999; --xp:0; --yp:0; }
 
   /* brick text glow — подложка */
-  [style*="color: #B04A38"],
-  [style*="color: #8C3525"] {
-    text-shadow: 0 0 22px rgba(176,74,56,0.58), 0 0 8px rgba(140,53,37,0.42);
+  [style*="color: #AD4840"],
+  [style*="color: #852E28"] {
+    text-shadow: 0 0 22px rgba(173,72,64,0.58), 0 0 8px rgba(133,46,40,0.42);
   }
 
   [data-glow] {
@@ -227,7 +227,7 @@ const GLOBAL_CSS = `
 
   /* interactive capability tag */
   .abt-tag { display: inline-block; padding: 5px 11px; border-radius: 9999px; font-weight: 400; line-height: 1.4; color: rgba(255,255,255,0.78); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); letter-spacing: 0.01em; cursor: default; transition: background .22s, border-color .22s, color .22s, transform .22s; }
-  .abt-tag:hover { background: rgba(176,74,56,0.20); border-color: rgba(176,74,56,0.48); color: #fff; transform: translateY(-1px); }
+  .abt-tag:hover { background: rgba(173,72,64,0.20); border-color: rgba(173,72,64,0.48); color: #fff; transform: translateY(-1px); }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -265,7 +265,7 @@ const GLOBAL_CSS = `
     display: flex; align-items: center; justify-content: space-around; overflow: hidden; }
 
   .abt-cursor-ring { position: fixed; top: 0; left: 0; width: 30px; height: 30px; border-radius: 50%;
-    border: 1px solid rgba(140,53,37,0.60); pointer-events: none; z-index: 600; mix-blend-mode: screen;
+    border: 1px solid rgba(133,46,40,0.60); pointer-events: none; z-index: 600; mix-blend-mode: screen;
     transform: translate(calc(var(--x) * 1px - 15px), calc(var(--y) * 1px - 15px));
     transition: transform 0.12s ease-out, width 0.2s, height 0.2s, opacity 0.2s; }
 
@@ -406,16 +406,16 @@ function PillCTA({ label, href, onClick, target }: { label: string; href?: strin
   const btnStyle: React.CSSProperties = {
     display: "inline-flex", alignItems: "stretch",
     borderRadius: 12, cursor: "pointer",
-    border: `1px solid ${h ? "rgba(176,74,56,0.90)" : "rgba(176,74,56,0.65)"}`,
-    background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)",
+    border: `1px solid ${h ? "rgba(173,72,64,0.90)" : "rgba(173,72,64,0.65)"}`,
+    background: "linear-gradient(90deg, rgba(173,72,64,0.78) 0%, rgba(173,72,64,0.60) 100%)",
     backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-    boxShadow: h ? "0 0 56px rgba(140,53,37,0.38), 0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18)" : "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
+    boxShadow: h ? "0 0 56px rgba(133,46,40,0.38), 0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18)" : "0 0 36px rgba(133,46,40,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
     textDecoration: "none", overflow: "hidden",
     transition: "border-color 0.25s, box-shadow 0.30s",
   }
   const inner = (
     <>
-      <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[01]</span>
+      <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(133,46,40,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[01]</span>
       <span style={{ padding: "14px 20px", display: "flex", alignItems: "center", gap: 12, fontFamily: MONO, fontSize: 12, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
         {label}
         <motion.span animate={{ x: h ? [0,4,0] : 0 }} transition={{ duration: 0.55, repeat: h ? Infinity : 0, ease: "easeInOut" }} style={{ fontSize: 14, color: "rgba(255,255,255,0.92)" }}>→</motion.span>
@@ -476,7 +476,7 @@ function DateTimeWidget() {
     <div className="abt-datetime" aria-label="Local time" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", alignItems: "center", gap: 10, padding: "5px 14px 5px 8px", borderRadius: 100, background: "rgba(255,255,255,0.04)", backdropFilter: "blur(22px) saturate(1.6)", WebkitBackdropFilter: "blur(22px) saturate(1.6)", border: "1px solid rgba(255,255,255,0.09)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 14px rgba(0,0,0,0.22)", whiteSpace: "nowrap", userSelect: "none", pointerEvents: "none", zIndex: 10 } as React.CSSProperties}>
       <svg width="22" height="22" viewBox="0 0 22 22" style={{ flexShrink: 0 }}>
         <circle cx="11" cy="11" r="8.5" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" />
-        <motion.circle cx="11" cy="11" r="8.5" fill="none" stroke="#B04A38" strokeWidth="1.5" strokeLinecap="round" transform="rotate(-90 11 11)" animate={{ pathLength: ss / 60 }} transition={{ duration: 0.85, ease: "easeOut" }} />
+        <motion.circle cx="11" cy="11" r="8.5" fill="none" stroke="#AD4840" strokeWidth="1.5" strokeLinecap="round" transform="rotate(-90 11 11)" animate={{ pathLength: ss / 60 }} transition={{ duration: 0.85, ease: "easeOut" }} />
       </svg>
       <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.06em", color: "rgba(255,255,255,0.92)", display: "inline-flex", alignItems: "baseline", gap: 1 }}>
         {hh}
@@ -563,8 +563,8 @@ function ScrollProgress() {
       style={{
         position: "fixed", top: 0, left: 0, right: 0, height: 2, zIndex: 500,
         transformOrigin: "0% 50%", scaleX,
-        background: "linear-gradient(90deg, rgba(100,35,22,1), #8C3525, #B04A38)",
-        boxShadow: "0 0 12px rgba(140,53,37,0.7)",
+        background: "linear-gradient(90deg, rgba(100,35,22,1), #852E28, #AD4840)",
+        boxShadow: "0 0 12px rgba(133,46,40,0.7)",
       }}
     />
   )
@@ -593,7 +593,7 @@ function Logo3D({ onClick }: { onClick: () => void }) {
           <motion.span aria-hidden
             animate={{ opacity: h ? 1 : 0 }}
             transition={{ duration: 0.30 }}
-            style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(140,53,37,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }}
+            style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(133,46,40,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }}
           />
         </span>
         <span aria-hidden style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
@@ -688,7 +688,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         {MENU_SOCIALS.map(({ label, href }) => (
           <a key={label} href={href} target="_blank" rel="noopener noreferrer"
             style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: "rgba(255,255,255,0.55)", background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", textDecoration: "none", transition: "all 0.18s" }}
-            onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color="#fff"; el.style.borderColor="rgba(140,53,37,0.55)"; el.style.background="rgba(140,53,37,0.14)" }}
+            onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color="#fff"; el.style.borderColor="rgba(133,46,40,0.55)"; el.style.background="rgba(133,46,40,0.14)" }}
             onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.color="rgba(255,255,255,0.55)"; el.style.borderColor="rgba(255,255,255,0.12)"; el.style.background="rgba(255,255,255,0.07)" }}
           >{label}</a>
         ))}
@@ -704,7 +704,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         style={{ position: "fixed", inset: 0, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 28px", overflow: "hidden", ...GLASS }}
       >
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(140,53,37,0.70), rgba(176,74,56,0.45), transparent)", flexShrink: 0 }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(133,46,40,0.70), rgba(173,72,64,0.45), transparent)", flexShrink: 0 }} />
         <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
           <NMmark size={26} id="nm-abt-menu-mob" hover={false} />
         </div>
@@ -732,14 +732,14 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         transition={{ type: "spring", stiffness: 320, damping: 36 }}
         style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: 460, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 40px", borderLeft: "1px solid rgba(255,255,255,0.14)", ...GLASS }}
       >
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(140,53,37,0.70) 40%, rgba(176,74,56,0.45) 70%, transparent)", flexShrink: 0 }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(133,46,40,0.70) 40%, rgba(173,72,64,0.45) 70%, transparent)", flexShrink: 0 }} />
         <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
           <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.26em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.36)" }}>Navigation</span>
         </div>
         <div aria-hidden style={{ position: "absolute", right: -8, top: 0, bottom: 0, display: "flex", alignItems: "center", pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
           <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,9vw,130px)", letterSpacing: "-0.04em", color: "rgba(74,94,118,0.15)", filter: "blur(0.8px)", userSelect: "none", lineHeight: 0.82 }}>MAAR</span>
         </div>
-        <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(140,53,37,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
+        <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(133,46,40,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 4 }}>
           {NAV.map((item, i) => (
             <MenuNavItem key={item.key} num={item.num} label={item.label} onClick={item.action} index={i} active={isAboutPage ? item.key === "About Me" : item.key === "Home"} />
@@ -1184,9 +1184,9 @@ function ProcessCard({ p, i }: { p: typeof PROCESS[number]; i: number }) {
         position: "relative", borderRadius: 16, overflow: "hidden",
         padding: "26px 24px 24px",
         borderTop:    `1px solid ${hov ? "rgba(224,224,224,0.55)" : "rgba(224,224,224,0.22)"}`,
-        borderRight:  `1px solid ${hov ? "rgba(140,53,37,.55)" : "rgba(255,255,255,0.12)"}`,
-        borderBottom: `1px solid ${hov ? "rgba(140,53,37,.55)" : "rgba(255,255,255,0.08)"}`,
-        borderLeft:   `1px solid ${hov ? "rgba(140,53,37,.55)" : "rgba(255,255,255,0.12)"}`,
+        borderRight:  `1px solid ${hov ? "rgba(133,46,40,.55)" : "rgba(255,255,255,0.12)"}`,
+        borderBottom: `1px solid ${hov ? "rgba(133,46,40,.55)" : "rgba(255,255,255,0.08)"}`,
+        borderLeft:   `1px solid ${hov ? "rgba(133,46,40,.55)" : "rgba(255,255,255,0.12)"}`,
         background: hov ? "rgba(255,255,255,.58)" : "rgba(255,255,255,.50)",
         backdropFilter: "blur(36px) saturate(1.1)",
         WebkitBackdropFilter: "blur(36px) saturate(1.1)",
@@ -1201,8 +1201,8 @@ function ProcessCard({ p, i }: { p: typeof PROCESS[number]; i: number }) {
       <span aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 30%, transparent 55%)", pointerEvents: "none" }} />
 
       {/* corner brackets — brick */}
-      <span aria-hidden style={{ position: "absolute", top: 9, left: 9, width: 10, height: 10, borderTop: "1.5px solid rgba(140,53,37,.55)", borderLeft: "1.5px solid rgba(140,53,37,.55)" }} />
-      <span aria-hidden style={{ position: "absolute", bottom: 9, right: 9, width: 10, height: 10, borderBottom: "1.5px solid rgba(140,53,37,.55)", borderRight: "1.5px solid rgba(140,53,37,.55)" }} />
+      <span aria-hidden style={{ position: "absolute", top: 9, left: 9, width: 10, height: 10, borderTop: "1.5px solid rgba(133,46,40,.55)", borderLeft: "1.5px solid rgba(133,46,40,.55)" }} />
+      <span aria-hidden style={{ position: "absolute", bottom: 9, right: 9, width: 10, height: 10, borderBottom: "1.5px solid rgba(133,46,40,.55)", borderRight: "1.5px solid rgba(133,46,40,.55)" }} />
 
       {/* [01] tag */}
       <div style={{ position: "relative", fontFamily: MONO, fontSize: 11, letterSpacing: ".14em", color: T.accentLt, marginBottom: 14 }}>[{p.n}]</div>
@@ -1573,8 +1573,8 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               <GlassSelect label="Cosa dobbiamo risolvere?" value={fields.area} onChange={set("area")} />
               <GlassTextarea label="Messaggio" placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={set("msg")} />
               <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 380, damping: 18 }}
-                style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(176,74,56,0.80)", background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
-                <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[→]</span>
+                style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(173,72,64,0.80)", background: "linear-gradient(90deg, rgba(173,72,64,0.78) 0%, rgba(173,72,64,0.60) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(133,46,40,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
+                <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(133,46,40,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[→]</span>
                 <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF", padding: "14px 0" }}>Invia Richiesta →</span>
               </motion.button>
             </form>

@@ -9,7 +9,7 @@ const STYLE_ID = "nm-project-card-styles"
 const CSS = `
 .nm-card {
   position: relative; overflow: hidden;
-  background: rgba(28,52,68,0.80);
+  background: rgba(22,44,58,0.88);
   backdrop-filter: blur(20px) saturate(120%);
   -webkit-backdrop-filter: blur(20px) saturate(120%);
   border: 1px solid rgba(255,255,255,0.10);
