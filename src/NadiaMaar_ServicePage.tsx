@@ -397,9 +397,9 @@ interface ServiceData {
   cta: { heading: string; sub: string; btn: string }
 }
 
-const iconStroke = (d: string, extra?: string) => (
+const iconStroke = (d: string, ...extra: string[]) => (
   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-    <path d={d} />{extra && <path d={extra} />}
+    <path d={d} />{extra.map((e, i) => <path key={i} d={e} />)}
   </svg>
 )
 

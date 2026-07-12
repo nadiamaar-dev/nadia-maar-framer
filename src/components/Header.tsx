@@ -12,7 +12,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useBlueprint } from "../context/BlueprintContext"
-import { supabase } from "../lib/supabase"
 
 /* ── tokens ── */
 const T = {
@@ -127,9 +126,9 @@ function MenuNavItem({ num, label, onClick, index, active = false }: {
 
 /* ── Auth section inside the menu ── */
 function MenuAuthSection({ onClose }: { onClose: () => void }) {
-  const { user, openAuthModal } = useBlueprint()
+  const { user, openAuthModal, signOut } = useBlueprint()
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
+    await signOut()
     window.location.href = "/"
   }
 
@@ -403,7 +402,7 @@ export default function Header() {
   const [scrolled,  setScrolled]  = useState(false)
   const [menuOpen,  setMenuOpen]  = useState(false)
   const [logoHover, setLogoHover] = useState(false)
-  const { user, openAuthModal }   = useBlueprint()
+  const { user, openAuthModal, signOut } = useBlueprint()
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 48)
@@ -412,7 +411,7 @@ export default function Header() {
   }, [])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
+    await signOut()
     window.location.href = "/"
   }
 

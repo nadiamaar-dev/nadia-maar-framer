@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react"
-import { User } from "@supabase/supabase-js"
-import { supabase, SUPABASE_READY } from "../lib/supabase"
+import type { SupabaseClient, User } from "@supabase/supabase-js"
+import { SUPABASE_READY } from "../lib/supabaseEnv"
 import { SandboxItem } from "../data/sandboxData"
 
 interface BlueprintContextValue {
@@ -14,12 +14,22 @@ interface BlueprintContextValue {
   removeFromBlueprint: (id: string) => void
   isInBlueprint: (id: string) => boolean
   clearBlueprint: () => void
+  signOut: () => Promise<void>
 }
 
 const BlueprintContext = createContext<BlueprintContextValue | null>(null)
 
+/* Lazy singleton: dynamically import the shared client so @supabase/supabase-js
+   stays OUT of the initial homepage bundle. ES module caching guarantees this is
+   the exact same instance the portal uses (no duplicate GoTrue client). */
+let clientPromise: Promise<SupabaseClient> | null = null
+function getClient(): Promise<SupabaseClient> {
+  return (clientPromise ??= import("../lib/supabase").then(m => m.supabase))
+}
+
 /* ── helpers ── */
 async function fetchUserBlueprints(userId: string): Promise<SandboxItem[]> {
+  const supabase = await getClient()
   const { data, error } = await supabase
     .from("blueprints")
     .select("item_data")
@@ -30,20 +40,19 @@ async function fetchUserBlueprints(userId: string): Promise<SandboxItem[]> {
 }
 
 async function insertBlueprint(userId: string, item: SandboxItem) {
+  const supabase = await getClient()
   await supabase
     .from("blueprints")
     .upsert({ user_id: userId, item_id: item.id, item_data: item }, { onConflict: "user_id,item_id" })
 }
 
 async function deleteBlueprint(userId: string, itemId: string) {
-  await supabase
-    .from("blueprints")
-    .delete()
-    .eq("user_id", userId)
-    .eq("item_id", itemId)
+  const supabase = await getClient()
+  await supabase.from("blueprints").delete().eq("user_id", userId).eq("item_id", itemId)
 }
 
 async function clearUserBlueprints(userId: string) {
+  const supabase = await getClient()
   await supabase.from("blueprints").delete().eq("user_id", userId)
 }
 
@@ -55,47 +64,50 @@ export function BlueprintProvider({ children }: { children: React.ReactNode }) {
   const [isAuthModalOpen, setAuthModal] = useState(false)
   const mountedRef                      = useRef(true)
 
-  /* ── bootstrap: read session once, then subscribe to changes ── */
+  /* ── bootstrap: read session once, then subscribe to changes ──
+     The client is fetched lazily (async) so it is not part of the initial
+     critical bundle; auth state hydrates a beat after first paint. */
   useEffect(() => {
     mountedRef.current = true
 
-    /* Skip all Supabase calls if credentials are not configured */
     if (!SUPABASE_READY) {
       setLoading(false)
       return () => { mountedRef.current = false }
     }
 
-    supabase.auth.getSession()
-      .then(async ({ data }) => {
+    let unsub: (() => void) | undefined
+
+    getClient()
+      .then(async (supabase) => {
+        const { data } = await supabase.auth.getSession()
         const u = data.session?.user ?? null
         if (!mountedRef.current) return
         setUser(u)
         if (u) {
-          const saved = await fetchUserBlueprints(u.id)
+          const saved = await fetchUserBlueprints(u.id).catch(() => [] as SandboxItem[])
           if (mountedRef.current) setItems(saved)
         }
         setLoading(false)
-      })
-      .catch(() => {
-        if (mountedRef.current) setLoading(false)
-      })
 
-    const { data: sub } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      const u = session?.user ?? null
-      if (!mountedRef.current) return
-      setUser(u)
-      if (u) {
-        setLoading(true)
-        const saved = await fetchUserBlueprints(u.id).catch(() => [] as SandboxItem[])
-        if (mountedRef.current) { setItems(saved); setLoading(false) }
-        setAuthModal(false)
-      } else {
-        setItems([])
-        setLoading(false)
-      }
-    })
+        const { data: sub } = supabase.auth.onAuthStateChange(async (_event, session) => {
+          const nu = session?.user ?? null
+          if (!mountedRef.current) return
+          setUser(nu)
+          if (nu) {
+            setLoading(true)
+            const saved = await fetchUserBlueprints(nu.id).catch(() => [] as SandboxItem[])
+            if (mountedRef.current) { setItems(saved); setLoading(false) }
+            setAuthModal(false)
+          } else {
+            setItems([])
+            setLoading(false)
+          }
+        })
+        unsub = () => sub.subscription.unsubscribe()
+      })
+      .catch(() => { if (mountedRef.current) setLoading(false) })
 
-    return () => { mountedRef.current = false; sub.subscription.unsubscribe() }
+    return () => { mountedRef.current = false; unsub?.() }
   }, [])
 
   /* ── actions ── */
@@ -122,11 +134,16 @@ export function BlueprintProvider({ children }: { children: React.ReactNode }) {
     clearUserBlueprints(user.id)
   }, [user])
 
+  const signOut = useCallback(async () => {
+    const supabase = await getClient()
+    await supabase.auth.signOut()
+  }, [])
+
   return (
     <BlueprintContext.Provider value={{
       items, user, loading,
       isAuthModalOpen, openAuthModal, closeAuthModal,
-      addToBlueprint, removeFromBlueprint, isInBlueprint, clearBlueprint,
+      addToBlueprint, removeFromBlueprint, isInBlueprint, clearBlueprint, signOut,
     }}>
       {children}
     </BlueprintContext.Provider>

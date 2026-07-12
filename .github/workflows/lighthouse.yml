@@ -1,0 +1,31 @@
+name: Lighthouse CI
+
+# Flags (and, for the hard budgets, blocks) any PR that regresses performance,
+# before it reaches Vercel production.
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (static output)
+        run: npm run build
+
+      # Runs Lighthouse against the built ./dist, asserts the budgets in
+      # lighthouserc.json, and posts a report link on the PR.
+      # "error"-level assertions fail the check → the PR is blocked.
+      # "warn"-level assertions only annotate.
+      - name: Lighthouse CI
+        run: npx --yes @lhci/cli@0.13.x autorun

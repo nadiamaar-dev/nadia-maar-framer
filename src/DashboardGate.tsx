@@ -29,16 +29,18 @@ export default function DashboardGate() {
       .select("role")
       .eq("id", user.id)
       .single()
-      .then(({ data }) => {
-        const r = (data?.role as "admin" | "client") ?? "client"
-        if (r === "client") {
-          window.location.replace("/cabinet")
-        } else {
-          setRole("admin")
-          setReady(true)
-        }
-      })
-      .catch(() => window.location.replace("/"))
+      .then(
+        ({ data }) => {
+          const r = (data?.role as "admin" | "client") ?? "client"
+          if (r === "client") {
+            window.location.replace("/cabinet")
+          } else {
+            setRole("admin")
+            setReady(true)
+          }
+        },
+        () => window.location.replace("/"),
+      )
   }, [user, authLoading])
 
   /* Loading state */
