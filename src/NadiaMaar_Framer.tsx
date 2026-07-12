@@ -4116,16 +4116,16 @@ function FoundryDemoCard({ d, i }: { d: typeof FOUNDRY_DEMOS[number]; i: number 
       animate={{ y: h ? -2 : 0 }}
       style={{
         display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: 14, textDecoration: "none",
-        background: h ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.055)",
-        backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)",
-        border: `1px solid ${h ? "rgba(255,255,255,0.26)" : "rgba(255,255,255,0.12)"}`,
-        borderTop: `1px solid ${h ? "rgba(255,255,255,0.32)" : "rgba(255,255,255,0.18)"}`,
-        boxShadow: h ? "0 8px 32px rgba(0,0,0,0.26), inset 0 1px 0 rgba(255,255,255,0.14)" : "inset 0 1px 0 rgba(255,255,255,0.08)",
+        background: h ? "rgba(8,15,20,0.34)" : "rgba(8,15,20,0.20)",
+        backdropFilter: "none", WebkitBackdropFilter: "none",
+        border: `1px solid ${h ? "rgba(255,255,255,0.22)" : "rgba(255,255,255,0.10)"}`,
+        borderTop: `1px solid ${h ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.14)"}`,
+        boxShadow: h ? "0 8px 32px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.08)" : "inset 0 1px 0 rgba(255,255,255,0.05)",
         transition: "background .24s, border-color .24s, box-shadow .24s",
       } as React.CSSProperties}
     >
       {/* preview */}
-      <div style={{ padding: 14, background: "rgba(0,0,0,0.10)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+      <div style={{ padding: 14, background: "rgba(0,0,0,0.16)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
         <div style={{ borderRadius: 10, overflow: "hidden", aspectRatio: "260 / 150" }}>
           <Visual />
         </div>
