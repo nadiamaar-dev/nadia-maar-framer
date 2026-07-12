@@ -169,10 +169,18 @@ const GLOBAL_CSS = `
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
   :root { --x:-9999; --y:-9999; --xp:0; --yp:0; }
 
-  /* brick text glow — подложка */
+  /* brick text — semi-transparent + warm glow, matching button quality */
   [style*="color: #AD4840"],
-  [style*="color: #852E28"] {
-    text-shadow: 0 0 22px rgba(173,72,64,0.58), 0 0 8px rgba(133,46,40,0.42);
+  [style*='color: "#AD4840"'] {
+    color: rgba(173,72,64,0.82) !important;
+    text-shadow:
+      0 0 52px rgba(173,72,64,0.38),
+      0 0 18px rgba(173,72,64,0.26),
+      0 2px 6px rgba(0,0,0,0.28);
+  }
+  [style*="color: #852E28"],
+  [style*='color: "#852E28"'] {
+    text-shadow: 0 0 24px rgba(133,46,40,0.45), 0 0 8px rgba(133,46,40,0.26);
   }
 
   [data-glow] {
