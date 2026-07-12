@@ -251,13 +251,11 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
   }
 
   const NAV = [
-    { num: "01", label: "Home",      sectionId: "s1", href: "/",          action: () => nav("s1", "/") },
-    { num: "02", label: "About",     sectionId: "",   href: "/about",     action: () => { window.location.href = "/about" } },
-    { num: "03", label: "Soluzioni", sectionId: "s3", href: "/#s3",       action: () => nav("s3", "/#s3") },
-    { num: "04", label: "Foundry",   sectionId: "",   href: "/foundry",   action: () => { window.location.href = "/foundry" } },
-    { num: "05", label: "Projects",  sectionId: "",   href: "/projects",  action: () => { window.location.href = "/projects" } },
-    { num: "06", label: "Portfolio", sectionId: "s6", href: "/#s6",       action: () => nav("s6", "/#s6") },
-    { num: "07", label: "Contatti",  sectionId: "s9", href: "/#s9",       action: () => nav("s9", "/#s9") },
+    { num: "01", label: "Home",     sectionId: "s1", href: "/",          action: () => nav("s1", "/") },
+    { num: "02", label: "About",    sectionId: "",   href: "/about",     action: () => { window.location.href = "/about" } },
+    { num: "03", label: "Projects", sectionId: "",   href: "/projects",  action: () => { window.location.href = "/projects" } },
+    { num: "04", label: "Foundry",  sectionId: "",   href: "/foundry",   action: () => { window.location.href = "/foundry" } },
+    { num: "05", label: "Contatti", sectionId: "s9", href: "/#s9",       action: () => nav("s9", "/#s9") },
   ]
 
   const MENU_SOCIALS = [
@@ -266,6 +264,16 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
     { label: "IG", href: "https://instagram.com/nadiamaar.dev" },
     { label: "DC", href: "https://discord.gg/nadiamaar" },
   ]
+
+  /* highlight the current page/section in the menu */
+  const path = typeof window !== "undefined" ? window.location.pathname : "/"
+  const isActive = (item: typeof NAV[number]) => {
+    // standalone page links (e.g. /about, /projects, /foundry)
+    if (item.href !== "/" && !item.href.includes("#") && path === item.href) return true
+    // home sections (only on the home page)
+    if (path === "/" && !!item.sectionId && activeId === item.sectionId) return true
+    return false
+  }
 
   const GLASS = {
     background: "rgba(20,35,45,0.94)",
@@ -342,7 +350,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
 
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 20 }}>
           {NAV.map((item, i) => (
-            <MenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} active={!!item.sectionId && activeId === item.sectionId} />
+            <MenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} active={isActive(item)} />
           ))}
           <MenuAuthSection onClose={onClose} />
         </div>
@@ -375,7 +383,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(115,54,53,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 4 }}>
           {NAV.map((item, i) => (
-            <MenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} active={!!item.sectionId && activeId === item.sectionId} />
+            <MenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} active={isActive(item)} />
           ))}
           <MenuAuthSection onClose={onClose} />
         </div>
