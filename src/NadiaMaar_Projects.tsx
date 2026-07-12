@@ -147,8 +147,8 @@ function VisualEcommerce() {
         const i = c * 3 + r
         return (
           <motion.g key={`${c}-${r}`}
-            initial={{ opacity: 0, scale: 0.7 }} whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }} transition={{ delay: 0.05 + i * 0.03, duration: 0.4, ease }}
+            initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.05 + i * 0.03, duration: 0.4, ease }}
             style={{ transformOrigin: `${x + 18}px ${y + 18}px` }}
           >
             <rect x={x} y={y} width={36} height={36} rx={7}
@@ -159,15 +159,15 @@ function VisualEcommerce() {
         )
       }))}
       {/* performance gauge */}
-      <motion.g initial={{ opacity: 0, x: 12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.4, duration: 0.5 }}>
+      <motion.g initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4, duration: 0.5 }}>
         <rect x={210} y={22} width={92} height={70} rx={11} fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.10)" strokeWidth="1" />
         <text x={256} y={44} textAnchor="middle" fontSize={8} fill="rgba(255,255,255,0.42)" fontFamily="Inter,sans-serif">TIME TO INTERACTIVE</text>
         <text x={256} y={70} textAnchor="middle" fontSize={22} fontWeight="800" fill="rgba(255,255,255,0.90)" fontFamily="Inter,sans-serif">1.4s</text>
         <motion.rect x={222} y={80} width={0} height={4} rx={2} fill="url(#pr-e-grad)"
-          initial={{ width: 0 }} whileInView={{ width: 68 }} viewport={{ once: true }} transition={{ delay: 0.7, duration: 0.9, ease }} />
+          initial={{ width: 0 }} animate={{ width: 68 }} transition={{ delay: 0.7, duration: 0.9, ease }} />
       </motion.g>
       {/* SKU counter */}
-      <motion.g initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.55 }}>
+      <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}>
         <rect x={210} y={102} width={92} height={64} rx={11} fill="rgba(174,83,80,0.10)" stroke="rgba(174,83,80,0.30)" strokeWidth="1" />
         <text x={256} y={128} textAnchor="middle" fontSize={19} fontWeight="800" fill="rgba(255,255,255,0.90)" fontFamily="Inter,sans-serif">32.000</text>
         <text x={256} y={146} textAnchor="middle" fontSize={8} fill="rgba(174,83,80,0.72)" fontFamily="Inter,sans-serif">SKU · Multi-country EU</text>
@@ -192,7 +192,7 @@ function VisualMiddleware() {
       {/* connectors */}
       {[[84, 92, 128, 92], [192, 92, 236, 92]].map(([x1, y1, x2, y2], i) => (
         <motion.path key={i} d={`M${x1},${y1}L${x2},${y2}`} stroke="rgba(174,83,80,0.28)" strokeWidth="1.5" strokeDasharray="5 3"
-          initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 + i * 0.15, duration: 0.6 }} />
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.3 + i * 0.15, duration: 0.6 }} />
       ))}
       {/* flowing packets */}
       {[0, 1].map(edge => [0, 1, 2].map(j => (
@@ -200,7 +200,7 @@ function VisualMiddleware() {
           animate={{ x: [0, 44, 44], opacity: [0, 1, 0] }} transition={{ duration: 1.2, repeat: Infinity, delay: j * 0.4 + edge * 0.22, ease: "easeInOut" }} />
       )))}
       {nodes.map((n, i) => (
-        <motion.g key={i} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.14, duration: 0.45, ease }}>
+        <motion.g key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.14, duration: 0.45, ease }}>
           <rect x={n.x} y={n.y} width={64} height={i === 1 ? 56 : 40} rx={11}
             fill={i === 1 ? "rgba(174,83,80,0.14)" : "rgba(255,255,255,0.05)"}
             stroke={i === 1 ? "rgba(174,83,80,0.42)" : "rgba(255,255,255,0.13)"} strokeWidth="1" />
@@ -210,7 +210,7 @@ function VisualMiddleware() {
         </motion.g>
       ))}
       {/* uptime badge */}
-      <motion.g initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.6 }}>
+      <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
         <rect x={92} y={140} width={136} height={34} rx={9} fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.10)" strokeWidth="1" />
         <text x={128} y={161} textAnchor="middle" fontSize={15} fontWeight="800" fill="rgba(255,255,255,0.90)" fontFamily="Inter,sans-serif">99.9%</text>
         <text x={186} y={158} textAnchor="middle" fontSize={7.5} fill="rgba(255,255,255,0.44)" fontFamily="Inter,sans-serif">UPTIME</text>
@@ -233,9 +233,9 @@ function VisualCivic() {
     <svg viewBox="0 0 320 190" width="100%" height="100%">
       {/* ── role hierarchy ── */}
       <motion.path d="M40,50 L40,98 M40,98 L40,146" stroke="rgba(174,83,80,0.30)" strokeWidth="1.4"
-        initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ delay: 0.3, duration: 0.7 }} />
+        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.3, duration: 0.7 }} />
       {roles.map((r, i) => (
-        <motion.g key={i} initial={{ opacity: 0, x: -12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.15 + i * 0.14, duration: 0.45, ease }}>
+        <motion.g key={i} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 + i * 0.14, duration: 0.45, ease }}>
           <rect x={22} y={r.y} width={116} height={36} rx={9}
             fill={r.accent ? "rgba(174,83,80,0.16)" : "rgba(255,255,255,0.05)"}
             stroke={r.accent ? "rgba(174,83,80,0.45)" : "rgba(255,255,255,0.12)"} strokeWidth="1" />
@@ -248,17 +248,17 @@ function VisualCivic() {
       {/* ── region (no cities) ── */}
       <g transform="translate(62,2) scale(0.82)">
         <motion.path d={region} fill="rgba(174,83,80,0.09)" stroke="rgba(174,83,80,0.40)" strokeWidth="1.6" strokeLinejoin="round"
-          initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true }} transition={{ duration: 1.4, ease }} />
+          initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 1.4, ease }} />
         <motion.circle cx={162} cy={100} r={20} fill="rgba(174,83,80,0.16)"
           animate={{ r: [20, 34, 20], opacity: [0.5, 0, 0.5] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }} />
         <motion.circle cx={162} cy={100} r={5} fill="rgba(174,83,80,0.9)" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5"
-          initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.9, type: "spring", stiffness: 240 }} style={{ transformOrigin: "162px 100px" }} />
+          initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.9, type: "spring", stiffness: 240 }} style={{ transformOrigin: "162px 100px" }} />
       </g>
       <motion.text x={228} y={150} textAnchor="middle" fontSize={8} fontWeight="500" fill="rgba(255,255,255,0.5)" fontFamily="Inter,sans-serif"
-        initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 1 }}>Regione Basilicata</motion.text>
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>Regione Basilicata</motion.text>
 
       {/* ── Supabase badge ── */}
-      <motion.g initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.6, duration: 0.5 }}>
+      <motion.g initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.5 }}>
         <rect x={22} y={166} width={116} height={20} rx={7} fill="rgba(16,185,129,0.10)" stroke="rgba(16,185,129,0.32)" strokeWidth="1" />
         <motion.circle cx={36} cy={176} r={3.2} fill="#10B981" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.5, repeat: Infinity }} />
         <text x={46} y={179} fontSize={7.5} fontWeight="500" fill="rgba(255,255,255,0.72)" fontFamily="Inter,sans-serif">Supabase · Postgres RLS</text>
@@ -517,7 +517,7 @@ function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
             {/* visual */}
             <Reveal delay={0.1}>
               <div style={{ borderRadius: 16, overflow: "hidden", ...GLASS_SOLID, padding: 14, marginBottom: 22 }}>
-                <div style={{ borderRadius: 10, background: "rgba(0,0,0,0.14)", border: "1px solid rgba(255,255,255,0.05)", aspectRatio: "320 / 190" }}>
+                <div style={{ borderRadius: 10, background: "rgba(0,0,0,0.14)", border: "1px solid rgba(255,255,255,0.05)", aspectRatio: "320 / 190", minHeight: 160, overflow: "hidden" }}>
                   <Visual />
                 </div>
               </div>
