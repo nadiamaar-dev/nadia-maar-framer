@@ -31,6 +31,7 @@ function mapStage(r: any): ProjectStage {
     progress: r.status === "done" ? 100 : Math.max(0, Math.min(100, r.progress ?? 0)),
     deliverableUrl: r.deliverable_url ?? undefined,
     deliverableNote: r.deliverable_note ?? undefined,
+    revisionNote: r.revision_note ?? undefined,
     startedAt: r.started_at ?? undefined,
     completedAt: r.completed_at ?? undefined,
     createdAt: r.created_at,
@@ -203,6 +204,12 @@ export async function requestStageApproval(
 /** Client signs off a requested stage → RPC validates, closes it, unlocks the next. */
 export async function approveStage(stageId: string): Promise<void> {
   const { error } = await supabase.rpc("approve_stage", { p_stage: stageId })
+  if (error) throw error
+}
+
+/** Client asks for changes on a stage awaiting approval → admin re-submits later. */
+export async function requestStageChanges(stageId: string, note: string): Promise<void> {
+  const { error } = await supabase.rpc("request_stage_changes", { p_stage: stageId, p_note: note })
   if (error) throw error
 }
 

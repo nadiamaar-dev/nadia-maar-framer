@@ -14,6 +14,7 @@ import AuditTrail from "./AuditTrail"
 import ChatThread from "../ChatThread"
 import DossierDocsAdmin from "./DossierDocsAdmin"
 import DossierHandoverAdmin from "./DossierHandoverAdmin"
+import ReferencesBoard from "../ReferencesBoard"
 import StageRail, { stageProgress } from "../StageRail"
 import {
   Badge, BriefCard, Btn, DISPLAY, Empty, Field, Glass, Icon, Input, INVOICE_STATUS, Loading,
@@ -21,7 +22,7 @@ import {
   Timeline,
 } from "../ui"
 
-type TabId = "fasi" | "diario" | "documenti" | "consegna" | "fatture" | "riunioni"
+type TabId = "fasi" | "diario" | "riferimenti" | "documenti" | "consegna" | "fatture" | "riunioni"
 
 export default function DossierAdmin({ projectId, home, adminId, onBack, reload }: {
   projectId: string
@@ -244,8 +245,9 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
 
       <Tabs<TabId>
         items={[
-          { id: "fasi", label: "Fasi", badge: stages.filter(s => s.approvalState === "requested").length || undefined },
+          { id: "fasi", label: "Fasi", badge: stages.filter(s => s.approvalState === "requested" || s.approvalState === "changes_requested").length || undefined },
           { id: "diario", label: "Diario" },
+          { id: "riferimenti", label: "Riferimenti" },
           { id: "documenti", label: "Documenti" },
           { id: "consegna", label: "Consegna" },
           { id: "fatture", label: "Fatture" },
@@ -271,10 +273,18 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
                   <StageRail
                     stages={stages}
                     renderAction={s => (
-                      <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
-                        {s.status === "active" && s.approvalState === "none" && (
+                      <div style={{ display: "flex", gap: 7, flexWrap: "wrap", alignItems: "center" }}>
+                        {s.approvalState === "changes_requested" && s.revisionNote && (
+                          <span style={{ flexBasis: "100%", display: "flex", gap: 8, alignItems: "flex-start", padding: "9px 12px", borderRadius: 10, background: "rgba(248,113,113,0.10)", border: "1px solid rgba(248,113,113,0.28)" }}>
+                            <Icon name="edit" size={13} style={{ color: T.red, marginTop: 2, flexShrink: 0 }} />
+                            <span style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.5, color: T.muted }}>
+                              <strong style={{ color: T.text }}>Modifiche richieste:</strong> {s.revisionNote}
+                            </span>
+                          </span>
+                        )}
+                        {s.status === "active" && (s.approvalState === "none" || s.approvalState === "changes_requested") && (
                           <Btn size="sm" variant="copper" icon="flag" onClick={() => { setReqUrl(s.deliverableUrl ?? ""); setReqNote(s.deliverableNote ?? ""); setRequesting(s) }}>
-                            Chiedi approvazione
+                            {s.approvalState === "changes_requested" ? "Riproponi al cliente" : "Chiedi approvazione"}
                           </Btn>
                         )}
                         {s.status === "active" && (
@@ -322,6 +332,12 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
                 ? <Empty icon="sparkle" title="Diario vuoto" hint="Ogni transizione del progetto viene registrata qui." />
                 : <Timeline events={events} />}
               <AuditTrail projectId={projectId} />
+            </Glass>
+          )}
+
+          {tab === "riferimenti" && (
+            <Glass variant="panel" style={{ padding: 22 }}>
+              <ReferencesBoard projectId={projectId} clientId={project.clientId} role="admin" />
             </Glass>
           )}
 

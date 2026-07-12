@@ -65,7 +65,7 @@ export interface AdminProject extends ClientProject {
 }
 
 export type StageStatus = "locked" | "active" | "done"
-export type ApprovalState = "none" | "requested" | "approved"
+export type ApprovalState = "none" | "requested" | "approved" | "changes_requested"
 
 export interface ProjectStage {
   id: string
@@ -78,6 +78,7 @@ export interface ProjectStage {
   progress: number
   deliverableUrl?: string
   deliverableNote?: string
+  revisionNote?: string
   startedAt?: string
   completedAt?: string
   createdAt: string
@@ -87,7 +88,7 @@ export interface ProjectStage {
 /* ── Project events (the journal) ──────────────────────────── */
 export type EventType =
   | "project_submitted" | "project_approved" | "project_paused" | "project_resumed" | "project_completed"
-  | "stage_started" | "stage_completed" | "approval_requested" | "approval_granted"
+  | "stage_started" | "stage_completed" | "approval_requested" | "approval_granted" | "changes_requested"
   | "invoice_issued" | "invoice_paid" | "invoice_overdue" | "payment_declared"
   | "meeting_proposed" | "meeting_confirmed" | "meeting_cancelled" | "meeting_rescheduled"
   | "document_shared" | "document_signed" | "credentials_released"
@@ -209,6 +210,7 @@ export interface SupportTicket {
   id: string
   clientId: string
   clientName: string
+  projectId?: string
   subject: string
   message: string
   priority: TicketPriority
@@ -219,6 +221,7 @@ export interface SupportTicket {
   /** Optional quote for the requested work (Fase 6). */
   estimateAmount?: number
   estimateHours?: number
+  estimateAcceptedAt?: string
 }
 
 /* ── Handover: credentials & resources (Fase 5) ────────────── */
@@ -251,6 +254,23 @@ export interface ClientAsset {
   mime?: string
   sizeBytes: number
   uploadedBy: AssetUploader
+  createdAt: string
+}
+
+/* ── Project references (Blueprint / inspiration board) ────── */
+export type ReferenceKind = "link" | "image" | "foundry" | "note"
+
+export interface ProjectReference {
+  id: string
+  projectId: string
+  clientId: string
+  kind: ReferenceKind
+  title: string
+  url?: string
+  imageUrl?: string
+  note?: string
+  source?: string
+  addedBy: "client" | "admin"
   createdAt: string
 }
 

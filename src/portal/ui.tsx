@@ -725,6 +725,7 @@ export const APPROVAL_STATE: Record<ApprovalState, { label: string; tone: Tone }
   none: { label: "—", tone: "steel" },
   requested: { label: "Da approvare", tone: "amber" },
   approved: { label: "Approvata", tone: "green" },
+  changes_requested: { label: "Modifiche richieste", tone: "red" },
 }
 
 export const MEETING_STATUS: Record<MeetingStatus, { label: string; tone: Tone }> = {
@@ -783,6 +784,7 @@ export const EVENT_META: Record<EventType, { icon: IconName; tone: Tone }> = {
   stage_completed: { icon: "check", tone: "green" },
   approval_requested: { icon: "bell", tone: "amber" },
   approval_granted: { icon: "checkCircle", tone: "green" },
+  changes_requested: { icon: "edit", tone: "red" },
   invoice_issued: { icon: "invoice", tone: "silver" },
   invoice_paid: { icon: "euro", tone: "green" },
   invoice_overdue: { icon: "warn", tone: "red" },

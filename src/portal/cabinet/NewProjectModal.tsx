@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { useBlueprint } from "../../context/BlueprintContext"
 import { useToast } from "../../context/ToastContext"
-import type { OwnProfile, ProjectBrief } from "../../lib/api"
-import { createProject, updateOwnPhone } from "../../lib/api"
-import { Btn, DISPLAY, Field, Icon, Input, MONO, Modal, Note, Select, T, Textarea } from "../ui"
+import type { OwnProfile, ProjectBrief, ReferenceKind } from "../../lib/api"
+import { createProject, createReferences, titleFromUrl, updateOwnPhone } from "../../lib/api"
+import { Badge, Btn, DISPLAY, Field, Icon, Input, MONO, Modal, Select, T, Textarea } from "../ui"
 
 const PROJECT_TYPES = [
   "Sito vetrina",
@@ -45,6 +45,9 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
   const [desc, setDesc] = useState("")
   const [references, setReferences] = useState("")
   const [phone, setPhone] = useState("")
+  const [refUrls, setRefUrls] = useState<string[]>([])
+  const [refInput, setRefInput] = useState("")
+  const [includeFoundry, setIncludeFoundry] = useState(true)
   const [busy, setBusy] = useState(false)
 
   useEffect(() => {
@@ -54,6 +57,9 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
     setBudgetRange("")
     setDeadline("")
     setReferences("")
+    setRefUrls([])
+    setRefInput("")
+    setIncludeFoundry(true)
     setPhone(profile?.phone ?? "")
     setDesc(items.length > 0
       ? `Elementi selezionati dal Foundry:\n${items.map(i => `• ${i.title} — ${i.category}`).join("\n")}\n\n`
@@ -61,6 +67,13 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
   }, [open, profile, items])
 
   const canSubmit = name.trim() && desc.trim() && !busy
+
+  function addRefUrl() {
+    const u = refInput.trim()
+    if (!u) return
+    setRefUrls(prev => prev.includes(u) ? prev : [...prev, u])
+    setRefInput("")
+  }
 
   async function submit() {
     if (!canSubmit) return
@@ -70,7 +83,20 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
         await updateOwnPhone(userId, phone).catch(() => {})
       }
       const brief: ProjectBrief = { projectType, budgetRange, deadline, references }
-      await createProject({ clientId: userId, name, description: desc, brief })
+      const project = await createProject({ clientId: userId, name, description: desc, brief })
+
+      // Blueprint: seed the project's reference board from the intake.
+      const rows: Array<{ projectId: string; clientId: string; kind: ReferenceKind; title: string; url?: string; note?: string; source?: string }> = []
+      for (const u of refUrls) {
+        rows.push({ projectId: project.id, clientId: userId, kind: "link", title: titleFromUrl(u), url: u })
+      }
+      if (includeFoundry) {
+        for (const it of items) {
+          rows.push({ projectId: project.id, clientId: userId, kind: "foundry", title: it.title, note: it.description, source: it.category ? `Foundry · ${it.category}` : "Foundry" })
+        }
+      }
+      if (rows.length > 0) await createReferences(rows).catch(() => {})
+
       if (items.length > 0) clearBlueprint()
       onClose()
       toast.success("Progetto inviato — lo valutiamo a breve")
@@ -133,12 +159,6 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
           ))}
         </div>
 
-        {items.length > 0 && (
-          <Note tone="copper">
-            {items.length} element{items.length === 1 ? "o" : "i"} dal tuo Blueprint Foundry inclus{items.length === 1 ? "o" : "i"} nel brief.
-          </Note>
-        )}
-
         <Field label="Nome del progetto">
           <Input value={name} onChange={e => setName(e.target.value)} placeholder="Es. Sito vetrina + area riservata" autoFocus />
         </Field>
@@ -167,9 +187,43 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
         <Field label="Obiettivi & descrizione" hint="Cosa vuoi ottenere, funzioni chiave, pubblico: più contesto dai, migliore sarà la proposta.">
           <Textarea value={desc} onChange={e => setDesc(e.target.value)} rows={5} placeholder="Descrivi cosa vuoi realizzare…" style={{ resize: "vertical", minHeight: 110 }} />
         </Field>
-        <Field label="Riferimenti (opzionale)" hint="Link a siti che ti piacciono, moodboard, esempi da cui partire.">
-          <Textarea value={references} onChange={e => setReferences(e.target.value)} rows={2} placeholder="https://…" style={{ resize: "vertical", minHeight: 60 }} />
+        <Field label="Note di stile (opzionale)" hint="Cosa ti piace, moodboard, direzione visiva.">
+          <Textarea value={references} onChange={e => setReferences(e.target.value)} rows={2} placeholder="Es. minimale, molto bianco, tipografia grande…" style={{ resize: "vertical", minHeight: 60 }} />
         </Field>
+
+        {/* Blueprint — reference sites/layouts */}
+        <div style={{ padding: "13px 15px", borderRadius: 12, background: "rgba(224,131,106,0.06)", border: "1px solid rgba(224,131,106,0.20)", display: "flex", flexDirection: "column", gap: 10 }}>
+          <p style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>
+            <Icon name="sparkle" size={12} /> Blueprint · siti e layout di riferimento
+          </p>
+          <div style={{ display: "flex", gap: 8 }}>
+            <Input value={refInput} onChange={e => setRefInput(e.target.value)} placeholder="Incolla il link di un sito che ti ispira…" inputMode="url" style={{ flex: 1 }}
+              onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addRefUrl() } }} />
+            <Btn variant="outline" icon="plus" onClick={addRefUrl} disabled={!refInput.trim()}>Aggiungi</Btn>
+          </div>
+          {refUrls.length > 0 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              {refUrls.map(u => (
+                <span key={u} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 99, background: "rgba(255,255,255,0.06)", border: `1px solid ${T.border}`, fontFamily: MONO, fontSize: 10, color: T.muted }}>
+                  {titleFromUrl(u)}
+                  <button onClick={() => setRefUrls(prev => prev.filter(x => x !== u))} style={{ background: "none", border: "none", cursor: "pointer", color: T.faint, display: "inline-flex", padding: 0 }}>
+                    <Icon name="x" size={11} />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+          {items.length > 0 && (
+            <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 12.5, color: T.muted }}>
+              <input type="checkbox" checked={includeFoundry} onChange={e => setIncludeFoundry(e.target.checked)} style={{ accentColor: "#E0836A", width: 15, height: 15 }} />
+              Includi i miei {items.length} element{items.length === 1 ? "o" : "i"} dal Foundry
+              <Badge tone="copper">Blueprint</Badge>
+            </label>
+          )}
+          <p style={{ fontFamily: DISPLAY, fontSize: 11.5, lineHeight: 1.5, color: T.faint, margin: 0 }}>
+            Potrai aggiungerne altri in qualsiasi momento dalla scheda «Riferimenti» del progetto.
+          </p>
+        </div>
         <Field label="Telefono (opzionale)" hint="Per un contatto rapido in fase di valutazione.">
           <Input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+39 …" inputMode="tel" />
         </Field>

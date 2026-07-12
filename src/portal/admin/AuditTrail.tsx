@@ -4,10 +4,12 @@ import { fetchAuditLogs, fmtDateTime, subscribe } from "../../lib/api"
 import { Badge, DISPLAY, Icon, MONO, T, type Tone } from "../ui"
 
 const ACTION: Record<string, { label: string; tone: Tone }> = {
-  stage_approved:   { label: "Fase approvata dal cliente", tone: "green" },
-  document_signed:  { label: "Documento firmato",          tone: "green" },
-  payment_declared: { label: "Pagamento dichiarato",       tone: "amber" },
-  stage_advanced:   { label: "Fase chiusa dallo studio",   tone: "copper" },
+  stage_approved:          { label: "Fase approvata dal cliente", tone: "green" },
+  stage_changes_requested: { label: "Modifiche richieste dal cliente", tone: "red" },
+  document_signed:         { label: "Documento firmato",          tone: "green" },
+  payment_declared:        { label: "Pagamento dichiarato",       tone: "amber" },
+  estimate_accepted:       { label: "Preventivo approvato",       tone: "green" },
+  stage_advanced:          { label: "Fase chiusa dallo studio",   tone: "copper" },
 }
 
 function subjectOf(l: AuditLog): string | null {

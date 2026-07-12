@@ -8,6 +8,7 @@ function mapTicket(r: any): SupportTicket {
     id: r.id,
     clientId: r.client_id,
     clientName: r.client_name ?? "",
+    projectId: r.project_id ?? undefined,
     subject: r.subject,
     message: r.message,
     priority: r.priority as TicketPriority,
@@ -17,6 +18,7 @@ function mapTicket(r: any): SupportTicket {
     respondedAt: r.responded_at ?? undefined,
     estimateAmount: r.estimate_amount ?? undefined,
     estimateHours: r.estimate_hours ?? undefined,
+    estimateAcceptedAt: r.estimate_accepted_at ?? undefined,
   }
 }
 
@@ -44,11 +46,13 @@ export async function createTicket(payload: {
   subject: string
   message: string
   priority: TicketPriority
+  projectId?: string
 }): Promise<SupportTicket> {
   const { data, error } = await supabase
     .from("support_tickets")
     .insert({
       client_id: payload.clientId,
+      project_id: payload.projectId ?? null,
       subject: payload.subject.trim(),
       message: payload.message.trim(),
       priority: payload.priority,
@@ -57,6 +61,12 @@ export async function createTicket(payload: {
     .single()
   if (error) throw error
   return mapTicket(data)
+}
+
+/** Client accepts a quoted estimate on a ticket (RPC guards ownership). */
+export async function acceptTicketEstimate(id: string): Promise<void> {
+  const { error } = await supabase.rpc("accept_ticket_estimate", { p_ticket: id })
+  if (error) throw error
 }
 
 export async function updateTicket(id: string, patch: {

@@ -25,6 +25,7 @@ export default function SupportAdmin({ home, reload }: {
 
   const openCount = home.tickets.filter(t => t.status !== "resolved").length
   const list = filter === "aperti" ? home.tickets.filter(t => t.status !== "resolved") : home.tickets
+  const projectName = (id?: string) => home.projects.find(p => p.id === id)?.name
 
   function openReply(t: SupportTicket) {
     setReply(t.adminNote ?? "")
@@ -89,9 +90,11 @@ export default function SupportAdmin({ home, reload }: {
                     </h4>
                     <Badge tone={tp.tone}>{tp.label}</Badge>
                     <Badge tone={ts.tone} dot>{ts.label}</Badge>
+                    {t.projectId && <Badge tone="silver">{projectName(t.projectId) ?? "Progetto"}</Badge>}
                     {(t.estimateAmount != null || t.estimateHours != null) && (
-                      <Badge tone="copper">
+                      <Badge tone={t.estimateAcceptedAt ? "green" : "copper"} dot={!!t.estimateAcceptedAt}>
                         {[t.estimateAmount != null ? fmtEur(t.estimateAmount) : null, t.estimateHours != null ? `${t.estimateHours}h` : null].filter(Boolean).join(" · ")}
+                        {t.estimateAcceptedAt ? " · approvato" : ""}
                       </Badge>
                     )}
                     <Btn size="sm" variant={t.status === "new" ? "primary" : "outline"} icon="send" onClick={() => openReply(t)}>

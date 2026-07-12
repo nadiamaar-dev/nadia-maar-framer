@@ -1,21 +1,23 @@
 import React, { useCallback, useEffect, useState } from "react"
+import { useBlueprint } from "../../context/BlueprintContext"
 import { useToast } from "../../context/ToastContext"
 import type { ClientHome, Conversation, Invoice, Meeting, ProjectCredential, ProjectEvent, ProjectStage } from "../../lib/api"
 import {
   approveStage, fetchCredentialsByProject, fetchInvoicesByProject, fetchMeetingsByProject, fetchProjectEvents,
   fetchProjectStages, fmtDate, fmtDateTime, fmtEur, getOrCreateStageConversation,
-  isUnreadFor, subscribe,
+  isUnreadFor, requestStageChanges, subscribe,
 } from "../../lib/api"
 import ChatThread from "../ChatThread"
 import HandoverPanel from "./HandoverPanel"
+import ReferencesBoard from "../ReferencesBoard"
 import StageGrid from "../StageGrid"
 import { stageProgress } from "../StageRail"
 import {
-  Badge, BriefCard, Btn, DISPLAY, Empty, Glass, Icon, INVOICE_STATUS, Loading, MEETING_STATUS,
-  Modal, MONO, Note, PROJECT_STATUS, Ring, Row, T, TL, Tabs, Timeline, TONE,
+  Badge, BriefCard, Btn, DISPLAY, Empty, Field, Glass, Icon, INVOICE_STATUS, Loading, MEETING_STATUS,
+  Modal, MONO, Note, PROJECT_STATUS, Ring, Row, T, TL, Tabs, Textarea, Timeline, TONE,
 } from "../ui"
 
-type TabId = "fasi" | "diario" | "fatture" | "riunioni" | "consegna"
+type TabId = "fasi" | "diario" | "riferimenti" | "fatture" | "riunioni" | "consegna"
 
 /** Top-of-view project switcher — pill tabs when the client has >1 project,
  *  plus a persistent "Nuovo progetto" affordance. */
@@ -81,6 +83,7 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
   reload: () => void
 }) {
   const toast = useToast()
+  const { items: foundryItems } = useBlueprint()
   const project = home.projects.find(p => p.id === projectId)
 
   const [tab, setTab] = useState<TabId>("fasi")
@@ -93,6 +96,10 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
 
   const [approving, setApproving] = useState<ProjectStage | null>(null)
   const [approveBusy, setApproveBusy] = useState(false)
+
+  const [changesFor, setChangesFor] = useState<ProjectStage | null>(null)
+  const [changeNote, setChangeNote] = useState("")
+  const [changeBusy, setChangeBusy] = useState(false)
 
   const [chatStage, setChatStage] = useState<ProjectStage | null>(null)
   const [chatConvo, setChatConvo] = useState<Conversation | null>(null)
@@ -146,6 +153,23 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
       toast.error("Approvazione non riuscita. Riprova.")
     } finally {
       setApproveBusy(false)
+    }
+  }
+
+  async function confirmRequestChanges() {
+    if (!changesFor || changeBusy || !changeNote.trim()) return
+    setChangeBusy(true)
+    try {
+      await requestStageChanges(changesFor.id, changeNote.trim())
+      setChangesFor(null)
+      setChangeNote("")
+      toast.success("Richiesta inviata allo studio")
+      await load()
+      reload()
+    } catch {
+      toast.error("Invio non riuscito. Riprova.")
+    } finally {
+      setChangeBusy(false)
     }
   }
 
@@ -229,6 +253,7 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
         items={[
           { id: "fasi", label: "Fasi", badge: stages.filter(s => s.approvalState === "requested").length || undefined },
           { id: "diario", label: "Diario" },
+          { id: "riferimenti", label: "Riferimenti" },
           { id: "fatture", label: "Fatture", badge: dueInvoices.length || undefined },
           { id: "riunioni", label: "Riunioni" },
           ...(creds.length > 0 || project.status === "completed"
@@ -253,31 +278,37 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
                   stages={stages}
                   renderAction={s => {
                     if (s.status === "locked") return null
-                    const hasAction = s.approvalState === "requested"
-                    if (!hasAction && !stageUnread(s)) {
+                    const chatBtn = (
+                      <span style={{ position: "relative", display: "inline-flex" }}>
+                        <Btn size="sm" variant="ghost" icon="chat" onClick={() => openStageChat(s)}>Discussione</Btn>
+                        {stageUnread(s) && (
+                          <span style={{ position: "absolute", top: -2, right: -2, width: 7, height: 7, borderRadius: 99, background: T.copperLt, boxShadow: "0 0 8px rgba(212,105,90,0.8)" }} />
+                        )}
+                      </span>
+                    )
+                    if (s.approvalState === "requested") {
                       return (
-                        <Btn size="sm" variant="ghost" icon="chat" onClick={() => openStageChat(s)}>
-                          Discussione
-                        </Btn>
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                          <Btn size="sm" variant="primary" icon="check" onClick={() => setApproving(s)}>Approva fase</Btn>
+                          <Btn size="sm" variant="outline" icon="edit" onClick={() => { setChangeNote(""); setChangesFor(s) }}>Richiedi modifiche</Btn>
+                          {chatBtn}
+                        </div>
                       )
                     }
-                    return (
-                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                        {s.approvalState === "requested" && (
-                          <Btn size="sm" variant="primary" icon="check" onClick={() => setApproving(s)}>
-                            Approva fase
-                          </Btn>
-                        )}
-                        <span style={{ position: "relative", display: "inline-flex" }}>
-                          <Btn size="sm" variant="ghost" icon="chat" onClick={() => openStageChat(s)}>
-                            Discussione
-                          </Btn>
-                          {stageUnread(s) && (
-                            <span style={{ position: "absolute", top: -2, right: -2, width: 7, height: 7, borderRadius: 99, background: T.copperLt, boxShadow: "0 0 8px rgba(212,105,90,0.8)" }} />
-                          )}
-                        </span>
-                      </div>
-                    )
+                    if (s.approvalState === "changes_requested") {
+                      return (
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: DISPLAY, fontSize: 12, color: T.amber }}>
+                            <Icon name="clock" size={13} /> Modifiche richieste — in attesa dello studio
+                          </span>
+                          {chatBtn}
+                        </div>
+                      )
+                    }
+                    if (!stageUnread(s)) {
+                      return <Btn size="sm" variant="ghost" icon="chat" onClick={() => openStageChat(s)}>Discussione</Btn>
+                    }
+                    return <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>{chatBtn}</div>
                   }}
                 />
               )
@@ -288,6 +319,12 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
               {events.length === 0
                 ? <Empty icon="sparkle" title="Diario vuoto" hint="Ogni avanzamento del progetto viene registrato qui." />
                 : <Timeline events={events} />}
+            </Glass>
+          )}
+
+          {tab === "riferimenti" && (
+            <Glass variant="panel" style={{ padding: 22 }}>
+              <ReferencesBoard projectId={projectId} clientId={userId} role="client" foundryItems={foundryItems} />
             </Glass>
           )}
 
@@ -369,6 +406,27 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
           Confermando dai il via libera su questa fase: verrà chiusa e il lavoro passa alla successiva.
           Se hai dubbi, usa prima la discussione della fase.
         </p>
+      </Modal>
+
+      {/* Request changes */}
+      <Modal
+        open={!!changesFor}
+        onClose={() => !changeBusy && setChangesFor(null)}
+        kicker="Revisione"
+        title={changesFor ? `Richiedi modifiche · ${changesFor.title}` : ""}
+        footer={
+          <>
+            <Btn variant="ghost" onClick={() => setChangesFor(null)} disabled={changeBusy}>Annulla</Btn>
+            <Btn variant="primary" icon="send" onClick={confirmRequestChanges} busy={changeBusy} disabled={!changeNote.trim()}>Invia richiesta</Btn>
+          </>
+        }
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
+          <Note tone="amber">Descrivi cosa vuoi cambiare: lo studio riceve la richiesta e ti ripropone la fase aggiornata.</Note>
+          <Field label="Cosa modificare">
+            <Textarea value={changeNote} onChange={e => setChangeNote(e.target.value)} rows={4} autoFocus placeholder="Es. La sezione hero troppo scura, il font del titolo più grande…" style={{ resize: "vertical" }} />
+          </Field>
+        </div>
       </Modal>
 
       {/* Stage discussion */}
