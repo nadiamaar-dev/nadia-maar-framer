@@ -120,8 +120,8 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                   borderTopRightRadius: own ? 4 : 14, borderTopLeftRadius: own ? 14 : 4,
                   background: m.isDeleted
                     ? "rgba(255,255,255,0.025)"
-                    : own ? "linear-gradient(140deg, rgba(176,74,56,0.24), rgba(176,74,56,0.13))" : "rgba(255,255,255,0.065)",
-                  border: `1px solid ${m.isDeleted ? "rgba(255,255,255,0.07)" : own ? "rgba(176,74,56,0.34)" : "rgba(255,255,255,0.13)"}`,
+                    : own ? "linear-gradient(140deg, rgba(174,83,80,0.24), rgba(174,83,80,0.13))" : "rgba(255,255,255,0.065)",
+                  border: `1px solid ${m.isDeleted ? "rgba(255,255,255,0.07)" : own ? "rgba(174,83,80,0.34)" : "rgba(255,255,255,0.13)"}`,
                   boxShadow: m.isDeleted ? "none" : "inset 0 1px 0 rgba(255,255,255,0.14)",
                 }}>
                   {m.isDeleted ? (
@@ -224,7 +224,7 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                 <span key={i} style={{
                   display: "inline-flex", alignItems: "center", gap: 6,
                   padding: "4px 9px", borderRadius: 8,
-                  background: "rgba(176,74,56,0.10)", border: "1px solid rgba(176,74,56,0.26)",
+                  background: "rgba(174,83,80,0.10)", border: "1px solid rgba(174,83,80,0.26)",
                   fontFamily: MONO, fontSize: 10, color: T.copperLt,
                 }}>
                   <Icon name="paperclip" size={10} />

@@ -95,7 +95,7 @@ export default function DigitalFoundry() {
         <div className="nm-foundry-hero">
           <div style={{
             fontFamily: MONO, fontSize: 10, letterSpacing: "0.26em", textTransform: "uppercase",
-            color: "#B04A38", marginBottom: 16,
+            color: "#AE5350", marginBottom: 16,
           }}>
             Digital Foundry · Sandbox
           </div>

@@ -26,7 +26,7 @@ const CHECK_CIRCLE = (
 function StatusIcon({ status }: { status: ProjectStage["status"] }) {
   const configs = {
     locked: { paths: LOCK_CLOSED, color: "rgba(255,255,255,0.34)", bg: "rgba(255,255,255,0.06)", border: "rgba(255,255,255,0.11)", label: "Fase bloccata" },
-    active: { paths: LOCK_OPEN, color: "#E0836A", bg: "rgba(176,74,56,0.20)", border: "rgba(176,74,56,0.42)", label: "Fase in corso" },
+    active: { paths: LOCK_OPEN, color: "#E0836A", bg: "rgba(174,83,80,0.20)", border: "rgba(174,83,80,0.42)", label: "Fase in corso" },
     done: { paths: CHECK_CIRCLE, color: "#4BD39B", bg: "rgba(61,190,139,0.16)", border: "rgba(61,190,139,0.36)", label: "Fase completata" },
   }
   const c = configs[status]
@@ -36,7 +36,7 @@ function StatusIcon({ status }: { status: ProjectStage["status"] }) {
       display: "flex", alignItems: "center", justifyContent: "center",
       background: c.bg, border: `1px solid ${c.border}`, color: c.color, flexShrink: 0,
       boxShadow: status === "active"
-        ? "0 0 20px rgba(176,74,56,0.30), inset 0 1px 0 rgba(255,255,255,0.20)"
+        ? "0 0 20px rgba(174,83,80,0.30), inset 0 1px 0 rgba(255,255,255,0.20)"
         : "inset 0 1px 0 rgba(255,255,255,0.10)",
     }}>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7}
@@ -117,9 +117,9 @@ function StageCard({ stage, index, renderAction }: {
 
   /* Opaque, matte, LIGHTER than the page — cards read as physical tiles. */
   const surface = isActive ? "#2b2421" : isDone ? "#23271f" : "#262730"
-  const borderCol = isActive ? "rgba(176,74,56,0.42)" : isDone ? "rgba(61,190,139,0.30)" : "rgba(255,255,255,0.10)"
+  const borderCol = isActive ? "rgba(174,83,80,0.42)" : isDone ? "rgba(61,190,139,0.30)" : "rgba(255,255,255,0.10)"
   const shadow = isActive
-    ? "0 8px 30px rgba(176,74,56,0.16), 0 2px 8px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.10)"
+    ? "0 8px 30px rgba(174,83,80,0.16), 0 2px 8px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.10)"
     : "0 6px 22px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.07)"
 
   const titleColor = isLocked ? "rgba(255,255,255,0.50)" : T.text
@@ -143,8 +143,8 @@ function StageCard({ stage, index, renderAction }: {
           fontFamily: MONO, fontSize: 10.5, fontWeight: 700, letterSpacing: "0.12em",
           color: isActive ? "#E0836A" : "rgba(255,255,255,0.40)",
           padding: "4px 9px", borderRadius: 99,
-          background: isActive ? "rgba(176,74,56,0.14)" : "rgba(255,255,255,0.05)",
-          border: `1px solid ${isActive ? "rgba(176,74,56,0.28)" : "rgba(255,255,255,0.09)"}`,
+          background: isActive ? "rgba(174,83,80,0.14)" : "rgba(255,255,255,0.05)",
+          border: `1px solid ${isActive ? "rgba(174,83,80,0.28)" : "rgba(255,255,255,0.09)"}`,
         }}>
           FASE {String(index + 1).padStart(2, "0")}
         </span>

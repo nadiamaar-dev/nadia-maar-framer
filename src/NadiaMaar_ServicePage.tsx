@@ -9,7 +9,7 @@ import Background from "./components/Background"
 const T = {
   bg: "#233D4D", text: "#FFFFFF", muted: "rgba(255,255,255,0.78)",
   faint: "rgba(255,255,255,0.58)", border: "rgba(255,255,255,0.11)",
-  accent: "#852E28", accentLt: "#AD4840", green: "#10B981",
+  accent: "#733635", accentLt: "#AE5350", green: "#10B981",
   surface: "rgba(255,255,255,0.055)", surfaceHi: "rgba(255,255,255,0.10)",
 } as const
 const MONO = "'JetBrains Mono','SF Mono',ui-monospace,monospace"
@@ -32,17 +32,17 @@ const SVC_CSS = `
   ::placeholder { color: rgba(255,255,255,0.22) !important; }
   :root { --x:-9999; --y:-9999; }
   /* brick text — semi-transparent + warm glow, matching button quality */
-  [style*="color: #AD4840"],
-  [style*='color: "#AD4840"'] {
-    color: rgba(173,72,64,0.82) !important;
+  [style*="color: #AE5350"],
+  [style*='color: "#AE5350"'] {
+    color: rgba(174,83,80,0.82) !important;
     text-shadow:
-      0 0 52px rgba(173,72,64,0.38),
-      0 0 18px rgba(173,72,64,0.26),
+      0 0 52px rgba(174,83,80,0.38),
+      0 0 18px rgba(174,83,80,0.26),
       0 2px 6px rgba(0,0,0,0.28);
   }
-  [style*="color: #852E28"],
-  [style*='color: "#852E28"'] {
-    text-shadow: 0 0 24px rgba(133,46,40,0.45), 0 0 8px rgba(133,46,40,0.26);
+  [style*="color: #733635"],
+  [style*='color: "#733635"'] {
+    text-shadow: 0 0 24px rgba(115,54,53,0.45), 0 0 8px rgba(115,54,53,0.26);
   }
   [data-glow] {
     --border-size: calc(var(--border,1.5) * 1px);
@@ -141,8 +141,8 @@ function NMmark({size=32,id="nm-sg",hover=false}:{size?:number;id?:string;hover?
         <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stopColor={hover?"#ffffff":"rgba(255,255,255,0.90)"} />
           <stop offset="44%"  stopColor={hover?"#ffffff":"rgba(255,255,255,0.90)"} />
-          <stop offset="56%"  stopColor="#AD4840" />
-          <stop offset="100%" stopColor={hover?"#943830":"#852E28"} />
+          <stop offset="56%"  stopColor="#AE5350" />
+          <stop offset="100%" stopColor={hover?"#943830":"#733635"} />
         </linearGradient>
       </defs>
       <motion.path d="M 2,22 L 2,2 L 13,22 L 13,2 L 19.5,12 L 26,2 L 26,22"
@@ -216,7 +216,7 @@ function AnimatedBackground() {
 function ScrollProgress() {
   const {scrollYProgress} = useScroll()
   const scaleX = useSpring(scrollYProgress,{stiffness:140,damping:26,mass:0.3})
-  return <motion.div aria-hidden style={{position:"fixed",top:0,left:0,right:0,height:2,zIndex:500,transformOrigin:"0% 50%",scaleX,background:"linear-gradient(90deg,rgba(95,32,28,1),#852E28,#AD4840)",boxShadow:"0 0 12px rgba(133,46,40,0.7)"}} />
+  return <motion.div aria-hidden style={{position:"fixed",top:0,left:0,right:0,height:2,zIndex:500,transformOrigin:"0% 50%",scaleX,background:"linear-gradient(90deg,rgba(90,40,40,1),#733635,#AE5350)",boxShadow:"0 0 12px rgba(115,54,53,0.7)"}} />
 }
 
 /* ── DateTimeWidget ── */
@@ -241,6 +241,7 @@ const SVC_MENU_LINKS = [
   { label:"Home",       href:"/" },
   { label:"Soluzioni",  href:"/#soluzioni" },
   { label:"Metodo",     href:"/#metodo" },
+  { label:"Projects",   href:"/projects" },
   { label:"Portfolio",  href:"/#portfolio" },
   { label:"Contatti",   href:"/#contatti" },
   { label:"About",      href:"/about" },
@@ -261,7 +262,7 @@ function MenuOverlay({onClose}:{onClose:()=>void}) {
               style={{display:"flex",alignItems:"center",gap:12,padding:"13px 0",textDecoration:"none",borderBottom:"1px solid rgba(255,255,255,0.05)",fontFamily:MONO,fontSize:12,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:T.muted,transition:"color 0.18s"}}
               onMouseEnter={e=>(e.currentTarget.style.color="#fff")}
               onMouseLeave={e=>(e.currentTarget.style.color=T.muted)}>
-              <span style={{width:16,height:1,background:"rgba(133,46,40,0.60)",display:"inline-block"}} aria-hidden />
+              <span style={{width:16,height:1,background:"rgba(115,54,53,0.60)",display:"inline-block"}} aria-hidden />
               {label}
             </motion.a>
           ))}
@@ -353,19 +354,19 @@ function ContactModal({onClose}:{onClose:()=>void}) {
             <div style={{display:"flex",flexDirection:"column",gap:12}}>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
                 <input placeholder="Nome" value={form.name} onChange={set("name")} style={inp}
-                  onFocus={e=>(e.target.style.borderColor="rgba(133,46,40,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
+                  onFocus={e=>(e.target.style.borderColor="rgba(115,54,53,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
                 <input placeholder="Email" type="email" value={form.email} onChange={set("email")} style={inp}
-                  onFocus={e=>(e.target.style.borderColor="rgba(133,46,40,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
+                  onFocus={e=>(e.target.style.borderColor="rgba(115,54,53,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               </div>
               <input placeholder="Azienda (opzionale)" value={form.company} onChange={set("company")} style={inp}
-                onFocus={e=>(e.target.style.borderColor="rgba(133,46,40,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
+                onFocus={e=>(e.target.style.borderColor="rgba(115,54,53,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               <textarea placeholder="Descrivi il tuo progetto o problema principale..." value={form.message} onChange={set("message")} rows={4}
                 style={{...inp,resize:"none" as const,lineHeight:1.65}}
-                onFocus={e=>(e.target.style.borderColor="rgba(133,46,40,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
+                onFocus={e=>(e.target.style.borderColor="rgba(115,54,53,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                 onClick={()=>setSent(true)}
-                style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(173,72,64,0.80)",background:"linear-gradient(90deg,rgba(173,72,64,0.78) 0%,rgba(173,72,64,0.60) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 36px rgba(133,46,40,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden",marginTop:4}}>
-                <span style={{padding:"12px 14px 12px 16px",borderRight:"1px solid rgba(133,46,40,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[→]</span>
+                style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(174,83,80,0.80)",background:"linear-gradient(90deg,rgba(174,83,80,0.78) 0%,rgba(174,83,80,0.60) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden",marginTop:4}}>
+                <span style={{padding:"12px 14px 12px 16px",borderRight:"1px solid rgba(115,54,53,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[→]</span>
                 <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 20px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.90)",fontWeight:500}}>Invia Messaggio</span>
               </motion.button>
             </div>
@@ -408,8 +409,8 @@ const SERVICES: Record<string, ServiceData> = {
     title:"E-commerce ad Alta Conversione",
     subtitle:"Architetture Shopify custom e headless commerce scalabili. Automazione totale di magazzini, cataloghi massivi e logistica multi-corriere. Costruiamo infrastrutture che convertono e scalano senza attriti.",
     eyebrow:"E-Commerce · Shopify · Automazione",
-    gradient:"linear-gradient(135deg,#852E28 0%,#AD4840 100%)",
-    accentColor:"rgba(133,46,40,0.60)",
+    gradient:"linear-gradient(135deg,#733635 0%,#AE5350 100%)",
+    accentColor:"rgba(115,54,53,0.60)",
     whatWeDo:{
       heading:"Il tuo e-commerce è un asset — non un sito.",
       body:[
@@ -550,8 +551,8 @@ const SERVICES: Record<string, ServiceData> = {
     title:"SEO Strategico & Performance Marketing",
     subtitle:"Posizionamento organico integrato nell'architettura dal primo giorno. Google Ads e Meta Ads scalabili a costi decrescenti. Costruiamo canali di acquisizione che lavorano anche mentre dormi.",
     eyebrow:"SEO Tecnico · Google Ads · Meta Ads",
-    gradient:"linear-gradient(135deg,#852E28 0%,#DFA088 100%)",
-    accentColor:"rgba(133,46,40,0.60)",
+    gradient:"linear-gradient(135deg,#733635 0%,#DFA088 100%)",
+    accentColor:"rgba(115,54,53,0.60)",
     whatWeDo:{
       heading:"Il traffico organico è il tuo asset più redditizio.",
       body:[
@@ -597,8 +598,8 @@ const SERVICES: Record<string, ServiceData> = {
     title:"Integrazione AI & Sistemi Intelligenti",
     subtitle:"Agenti AI, LLM e sistemi RAG integrati nei tuoi processi aziendali. Riduciamo i costi operativi, acceleriamo le decisioni e liberiamo il tuo team per il lavoro ad alto valore strategico.",
     eyebrow:"AI Agents · LLM · Automazione Intelligente",
-    gradient:"linear-gradient(135deg,#AD4840 0%,#DFA088 100%)",
-    accentColor:"rgba(173,72,64,0.60)",
+    gradient:"linear-gradient(135deg,#AE5350 0%,#DFA088 100%)",
+    accentColor:"rgba(174,83,80,0.60)",
     whatWeDo:{
       heading:"L'AI non è il futuro. È il vantaggio competitivo di oggi.",
       body:[
@@ -708,8 +709,8 @@ function ServicePage({data}:{data:ServiceData}) {
               <div style={{display:"flex",gap:12,flexWrap:"wrap" as const,alignItems:"center"}}>
                 <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                   onClick={()=>setModalOpen(true)}
-                  style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(173,72,64,0.80)",background:"linear-gradient(90deg,rgba(173,72,64,0.78) 0%,rgba(173,72,64,0.60) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 36px rgba(133,46,40,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
-                  <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(133,46,40,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
+                  style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(174,83,80,0.80)",background:"linear-gradient(90deg,rgba(174,83,80,0.78) 0%,rgba(174,83,80,0.60) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
+                  <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(115,54,53,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
                   <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 22px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.92)",fontWeight:500}}>
                     {data.cta.btn} <ArrowRightIcon size={11} />
                   </span>
@@ -798,7 +799,7 @@ function ServicePage({data}:{data:ServiceData}) {
             </Reveal>
             <div style={{position:"relative"}}>
               {/* vertical connector line */}
-              <div aria-hidden style={{position:"absolute",left:28,top:48,bottom:48,width:1,background:`linear-gradient(180deg, ${data.accentColor}, rgba(133,46,40,0.08))`,zIndex:0}} />
+              <div aria-hidden style={{position:"absolute",left:28,top:48,bottom:48,width:1,background:`linear-gradient(180deg, ${data.accentColor}, rgba(115,54,53,0.08))`,zIndex:0}} />
               <div style={{display:"flex",flexDirection:"column",gap:0}}>
                 {data.howWeDoIt.steps.map((step,i)=>(
                   <Reveal key={i} delay={i*0.07}>
@@ -821,7 +822,7 @@ function ServicePage({data}:{data:ServiceData}) {
                 <div aria-hidden style={{position:"absolute",bottom:0,left:0,right:0,height:1,background:`linear-gradient(90deg,transparent,${data.accentColor},transparent)`}} />
 
                 <div style={{position:"relative",zIndex:1}}>
-                  <div style={{display:"inline-flex",alignItems:"center",gap:10,padding:"7px 16px",borderRadius:9999,background:"rgba(133,46,40,0.10)",border:"1px solid rgba(133,46,40,0.35)",marginBottom:24}}>
+                  <div style={{display:"inline-flex",alignItems:"center",gap:10,padding:"7px 16px",borderRadius:9999,background:"rgba(115,54,53,0.10)",border:"1px solid rgba(115,54,53,0.35)",marginBottom:24}}>
                     <PingDot color={T.accentLt} size={6} />
                     <span style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.20em",textTransform:"uppercase" as const,color:T.accentLt}}>Disponibile · 2026</span>
                   </div>
@@ -834,8 +835,8 @@ function ServicePage({data}:{data:ServiceData}) {
                   <div style={{display:"flex",justifyContent:"center",gap:12,flexWrap:"wrap" as const}}>
                     <motion.button whileHover={{scale:1.03}} whileTap={{scale:0.97}}
                       onClick={()=>setModalOpen(true)}
-                      style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(173,72,64,0.80)",background:"linear-gradient(90deg,rgba(173,72,64,0.78) 0%,rgba(173,72,64,0.60) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 36px rgba(133,46,40,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
-                      <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(133,46,40,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
+                      style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(174,83,80,0.80)",background:"linear-gradient(90deg,rgba(174,83,80,0.78) 0%,rgba(174,83,80,0.60) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
+                      <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(115,54,53,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
                       <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 24px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.92)",fontWeight:500}}>
                         {data.cta.btn} <ArrowRightIcon size={11} />
                       </span>

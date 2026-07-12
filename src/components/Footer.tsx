@@ -19,8 +19,8 @@ const T = {
   muted:    "rgba(255,255,255,0.78)",
   faint:    "rgba(255,255,255,0.58)",
   border:   "rgba(255,255,255,0.11)",
-  accent:   "#8C3525",
-  accentLt: "#B04A38",
+  accent:   "#733635",
+  accentLt: "#AE5350",
   green:    "#10B981",
 } as const
 
@@ -111,6 +111,7 @@ const NAV_LINKS = [
   { label: "Home",      href: "/" },
   { label: "About",     href: "/about" },
   { label: "Soluzioni", href: "/#s4" },
+  { label: "Projects",  href: "/projects" },
   { label: "Portfolio", href: "/#s6" },
   { label: "Contatti",  href: "/#s9" },
 ]
@@ -123,8 +124,8 @@ function NMmark({ size = 30, id = "nm-ft" }: { size?: number; id?: string }) {
         <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stopColor="rgba(255,255,255,0.90)" />
           <stop offset="44%"  stopColor="rgba(255,255,255,0.90)" />
-          <stop offset="56%"  stopColor="#B04A38" />
-          <stop offset="100%" stopColor="#8C3525" />
+          <stop offset="56%"  stopColor="#AE5350" />
+          <stop offset="100%" stopColor="#733635" />
         </linearGradient>
       </defs>
       <path d="M 2,22 L 2,2 L 13,22 L 13,2 L 19.5,12 L 26,2 L 26,22"
@@ -171,7 +172,7 @@ export default function Footer({ onContact }: FooterProps) {
     <footer className="nm-footer">
 
       {/* ── accent top line ── */}
-      <div style={{ height: 1, background: "linear-gradient(90deg, transparent 0%, rgba(140,53,37,0.55) 28%, rgba(176,74,56,0.80) 50%, rgba(140,53,37,0.55) 72%, transparent 100%)" }} />
+      <div style={{ height: 1, background: "linear-gradient(90deg, transparent 0%, rgba(115,54,53,0.55) 28%, rgba(174,83,80,0.80) 50%, rgba(115,54,53,0.55) 72%, transparent 100%)" }} />
 
       {/* ── main grid ── */}
       <div className="nm-footer-wrap">
@@ -210,7 +211,7 @@ export default function Footer({ onContact }: FooterProps) {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "#fff" }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = T.faint }}
               >
-                <span style={{ width: 14, height: 1, background: "rgba(140,53,37,0.60)", display: "inline-block" }} aria-hidden />
+                <span style={{ width: 14, height: 1, background: "rgba(115,54,53,0.60)", display: "inline-block" }} aria-hidden />
                 {label}
               </motion.a>
             ))}
@@ -228,7 +229,7 @@ export default function Footer({ onContact }: FooterProps) {
             >nadiamaar.dev@gmail.com</a>
 
             {/* stat card */}
-            <div style={{ padding: "12px 16px", borderRadius: 12, background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)", border: "1px solid rgba(176,74,56,0.80)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ padding: "12px 16px", borderRadius: 12, background: "linear-gradient(90deg, rgba(174,83,80,0.78) 0%, rgba(174,83,80,0.60) 100%)", border: "1px solid rgba(174,83,80,0.80)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", flexDirection: "column", gap: 4 }}>
               <span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 700, color: "#fff", letterSpacing: "0.02em" }}>50+</span>
               <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em", textTransform: "uppercase", color: "rgba(255,255,255,0.85)" }}>Progetti Completati</span>
             </div>
@@ -236,8 +237,8 @@ export default function Footer({ onContact }: FooterProps) {
             {/* contact button — only shown when onContact prop is provided */}
             {onContact && (
               <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onContact}
-                style={{ display: "flex", alignItems: "stretch", borderRadius: 10, border: "1px solid rgba(176,74,56,0.80)", background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", cursor: "pointer", overflow: "hidden", width: "fit-content" }}>
-                <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(140,53,37,0.35)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[→]</span>
+                style={{ display: "flex", alignItems: "stretch", borderRadius: 10, border: "1px solid rgba(174,83,80,0.80)", background: "linear-gradient(90deg, rgba(174,83,80,0.78) 0%, rgba(174,83,80,0.60) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", cursor: "pointer", overflow: "hidden", width: "fit-content" }}>
+                <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(115,54,53,0.35)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[→]</span>
                 <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.85)" }}>Scrivimi</span>
               </motion.button>
             )}
@@ -264,7 +265,7 @@ export default function Footer({ onContact }: FooterProps) {
                   backdropFilter: "blur(12px)",
                   textDecoration: "none", flexShrink: 0,
                 } as React.CSSProperties}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.accentLt; el.style.borderColor = "rgba(140,53,37,0.55)"; el.style.backgroundColor = "rgba(140,53,37,0.12)"; el.style.boxShadow = "0 0 16px rgba(140,53,37,0.25)" }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.accentLt; el.style.borderColor = "rgba(115,54,53,0.55)"; el.style.backgroundColor = "rgba(115,54,53,0.12)"; el.style.boxShadow = "0 0 16px rgba(115,54,53,0.25)" }}
                 onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.faint; el.style.borderColor = T.border; el.style.backgroundColor = "rgba(255,255,255,0.03)"; el.style.boxShadow = "none" }}
               >
                 <Icon />

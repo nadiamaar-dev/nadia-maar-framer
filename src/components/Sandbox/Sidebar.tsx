@@ -4,7 +4,7 @@ import { useBlueprint } from "../../context/BlueprintContext"
 
 const MONO    = "'JetBrains Mono',monospace"
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
-const ACCENT  = "#B04A38"
+const ACCENT  = "#AE5350"
 
 const CATEGORIES: SandboxCategory[] = [
   "All",
@@ -44,7 +44,7 @@ const CSS = `
   background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.18); color: #fff;
 }
 .nm-sb-cat.active {
-  background: rgba(176,74,56,0.58); border-color: rgba(176,74,56,0.50); color: #fff;
+  background: rgba(174,83,80,0.58); border-color: rgba(174,83,80,0.50); color: #fff;
 }
 .nm-sb-cat.active::before {
   content: ''; position: absolute; left: -1px; top: 20%; bottom: 20%;
@@ -71,12 +71,12 @@ const CSS = `
 /* ── blueprint badge ── */
 .nm-blueprint-badge {
   display: flex; align-items: center; gap: 8px; padding: 14px 16px;
-  background: rgba(176,74,56,0.56); border: 1px solid rgba(176,74,56,0.45);
+  background: rgba(174,83,80,0.56); border: 1px solid rgba(174,83,80,0.45);
   border-radius: 10px; cursor: pointer; text-decoration: none;
   transition: all 0.18s ease;
 }
 .nm-blueprint-badge:hover {
-  background: rgba(176,74,56,0.61); border-color: rgba(176,74,56,0.65);
+  background: rgba(174,83,80,0.61); border-color: rgba(174,83,80,0.65);
 }
 
 /* ── responsive show/hide ── */
@@ -114,7 +114,7 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
     <a href="/cabinet" className="nm-blueprint-badge">
       <div style={{
         width: 28, height: 28, borderRadius: 6,
-        background: "rgba(176,74,56,0.61)",
+        background: "rgba(174,83,80,0.61)",
         display: "flex", alignItems: "center", justifyContent: "center",
         fontFamily: MONO, fontSize: 10, fontWeight: 700,
         color: "#fff", flexShrink: 0,
@@ -163,8 +163,8 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
                 <button key={c} onClick={() => onCategoryChange(c)} style={{
                   flex: 1, minWidth: 0, padding: "8px 4px",
                   borderRadius: 11,
-                  border: "1px solid " + (active ? "rgba(176,74,56,0.55)" : "transparent"),
-                  background: active ? "rgba(176,74,56,0.60)" : "transparent",
+                  border: "1px solid " + (active ? "rgba(174,83,80,0.55)" : "transparent"),
+                  background: active ? "rgba(174,83,80,0.60)" : "transparent",
                   fontFamily: DISPLAY, fontSize: 11,
                   fontWeight: active ? 700 : 500,
                   color: active ? "#fff" : "rgba(255,255,255,0.52)",
@@ -188,8 +188,8 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
               position: "absolute",
               top: 2, bottom: 2, left: 2,
               width: "calc((100% - 4px) / 3)",
-              background: "rgba(176,74,56,0.61)",
-              border: "1px solid rgba(176,74,56,0.52)",
+              background: "rgba(174,83,80,0.61)",
+              border: "1px solid rgba(174,83,80,0.52)",
               borderRadius: 10,
               transform: `translateX(calc(${typeIndex} * 100%))`,
               transition: "transform 0.22s cubic-bezier(0.16,1,0.3,1)",

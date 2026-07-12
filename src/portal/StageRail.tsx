@@ -22,7 +22,7 @@ export default function StageRail({ stages, renderAction }: {
         const node = s.status === "done"
           ? { icon: "check" as const, bg: "rgba(61,190,139,0.16)", bd: "rgba(61,190,139,0.45)", fg: T.green }
           : s.status === "active"
-            ? { icon: "bolt" as const, bg: "rgba(176,74,56,0.20)", bd: "rgba(176,74,56,0.55)", fg: T.copperLt }
+            ? { icon: "bolt" as const, bg: "rgba(174,83,80,0.20)", bd: "rgba(174,83,80,0.55)", fg: T.copperLt }
             : { icon: "lock" as const, bg: "rgba(255,255,255,0.04)", bd: T.border, fg: T.ghost }
         return (
           <div key={s.id} style={{ display: "flex", gap: 14 }}>
@@ -32,7 +32,7 @@ export default function StageRail({ stages, renderAction }: {
                 width: 30, height: 30, borderRadius: 10,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 background: node.bg, border: `1px solid ${node.bd}`, color: node.fg,
-                boxShadow: s.status === "active" ? "0 0 18px rgba(176,74,56,0.30), inset 0 1px 0 rgba(255,255,255,0.20)" : "inset 0 1px 0 rgba(255,255,255,0.10)",
+                boxShadow: s.status === "active" ? "0 0 18px rgba(174,83,80,0.30), inset 0 1px 0 rgba(255,255,255,0.20)" : "inset 0 1px 0 rgba(255,255,255,0.10)",
               }}>
                 <Icon name={node.icon} size={13} />
               </div>

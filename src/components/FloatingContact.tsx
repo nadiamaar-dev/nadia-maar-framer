@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion"
 const MONO = "'JetBrains Mono','SF Mono',ui-monospace,monospace"
 
 const T = {
-  accentLt: "#B04A38",
+  accentLt: "#AE5350",
   muted: "rgba(245,245,247,0.52)",
   text: "#F5F5F7",
 } as const
@@ -50,9 +50,9 @@ function FloatingActionBtn({ href, icon, label, external }: {
       style={{
         display: "flex", flexDirection: "column", alignItems: "center", gap: 5,
         padding: "10px 4px", borderRadius: 12,
-        background: hov ? "rgba(140,53,37,0.18)" : "rgba(255,255,255,0.07)",
-        border: `1px solid ${hov ? "rgba(140,53,37,0.58)" : "rgba(255,255,255,0.14)"}`,
-        boxShadow: hov ? "0 0 18px rgba(140,53,37,0.28), inset 0 1px 0 rgba(255,255,255,0.14)" : "none",
+        background: hov ? "rgba(115,54,53,0.18)" : "rgba(255,255,255,0.07)",
+        border: `1px solid ${hov ? "rgba(115,54,53,0.58)" : "rgba(255,255,255,0.14)"}`,
+        boxShadow: hov ? "0 0 18px rgba(115,54,53,0.28), inset 0 1px 0 rgba(255,255,255,0.14)" : "none",
         color: hov ? "#fff" : "rgba(255,255,255,0.85)",
         fontSize: 10, fontWeight: 600, letterSpacing: "0.03em",
         textDecoration: "none", cursor: "pointer",
@@ -115,11 +115,11 @@ export default function FloatingContact() {
     background: "rgba(255,255,255,0.05)",
     backdropFilter: "blur(48px) saturate(1.5) brightness(0.90)",
     WebkitBackdropFilter: "blur(48px) saturate(1.5) brightness(0.90)",
-    border: "1px solid rgba(140,53,37,0.42)",
+    border: "1px solid rgba(115,54,53,0.42)",
     boxShadow: [
-      "0 0 0 1px rgba(140,53,37,0.10)",
+      "0 0 0 1px rgba(115,54,53,0.10)",
       "0 28px 64px rgba(0,0,0,0.65)",
-      "0 0 40px rgba(140,53,37,0.10)",
+      "0 0 40px rgba(115,54,53,0.10)",
       "inset 0 1px 0 rgba(255,255,255,0.12)",
     ].join(", "),
     overflow: "hidden",
@@ -152,12 +152,12 @@ export default function FloatingContact() {
             transition={{ type: "spring", stiffness: 520, damping: 28 }}
           >
             {/* accent top line */}
-            <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(140,53,37,0.80), rgba(176,74,56,0.55), transparent)" }} />
+            <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(115,54,53,0.80), rgba(174,83,80,0.55), transparent)" }} />
 
             {/* header */}
             <div style={{ padding: "14px 14px 12px", display: "flex", alignItems: "center", gap: 11 }}>
               <div style={{ position: "relative", flexShrink: 0 }}>
-                <div style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid rgba(140,53,37,0.50)", boxShadow: "0 0 12px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid rgba(115,54,53,0.50)", boxShadow: "0 0 12px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <span style={{ fontSize: 15, fontWeight: 700, color: "rgba(255,255,255,0.90)" }}>{initials}</span>
                 </div>
                 <span style={{ position: "absolute", bottom: 0, right: 0, width: 10, height: 10, borderRadius: "50%", background: T.accentLt, border: "2px solid rgba(10,5,20,0.90)", display: "block" }}>
@@ -181,7 +181,7 @@ export default function FloatingContact() {
             </div>
 
             {/* contact info */}
-            <div style={{ padding: "9px 14px", display: "flex", flexDirection: "column", gap: 7, borderTop: "1px solid rgba(140,53,37,0.18)" }}>
+            <div style={{ padding: "9px 14px", display: "flex", flexDirection: "column", gap: 7, borderTop: "1px solid rgba(115,54,53,0.18)" }}>
               <a href={`mailto:${email}`} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: T.muted, textDecoration: "none", transition: "color 0.16s" }}
                 onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.90)")}
                 onMouseLeave={e => (e.currentTarget.style.color = T.muted)}>
@@ -193,7 +193,7 @@ export default function FloatingContact() {
             </div>
 
             {/* action buttons */}
-            <div style={{ padding: "9px 12px 14px", borderTop: "1px solid rgba(140,53,37,0.18)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
+            <div style={{ padding: "9px 12px 14px", borderTop: "1px solid rgba(115,54,53,0.18)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
               <FloatingActionBtn href={`mailto:${email}`}                                                        icon={<MailIcon size={13} />}    label="Email"     />
               <FloatingActionBtn href={`tel:${phone.replace(/\s/g, "")}`}                                        icon={<PhoneIcon size={13} />}   label="Chiama"    />
               <FloatingActionBtn href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}?text=Ciao%20Nadia!`}   icon={<WhatsAppIcon />}          label="WhatsApp"  external />
@@ -216,18 +216,18 @@ export default function FloatingContact() {
           transform: isMobile ? "none" : "translateY(-50%)",
           zIndex: 401,
           borderRadius: 12,
-          border: `1px solid ${open ? "rgba(176,74,56,0.90)" : "rgba(176,74,56,0.65)"}`,
-          background: "linear-gradient(90deg, rgba(140,53,37,0.55) 0%, rgba(176,74,56,0.28) 100%)",
+          border: `1px solid ${open ? "rgba(174,83,80,0.90)" : "rgba(174,83,80,0.65)"}`,
+          background: "linear-gradient(90deg, rgba(115,54,53,0.55) 0%, rgba(174,83,80,0.28) 100%)",
           backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
           boxShadow: open
-            ? "0 0 56px rgba(140,53,37,0.38), 0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18)"
-            : "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
+            ? "0 0 56px rgba(115,54,53,0.38), 0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18)"
+            : "0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
           cursor: "pointer", display: "flex", alignItems: "stretch",
           transition: "border-color 0.24s, box-shadow 0.24s",
           flexShrink: 0, overflow: "hidden",
         } as React.CSSProperties}
       >
-        <span style={{ padding: "12px 10px 12px 14px", borderRight: "1px solid rgba(140,53,37,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.20em", color: "rgba(255,220,200,0.80)" }}>NM</span>
+        <span style={{ padding: "12px 10px 12px 14px", borderRight: "1px solid rgba(115,54,53,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.20em", color: "rgba(255,220,200,0.80)" }}>NM</span>
         <span style={{ padding: "12px 14px", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 13, color: "#fff" }}>→</span>
       </motion.button>
     </>

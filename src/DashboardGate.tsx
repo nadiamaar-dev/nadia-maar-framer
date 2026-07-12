@@ -51,8 +51,8 @@ export default function DashboardGate() {
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
           <div style={{
             width: 36, height: 36, borderRadius: "50%",
-            border: "2px solid rgba(176,74,56,0.25)",
-            borderTopColor: "#B04A38",
+            border: "2px solid rgba(174,83,80,0.25)",
+            borderTopColor: "#AE5350",
             animation: "spin 0.8s linear infinite",
           }} />
           <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", color: "rgba(255,255,255,0.30)", textTransform: "uppercase" }}>

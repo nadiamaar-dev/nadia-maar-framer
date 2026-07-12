@@ -115,7 +115,7 @@ export default function AdminApp() {
           style={{
             display: "inline-flex", alignItems: "center", gap: 7,
             padding: "7px 12px", borderRadius: 99, cursor: "pointer",
-            background: "rgba(176,74,56,0.13)", border: "1px solid rgba(176,74,56,0.32)",
+            background: "rgba(174,83,80,0.13)", border: "1px solid rgba(174,83,80,0.32)",
             fontFamily: MONO, fontSize: 10, fontWeight: 700, color: T.copperLt,
           }}
         >

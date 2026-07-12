@@ -33,7 +33,7 @@ function FullScreen({ children }: { children: React.ReactNode }) {
       <div aria-hidden style={{ position: "fixed", inset: 0, pointerEvents: "none" }}>
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, #233D4D 0%, #233D4D 55%, #1E3544 100%)" }} />
         <div style={{ position: "absolute", top: "-20%", left: "-10%", width: "55%", height: "60%", background: "radial-gradient(ellipse, rgba(226,230,238,0.05) 0%, transparent 65%)" }} />
-        <div style={{ position: "absolute", bottom: "-25%", right: "-12%", width: "60%", height: "70%", background: "radial-gradient(ellipse, rgba(176,74,56,0.08) 0%, transparent 62%)" }} />
+        <div style={{ position: "absolute", bottom: "-25%", right: "-12%", width: "60%", height: "70%", background: "radial-gradient(ellipse, rgba(174,83,80,0.08) 0%, transparent 62%)" }} />
       </div>
       <div style={{ position: "relative", zIndex: 1, width: "100%", display: "flex", justifyContent: "center" }}>
         {children}
@@ -203,7 +203,7 @@ export default function CabinetApp() {
           style={{
             display: "inline-flex", alignItems: "center", gap: 7,
             padding: "7px 12px", borderRadius: 99, cursor: "pointer",
-            background: "rgba(176,74,56,0.13)", border: "1px solid rgba(176,74,56,0.32)",
+            background: "rgba(174,83,80,0.13)", border: "1px solid rgba(174,83,80,0.32)",
             fontFamily: MONO, fontSize: 10, fontWeight: 700, color: T.copperLt,
           }}
         >

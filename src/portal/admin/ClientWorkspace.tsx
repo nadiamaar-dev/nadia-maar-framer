@@ -341,8 +341,8 @@ export default function ClientWorkspace({ client, home, adminId, onBack, reload,
                       style={{
                         display: "flex", flexDirection: "column", gap: 5, textAlign: "left",
                         padding: "10px 12px", borderRadius: 11, cursor: "pointer",
-                        background: sel ? "rgba(176,74,56,0.12)" : "transparent",
-                        border: `1px solid ${sel ? "rgba(176,74,56,0.32)" : "transparent"}`,
+                        background: sel ? "rgba(174,83,80,0.12)" : "transparent",
+                        border: `1px solid ${sel ? "rgba(174,83,80,0.32)" : "transparent"}`,
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 8, width: "100%" }}>

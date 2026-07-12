@@ -23,7 +23,7 @@ export const T = {
   muted: "rgba(255,255,255,0.76)",
   faint: "rgba(255,255,255,0.58)",
   ghost: "rgba(255,255,255,0.40)",
-  copper: "#B04A38",
+  copper: "#AE5350",
   copperLt: "#D4695A",
   green: "#3DBE8B",
   amber: "#D9A441",
@@ -34,7 +34,7 @@ export const T = {
 export type Tone = "copper" | "green" | "amber" | "red" | "silver" | "steel"
 
 export const TONE: Record<Tone, { fg: string; bg: string; bd: string }> = {
-  copper: { fg: "#D4695A", bg: "rgba(176,74,56,0.14)", bd: "rgba(176,74,56,0.32)" },
+  copper: { fg: "#D4695A", bg: "rgba(174,83,80,0.14)", bd: "rgba(174,83,80,0.32)" },
   green: { fg: "#3DBE8B", bg: "rgba(61,190,139,0.11)", bd: "rgba(61,190,139,0.28)" },
   amber: { fg: "#D9A441", bg: "rgba(217,164,65,0.11)", bd: "rgba(217,164,65,0.28)" },
   red: { fg: "#E05252", bg: "rgba(224,82,82,0.11)", bd: "rgba(224,82,82,0.30)" },
@@ -66,7 +66,7 @@ export const GLASS: Record<"panel" | "raised" | "outline" | "accent", React.CSSP
   },
   accent: {
     background: "linear-gradient(150deg, #2c211d, #241c1a 62%)",
-    border: "1px solid rgba(176,74,56,0.38)",
+    border: "1px solid rgba(174,83,80,0.38)",
     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 34px rgba(0,0,0,0.42)",
   },
 }
@@ -167,8 +167,8 @@ export function PortalLogo({ size = 34, id = "nm-portal" }: { size?: number; id?
         <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="rgba(255,255,255,0.92)" />
           <stop offset="46%" stopColor="rgba(255,255,255,0.92)" />
-          <stop offset="58%" stopColor="#B04A38" />
-          <stop offset="100%" stopColor="#8C3525" />
+          <stop offset="58%" stopColor="#AE5350" />
+          <stop offset="100%" stopColor="#733635" />
         </linearGradient>
       </defs>
       <path d="M 2,22 L 2,2 L 13,22 L 13,2 L 19.5,12 L 26,2 L 26,22" stroke={`url(#${id})`} strokeWidth="2" />
@@ -218,8 +218,8 @@ const BTN_VARIANTS: Record<BtnVariant, React.CSSProperties> = {
     color: "#E88",
   },
   copper: {
-    background: "rgba(176,74,56,0.57)",
-    border: "1px solid rgba(176,74,56,0.67)",
+    background: "rgba(174,83,80,0.57)",
+    border: "1px solid rgba(174,83,80,0.67)",
     color: "#fff",
   },
 }
@@ -418,7 +418,7 @@ export function Tabs<Id extends string>({ items, value, onChange }: {
               <span style={{
                 minWidth: 16, height: 16, padding: "0 4px", borderRadius: 99,
                 display: "inline-flex", alignItems: "center", justifyContent: "center",
-                background: "rgba(176,74,56,0.85)", color: "#fff",
+                background: "rgba(174,83,80,0.85)", color: "#fff",
                 fontFamily: MONO, fontSize: 9, fontWeight: 700,
               }}>
                 {it.badge}
@@ -636,7 +636,7 @@ export function Spinner({ size = 26 }: { size?: number }) {
   return (
     <span style={{
       display: "inline-block", width: size, height: size, borderRadius: "50%",
-      border: "2px solid rgba(176,74,56,0.22)", borderTopColor: T.copper,
+      border: "2px solid rgba(174,83,80,0.22)", borderTopColor: T.copper,
       animation: "portal-spin 0.75s linear infinite",
     }} />
   )

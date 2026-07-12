@@ -22,7 +22,7 @@ function Backdrop() {
       }} />
       <div style={{
         position: "absolute", bottom: "-25%", right: "-12%", width: "60%", height: "70%",
-        background: "radial-gradient(ellipse, rgba(176,74,56,0.075) 0%, transparent 62%)",
+        background: "radial-gradient(ellipse, rgba(174,83,80,0.075) 0%, transparent 62%)",
       }} />
       <div style={{
         position: "absolute", inset: 0, opacity: 0.05,
@@ -82,8 +82,8 @@ export default function Shell({
               style={{
                 display: "flex", alignItems: "center", gap: 13,
                 padding: "13px 14px", borderRadius: 12, textAlign: "left",
-                background: isActive ? "rgba(176,74,56,0.16)" : "transparent",
-                border: `1px solid ${isActive ? "rgba(176,74,56,0.34)" : "transparent"}`,
+                background: isActive ? "rgba(174,83,80,0.16)" : "transparent",
+                border: `1px solid ${isActive ? "rgba(174,83,80,0.34)" : "transparent"}`,
                 boxShadow: isActive ? "inset 0 1px 0 rgba(255,255,255,0.10)" : "none",
                 color: isActive ? T.copperLt : T.muted,
                 cursor: "pointer",
@@ -95,7 +95,7 @@ export default function Shell({
                 <span style={{
                   minWidth: 20, height: 20, padding: "0 6px", borderRadius: 99,
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  background: isActive ? "rgba(212,105,90,0.90)" : "rgba(176,74,56,0.80)",
+                  background: isActive ? "rgba(212,105,90,0.90)" : "rgba(174,83,80,0.80)",
                   color: "#FFF", fontFamily: MONO, fontSize: 10.5, fontWeight: 700,
                 }}>
                   {item.badge}

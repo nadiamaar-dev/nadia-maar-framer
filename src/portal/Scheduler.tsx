@@ -109,9 +109,9 @@ export default function Scheduler({ value, onChange, refreshKey = 0 }: {
                 aspectRatio: "1 / 0.82", borderRadius: 9,
                 display: "flex", alignItems: "center", justifyContent: "center", position: "relative",
                 background: isSelDay
-                  ? "linear-gradient(140deg, rgba(176,74,56,0.34), rgba(176,74,56,0.18))"
+                  ? "linear-gradient(140deg, rgba(174,83,80,0.34), rgba(174,83,80,0.18))"
                   : isOpen ? "rgba(255,255,255,0.09)" : "rgba(255,255,255,0.025)",
-                border: `1px solid ${isSelDay ? "rgba(176,74,56,0.55)" : isOpen ? T.borderHi : T.border}`,
+                border: `1px solid ${isSelDay ? "rgba(174,83,80,0.55)" : isOpen ? T.borderHi : T.border}`,
                 boxShadow: isSelDay || isOpen ? "inset 0 1px 0 rgba(255,255,255,0.16)" : "none",
                 color: disabled ? T.ghost : isSelDay ? T.copperLt : T.muted,
                 fontFamily: MONO, fontSize: 11.5, fontWeight: isSelDay ? 700 : 500,
@@ -149,8 +149,8 @@ export default function Scheduler({ value, onChange, refreshKey = 0 }: {
                     className={sel ? undefined : "portal-nav-item"}
                     style={{
                       padding: "6px 11px", borderRadius: 8,
-                      background: sel ? "linear-gradient(140deg, rgba(176,74,56,0.38), rgba(176,74,56,0.20))" : "rgba(255,255,255,0.035)",
-                      border: `1px solid ${sel ? "rgba(176,74,56,0.60)" : T.border}`,
+                      background: sel ? "linear-gradient(140deg, rgba(174,83,80,0.38), rgba(174,83,80,0.20))" : "rgba(255,255,255,0.035)",
+                      border: `1px solid ${sel ? "rgba(174,83,80,0.60)" : T.border}`,
                       boxShadow: sel ? "inset 0 1px 0 rgba(255,255,255,0.18)" : "none",
                       color: sel ? "#FFE9E3" : T.muted,
                       fontFamily: MONO, fontSize: 11, fontWeight: sel ? 700 : 500,

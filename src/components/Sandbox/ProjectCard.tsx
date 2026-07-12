@@ -60,23 +60,23 @@ const CSS = `
   border-color: rgba(255,255,255,0.40);
 }
 .nm-card-btn-primary {
-  background: rgba(176,74,56,0.59);
-  border-color: rgba(176,74,56,0.55);
+  background: rgba(174,83,80,0.59);
+  border-color: rgba(174,83,80,0.55);
   color: #fff;
 }
 .nm-card-btn-primary:hover {
-  background: rgba(176,74,56,0.66);
-  border-color: rgba(176,74,56,0.80);
+  background: rgba(174,83,80,0.66);
+  border-color: rgba(174,83,80,0.80);
   color: #fff;
 }
 .nm-card-btn-remove {
-  background: rgba(176,74,56,0.55);
-  border-color: rgba(176,74,56,0.40);
+  background: rgba(174,83,80,0.55);
+  border-color: rgba(174,83,80,0.40);
   color: #fff;
 }
 .nm-card-btn-remove:hover {
-  background: rgba(176,74,56,0.62);
-  border-color: rgba(176,74,56,0.65);
+  background: rgba(174,83,80,0.62);
+  border-color: rgba(174,83,80,0.65);
   color: #fff;
 }
 `

@@ -20,8 +20,8 @@ const T = {
   muted:    "rgba(255,255,255,0.78)",
   faint:    "rgba(255,255,255,0.58)",
   border:   "rgba(255,255,255,0.11)",
-  accent:   "#8C3525",
-  accentLt: "#B04A38",
+  accent:   "#733635",
+  accentLt: "#AE5350",
   green:    "#10B981",
 } as const
 
@@ -37,8 +37,8 @@ function NMmark({ size = 30, id = "nm-h", hover = false }: { size?: number; id?:
         <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
           <stop offset="44%"  stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
-          <stop offset="56%"  stopColor="#B04A38" />
-          <stop offset="100%" stopColor={hover ? "#A8452C" : "#8C3525"} />
+          <stop offset="56%"  stopColor="#AE5350" />
+          <stop offset="100%" stopColor={hover ? "#8A4241" : "#733635"} />
         </linearGradient>
       </defs>
       <motion.path
@@ -108,7 +108,7 @@ function MenuNavItem({ num, label, onClick, index, active = false }: {
       initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.06 + index * 0.08, duration: 0.55, ease }}>
       <button onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
-        style={{ background: "none", border: "none", cursor: "pointer", width: "100%", display: "flex", alignItems: "baseline", gap: 18, padding: "14px 0", borderBottom: `1px solid ${lit ? "rgba(140,53,37,0.40)" : "rgba(255,255,255,0.08)"}`, transition: "border-color 0.22s", textAlign: "left" as const, position: "relative" }}>
+        style={{ background: "none", border: "none", cursor: "pointer", width: "100%", display: "flex", alignItems: "baseline", gap: 18, padding: "14px 0", borderBottom: `1px solid ${lit ? "rgba(115,54,53,0.40)" : "rgba(255,255,255,0.08)"}`, transition: "border-color 0.22s", textAlign: "left" as const, position: "relative" }}>
         {/* accent left bar */}
         <motion.span aria-hidden
           animate={{ scaleY: lit ? 1 : 0, opacity: lit ? 1 : 0 }} transition={{ duration: 0.2 }}
@@ -186,10 +186,10 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
           onClick={() => { openAuthModal(); onClose() }}
           style={{
             width: "100%", padding: "13px 20px",
-            background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)",
-            border: "1px solid rgba(176,74,56,0.80)",
+            background: "linear-gradient(90deg, rgba(174,83,80,0.78) 0%, rgba(174,83,80,0.60) 100%)",
+            border: "1px solid rgba(174,83,80,0.80)",
             backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-            boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
+            boxShadow: "0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
             borderRadius: 10, cursor: "pointer",
             fontFamily: DISPLAY, fontSize: 13, fontWeight: 700,
             color: "#fff",
@@ -197,7 +197,7 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
             transition: "background 0.18s, border-color 0.18s",
           }}
           onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(90deg, rgba(196,84,66,0.85) 0%, rgba(196,84,66,0.70) 100%)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(196,84,66,0.90)" }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(176,74,56,0.80)" }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(90deg, rgba(174,83,80,0.78) 0%, rgba(174,83,80,0.60) 100%)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(174,83,80,0.80)" }}
         >
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
             <rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
@@ -251,12 +251,13 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
   }
 
   const NAV = [
-    { num: "01", label: "Home",      sectionId: "s1", href: "/",         action: () => nav("s1", "/") },
-    { num: "02", label: "About",     sectionId: "",   href: "/about",    action: () => { window.location.href = "/about" } },
-    { num: "03", label: "Soluzioni", sectionId: "s3", href: "/#s3",      action: () => nav("s3", "/#s3") },
-    { num: "04", label: "Foundry",   sectionId: "",   href: "/foundry",  action: () => { window.location.href = "/foundry" } },
-    { num: "05", label: "Portfolio", sectionId: "s6", href: "/#s6",      action: () => nav("s6", "/#s6") },
-    { num: "06", label: "Contatti",  sectionId: "s9", href: "/#s9",      action: () => nav("s9", "/#s9") },
+    { num: "01", label: "Home",      sectionId: "s1", href: "/",          action: () => nav("s1", "/") },
+    { num: "02", label: "About",     sectionId: "",   href: "/about",     action: () => { window.location.href = "/about" } },
+    { num: "03", label: "Soluzioni", sectionId: "s3", href: "/#s3",       action: () => nav("s3", "/#s3") },
+    { num: "04", label: "Foundry",   sectionId: "",   href: "/foundry",   action: () => { window.location.href = "/foundry" } },
+    { num: "05", label: "Projects",  sectionId: "",   href: "/projects",  action: () => { window.location.href = "/projects" } },
+    { num: "06", label: "Portfolio", sectionId: "s6", href: "/#s6",       action: () => nav("s6", "/#s6") },
+    { num: "07", label: "Contatti",  sectionId: "s9", href: "/#s9",       action: () => nav("s9", "/#s9") },
   ]
 
   const MENU_SOCIALS = [
@@ -293,7 +294,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         {MENU_SOCIALS.map(({ label, href }) => (
           <a key={label} href={href} target="_blank" rel="noopener noreferrer"
             style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: "rgba(255,255,255,0.55)", background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", textDecoration: "none", transition: "all 0.18s" }}
-            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = "#fff"; el.style.borderColor = "rgba(140,53,37,0.55)"; el.style.background = "rgba(140,53,37,0.14)" }}
+            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = "#fff"; el.style.borderColor = "rgba(115,54,53,0.55)"; el.style.background = "rgba(115,54,53,0.14)" }}
             onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = "rgba(255,255,255,0.55)"; el.style.borderColor = "rgba(255,255,255,0.12)"; el.style.background = "rgba(255,255,255,0.07)" }}>
             {label}
           </a>
@@ -311,7 +312,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         style={{ position: "fixed", inset: 0, zIndex: 500, display: "flex", flexDirection: "column", padding: "0 28px", overflow: "hidden", ...GLASS }}>
 
         {/* Accent top line */}
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(140,53,37,0.70), rgba(176,74,56,0.45), transparent)", flexShrink: 0 }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(115,54,53,0.70), rgba(174,83,80,0.45), transparent)", flexShrink: 0 }} />
 
         {/* Top row — mirrors the header: NM logo left, X close right */}
         <div style={{ height: 64, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -362,7 +363,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
         transition={{ type: "spring", stiffness: 320, damping: 36 }}
         style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: 460, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 40px", borderLeft: "1px solid rgba(255,255,255,0.14)", ...GLASS }}>
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(140,53,37,0.70) 40%, rgba(176,74,56,0.45) 70%, transparent)", flexShrink: 0 }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(115,54,53,0.70) 40%, rgba(174,83,80,0.45) 70%, transparent)", flexShrink: 0 }} />
         <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
           <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(255,255,255,0.36)" }}>Navigation</span>
         </div>
@@ -371,7 +372,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
           <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,9vw,130px)", letterSpacing: "-0.04em", color: "rgba(75,85,105,0.13)", filter: "blur(0.8px)", userSelect: "none", lineHeight: 0.82 }}>MAAR</span>
         </div>
         {/* ambient glow */}
-        <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(140,53,37,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
+        <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(115,54,53,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 4 }}>
           {NAV.map((item, i) => (
             <MenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} active={!!item.sectionId && activeId === item.sectionId} />
@@ -436,7 +437,7 @@ export default function Header() {
             <NMmark size={30} id="nm-header-logo" hover={logoHover} />
             <motion.span aria-hidden
               animate={{ opacity: logoHover ? 1 : 0 }} transition={{ duration: 0.30 }}
-              style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(140,53,37,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }} />
+              style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(115,54,53,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }} />
           </span>
           <span aria-hidden className="nm-hdr-divider" style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
           <motion.span className="nm-hdr-wordmark"
@@ -508,17 +509,17 @@ export default function Header() {
                 whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }}
                 style={{
                   padding: "6px 14px",
-                  background: "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)",
-                  border: "1px solid rgba(176,74,56,0.80)",
+                  background: "linear-gradient(90deg, rgba(174,83,80,0.78) 0%, rgba(174,83,80,0.60) 100%)",
+                  border: "1px solid rgba(174,83,80,0.80)",
                   backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-                  boxShadow: "0 0 36px rgba(140,53,37,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
+                  boxShadow: "0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
                   borderRadius: 8, cursor: "pointer",
                   fontFamily: DISPLAY, fontSize: 12, fontWeight: 600,
                   color: "#fff", whiteSpace: "nowrap" as const,
                   transition: "background 0.18s, border-color 0.18s",
                 }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(90deg, rgba(196,84,66,0.85) 0%, rgba(196,84,66,0.70) 100%)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(196,84,66,0.90)" }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(90deg, rgba(176,74,56,0.78) 0%, rgba(176,74,56,0.60) 100%)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(176,74,56,0.80)" }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(90deg, rgba(174,83,80,0.78) 0%, rgba(174,83,80,0.60) 100%)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(174,83,80,0.80)" }}
               >
                 Accedi
               </motion.button>
