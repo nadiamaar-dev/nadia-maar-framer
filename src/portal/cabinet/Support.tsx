@@ -73,36 +73,37 @@ export default function Support({ home, userId, reload }: {
                 const tp = TICKET_PRIORITY[t.priority]
                 return (
                   <div key={t.id} style={{
-                    padding: "13px 15px", borderRadius: 12,
-                    background: "rgba(255,255,255,0.03)", border: `1px solid ${T.border}`,
+                    padding: "16px 18px", borderRadius: 14,
+                    background: "rgba(255,255,255,0.06)", border: `1px solid ${T.border}`,
                     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
                   }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <h4 style={{ flex: 1, minWidth: 140, fontFamily: DISPLAY, fontSize: 13, fontWeight: 800, color: T.text, margin: 0 }}>
+                      <h4 style={{ flex: 1, minWidth: 140, fontFamily: DISPLAY, fontSize: 14, fontWeight: 700, color: T.text, margin: 0 }}>
                         {t.subject}
                       </h4>
                       <Badge tone={tp.tone}>{tp.label}</Badge>
                       <Badge tone={ts.tone} dot>{ts.label}</Badge>
                     </div>
-                    <p style={{ fontFamily: DISPLAY, fontSize: 12, lineHeight: 1.55, color: T.faint, margin: "7px 0 0", whiteSpace: "pre-wrap" }}>
+                    <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: "9px 0 0", whiteSpace: "pre-wrap" }}>
                       {t.message}
                     </p>
-                    <p style={{ fontFamily: MONO, fontSize: 8.5, color: T.ghost, margin: "8px 0 0", letterSpacing: "0.05em" }}>
+                    <p style={{ fontFamily: MONO, fontSize: 9, color: T.faint, margin: "9px 0 0", letterSpacing: "0.05em" }}>
                       {relativeDate(t.createdAt)}
                     </p>
                     {t.adminNote && (
                       <div style={{
-                        marginTop: 10, padding: "10px 13px", borderRadius: 10,
-                        background: "rgba(174,83,80,0.08)", borderLeft: `2px solid ${T.copper}`,
+                        marginTop: 12, padding: "12px 15px", borderRadius: 11,
+                        background: "rgba(224,131,106,0.10)", border: "1px solid rgba(224,131,106,0.26)",
+                        borderLeft: "3px solid #E0836A",
                       }}>
-                        <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.16em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>
+                        <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: T.copper, margin: 0 }}>
                           <Icon name="sparkle" size={10} /> Risposta dello studio
                         </p>
-                        <p style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.55, color: T.muted, margin: "6px 0 0", whiteSpace: "pre-wrap" }}>
+                        <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.text, margin: "7px 0 0", whiteSpace: "pre-wrap" }}>
                           {t.adminNote}
                         </p>
                         {t.respondedAt && (
-                          <p style={{ fontFamily: MONO, fontSize: 8.5, color: T.ghost, margin: "6px 0 0" }}>{fmtDateTime(t.respondedAt)}</p>
+                          <p style={{ fontFamily: MONO, fontSize: 9, color: T.faint, margin: "7px 0 0" }}>{fmtDateTime(t.respondedAt)}</p>
                         )}
                       </div>
                     )}

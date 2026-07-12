@@ -100,8 +100,6 @@ export default function AdminApp() {
 
   return (
     <Shell
-      brandName="Nadia Maar"
-      roleTag="Studio Admin"
       items={items}
       active={section}
       onSelect={handleSelect}
@@ -114,8 +112,8 @@ export default function AdminApp() {
           className="portal-nav-item"
           style={{
             display: "inline-flex", alignItems: "center", gap: 7,
-            padding: "7px 12px", borderRadius: 99, cursor: "pointer",
-            background: "rgba(174,83,80,0.13)", border: "1px solid rgba(174,83,80,0.32)",
+            padding: "7px 14px", borderRadius: 99, cursor: "pointer",
+            background: "rgba(224,131,106,0.14)", border: "1px solid rgba(224,131,106,0.32)",
             fontFamily: MONO, fontSize: 10, fontWeight: 700, color: T.copperLt,
           }}
         >

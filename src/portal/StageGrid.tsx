@@ -1,214 +1,267 @@
 import React from "react"
 import type { ProjectStage } from "../lib/api"
 import { fmtDate } from "../lib/api"
-import { APPROVAL_STATE, Badge, DISPLAY, Icon, MONO, T } from "./ui"
+import { APPROVAL_STATE, Badge, DISPLAY, Icon, MONO, T, TL } from "./ui"
 
-/* ── Inline status-icon paths ─────────────────────────────── */
-const LOCK_CLOSED = (
-  <>
-    <rect x="3" y="11" width="18" height="11" rx="2" />
-    <path d="M7 11V7a5 5 0 0110 0v4" />
-  </>
-)
-const LOCK_OPEN = (
-  <>
-    <rect x="3" y="11" width="18" height="11" rx="2" />
-    <path d="M7 11V7a5 5 0 019.9-1" />
-  </>
-)
-const CHECK_CIRCLE = (
-  <>
-    <circle cx="12" cy="12" r="10" />
-    <path d="M16 9l-5.5 6L8 12.5" />
-  </>
-)
+/* ── SVG icon paths ─────────────────────────────────────────── */
+const PATH_CHECK = <><circle cx="12" cy="12" r="10" /><path d="M16 9l-5.5 6L8 12.5" /></>
+const PATH_UNLOCK = <><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 019.9-1" /></>
+const PATH_LOCK   = <><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0110 0v4" /></>
 
-function StatusIcon({ status }: { status: ProjectStage["status"] }) {
-  const configs = {
-    locked: { paths: LOCK_CLOSED, color: "rgba(255,255,255,0.34)", bg: "rgba(255,255,255,0.06)", border: "rgba(255,255,255,0.11)", label: "Fase bloccata" },
-    active: { paths: LOCK_OPEN, color: "#E0836A", bg: "rgba(174,83,80,0.20)", border: "rgba(174,83,80,0.42)", label: "Fase in corso" },
-    done: { paths: CHECK_CIRCLE, color: "#4BD39B", bg: "rgba(61,190,139,0.16)", border: "rgba(61,190,139,0.36)", label: "Fase completata" },
-  }
-  const c = configs[status]
+function SvgIcon({ d, size = 18 }: { d: React.ReactNode; size?: number }) {
   return (
-    <div role="img" aria-label={c.label} style={{
-      width: 38, height: 38, borderRadius: 12,
-      display: "flex", alignItems: "center", justifyContent: "center",
-      background: c.bg, border: `1px solid ${c.border}`, color: c.color, flexShrink: 0,
-      boxShadow: status === "active"
-        ? "0 0 20px rgba(174,83,80,0.30), inset 0 1px 0 rgba(255,255,255,0.20)"
-        : "inset 0 1px 0 rgba(255,255,255,0.10)",
-    }}>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7}
-        strokeLinecap="round" strokeLinejoin="round" width={18} height={18} aria-hidden="true">
-        {c.paths}
-      </svg>
-    </div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round"
+      width={size} height={size} aria-hidden>
+      {d}
+    </svg>
   )
 }
 
-/* Real progress bar — filled to `value`%. Active stages get a subtle sheen
-   overlay (disabled under prefers-reduced-motion). */
+/* ── Progress bar ─────────────────────────────────────────────── */
 function ProgressBar({ value, tone }: { value: number; tone: "copper" | "green" }) {
   const pct = Math.max(0, Math.min(100, value))
-  const fill = tone === "green"
-    ? "linear-gradient(90deg, #2E9E70, #4BD39B)"
-    : "linear-gradient(90deg, #9E3F2E, #E0836A)"
-  const glow = tone === "green" ? "rgba(61,190,139,0.35)" : "rgba(212,105,90,0.40)"
+  const fill   = tone === "green" ? "linear-gradient(90deg,#2DA870,#4BD39B)" : "linear-gradient(90deg,#B04A38,#E0836A)"
+  const glow   = tone === "green" ? "rgba(75,211,155,0.45)" : "rgba(224,131,106,0.50)"
+  const label  = tone === "green" ? "#4BD39B" : "#F4A882"
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
-        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: T.ghost }}>
+        <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)" }}>
           Avanzamento
         </span>
-        <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: tone === "green" ? "#4BD39B" : "#E0836A" }}>
+        <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 700, color: label }}>
           {Math.round(pct)}%
         </span>
       </div>
-      <div style={{ height: 8, borderRadius: 99, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-        <div className={tone === "copper" ? "stage-progress-fill" : undefined} style={{
-          width: `${pct}%`, height: "100%", borderRadius: 99,
-          background: fill, boxShadow: `0 0 12px ${glow}`,
-          transition: "width 0.6s cubic-bezier(0.16,1,0.3,1)",
-        }} />
+      <div style={{ height: 5, borderRadius: 99, background: "rgba(255,255,255,0.09)", overflow: "hidden" }}>
+        <div
+          className={tone === "copper" ? "stage-progress-fill" : undefined}
+          style={{ width: `${pct}%`, height: "100%", borderRadius: 99, background: fill, boxShadow: `0 0 10px ${glow}`, transition: "width 0.65s cubic-bezier(0.16,1,0.3,1)" }}
+        />
       </div>
     </div>
   )
 }
 
-/* Horizontal arrow connector between cards in a row */
-function ArrowH({ lit }: { lit: boolean }) {
-  const color = lit ? "rgba(224,131,106,0.65)" : "rgba(255,255,255,0.16)"
-  return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, width: 34, pointerEvents: "none" }}>
-      <svg width="30" height="16" viewBox="0 0 30 16" fill="none" aria-hidden="true">
-        <line x1="2" y1="8" x2="23" y2="8" stroke={color} strokeWidth="1.6" strokeDasharray="3 2.5" />
-        <path d="M20 4.5L24.5 8 20 11.5" stroke={color} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      </svg>
-    </div>
-  )
-}
-
-/* Right-side wrap connector between row 1 and row 2 (straight L→R reading in both rows) */
-function RowWrap({ lit }: { lit: boolean }) {
-  const color = lit ? "rgba(224,131,106,0.55)" : "rgba(255,255,255,0.14)"
-  return (
-    <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", padding: "0 6px", margin: "6px 0" }}>
-      <svg width="54" height="38" viewBox="0 0 54 38" fill="none" style={{ display: "block" }} aria-hidden="true">
-        <path d="M2 4 L2 20 Q2 34 16 34 L52 34" stroke={color} strokeWidth="1.6" strokeDasharray="3.5 2.5" fill="none" strokeLinecap="round" />
-        <path d="M48 29.5L52.5 34 48 38.5" stroke={color} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      </svg>
-      <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color, marginLeft: 5 }}>
-        continua
-      </span>
-    </div>
-  )
-}
-
-/* ── Card ─────────────────────────────────────────────────── */
-function StageCard({ stage, index, renderAction }: {
+/* ── Single timeline row ─────────────────────────────────────── */
+function StageRow({ stage, index, isLast, renderAction }: {
   stage: ProjectStage
   index: number
+  isLast: boolean
   renderAction?: (s: ProjectStage) => React.ReactNode
 }) {
   const isActive = stage.status === "active"
-  const isDone = stage.status === "done"
+  const isDone   = stage.status === "done"
   const isLocked = stage.status === "locked"
 
-  /* Opaque, matte, LIGHTER than the page — cards read as physical tiles. */
-  const surface = isActive ? "#2b2421" : isDone ? "#23271f" : "#262730"
-  const borderCol = isActive ? "rgba(174,83,80,0.42)" : isDone ? "rgba(61,190,139,0.30)" : "rgba(255,255,255,0.10)"
-  const shadow = isActive
-    ? "0 8px 30px rgba(174,83,80,0.16), 0 2px 8px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.10)"
-    : "0 6px 22px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.07)"
-
-  const titleColor = isLocked ? "rgba(255,255,255,0.50)" : T.text
   const action = renderAction?.(stage)
 
+  /* ── Circle config ── */
+  const circle = isActive
+    ? { bg: "rgba(224,131,106,0.22)", border: "rgba(224,131,106,0.55)", color: "#F4A882", glow: "0 0 22px rgba(224,131,106,0.40), 0 0 6px rgba(224,131,106,0.25)", icon: PATH_UNLOCK }
+    : isDone
+    ? { bg: "rgba(75,211,155,0.18)",  border: "rgba(75,211,155,0.46)",  color: "#4BD39B", glow: "0 0 16px rgba(75,211,155,0.28)", icon: PATH_CHECK }
+    : { bg: "rgba(255,255,255,0.04)", border: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.32)", glow: "none", icon: PATH_LOCK }
+
+  /* ── Connector line ── */
+  const lineColor = isDone
+    ? "linear-gradient(180deg, rgba(75,211,155,0.45) 0%, rgba(75,211,155,0.20) 100%)"
+    : isActive
+    ? "linear-gradient(180deg, rgba(224,131,106,0.42) 0%, rgba(255,255,255,0.08) 100%)"
+    : "rgba(255,255,255,0.08)"
+
+  /* ── Content card (only active + done) ── */
+  const cardBg     = isActive ? "rgba(18,32,44,0.72)"   : "rgba(12,40,28,0.58)"
+  const cardBorder = isActive ? "rgba(224,131,106,0.32)" : "rgba(75,211,155,0.22)"
+  const descColor  = "rgba(255,255,255,0.64)"
+
+  const numLabel = String(index + 1).padStart(2, "0")
+
   return (
-    <div style={{
-      flex: 1, minWidth: 0,
-      background: surface,
-      border: `1px solid ${borderCol}`,
-      borderRadius: 18,
-      padding: "20px 20px 18px",
-      boxShadow: shadow,
-      display: "flex", flexDirection: "column", gap: 13,
-      opacity: isLocked ? 0.82 : 1,
-      transition: "box-shadow 0.3s cubic-bezier(0.32,0.72,0,1)",
-    }}>
-      {/* Top: number pill + status icon */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <span style={{
-          fontFamily: MONO, fontSize: 10.5, fontWeight: 700, letterSpacing: "0.12em",
-          color: isActive ? "#E0836A" : "rgba(255,255,255,0.40)",
-          padding: "4px 9px", borderRadius: 99,
-          background: isActive ? "rgba(174,83,80,0.14)" : "rgba(255,255,255,0.05)",
-          border: `1px solid ${isActive ? "rgba(174,83,80,0.28)" : "rgba(255,255,255,0.09)"}`,
+    <div style={{ display: "flex", gap: 0, position: "relative" }}>
+      {/* ── Left: circle + line ── */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 64, flexShrink: 0 }}>
+        {/* Circle */}
+        <div style={{
+          width: isActive ? 48 : 42, height: isActive ? 48 : 42,
+          borderRadius: "50%", flexShrink: 0,
+          background: circle.bg,
+          border: `1.5px solid ${circle.border}`,
+          color: circle.color,
+          boxShadow: circle.glow,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          position: "relative", zIndex: 1,
+          transition: "all 0.3s ease",
         }}>
-          FASE {String(index + 1).padStart(2, "0")}
-        </span>
-        <StatusIcon status={stage.status} />
+          {isLocked
+            ? <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, letterSpacing: "0.04em" }}>{numLabel}</span>
+            : <SvgIcon d={circle.icon} size={isActive ? 19 : 17} />
+          }
+          {/* Active pulse ring */}
+          {isActive && (
+            <div className="stage-pulse" style={{
+              position: "absolute", inset: -5, borderRadius: "50%",
+              border: "1.5px solid rgba(224,131,106,0.28)",
+            }} />
+          )}
+        </div>
+
+        {/* Connector */}
+        {!isLast && (
+          <div style={{
+            width: 2, flex: 1, minHeight: 20, marginTop: 4,
+            background: lineColor,
+            borderRadius: 1,
+          }} />
+        )}
       </div>
 
-      {/* Title + approval badge */}
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 8, flexWrap: "wrap" }}>
-        <h4 style={{
-          fontFamily: DISPLAY, fontSize: 17, fontWeight: 700, letterSpacing: "-0.01em",
-          lineHeight: 1.3, color: titleColor, margin: 0, flex: 1, minWidth: 0,
+      {/* ── Right: content ── */}
+      <div style={{ flex: 1, minWidth: 0, paddingBottom: isLast ? 0 : 28, paddingTop: 2 }}>
+        {/* Header row */}
+        <div style={{
+          display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap",
+          minHeight: isActive ? 48 : 42,
         }}>
-          {stage.title}
-        </h4>
+          {/* Fase label */}
+          <span style={{
+            fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em", textTransform: "uppercase",
+            color: circle.color, flexShrink: 0,
+          }}>
+            FASE {numLabel}
+          </span>
+
+          {/* Title */}
+          <h4 style={{
+            fontFamily: DISPLAY,
+            fontSize: isActive ? 17 : isLocked ? 14 : 15,
+            fontWeight: isActive ? 800 : isLocked ? 500 : 700,
+            letterSpacing: "-0.01em", lineHeight: 1.25,
+            color: isLocked ? "rgba(255,255,255,0.38)" : isActive ? "#F5EDE8" : "#D4EEE0",
+            margin: 0, flex: 1, minWidth: 0,
+          }}>
+            {stage.title}
+          </h4>
+
+          {/* Status pill */}
+          <div style={{ flexShrink: 0 }}>
+            {isDone && (
+              <span style={{
+                display: "inline-flex", alignItems: "center", gap: 5,
+                padding: "3px 10px", borderRadius: 99,
+                background: "rgba(75,211,155,0.12)", border: "1px solid rgba(75,211,155,0.28)",
+                fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.06em",
+                color: "#4BD39B",
+              }}>
+                <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#4BD39B" }} />
+                Completata
+              </span>
+            )}
+            {isActive && (
+              <span style={{
+                display: "inline-flex", alignItems: "center", gap: 5,
+                padding: "3px 10px", borderRadius: 99,
+                background: "rgba(224,131,106,0.14)", border: "1px solid rgba(224,131,106,0.34)",
+                fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.06em",
+                color: "#F4A882",
+              }}>
+                <span className="stage-dot-pulse" style={{ width: 5, height: 5, borderRadius: "50%", background: "#F4A882" }} />
+                In corso
+              </span>
+            )}
+            {isLocked && (
+              <span style={{
+                display: "inline-flex", alignItems: "center", gap: 5,
+                padding: "2px 9px", borderRadius: 99,
+                background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+                fontFamily: MONO, fontSize: 9, letterSpacing: "0.06em",
+                color: "rgba(255,255,255,0.28)",
+              }}>
+                In attesa
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Approval state badge */}
         {stage.approvalState !== "none" && (
-          <Badge tone={APPROVAL_STATE[stage.approvalState].tone}>
-            {APPROVAL_STATE[stage.approvalState].label}
-          </Badge>
+          <div style={{ marginTop: 6 }}>
+            <Badge tone={APPROVAL_STATE[stage.approvalState].tone}>
+              {APPROVAL_STATE[stage.approvalState].label}
+            </Badge>
+          </div>
         )}
-      </div>
 
-      {/* Admin description */}
-      {stage.deliverableNote && (
-        <p style={{
-          fontFamily: DISPLAY, fontSize: 14, lineHeight: 1.6,
-          color: isLocked ? "rgba(255,255,255,0.42)" : "rgba(255,255,255,0.72)",
-          margin: 0, whiteSpace: "pre-wrap",
-          display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden",
-        }}>
-          {stage.deliverableNote}
-        </p>
-      )}
+        {/* Content card — only active + done */}
+        {!isLocked && (
+          <div style={{
+            marginTop: 12,
+            padding: "18px 20px",
+            borderRadius: 16,
+            background: cardBg,
+            border: `1px solid ${cardBorder}`,
+            borderLeft: isActive ? "3px solid rgba(224,131,106,0.70)" : `1px solid ${cardBorder}`,
+            backdropFilter: "blur(14px) saturate(1.4)",
+            WebkitBackdropFilter: "blur(14px) saturate(1.4)",
+            boxShadow: isActive
+              ? "0 0 0 1px rgba(224,131,106,0.08), 0 8px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.07)"
+              : "inset 0 1px 0 rgba(75,211,155,0.07)",
+            display: "flex", flexDirection: "column", gap: 14,
+          }}>
+            {/* Description */}
+            {stage.deliverableNote && (
+              <p style={{
+                fontFamily: DISPLAY, fontSize: 13.5, lineHeight: 1.65,
+                color: descColor, margin: 0, whiteSpace: "pre-wrap",
+                display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden",
+              }}>
+                {stage.deliverableNote}
+              </p>
+            )}
 
-      {/* Deliverable link */}
-      {stage.deliverableUrl && (
-        <a href={stage.deliverableUrl} target="_blank" rel="noreferrer" className="portal-link" style={{
-          display: "inline-flex", alignItems: "center", gap: 6,
-          fontFamily: MONO, fontSize: 11.5, color: T.copperLt, textDecoration: "none",
-        }}>
-          <Icon name="external" size={13} /> Apri deliverable
-        </a>
-      )}
+            {/* Progress — active only */}
+            {isActive && (
+              <ProgressBar value={stage.progress} tone="copper" />
+            )}
 
-      {/* Action slot */}
-      {action && <div>{action}</div>}
+            {/* Deliverable link */}
+            {stage.deliverableUrl && (
+              <a
+                href={stage.deliverableUrl}
+                target="_blank" rel="noreferrer"
+                className="portal-link"
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  fontFamily: MONO, fontSize: 11, color: T.copperLt, textDecoration: "none",
+                }}
+              >
+                <Icon name="external" size={12} /> Apri deliverable
+              </a>
+            )}
 
-      {/* Footer: progress bar + dates, pinned to bottom */}
-      <div style={{ marginTop: "auto", paddingTop: 4, display: "flex", flexDirection: "column", gap: 10 }}>
-        {(isActive || isDone) && (
-          <ProgressBar value={stage.progress} tone={isDone ? "green" : "copper"} />
-        )}
-        {(stage.startedAt || stage.completedAt) && (
-          <p style={{ fontFamily: MONO, fontSize: 10, color: "rgba(255,255,255,0.34)", margin: 0, letterSpacing: "0.04em" }}>
-            {stage.startedAt ? `Avviata ${fmtDate(stage.startedAt)}` : ""}
-            {stage.startedAt && stage.completedAt ? " · " : ""}
-            {stage.completedAt ? `Chiusa ${fmtDate(stage.completedAt)}` : ""}
-          </p>
+            {/* Actions — injected from Dossier */}
+            {action && <div style={{ paddingTop: 2 }}>{action}</div>}
+
+            {/* Dates */}
+            {(stage.startedAt || stage.completedAt) && (
+              <p style={{
+                fontFamily: MONO, fontSize: 9.5, color: "rgba(255,255,255,0.28)",
+                margin: 0, letterSpacing: "0.04em",
+              }}>
+                {stage.startedAt ? `Avviata ${fmtDate(stage.startedAt)}` : ""}
+                {stage.startedAt && stage.completedAt ? "  ·  " : ""}
+                {stage.completedAt ? `Chiusa ${fmtDate(stage.completedAt)}` : ""}
+              </p>
+            )}
+          </div>
         )}
       </div>
     </div>
   )
 }
 
-/* ── Grid ─────────────────────────────────────────────────── */
+/* ── Main export ────────────────────────────────────────────── */
 export default function StageGrid({ stages, renderAction }: {
   stages: ProjectStage[]
   renderAction?: (s: ProjectStage) => React.ReactNode
@@ -216,60 +269,49 @@ export default function StageGrid({ stages, renderAction }: {
   if (stages.length === 0) return null
 
   const sorted = [...stages].sort((a, b) => a.orderIndex - b.orderIndex)
-  const COLS = 3
-  const rows: ProjectStage[][] = []
-  for (let i = 0; i < sorted.length; i += COLS) rows.push(sorted.slice(i, i + COLS))
-
-  const lastLitIdx = sorted.reduce((acc, s, i) => (s.status !== "locked" ? i : acc), -1)
 
   return (
     <>
       <style>{`
-        @keyframes stageFillSheen { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        @keyframes stageFillSheen {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
         .stage-progress-fill { position: relative; }
         .stage-progress-fill::after {
           content: ""; position: absolute; inset: 0; border-radius: 99px;
-          background: linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.28) 50%, transparent 70%);
+          background: linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.22) 50%, transparent 70%);
           background-size: 200% 100%;
-          animation: stageFillSheen 2.4s ease-in-out infinite;
+          animation: stageFillSheen 2.8s ease-in-out infinite;
         }
+        @keyframes stagePulse {
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50% { opacity: 0; transform: scale(1.6); }
+        }
+        .stage-pulse { animation: stagePulse 2s ease-in-out infinite; }
+        @keyframes stageDotPulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+        .stage-dot-pulse { animation: stageDotPulse 1.8s ease-in-out infinite; }
         @media (prefers-reduced-motion: reduce) {
-          .stage-progress-fill::after { animation: none; display: none; }
-        }
-        @media (max-width: 680px) {
-          .stage-grid-row { flex-direction: column !important; }
-          .stage-grid-arrow { display: none !important; }
-          .stage-grid-wrap { display: none !important; }
+          .stage-progress-fill::after,
+          .stage-pulse,
+          .stage-dot-pulse { animation: none; }
+          .stage-pulse { display: none; }
         }
       `}</style>
+
       <div style={{ display: "flex", flexDirection: "column" }}>
-        {rows.map((row, rowIdx) => {
-          const rowStartIdx = rowIdx * COLS
-          return (
-            <React.Fragment key={rowIdx}>
-              {rowIdx > 0 && (
-                <div className="stage-grid-wrap">
-                  <RowWrap lit={sorted[rowStartIdx]?.status !== "locked"} />
-                </div>
-              )}
-              <div className="stage-grid-row" style={{ display: "flex", alignItems: "stretch", gap: 0 }}>
-                {row.map((stage, colIdx) => {
-                  const globalIdx = rowStartIdx + colIdx
-                  return (
-                    <React.Fragment key={stage.id}>
-                      <StageCard stage={stage} index={globalIdx} renderAction={renderAction} />
-                      {colIdx < row.length - 1 && (
-                        <div className="stage-grid-arrow">
-                          <ArrowH lit={globalIdx < lastLitIdx} />
-                        </div>
-                      )}
-                    </React.Fragment>
-                  )
-                })}
-              </div>
-            </React.Fragment>
-          )
-        })}
+        {sorted.map((stage, i) => (
+          <StageRow
+            key={stage.id}
+            stage={stage}
+            index={i}
+            isLast={i === sorted.length - 1}
+            renderAction={renderAction}
+          />
+        ))}
       </div>
     </>
   )

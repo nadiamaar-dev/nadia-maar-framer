@@ -3113,10 +3113,10 @@ function ContactModal({ onClose }: { onClose: () => void }) {
         style={{
           width: "100%", maxWidth: 580, position: "relative",
           borderRadius: 20,
-          background: "rgba(30,37,50,0.88)",
-          backdropFilter: "blur(72px) brightness(1.12) saturate(0.80)",
-          WebkitBackdropFilter: "blur(72px) brightness(1.12) saturate(0.80)",
-          border: "1px solid rgba(255,255,255,0.14)",
+          background: "rgba(20,35,45,0.94)",
+          backdropFilter: "blur(72px) brightness(0.92) saturate(1.10)",
+          WebkitBackdropFilter: "blur(72px) brightness(0.92) saturate(1.10)",
+          border: "1px solid rgba(255,255,255,0.12)",
           boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.22), inset 1px 0 0 rgba(255,255,255,0.08), 0 40px 100px rgba(0,0,0,0.65)",
           overflow: "hidden",
         } as React.CSSProperties}

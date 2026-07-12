@@ -1,14 +1,47 @@
 import React from "react"
 import type { ProjectStage } from "../lib/api"
 import { fmtDate } from "../lib/api"
-import { APPROVAL_STATE, Badge, Bar, DISPLAY, Icon, MONO, STAGE_STATUS, T } from "./ui"
+import { APPROVAL_STATE, Badge, DISPLAY, Icon, MONO, STAGE_STATUS, T } from "./ui"
 
 export function stageProgress(stages: ProjectStage[]): number {
   if (stages.length === 0) return 0
   return Math.round((stages.filter(s => s.status === "done").length / stages.length) * 100)
 }
 
-/** Vertical stage rail with status nodes, deliverables and a per-stage action slot. */
+const SVG_CHECK  = <><circle cx="12" cy="12" r="10" /><path d="M16 9l-5.5 6L8 12.5" /></>
+const SVG_UNLOCK = <><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 019.9-1" /></>
+const SVG_LOCK   = <><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0110 0v4" /></>
+
+function NodeIcon({ d }: { d: React.ReactNode }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round"
+      width={14} height={14} aria-hidden>
+      {d}
+    </svg>
+  )
+}
+
+function ProgressBar({ value, tone }: { value: number; tone: "copper" | "green" }) {
+  const pct = Math.max(0, Math.min(100, value))
+  const fill = tone === "green"
+    ? "linear-gradient(90deg,#2DA870,#4BD39B)"
+    : "linear-gradient(90deg,#B04A38,#E0836A)"
+  const glow = tone === "green" ? "rgba(75,211,155,0.40)" : "rgba(224,131,106,0.45)"
+  const label = tone === "green" ? "#4BD39B" : "#F4A882"
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <div style={{ flex: 1, height: 4, borderRadius: 99, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+        <div style={{ width: `${pct}%`, height: "100%", borderRadius: 99, background: fill, boxShadow: `0 0 8px ${glow}`, transition: "width 0.5s cubic-bezier(0.16,1,0.3,1)" }} />
+      </div>
+      <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: label, minWidth: 30, textAlign: "right" }}>
+        {pct}%
+      </span>
+    </div>
+  )
+}
+
+/** Compact vertical stage rail for the admin dossier view. */
 export default function StageRail({ stages, renderAction }: {
   stages: ProjectStage[]
   renderAction?: (s: ProjectStage) => React.ReactNode
@@ -19,40 +52,53 @@ export default function StageRail({ stages, renderAction }: {
     <div style={{ display: "flex", flexDirection: "column" }}>
       {sorted.map((s, i) => {
         const last = i === sorted.length - 1
-        const node = s.status === "done"
-          ? { icon: "check" as const, bg: "rgba(61,190,139,0.16)", bd: "rgba(61,190,139,0.45)", fg: T.green }
-          : s.status === "active"
-            ? { icon: "bolt" as const, bg: "rgba(174,83,80,0.20)", bd: "rgba(174,83,80,0.55)", fg: T.copperLt }
-            : { icon: "lock" as const, bg: "rgba(255,255,255,0.04)", bd: T.border, fg: T.ghost }
+        const isActive = s.status === "active"
+        const isDone   = s.status === "done"
+        const isLocked = s.status === "locked"
+
+        /* Node config */
+        const node = isDone
+          ? { d: SVG_CHECK,  bg: "rgba(75,211,155,0.18)",   bd: "rgba(75,211,155,0.46)",   fg: "#4BD39B", glow: "0 0 14px rgba(75,211,155,0.28)" }
+          : isActive
+          ? { d: SVG_UNLOCK, bg: "rgba(224,131,106,0.22)",  bd: "rgba(224,131,106,0.52)",  fg: "#F4A882", glow: "0 0 18px rgba(224,131,106,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" }
+          : { d: SVG_LOCK,   bg: "rgba(255,255,255,0.05)",  bd: "rgba(255,255,255,0.10)",  fg: "rgba(255,255,255,0.35)", glow: "none" }
+
+        /* Line below this node */
+        const lineGrad = isDone
+          ? "linear-gradient(180deg,rgba(75,211,155,0.40) 0%,rgba(75,211,155,0.18) 100%)"
+          : isActive
+          ? "linear-gradient(180deg,rgba(224,131,106,0.38) 0%,rgba(255,255,255,0.07) 100%)"
+          : "rgba(255,255,255,0.08)"
+
         return (
           <div key={s.id} style={{ display: "flex", gap: 14 }}>
             {/* Node + connector */}
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
               <div style={{
-                width: 30, height: 30, borderRadius: 10,
+                width: 32, height: 32, borderRadius: 10, flexShrink: 0,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 background: node.bg, border: `1px solid ${node.bd}`, color: node.fg,
-                boxShadow: s.status === "active" ? "0 0 18px rgba(174,83,80,0.30), inset 0 1px 0 rgba(255,255,255,0.20)" : "inset 0 1px 0 rgba(255,255,255,0.10)",
+                boxShadow: node.glow,
+                transition: "box-shadow 0.3s ease",
               }}>
-                <Icon name={node.icon} size={13} />
+                <NodeIcon d={node.d} />
               </div>
               {!last && (
-                <div style={{
-                  width: 1.5, flex: 1, minHeight: 18, margin: "4px 0",
-                  background: s.status === "done" ? "rgba(61,190,139,0.35)" : "rgba(255,255,255,0.10)",
-                }} />
+                <div style={{ width: 2, flex: 1, minHeight: 16, margin: "4px 0", background: lineGrad, borderRadius: 1 }} />
               )}
             </div>
 
-            {/* Body */}
-            <div style={{ flex: 1, minWidth: 0, paddingBottom: last ? 0 : 22 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                <span style={{ fontFamily: MONO, fontSize: 9, color: T.ghost, letterSpacing: "0.1em" }}>
+            {/* Content */}
+            <div style={{ flex: 1, minWidth: 0, paddingBottom: last ? 0 : 20 }}>
+              {/* Title row */}
+              <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap", minHeight: 32 }}>
+                <span style={{ fontFamily: MONO, fontSize: 9, color: node.fg, letterSpacing: "0.14em", opacity: 0.8 }}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h4 style={{
-                  fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 800, margin: 0, letterSpacing: "-0.01em",
-                  color: s.status === "locked" ? T.faint : T.text,
+                  fontFamily: DISPLAY, fontSize: 13.5, fontWeight: isLocked ? 500 : 700,
+                  letterSpacing: "-0.01em", margin: 0,
+                  color: isLocked ? "rgba(255,255,255,0.40)" : isActive ? "#F5EDE8" : "#D4EEE0",
                 }}>
                   {s.title}
                 </h4>
@@ -62,32 +108,32 @@ export default function StageRail({ stages, renderAction }: {
                 )}
               </div>
 
+              {/* Dates */}
               {(s.startedAt || s.completedAt) && (
-                <p style={{ fontFamily: MONO, fontSize: 9.5, color: T.ghost, margin: "5px 0 0", letterSpacing: "0.04em" }}>
+                <p style={{ fontFamily: MONO, fontSize: 9, color: "rgba(255,255,255,0.28)", margin: "4px 0 0", letterSpacing: "0.04em" }}>
                   {s.startedAt ? `Avviata ${fmtDate(s.startedAt)}` : ""}
-                  {s.startedAt && s.completedAt ? " · " : ""}
+                  {s.startedAt && s.completedAt ? "  ·  " : ""}
                   {s.completedAt ? `Chiusa ${fmtDate(s.completedAt)}` : ""}
                 </p>
               )}
 
-              {s.status !== "locked" && (
-                <div style={{ marginTop: 8, maxWidth: 320 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.14em", textTransform: "uppercase", color: T.ghost }}>Avanzamento</span>
-                    <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: s.status === "done" ? T.green : T.copperLt }}>{s.progress}%</span>
-                  </div>
-                  <Bar value={s.progress} tone={s.status === "done" ? "green" : "copper"} height={4} />
+              {/* Progress — active + done */}
+              {!isLocked && (
+                <div style={{ marginTop: 8, maxWidth: 340 }}>
+                  <ProgressBar value={s.progress} tone={isDone ? "green" : "copper"} />
                 </div>
               )}
 
+              {/* Deliverable card */}
               {(s.deliverableUrl || s.deliverableNote) && (
                 <div style={{
-                  marginTop: 9, padding: "9px 12px", borderRadius: 10,
-                  background: "rgba(255,255,255,0.035)", border: `1px solid ${T.border}`,
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
+                  marginTop: 10, padding: "10px 13px", borderRadius: 11,
+                  background: isActive ? "rgba(224,131,106,0.08)" : "rgba(255,255,255,0.05)",
+                  border: `1px solid ${isActive ? "rgba(224,131,106,0.22)" : "rgba(255,255,255,0.09)"}`,
+                  borderLeft: isActive ? "2px solid rgba(224,131,106,0.55)" : undefined,
                 }}>
                   {s.deliverableNote && (
-                    <p style={{ fontFamily: DISPLAY, fontSize: 12, lineHeight: 1.55, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>
+                    <p style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>
                       {s.deliverableNote}
                     </p>
                   )}
@@ -109,7 +155,8 @@ export default function StageRail({ stages, renderAction }: {
                 </div>
               )}
 
-              {renderAction && <div style={{ marginTop: 9 }}>{renderAction(s)}</div>}
+              {/* Actions */}
+              {renderAction && <div style={{ marginTop: 10 }}>{renderAction(s)}</div>}
             </div>
           </div>
         )

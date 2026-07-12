@@ -16,10 +16,10 @@ const CSS = `
   animation: nm-modal-in 0.28s cubic-bezier(0.16,1,0.3,1) forwards;
   position: relative;
   width: 100%; max-width: 440px;
-  background: rgba(22,27,34,0.88);
-  backdrop-filter: blur(40px) saturate(140%);
-  -webkit-backdrop-filter: blur(40px) saturate(140%);
-  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(20,35,45,0.94);
+  backdrop-filter: blur(72px) brightness(0.92) saturate(1.10);
+  -webkit-backdrop-filter: blur(72px) brightness(0.92) saturate(1.10);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 20px;
   padding: 40px;
   box-shadow: 0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.05) inset;

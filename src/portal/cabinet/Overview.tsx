@@ -2,7 +2,7 @@ import React from "react"
 import type { ClientHome, PortalAction } from "../../lib/api"
 import { fmtDateTime, fmtEur, isUnreadFor } from "../../lib/api"
 import {
-  DISPLAY, Empty, Glass, Icon, PROJECT_STATUS, Row, SectionTitle, Stat, T, Timeline,
+  DISPLAY, Empty, Glass, Icon, MONO, PROJECT_STATUS, Row, SectionTitle, Stat, T, TL, Timeline,
   type IconName, type Tone,
 } from "../ui"
 
@@ -14,10 +14,35 @@ const ACTION_META: Record<string, { icon: IconName; tone: Tone }> = {
   start_project: { icon: "plus", tone: "copper" },
 }
 
-export default function Overview({ home, onAction, onOpenProject }: {
+function Greeting({ name }: { name?: string }) {
+  const h = new Date().getHours()
+  const saluto = h < 5 ? "Buonanotte" : h < 12 ? "Buongiorno" : h < 18 ? "Buon pomeriggio" : "Buona sera"
+  const firstName = name?.split(" ")[0] ?? name?.split("@")[0]
+  return (
+    <div style={{ paddingBottom: 4 }}>
+      <h1 style={{
+        fontFamily: DISPLAY, fontSize: 29, fontWeight: 800,
+        color: TL.text, margin: 0, letterSpacing: "-0.025em", lineHeight: 1.15,
+      }}>
+        {saluto}{firstName ? (
+          <>, <span style={{ color: "#D4856A" }}>{firstName}</span></>
+        ) : ""}
+      </h1>
+      <p style={{
+        fontFamily: DISPLAY, fontSize: 14, color: TL.muted,
+        margin: "6px 0 0", lineHeight: 1.5,
+      }}>
+        Ecco un riepilogo del tuo spazio di lavoro.
+      </p>
+    </div>
+  )
+}
+
+export default function Overview({ home, onAction, onOpenProject, userName }: {
   home: ClientHome
   onAction: (a: PortalAction) => void
   onOpenProject: (id: string) => void
+  userName?: string
 }) {
   const active = home.projects.filter(p => p.status === "active")
   const dueSum = home.invoices
@@ -31,6 +56,8 @@ export default function Overview({ home, onAction, onOpenProject }: {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
+      <Greeting name={userName} />
+
       {/* KPI row */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
         <Stat label="Progetti attivi" value={String(active.length)} icon="layers" tone="copper"

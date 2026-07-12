@@ -3,7 +3,7 @@ import { useBlueprint } from "../../context/BlueprintContext"
 import { useToast } from "../../context/ToastContext"
 import type { OwnProfile } from "../../lib/api"
 import { createProject, updateOwnPhone } from "../../lib/api"
-import { Btn, Field, Input, Modal, Note, Textarea } from "../ui"
+import { Btn, DISPLAY, Field, Icon, Input, MONO, Modal, Note, T, Textarea } from "../ui"
 
 /** Shared "new project" wizard — reachable from the empty state and the
  *  project switcher bar. Pulls any Blueprint Foundry selections into the brief. */
@@ -64,12 +64,47 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
         </>
       }
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        {/* Steps hint */}
+        <div style={{
+          display: "flex", gap: 0,
+          padding: "12px 16px", borderRadius: 12,
+          background: "rgba(224,131,106,0.08)", border: "1px solid rgba(224,131,106,0.20)",
+        }}>
+          {[
+            { icon: "send" as const, label: "Invii il brief" },
+            { icon: "sparkle" as const, label: "Valutiamo" },
+            { icon: "layers" as const, label: "Attiviamo le fasi" },
+          ].map((step, i) => (
+            <React.Fragment key={step.label}>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 5, textAlign: "center" }}>
+                <span style={{
+                  width: 30, height: 30, borderRadius: 9,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  background: "rgba(224,131,106,0.16)", border: "1px solid rgba(224,131,106,0.28)",
+                  color: T.copperLt,
+                }}>
+                  <Icon name={step.icon} size={13} />
+                </span>
+                <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.10em", textTransform: "uppercase", color: T.faint }}>
+                  {step.label}
+                </span>
+              </div>
+              {i < 2 && (
+                <div style={{ display: "flex", alignItems: "center", paddingBottom: 20, color: "rgba(224,131,106,0.35)", fontSize: 14, flexShrink: 0 }}>
+                  →
+                </div>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+
         {items.length > 0 && (
           <Note tone="copper">
             {items.length} element{items.length === 1 ? "o" : "i"} dal tuo Blueprint Foundry inclus{items.length === 1 ? "o" : "i"} nella descrizione.
           </Note>
         )}
+
         <Field label="Nome del progetto">
           <Input value={name} onChange={e => setName(e.target.value)} placeholder="Es. Sito vetrina + area riservata" autoFocus />
         </Field>
@@ -79,9 +114,14 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
         <Field label="Telefono (opzionale)" hint="Per un contatto rapido in fase di valutazione.">
           <Input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+39 …" inputMode="tel" />
         </Field>
-        <Note tone="silver">
-          Il progetto entra <strong>in valutazione</strong>: definiamo insieme le fasi e ti arriva una notifica appena è attivo.
-        </Note>
+        <div style={{
+          padding: "10px 14px", borderRadius: 11,
+          background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)",
+        }}>
+          <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.faint, margin: 0 }}>
+            Il progetto entra <span style={{ color: T.text, fontWeight: 600 }}>in valutazione</span>: definiamo insieme le fasi e ricevi una notifica appena è attivo.
+          </p>
+        </div>
       </div>
     </Modal>
   )

@@ -13,61 +13,83 @@ import type {
 
 export const MONO = "'JetBrains Mono', ui-monospace, monospace"
 export const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+export const BODY = "'Inter', system-ui, sans-serif"
 
+/* ── Card content (dark glass surfaces) ── */
 export const T = {
   bg: "#233D4D",
-  bgRaised: "#1A1A1F",
-  border: "rgba(255,255,255,0.09)",
-  borderHi: "rgba(255,255,255,0.17)",
-  text: "#F4F4F6",
-  muted: "rgba(255,255,255,0.76)",
-  faint: "rgba(255,255,255,0.58)",
-  ghost: "rgba(255,255,255,0.40)",
-  copper: "#AE5350",
-  copperLt: "#D4695A",
-  green: "#3DBE8B",
-  amber: "#D9A441",
-  red: "#E05252",
-  silver: "#C9CDD6",
+  bgRaised: "#1E3442",
+  border: "rgba(255,255,255,0.08)",
+  borderHi: "rgba(255,255,255,0.15)",
+  text: "#EEF2F7",
+  muted: "rgba(255,255,255,0.72)",
+  faint: "rgba(255,255,255,0.48)",
+  ghost: "rgba(255,255,255,0.28)",
+  copper: "#E0836A",
+  copperLt: "#F4A882",
+  green: "#4BD39B",
+  amber: "#FCD34D",
+  red: "#F87171",
+  silver: "rgba(255,255,255,0.60)",
+} as const
+
+/* ── Chrome (dark petrol sidebar / header) ── */
+export const TL = {
+  text: "#F1F5F9",
+  muted: "rgba(255,255,255,0.72)",
+  faint: "rgba(255,255,255,0.50)",
+  ghost: "rgba(255,255,255,0.34)",
+  border: "rgba(255,255,255,0.08)",
+  borderHi: "rgba(255,255,255,0.15)",
 } as const
 
 export type Tone = "copper" | "green" | "amber" | "red" | "silver" | "steel"
 
 export const TONE: Record<Tone, { fg: string; bg: string; bd: string }> = {
-  copper: { fg: "#D4695A", bg: "rgba(174,83,80,0.14)", bd: "rgba(174,83,80,0.32)" },
-  green: { fg: "#3DBE8B", bg: "rgba(61,190,139,0.11)", bd: "rgba(61,190,139,0.28)" },
-  amber: { fg: "#D9A441", bg: "rgba(217,164,65,0.11)", bd: "rgba(217,164,65,0.28)" },
-  red: { fg: "#E05252", bg: "rgba(224,82,82,0.11)", bd: "rgba(224,82,82,0.30)" },
-  silver: { fg: "#C9CDD6", bg: "rgba(201,205,214,0.09)", bd: "rgba(201,205,214,0.24)" },
-  steel: { fg: "rgba(255,255,255,0.46)", bg: "rgba(255,255,255,0.05)", bd: "rgba(255,255,255,0.11)" },
+  copper: { fg: "#E0836A", bg: "rgba(224,131,106,0.18)", bd: "rgba(224,131,106,0.38)" },
+  green:  { fg: "#4BD39B", bg: "rgba(75,211,155,0.15)", bd: "rgba(75,211,155,0.34)" },
+  amber:  { fg: "#FCD34D", bg: "rgba(252,211,77,0.14)", bd: "rgba(252,211,77,0.32)" },
+  red:    { fg: "#F87171", bg: "rgba(248,113,113,0.14)", bd: "rgba(248,113,113,0.32)" },
+  silver: { fg: "rgba(255,255,255,0.68)", bg: "rgba(255,255,255,0.09)", bd: "rgba(255,255,255,0.20)" },
+  steel:  { fg: "rgba(255,255,255,0.44)", bg: "rgba(255,255,255,0.05)", bd: "rgba(255,255,255,0.11)" },
 }
 
-/* Retained for the modal overlay only — cards are now opaque for readability. */
-const GLASS_BLUR = "blur(30px) brightness(1.14) saturate(0.72)"
+/* ── Modal overlay backdrop ── */
+const GLASS_BLUR = "blur(32px) brightness(0.92) saturate(1.20)"
 
-/* SOLID SURFACE SYSTEM — opaque, matte, lighter than the graphite background so
-   dense B2B content reads cleanly. Cards float on soft drop shadows, no
-   backdrop-blur (better contrast + GPU cost). Background layers stay untouched. */
+/* ── DARK FROSTED GLASS CARD SYSTEM ──────────────────────────
+   Semi-transparent dark panels over the charcoal backdrop.
+   backdrop-filter creates depth while text stays crisp.
+   ─────────────────────────────────────────────────────────── */
 export const GLASS: Record<"panel" | "raised" | "outline" | "accent", React.CSSProperties> = {
   panel: {
-    background: "#25262e",
-    border: "1px solid rgba(255,255,255,0.10)",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 10px 30px rgba(0,0,0,0.36)",
+    background: "rgba(18,32,44,0.70)",
+    border: "1px solid rgba(255,255,255,0.09)",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 24px rgba(0,0,0,0.32)",
+    backdropFilter: "blur(16px) saturate(1.40)",
+    WebkitBackdropFilter: "blur(16px) saturate(1.40)",
   },
   raised: {
-    background: "#2c2e37",
+    background: "rgba(12,24,36,0.82)",
     border: "1px solid rgba(255,255,255,0.13)",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 16px 44px rgba(0,0,0,0.46)",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 8px 40px rgba(0,0,0,0.50)",
+    backdropFilter: "blur(24px) saturate(1.50)",
+    WebkitBackdropFilter: "blur(24px) saturate(1.50)",
   },
   outline: {
-    background: "#1c1d22",
-    border: "1px solid rgba(255,255,255,0.09)",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.07)",
+    boxShadow: "none",
   },
   accent: {
-    background: "linear-gradient(150deg, #2c211d, #241c1a 62%)",
-    border: "1px solid rgba(174,83,80,0.38)",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 34px rgba(0,0,0,0.42)",
+    background: "rgba(18,32,44,0.70)",
+    borderLeft: "1px solid rgba(255,255,255,0.09)",
+    borderRight: "1px solid rgba(255,255,255,0.09)",
+    borderBottom: "1px solid rgba(255,255,255,0.09)",
+    borderTop: "2px solid #E0836A",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 24px rgba(0,0,0,0.32)",
+    backdropFilter: "blur(16px) saturate(1.40)",
+    WebkitBackdropFilter: "blur(16px) saturate(1.40)",
   },
 }
 
@@ -198,14 +220,14 @@ function btnBase(size: BtnSize): React.CSSProperties {
 const BTN_VARIANTS: Record<BtnVariant, React.CSSProperties> = {
   primary: {
     background: "linear-gradient(135deg, #C25640, #9E3F2E)",
-    border: "1px solid rgba(224,120,96,0.55)",
+    border: "1px solid rgba(224,131,106,0.55)",
     color: "#FFF1ED",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.28), 0 4px 14px rgba(0,0,0,0.35)",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.28), 0 4px 14px rgba(0,0,0,0.40)",
   },
   ghost: {
-    background: "rgba(255,255,255,0.055)",
-    border: "1px solid rgba(255,255,255,0.12)",
-    color: "rgba(255,255,255,0.72)",
+    background: "rgba(255,255,255,0.08)",
+    border: "1px solid rgba(255,255,255,0.15)",
+    color: "rgba(255,255,255,0.82)",
   },
   outline: {
     background: "transparent",
@@ -213,13 +235,13 @@ const BTN_VARIANTS: Record<BtnVariant, React.CSSProperties> = {
     color: "rgba(255,255,255,0.80)",
   },
   danger: {
-    background: "rgba(224,82,82,0.10)",
-    border: "1px solid rgba(224,82,82,0.32)",
-    color: "#E88",
+    background: "rgba(248,113,113,0.12)",
+    border: "1px solid rgba(248,113,113,0.30)",
+    color: "#FCA5A5",
   },
   copper: {
-    background: "rgba(174,83,80,0.57)",
-    border: "1px solid rgba(174,83,80,0.67)",
+    background: "rgba(194,86,64,0.60)",
+    border: "1px solid rgba(224,131,106,0.55)",
     color: "#fff",
   },
 }
@@ -347,10 +369,10 @@ export function SectionTitle({ kicker, title, sub, right }: {
     <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
       <div>
         {kicker && <div style={{ marginBottom: 8 }}><Kicker>{kicker}</Kicker></div>}
-        <h2 style={{ fontFamily: DISPLAY, fontSize: 25, fontWeight: 800, letterSpacing: "-0.02em", color: T.text, margin: 0, lineHeight: 1.15 }}>
+        <h2 style={{ fontFamily: DISPLAY, fontSize: 25, fontWeight: 800, letterSpacing: "-0.02em", color: TL.text, margin: 0, lineHeight: 1.15 }}>
           {title}
         </h2>
-        {sub && <p style={{ fontFamily: DISPLAY, fontSize: 14.5, color: T.faint, margin: "7px 0 0", lineHeight: 1.5 }}>{sub}</p>}
+        {sub && <p style={{ fontFamily: DISPLAY, fontSize: 14.5, color: TL.muted, margin: "7px 0 0", lineHeight: 1.5 }}>{sub}</p>}
       </div>
       {right && <div style={{ display: "flex", gap: 8, alignItems: "center" }}>{right}</div>}
     </div>
@@ -392,8 +414,8 @@ export function Tabs<Id extends string>({ items, value, onChange }: {
 }) {
   return (
     <div style={{
-      display: "inline-flex", gap: 3, padding: 3, borderRadius: 12,
-      background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`,
+      display: "inline-flex", gap: 3, padding: 4, borderRadius: 13,
+      background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)",
       maxWidth: "100%", overflowX: "auto",
     }}>
       {items.map(it => {
@@ -405,12 +427,12 @@ export function Tabs<Id extends string>({ items, value, onChange }: {
             className={`portal-btn portal-pill ${active ? "is-active" : ""}`}
             style={{
               display: "inline-flex", alignItems: "center", gap: 7,
-              padding: "9px 16px", borderRadius: 9, border: "1px solid transparent",
-              background: active ? "rgba(255,255,255,0.10)" : "transparent",
-              borderColor: active ? "rgba(255,255,255,0.16)" : "transparent",
-              boxShadow: active ? "inset 0 1px 0 rgba(255,255,255,0.22)" : "none",
-              color: active ? T.text : T.faint,
-              fontFamily: DISPLAY, fontSize: 14, fontWeight: 700, whiteSpace: "nowrap",
+              padding: "9px 18px", borderRadius: 9, border: "1px solid transparent",
+              background: active ? "rgba(255,255,255,0.14)" : "transparent",
+              borderColor: active ? "rgba(255,255,255,0.20)" : "transparent",
+              boxShadow: active ? "inset 0 1px 0 rgba(255,255,255,0.28), 0 1px 3px rgba(0,0,0,0.18)" : "none",
+              color: active ? TL.text : TL.faint,
+              fontFamily: DISPLAY, fontSize: 14, fontWeight: active ? 700 : 500, whiteSpace: "nowrap",
             }}
           >
             {it.label}
@@ -453,37 +475,41 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
       {open && (
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          transition={{ duration: 0.18 }}
+          transition={{ duration: 0.20 }}
           onClick={onClose}
           style={{
             position: "fixed", inset: 0, zIndex: 90,
-            background: "rgba(8,8,10,0.66)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+            background: "rgba(8,18,28,0.74)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
             display: "flex", alignItems: "center", justifyContent: "center", padding: 20,
           }}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            initial={{ opacity: 0, scale: 0.95, y: 14 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 8 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
             onClick={e => e.stopPropagation()}
             style={{
               width: "100%", maxWidth: width, maxHeight: "88vh",
               display: "flex", flexDirection: "column",
-              borderRadius: 20, overflow: "hidden",
-              background: "rgba(28,28,33,0.92)",
-              border: `1px solid ${T.borderHi}`,
-              backdropFilter: GLASS_BLUR, WebkitBackdropFilter: GLASS_BLUR,
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.30), 0 40px 90px rgba(0,0,0,0.65)",
+              borderRadius: 22, overflow: "hidden",
+              background: "rgba(16,30,44,0.96)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              backdropFilter: "blur(32px) saturate(1.50) brightness(0.96)",
+              WebkitBackdropFilter: "blur(32px) saturate(1.50) brightness(0.96)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 40px 100px rgba(0,0,0,0.72), 0 0 0 1px rgba(255,255,255,0.04)",
             }}
           >
+            {/* Header */}
             <div style={{
               display: "flex", alignItems: "center", justifyContent: "space-between",
-              padding: "18px 22px 14px", borderBottom: `1px solid ${T.border}`,
+              padding: "20px 24px 16px",
+              borderBottom: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.025)",
             }}>
               <div>
-                {kicker && <div style={{ marginBottom: 5 }}><Kicker>{kicker}</Kicker></div>}
-                <h3 style={{ fontFamily: DISPLAY, fontSize: 18.5, fontWeight: 800, color: T.text, margin: 0, letterSpacing: "-0.01em" }}>
+                {kicker && <div style={{ marginBottom: 6 }}><Kicker>{kicker}</Kicker></div>}
+                <h3 style={{ fontFamily: DISPLAY, fontSize: 19, fontWeight: 800, color: TL.text, margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
                   {title}
                 </h3>
               </div>
@@ -491,19 +517,25 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
                 onClick={onClose}
                 className="portal-btn portal-btn-ghost"
                 style={{
-                  width: 30, height: 30, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(255,255,255,0.05)", border: `1px solid ${T.border}`, color: T.faint,
+                  width: 32, height: 32, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
+                  background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", color: TL.muted,
+                  flexShrink: 0,
                 }}
               >
                 <Icon name="x" size={14} />
               </button>
             </div>
-            <div style={{ padding: 22, overflowY: "auto" }}>{children}</div>
+
+            {/* Content */}
+            <div style={{ padding: 24, overflowY: "auto" }}>{children}</div>
+
+            {/* Footer */}
             {footer && (
               <div style={{
                 display: "flex", justifyContent: "flex-end", gap: 10,
-                padding: "14px 22px", borderTop: `1px solid ${T.border}`,
-                background: "rgba(0,0,0,0.16)",
+                padding: "14px 24px",
+                borderTop: "1px solid rgba(255,255,255,0.07)",
+                background: "rgba(0,0,0,0.20)",
               }}>
                 {footer}
               </div>
@@ -541,7 +573,7 @@ export function Ring({ value, size = 46, stroke = 4, tone = "copper" }: {
   return (
     <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
       <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth={stroke} />
         <circle
           cx={size / 2} cy={size / 2} r={r} fill="none"
           stroke={TONE[tone].fg} strokeWidth={stroke} strokeLinecap="round"
@@ -568,24 +600,28 @@ export function Stat({ label, value, hint, icon, tone = "silver" }: {
 }) {
   const t = TONE[tone]
   return (
-    <Glass variant="panel" style={{ padding: "16px 18px", display: "flex", flexDirection: "column", gap: 10 }}>
+    <Glass variant="panel" style={{
+      padding: "18px 20px 16px",
+      display: "flex", flexDirection: "column", gap: 11,
+      borderTop: `2px solid ${t.fg}`,
+    }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: T.faint }}>
+        <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.20em", textTransform: "uppercase", color: T.faint }}>
           {label}
         </span>
         {icon && (
           <span style={{
-            width: 30, height: 30, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center",
+            width: 32, height: 32, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
             background: t.bg, border: `1px solid ${t.bd}`, color: t.fg,
           }}>
             <Icon name={icon} size={15} />
           </span>
         )}
       </div>
-      <div style={{ fontFamily: DISPLAY, fontSize: 30, fontWeight: 800, letterSpacing: "-0.02em", color: T.text, lineHeight: 1 }}>
+      <div style={{ fontFamily: DISPLAY, fontSize: 34, fontWeight: 800, letterSpacing: "-0.03em", color: T.text, lineHeight: 1 }}>
         {value}
       </div>
-      {hint && <div style={{ fontFamily: DISPLAY, fontSize: 13, color: T.ghost }}>{hint}</div>}
+      {hint && <div style={{ fontFamily: DISPLAY, fontSize: 12.5, color: t.fg, opacity: 0.75 }}>{hint}</div>}
     </Glass>
   )
 }
@@ -605,13 +641,13 @@ export function Empty({ icon = "sparkle", title, hint, action }: {
       <div style={{
         width: 46, height: 46, borderRadius: 14, marginBottom: 8,
         display: "flex", alignItems: "center", justifyContent: "center",
-        background: "rgba(255,255,255,0.045)", border: `1px solid ${T.border}`, color: T.faint,
+        background: "rgba(255,255,255,0.06)", border: `1px solid ${T.border}`, color: T.faint,
       }}>
         <Icon name={icon} size={20} strokeWidth={1.5} />
       </div>
-      <p style={{ fontFamily: DISPLAY, fontSize: 16.5, fontWeight: 700, color: T.muted, margin: 0 }}>{title}</p>
-      {hint && <p style={{ fontFamily: DISPLAY, fontSize: 14, color: T.ghost, margin: 0, maxWidth: 380, lineHeight: 1.6 }}>{hint}</p>}
-      {action && <div style={{ marginTop: 14 }}>{action}</div>}
+      <p style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 700, color: T.muted, margin: 0 }}>{title}</p>
+      {hint && <p style={{ fontFamily: DISPLAY, fontSize: 13.5, color: T.faint, margin: "4px 0 0", maxWidth: 380, lineHeight: 1.6 }}>{hint}</p>}
+      {action && <div style={{ marginTop: 16 }}>{action}</div>}
     </div>
   )
 }
@@ -646,7 +682,7 @@ export function Loading({ label = "Caricamento" }: { label?: string }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 13, padding: "64px 0" }}>
       <Spinner />
-      <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.22em", textTransform: "uppercase", color: T.ghost }}>
+      <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.22em", textTransform: "uppercase", color: TL.ghost }}>
         {label}…
       </span>
     </div>
@@ -770,7 +806,7 @@ export function Timeline({ events, showProject = false, showClient = false, limi
   }
   return (
     <div style={{ position: "relative" }}>
-      <div style={{ position: "absolute", left: 14, top: 10, bottom: 10, width: 1, background: "rgba(255,255,255,0.08)" }} />
+      <div style={{ position: "absolute", left: 14, top: 10, bottom: 10, width: 1, background: "rgba(255,255,255,0.12)" }} />
       <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
         {list.map(ev => {
           const meta = EVENT_META[ev.type] ?? EVENT_META.note
@@ -778,25 +814,25 @@ export function Timeline({ events, showProject = false, showClient = false, limi
           const context = [showClient ? ev.clientName : null, showProject ? ev.projectName : null]
             .filter(Boolean).join(" · ")
           return (
-            <div key={ev.id} style={{ position: "relative", display: "flex", gap: 13, padding: "7px 0", alignItems: "flex-start" }}>
+            <div key={ev.id} style={{ position: "relative", display: "flex", gap: 13, padding: "8px 0", alignItems: "flex-start" }}>
               <span style={{
                 position: "relative", zIndex: 1,
                 width: 29, height: 29, borderRadius: "50%", flexShrink: 0,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                background: "#1D1D22", border: `1px solid ${t.bd}`, color: t.fg,
-                boxShadow: "0 0 0 3px #233D4D",
+                background: t.bg, border: `1px solid ${t.bd}`, color: t.fg,
+                boxShadow: "0 0 0 4px #1C3040",
               }}>
                 <Icon name={meta.icon} size={12.5} />
               </span>
-              <div style={{ minWidth: 0, paddingTop: 2 }}>
-                <p style={{ fontFamily: DISPLAY, fontSize: 13, fontWeight: 600, color: T.muted, margin: 0, lineHeight: 1.4 }}>
+              <div style={{ minWidth: 0, paddingTop: 3 }}>
+                <p style={{ fontFamily: DISPLAY, fontSize: 13, fontWeight: 600, color: T.text, margin: 0, lineHeight: 1.4 }}>
                   {ev.title}
                 </p>
-                <p style={{ fontFamily: MONO, fontSize: 9.5, color: T.ghost, margin: "3px 0 0", letterSpacing: "0.04em" }}>
+                <p style={{ fontFamily: MONO, fontSize: 9.5, color: T.faint, margin: "3px 0 0", letterSpacing: "0.04em" }}>
                   {relativeDate(ev.createdAt)}{context ? `  ·  ${context}` : ""}
                 </p>
                 {ev.detail && (
-                  <p style={{ fontFamily: DISPLAY, fontSize: 12, color: T.faint, margin: "4px 0 0", lineHeight: 1.5 }}>
+                  <p style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.muted, margin: "4px 0 0", lineHeight: 1.5 }}>
                     {ev.detail}
                   </p>
                 )}
@@ -826,7 +862,7 @@ export function Row({ icon, iconTone = "steel", title, sub, right, onClick }: {
       style={{
         display: "flex", alignItems: "center", gap: 14,
         padding: "14px 16px", borderRadius: 13,
-        border: `1px solid ${T.border}`, background: "rgba(255,255,255,0.035)",
+        border: `1px solid ${T.border}`, background: "rgba(255,255,255,0.05)",
         cursor: onClick ? "pointer" : "default",
       }}
     >

@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Avatar, DISPLAY, Icon, MONO, PortalLogo, T, type IconName } from "./ui"
+import { Avatar, DISPLAY, Icon, MONO, T, TL, type IconName } from "./ui"
 
 export interface ShellNavItem {
   id: string
@@ -38,11 +38,9 @@ function Backdrop() {
 }
 
 export default function Shell({
-  brandName, roleTag, items, active, onSelect,
+  items, active, onSelect,
   email, roleLabel, onSignOut, topRight, children,
 }: {
-  brandName: string
-  roleTag: string
   items: ShellNavItem[]
   active: string
   onSelect: (id: string) => void
@@ -57,21 +55,30 @@ export default function Shell({
 
   const sidebar = (
     <>
-      {/* Brand */}
-      <div style={{ display: "flex", alignItems: "center", gap: 13, padding: "22px 20px 20px", borderBottom: `1px solid ${T.border}` }}>
-        <PortalLogo size={34} />
-        <div style={{ minWidth: 0 }}>
-          <p style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 800, color: T.text, margin: 0, lineHeight: 1.2, letterSpacing: "-0.01em" }}>
-            {brandName}
-          </p>
-          <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: T.faint, margin: "3px 0 0" }}>
-            {roleTag}
-          </p>
+      {/* Client profile — top of sidebar */}
+      <div style={{ padding: "24px 16px 20px", borderBottom: `1px solid ${TL.border}` }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Avatar name={email ?? "?"} size={42} />
+          <div style={{ minWidth: 0 }}>
+            <p style={{
+              fontFamily: DISPLAY, fontSize: 14, fontWeight: 700,
+              color: TL.text, margin: 0, lineHeight: 1.25,
+              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+            }}>
+              {roleLabel}
+            </p>
+            <p style={{
+              fontFamily: MONO, fontSize: 10, color: TL.faint,
+              margin: "4px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+            }}>
+              {email ?? "—"}
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Nav */}
-      <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4, padding: "16px 12px", overflowY: "auto" }}>
+      <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2, padding: "14px 10px", overflowY: "auto" }}>
         {items.map(item => {
           const isActive = item.id === active
           return (
@@ -80,23 +87,24 @@ export default function Shell({
               onClick={() => { onSelect(item.id); setDrawer(false) }}
               className={isActive ? undefined : "portal-nav-item"}
               style={{
-                display: "flex", alignItems: "center", gap: 13,
-                padding: "13px 14px", borderRadius: 12, textAlign: "left",
-                background: isActive ? "rgba(174,83,80,0.16)" : "transparent",
-                border: `1px solid ${isActive ? "rgba(174,83,80,0.34)" : "transparent"}`,
-                boxShadow: isActive ? "inset 0 1px 0 rgba(255,255,255,0.10)" : "none",
-                color: isActive ? T.copperLt : T.muted,
-                cursor: "pointer",
+                display: "flex", alignItems: "center", gap: 12,
+                padding: "11px 14px", borderRadius: 11, textAlign: "left",
+                background: isActive ? "rgba(194,86,64,0.14)" : "transparent",
+                border: `1px solid ${isActive ? "rgba(194,86,64,0.30)" : "transparent"}`,
+                borderLeft: isActive ? "3px solid #D4856A" : "3px solid transparent",
+                boxShadow: isActive ? "0 2px 8px rgba(0,0,0,0.14)" : "none",
+                color: isActive ? "#F4C5B4" : TL.muted,
+                cursor: "pointer", transition: "all 0.16s ease",
               }}
             >
-              <Icon name={item.icon} size={18} />
-              <span style={{ flex: 1, fontFamily: DISPLAY, fontSize: 15, fontWeight: 700 }}>{item.label}</span>
+              <Icon name={item.icon} size={16} />
+              <span style={{ flex: 1, fontFamily: DISPLAY, fontSize: 13.5, fontWeight: isActive ? 700 : 500 }}>{item.label}</span>
               {(item.badge ?? 0) > 0 && (
                 <span style={{
-                  minWidth: 20, height: 20, padding: "0 6px", borderRadius: 99,
+                  minWidth: 18, height: 18, padding: "0 5px", borderRadius: 99,
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  background: isActive ? "rgba(212,105,90,0.90)" : "rgba(174,83,80,0.80)",
-                  color: "#FFF", fontFamily: MONO, fontSize: 10.5, fontWeight: 700,
+                  background: "rgba(212,105,90,0.88)",
+                  color: "#FFF", fontFamily: MONO, fontSize: 9.5, fontWeight: 700,
                 }}>
                   {item.badge}
                 </span>
@@ -106,47 +114,34 @@ export default function Shell({
         })}
       </nav>
 
-      {/* User footer */}
-      <div style={{ padding: "15px 14px", borderTop: `1px solid ${T.border}` }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 11, padding: "4px 6px 14px" }}>
-          <Avatar name={email ?? "?"} size={36} />
-          <div style={{ minWidth: 0 }}>
-            <p style={{ fontFamily: MONO, fontSize: 12, fontWeight: 600, color: T.text, margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              {email ?? "—"}
-            </p>
-            <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: T.faint, margin: "3px 0 0" }}>
-              {roleLabel}
-            </p>
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: 8 }}>
-          <a
-            href="/"
-            className="portal-nav-item"
-            style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              padding: "11px 12px", borderRadius: 11, textDecoration: "none",
-              border: `1px solid ${T.borderHi}`, background: "rgba(255,255,255,0.06)",
-              fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 700, color: T.muted,
-            }}
-          >
-            <Icon name="home" size={15} />
-            Sito
-          </a>
-          <button
-            onClick={onSignOut}
-            className="portal-nav-item"
-            style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              padding: "11px 12px", borderRadius: 11,
-              border: `1px solid ${T.borderHi}`, background: "rgba(255,255,255,0.06)",
-              fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 700, color: T.muted, cursor: "pointer",
-            }}
-          >
-            <Icon name="logout" size={15} />
-            Esci
-          </button>
-        </div>
+      {/* Footer actions */}
+      <div style={{ padding: "12px 10px 16px", borderTop: `1px solid ${TL.border}`, display: "flex", gap: 8 }}>
+        <a
+          href="/"
+          className="portal-nav-item"
+          style={{
+            flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+            padding: "10px 12px", borderRadius: 10, textDecoration: "none",
+            border: `1px solid ${TL.border}`, background: "rgba(255,255,255,0.05)",
+            fontFamily: DISPLAY, fontSize: 13, fontWeight: 500, color: TL.faint,
+          }}
+        >
+          <Icon name="home" size={14} />
+          Sito
+        </a>
+        <button
+          onClick={onSignOut}
+          className="portal-nav-item"
+          style={{
+            flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+            padding: "10px 12px", borderRadius: 10,
+            border: `1px solid ${TL.border}`, background: "rgba(255,255,255,0.05)",
+            fontFamily: DISPLAY, fontSize: 13, fontWeight: 500, color: TL.faint, cursor: "pointer",
+          }}
+        >
+          <Icon name="logout" size={14} />
+          Esci
+        </button>
       </div>
     </>
   )
@@ -161,8 +156,8 @@ export default function Shell({
         style={{
           position: "relative", zIndex: 2, width: 268, flexShrink: 0,
           flexDirection: "column",
-          background: "#1a1b20",
-          borderRight: `1px solid ${T.borderHi}`,
+          background: "linear-gradient(180deg, #1B2C37 0%, #182833 100%)",
+          borderRight: `1px solid ${TL.borderHi}`,
         }}
       >
         {sidebar}
@@ -178,8 +173,8 @@ export default function Shell({
           <aside style={{
             position: "absolute", top: 0, bottom: 0, left: 0, width: 280,
             display: "flex", flexDirection: "column",
-            background: "#1a1b20",
-            borderRight: `1px solid ${T.borderHi}`,
+            background: "linear-gradient(180deg, #1B2C37 0%, #182833 100%)",
+            borderRight: `1px solid ${TL.borderHi}`,
           }}>
             {sidebar}
           </aside>
@@ -190,34 +185,35 @@ export default function Shell({
       <div style={{ position: "relative", zIndex: 1, flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
         <header style={{
           flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
-          padding: "15px 26px",
-          background: "#17181c",
-          borderBottom: `1px solid ${T.border}`,
+          padding: "14px 28px",
+          background: "linear-gradient(180deg, #1A2C38 0%, #162830 100%)",
+          borderBottom: "1px solid rgba(255,255,255,0.07)",
+          boxShadow: "0 1px 0 rgba(0,0,0,0.22)",
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 13, minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
             <button
               className="portal-nav-item lg:hidden"
               onClick={() => setDrawer(true)}
               style={{
                 width: 40, height: 40, borderRadius: 11, display: "flex", alignItems: "center", justifyContent: "center",
-                border: `1px solid ${T.borderHi}`, background: "rgba(255,255,255,0.06)", color: T.muted, cursor: "pointer",
+                border: `1px solid ${TL.borderHi}`, background: "rgba(255,255,255,0.06)", color: TL.muted, cursor: "pointer",
               }}
             >
               <Icon name="menu" size={18} />
             </button>
             <div style={{ minWidth: 0 }}>
-              <h1 style={{ fontFamily: DISPLAY, fontSize: 19, fontWeight: 800, color: T.text, margin: 0, letterSpacing: "-0.01em", lineHeight: 1.2 }}>
+              <h1 style={{ fontFamily: DISPLAY, fontSize: 20, fontWeight: 800, color: TL.text, margin: 0, letterSpacing: "-0.02em", lineHeight: 1.15 }}>
                 {current?.label ?? ""}
               </h1>
-              <p style={{ fontFamily: MONO, fontSize: 11.5, color: T.faint, margin: "3px 0 0", letterSpacing: "0.04em" }}>
-                {new Date().toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+              <p style={{ fontFamily: MONO, fontSize: 10.5, color: TL.faint, margin: "3px 0 0", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                {new Date().toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" })}
               </p>
             </div>
           </div>
           {topRight && <div style={{ display: "flex", alignItems: "center", gap: 9, flexShrink: 0 }}>{topRight}</div>}
         </header>
 
-        <main style={{ flex: 1, overflowY: "auto", padding: "26px 24px 48px" }}>
+        <main style={{ flex: 1, overflowY: "auto", padding: "28px 26px 52px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             {children}
           </div>

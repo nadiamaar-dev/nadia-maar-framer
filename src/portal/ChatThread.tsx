@@ -113,19 +113,31 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
         ) : (
           messages.map(m => {
             const own = m.authorId === authorId
+            const bubbleBg = m.isDeleted
+              ? "rgba(255,255,255,0.03)"
+              : own
+              ? "linear-gradient(145deg, rgba(194,86,64,0.36), rgba(174,83,80,0.22))"
+              : "rgba(255,255,255,0.09)"
+            const bubbleBorder = m.isDeleted
+              ? "rgba(255,255,255,0.07)"
+              : own
+              ? "rgba(224,131,106,0.40)"
+              : "rgba(255,255,255,0.13)"
             return (
               <div key={m.id} style={{ display: "flex", flexDirection: "column", alignItems: own ? "flex-end" : "flex-start" }}>
                 <div style={{
-                  maxWidth: "78%", padding: "9px 13px", borderRadius: 14,
-                  borderTopRightRadius: own ? 4 : 14, borderTopLeftRadius: own ? 14 : 4,
-                  background: m.isDeleted
-                    ? "rgba(255,255,255,0.025)"
-                    : own ? "linear-gradient(140deg, rgba(174,83,80,0.24), rgba(174,83,80,0.13))" : "rgba(255,255,255,0.065)",
-                  border: `1px solid ${m.isDeleted ? "rgba(255,255,255,0.07)" : own ? "rgba(174,83,80,0.34)" : "rgba(255,255,255,0.13)"}`,
-                  boxShadow: m.isDeleted ? "none" : "inset 0 1px 0 rgba(255,255,255,0.14)",
+                  maxWidth: "78%", padding: "10px 14px", borderRadius: 16,
+                  borderTopRightRadius: own ? 5 : 16, borderTopLeftRadius: own ? 16 : 5,
+                  background: bubbleBg,
+                  border: `1px solid ${bubbleBorder}`,
+                  boxShadow: m.isDeleted ? "none" : own
+                    ? "0 4px 16px rgba(194,86,64,0.18), inset 0 1px 0 rgba(255,255,255,0.14)"
+                    : "inset 0 1px 0 rgba(255,255,255,0.10)",
+                  backdropFilter: m.isDeleted ? "none" : "blur(8px)",
+                  WebkitBackdropFilter: m.isDeleted ? "none" : "blur(8px)",
                 }}>
                   {m.isDeleted ? (
-                    <p style={{ fontFamily: DISPLAY, fontSize: 12, fontStyle: "italic", color: T.ghost, margin: 0 }}>
+                    <p style={{ fontFamily: DISPLAY, fontSize: 12.5, fontStyle: "italic", color: T.ghost, margin: 0 }}>
                       Messaggio eliminato
                     </p>
                   ) : editingId === m.id ? (
@@ -134,7 +146,7 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                         className="portal-input"
                         value={editText}
                         onChange={e => setEditText(e.target.value)}
-                        style={{ minHeight: 60, fontSize: 12.5 }}
+                        style={{ minHeight: 60, fontSize: 13 }}
                         autoFocus
                       />
                       <div style={{ display: "flex", gap: 6, justifyContent: "flex-end" }}>
@@ -145,12 +157,16 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                   ) : (
                     <>
                       {m.content && (
-                        <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.55, color: own ? "#FFE9E3" : T.muted, margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                        <p style={{
+                          fontFamily: DISPLAY, fontSize: 13.5, lineHeight: 1.6,
+                          color: own ? "#FFE8DC" : T.text,
+                          margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-word",
+                        }}>
                           {m.content}
                         </p>
                       )}
                       {m.attachments.length > 0 && (
-                        <div style={{ display: "flex", flexDirection: "column", gap: 5, marginTop: m.content ? 8 : 0 }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 5, marginTop: m.content ? 9 : 0 }}>
                           {m.attachments.map((a, i) => (
                             <a
                               key={i}
@@ -159,12 +175,12 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                               className="portal-link"
                               style={{
                                 display: "flex", alignItems: "center", gap: 7,
-                                padding: "6px 9px", borderRadius: 8,
-                                background: "rgba(0,0,0,0.22)", border: "1px solid rgba(255,255,255,0.10)",
+                                padding: "6px 10px", borderRadius: 9,
+                                background: "rgba(0,0,0,0.24)", border: "1px solid rgba(255,255,255,0.11)",
                                 textDecoration: "none", color: T.muted,
                               }}
                             >
-                              <Icon name="paperclip" size={11.5} />
+                              <Icon name="paperclip" size={11} />
                               <span style={{ fontFamily: MONO, fontSize: 10.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 220 }}>
                                 {a.name}
                               </span>
@@ -176,8 +192,8 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                     </>
                   )}
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4, padding: "0 4px" }}>
-                  <span style={{ fontFamily: MONO, fontSize: 8.5, color: T.ghost, letterSpacing: "0.05em" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4, padding: "0 5px" }}>
+                  <span style={{ fontFamily: MONO, fontSize: 8.5, color: T.ghost, letterSpacing: "0.04em" }}>
                     {fmtDateTime(m.createdAt)}{m.editedAt ? " · modificato" : ""}
                   </span>
                   {canModify(m) && editingId !== m.id && (
@@ -210,21 +226,21 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
       {/* Composer */}
       {closedForMe ? (
         <div style={{
-          marginTop: 10, padding: "11px 14px", borderRadius: 12, textAlign: "center",
-          background: "rgba(255,255,255,0.03)", border: `1px dashed ${T.border}`,
-          fontFamily: DISPLAY, fontSize: 12, color: T.ghost,
+          marginTop: 12, padding: "12px 16px", borderRadius: 12, textAlign: "center",
+          background: "rgba(255,255,255,0.04)", border: `1px dashed ${T.border}`,
+          fontFamily: DISPLAY, fontSize: 13, color: T.ghost,
         }}>
           Conversazione chiusa
         </div>
       ) : (
-        <div style={{ marginTop: 10 }}>
+        <div style={{ marginTop: 12, borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 12 }}>
           {pending.length > 0 && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 9 }}>
               {pending.map((a, i) => (
                 <span key={i} style={{
                   display: "inline-flex", alignItems: "center", gap: 6,
-                  padding: "4px 9px", borderRadius: 8,
-                  background: "rgba(174,83,80,0.10)", border: "1px solid rgba(174,83,80,0.26)",
+                  padding: "4px 10px", borderRadius: 8,
+                  background: "rgba(224,131,106,0.12)", border: "1px solid rgba(224,131,106,0.28)",
                   fontFamily: MONO, fontSize: 10, color: T.copperLt,
                 }}>
                   <Icon name="paperclip" size={10} />
@@ -245,7 +261,7 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
               onFiles={handleFiles}
               busy={uploading}
               title="Allega file"
-              style={{ padding: "10px 12px" }}
+              style={{ padding: "10px 11px", flexShrink: 0 }}
             >
               {!uploading && <Icon name="paperclip" size={14} />}
             </FileBtn>
@@ -255,10 +271,10 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
               value={text}
               onChange={e => setText(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend() } }}
-              style={{ minHeight: 42, maxHeight: 130, resize: "none", lineHeight: 1.5 }}
+              style={{ minHeight: 42, maxHeight: 130, resize: "none", lineHeight: 1.55, fontSize: 13.5 }}
               rows={1}
             />
-            <Btn variant="primary" onClick={handleSend} busy={busy} icon="send" style={{ padding: "10px 16px" }}>
+            <Btn variant="primary" onClick={handleSend} busy={busy} icon="send" style={{ padding: "10px 16px", flexShrink: 0 }}>
               Invia
             </Btn>
           </div>

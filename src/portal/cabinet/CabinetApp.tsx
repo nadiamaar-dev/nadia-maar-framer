@@ -138,26 +138,49 @@ export default function CabinetApp() {
   if (!user) {
     return (
       <FullScreen>
-        <Glass variant="panel" style={{ padding: "36px 34px", maxWidth: 400, width: "100%", textAlign: "center" }}>
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 18 }}>
-            <PortalLogo size={48} id="nm-gate" />
+        <Glass variant="panel" style={{ padding: "44px 40px 36px", maxWidth: 420, width: "100%", textAlign: "center" }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 22 }}>
+            <PortalLogo size={52} id="nm-gate" />
           </div>
-          <h1 style={{ fontFamily: DISPLAY, fontSize: 19, fontWeight: 800, color: T.text, margin: 0, letterSpacing: "-0.02em" }}>
+          <h1 style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 800, color: T.text, margin: 0, letterSpacing: "-0.025em", lineHeight: 1.2 }}>
             Area Clienti
           </h1>
-          <p style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6, color: T.faint, margin: "9px 0 22px" }}>
-            Progetti, fasi, riunioni e fatture del tuo lavoro con lo studio, in un unico posto.
+          <p style={{ fontFamily: DISPLAY, fontSize: 14, lineHeight: 1.65, color: T.muted, margin: "11px 0 0" }}>
+            Segui i tuoi progetti in tempo reale — fasi, riunioni, fatture e chat con lo studio, tutto in un unico posto.
           </p>
-          <Btn variant="primary" icon="lock" onClick={openAuthModal} style={{ width: "100%", justifyContent: "center" }}>
-            Accedi
-          </Btn>
-          <a href="/" className="portal-link" style={{
-            display: "inline-flex", alignItems: "center", gap: 6, marginTop: 16,
-            fontFamily: MONO, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase",
-            color: T.ghost, textDecoration: "none",
-          }}>
-            <Icon name="arrowL" size={10} /> Torna al sito
-          </a>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 28 }}>
+            <Btn variant="primary" icon="lock" onClick={openAuthModal} style={{ width: "100%", justifyContent: "center", padding: "13px 20px", fontSize: 14 }}>
+              Accedi al tuo spazio
+            </Btn>
+            <a href="/" className="portal-link" style={{
+              display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
+              padding: "10px 16px", borderRadius: 10,
+              border: `1px solid ${T.border}`, background: "rgba(255,255,255,0.05)",
+              fontFamily: DISPLAY, fontSize: 13, fontWeight: 500, color: T.faint, textDecoration: "none",
+            }}>
+              <Icon name="arrowL" size={13} /> Torna al sito
+            </a>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginTop: 28, paddingTop: 24, borderTop: `1px solid ${T.border}` }}>
+            {[
+              { icon: "layers" as const, label: "Progetti" },
+              { icon: "calendar" as const, label: "Riunioni" },
+              { icon: "invoice" as const, label: "Fatture" },
+            ].map(item => (
+              <div key={item.label} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                <span style={{
+                  width: 36, height: 36, borderRadius: 10,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  background: "rgba(194,86,64,0.08)", border: "1px solid rgba(194,86,64,0.18)", color: T.copper,
+                }}>
+                  <Icon name={item.icon} size={16} />
+                </span>
+                <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: T.faint }}>
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
         </Glass>
       </FullScreen>
     )
@@ -188,13 +211,11 @@ export default function CabinetApp() {
 
   return (
     <Shell
-      brandName="Nadia Maar"
-      roleTag="Area Clienti"
       items={items}
       active={section}
       onSelect={handleSelect}
       email={profile?.email ?? user.email ?? undefined}
-      roleLabel={profile?.companyName ?? "Cliente"}
+      roleLabel={profile?.companyName ?? profile?.contactName ?? "Cliente"}
       onSignOut={() => { supabase.auth.signOut() }}
       topRight={home.actions.length > 0 ? (
         <button
@@ -213,7 +234,12 @@ export default function CabinetApp() {
       ) : undefined}
     >
       {section === "panoramica" && (
-        <Overview home={home} onAction={handleAction} onOpenProject={id => { setSection("progetti"); setProjectId(id) }} />
+        <Overview
+          home={home}
+          onAction={handleAction}
+          onOpenProject={id => { setSection("progetti"); setProjectId(id) }}
+          userName={profile?.contactName ?? profile?.email?.split("@")[0]}
+        />
       )}
       {section === "progetti" && (
         home.projects.length === 0

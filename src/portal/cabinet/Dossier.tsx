@@ -11,7 +11,7 @@ import StageGrid from "../StageGrid"
 import { stageProgress } from "../StageRail"
 import {
   Badge, Btn, DISPLAY, Empty, Glass, Icon, INVOICE_STATUS, Loading, MEETING_STATUS,
-  Modal, MONO, Note, PROJECT_STATUS, Ring, Row, T, Tabs, Timeline, TONE,
+  Modal, MONO, Note, PROJECT_STATUS, Ring, Row, T, TL, Tabs, Timeline, TONE,
 } from "../ui"
 
 type TabId = "fasi" | "diario" | "fatture" | "riunioni"
@@ -32,7 +32,7 @@ function ProjectSwitcher({ projects, currentId, onSwitch, onNew }: {
           aria-label="Seleziona progetto"
           style={{
             display: "flex", gap: 4, padding: 4, borderRadius: 14, maxWidth: "100%",
-            overflowX: "auto", background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`,
+            overflowX: "auto", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)",
           }}
         >
           {projects.map(p => {
@@ -48,11 +48,11 @@ function ProjectSwitcher({ projects, currentId, onSwitch, onNew }: {
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 8,
                   padding: "9px 15px", borderRadius: 10, border: "1px solid transparent",
-                  background: active ? "rgba(255,255,255,0.10)" : "transparent",
-                  borderColor: active ? "rgba(255,255,255,0.16)" : "transparent",
-                  boxShadow: active ? "inset 0 1px 0 rgba(255,255,255,0.22)" : "none",
-                  color: active ? T.text : T.faint,
-                  fontFamily: DISPLAY, fontSize: 14, fontWeight: 700, whiteSpace: "nowrap", maxWidth: 240,
+                  background: active ? "rgba(255,255,255,0.14)" : "transparent",
+                  borderColor: active ? "rgba(255,255,255,0.20)" : "transparent",
+                  boxShadow: active ? "inset 0 1px 0 rgba(255,255,255,0.28), 0 1px 3px rgba(0,0,0,0.18)" : "none",
+                  color: active ? TL.text : TL.muted,
+                  fontFamily: DISPLAY, fontSize: 14, fontWeight: active ? 700 : 500, whiteSpace: "nowrap", maxWidth: 240,
                 }}
               >
                 <span style={{ width: 7, height: 7, borderRadius: 99, background: TONE[ps.tone].fg, flexShrink: 0 }} />
@@ -62,7 +62,7 @@ function ProjectSwitcher({ projects, currentId, onSwitch, onNew }: {
           })}
         </div>
       ) : (
-        <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.2em", textTransform: "uppercase", color: T.ghost }}>
+        <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.2em", textTransform: "uppercase", color: TL.ghost }}>
           Dossier progetto
         </span>
       )}
