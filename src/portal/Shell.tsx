@@ -39,7 +39,7 @@ function Backdrop() {
 
 export default function Shell({
   items, active, onSelect,
-  email, roleLabel, onSignOut, topRight, children,
+  email, roleLabel, onSignOut, onEditProfile, topRight, children,
 }: {
   items: ShellNavItem[]
   active: string
@@ -47,6 +47,7 @@ export default function Shell({
   email?: string
   roleLabel: string
   onSignOut: () => void
+  onEditProfile?: () => void
   topRight?: React.ReactNode
   children: React.ReactNode
 }) {
@@ -57,9 +58,20 @@ export default function Shell({
     <>
       {/* Client profile — top of sidebar */}
       <div style={{ padding: "24px 16px 20px", borderBottom: `1px solid ${TL.border}` }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <button
+          onClick={onEditProfile ? () => { onEditProfile(); setDrawer(false) } : undefined}
+          disabled={!onEditProfile}
+          className={onEditProfile ? "portal-nav-item" : undefined}
+          title={onEditProfile ? "Modifica il tuo profilo" : undefined}
+          style={{
+            display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left",
+            background: "transparent", border: "1px solid transparent", borderRadius: 12,
+            padding: onEditProfile ? "8px 10px" : 0, margin: onEditProfile ? "-8px -10px" : 0,
+            cursor: onEditProfile ? "pointer" : "default",
+          }}
+        >
           <Avatar name={email ?? "?"} size={42} />
-          <div style={{ minWidth: 0 }}>
+          <div style={{ minWidth: 0, flex: 1 }}>
             <p style={{
               fontFamily: DISPLAY, fontSize: 14, fontWeight: 700,
               color: TL.text, margin: 0, lineHeight: 1.25,
@@ -74,7 +86,8 @@ export default function Shell({
               {email ?? "—"}
             </p>
           </div>
-        </div>
+          {onEditProfile && <Icon name="edit" size={13} style={{ color: TL.faint, flexShrink: 0 }} />}
+        </button>
       </div>
 
       {/* Nav */}

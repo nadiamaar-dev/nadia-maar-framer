@@ -254,6 +254,22 @@ export interface ClientAsset {
   createdAt: string
 }
 
+/* ── Audit trail (legal record of client actions) ──────────── */
+export interface AuditLog {
+  id: string
+  actorId?: string
+  actorRole: "admin" | "client" | "system"
+  action: string
+  entityType?: string
+  entityId?: string
+  projectId?: string
+  clientId?: string
+  ip?: string
+  userAgent?: string
+  detail: Record<string, unknown>
+  createdAt: string
+}
+
 /* ── Action center ─────────────────────────────────────────── */
 export type ActionKind =
   | "start_project" | "approve_stage" | "pay_invoice" | "confirm_meeting" | "unread_chat" | "sign_document"

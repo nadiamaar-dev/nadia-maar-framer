@@ -19,7 +19,7 @@ import {
 type TabId = "progetti" | "fatture" | "documenti" | "messaggi"
 
 const DOC_TYPES: Record<DocType, string> = {
-  report: "Report", contract: "Contratto", invoice: "Fattura", other: "Altro",
+  report: "Report", contract: "Contratto", invoice: "Fattura", handover: "Consegna", other: "Altro",
 }
 
 export default function ClientWorkspace({ client, home, adminId, onBack, reload, onOpenProject }: {

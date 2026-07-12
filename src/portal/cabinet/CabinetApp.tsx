@@ -14,6 +14,7 @@ import Meetings from "./Meetings"
 import Messages from "./Messages"
 import NewProjectModal from "./NewProjectModal"
 import Overview from "./Overview"
+import ProfileModal from "./ProfileModal"
 import Projects from "./Projects"
 import Support from "./Support"
 
@@ -21,9 +22,9 @@ const SECTIONS: Omit<ShellNavItem, "badge">[] = [
   { id: "panoramica", label: "Panoramica", icon: "home" },
   { id: "progetti", label: "Progetti", icon: "layers" },
   { id: "documenti", label: "Documenti", icon: "doc" },
+  { id: "fatture", label: "Fatture", icon: "invoice" },
   { id: "materiali", label: "Materiali", icon: "folder" },
   { id: "riunioni", label: "Riunioni", icon: "calendar" },
-  { id: "fatture", label: "Fatture", icon: "invoice" },
   { id: "messaggi", label: "Messaggi", icon: "chat" },
   { id: "supporto", label: "Supporto", icon: "ticket" },
 ]
@@ -54,6 +55,7 @@ export default function CabinetApp() {
   const [section, setSection] = useState("panoramica")
   const [projectId, setProjectId] = useState<string | null>(null)
   const [wizardOpen, setWizardOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout>>()
 
   const userId = user?.id ?? null
@@ -224,6 +226,7 @@ export default function CabinetApp() {
       email={profile?.email ?? user.email ?? undefined}
       roleLabel={profile?.companyName ?? profile?.contactName ?? "Cliente"}
       onSignOut={() => { supabase.auth.signOut() }}
+      onEditProfile={() => setProfileOpen(true)}
       topRight={home.actions.length > 0 ? (
         <button
           onClick={() => setSection("panoramica")}
@@ -270,6 +273,14 @@ export default function CabinetApp() {
       <NewProjectModal
         open={wizardOpen}
         onClose={() => setWizardOpen(false)}
+        userId={user.id}
+        profile={profile}
+        reload={reload}
+      />
+
+      <ProfileModal
+        open={profileOpen}
+        onClose={() => setProfileOpen(false)}
         userId={user.id}
         profile={profile}
         reload={reload}

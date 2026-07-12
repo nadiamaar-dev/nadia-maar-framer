@@ -10,6 +10,7 @@ import {
   updateProjectStatus, updateStage,
 } from "../../lib/api"
 import type { AdminHome } from "../../lib/api"
+import AuditTrail from "./AuditTrail"
 import ChatThread from "../ChatThread"
 import DossierDocsAdmin from "./DossierDocsAdmin"
 import DossierHandoverAdmin from "./DossierHandoverAdmin"
@@ -320,6 +321,7 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
               {events.length === 0
                 ? <Empty icon="sparkle" title="Diario vuoto" hint="Ogni transizione del progetto viene registrata qui." />
                 : <Timeline events={events} />}
+              <AuditTrail projectId={projectId} />
             </Glass>
           )}
 

@@ -1,6 +1,7 @@
 import React from "react"
 import type { ClientHome, PortalAction } from "../../lib/api"
 import { fmtDateTime, fmtEur, isUnreadFor } from "../../lib/api"
+import GuideStrip from "./GuideStrip"
 import {
   DISPLAY, Empty, Glass, Icon, MONO, PROJECT_STATUS, Row, SectionTitle, Stat, T, TL, Timeline,
   type IconName, type Tone,
@@ -58,6 +59,9 @@ export default function Overview({ home, onAction, onOpenProject, userName }: {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
       <Greeting name={userName} />
+
+      {/* Client journey guide */}
+      <GuideStrip home={home} />
 
       {/* KPI row */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>

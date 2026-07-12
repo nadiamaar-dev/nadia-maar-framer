@@ -85,6 +85,20 @@ export async function updateOwnPhone(clientId: string, phone: string): Promise<v
   if (error) throw error
 }
 
+/** Client edits their own card (company, contact, phone). Role/plan/status are
+ *  guarded server-side, so only these safe fields are ever sent. */
+export async function updateOwnProfile(
+  clientId: string,
+  patch: { companyName?: string; contactName?: string; phone?: string },
+): Promise<void> {
+  const db: Record<string, unknown> = { updated_at: new Date().toISOString() }
+  if (patch.companyName !== undefined) db.company_name = patch.companyName.trim() || null
+  if (patch.contactName !== undefined) db.contact_name = patch.contactName.trim() || null
+  if (patch.phone !== undefined) db.phone = patch.phone.trim() || null
+  const { error } = await supabase.from("profiles").update(db).eq("id", clientId)
+  if (error) throw error
+}
+
 export async function fetchKpi(): Promise<AdminKpi> {
   const clients = await fetchClients()
   return {

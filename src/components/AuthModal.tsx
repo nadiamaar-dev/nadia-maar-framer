@@ -101,6 +101,7 @@ export default function AuthModal() {
   const [company,  setCompany]  = useState("")
   const [error, setError]   = useState("")
   const [busy, setBusy]     = useState("")   // "loading" | "success" | ""
+  const [magicSent, setMagicSent] = useState(false)
   const backdropRef         = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -140,7 +141,18 @@ export default function AuthModal() {
     }
   }
 
-  const switchMode = (m: Mode) => { setMode(m); setError(""); setBusy(""); setFullName(""); setCompany("") }
+  const sendMagicLink = async () => {
+    if (!email.trim()) { setError("Inserisci la tua email per ricevere il link."); return }
+    setError(""); setBusy("loading")
+    const { error: err } = await supabase.auth.signInWithOtp({
+      email: email.trim(),
+      options: { emailRedirectTo: `${window.location.origin}/`, shouldCreateUser: false },
+    })
+    if (err) { setError(err.message); setBusy("") }
+    else { setMagicSent(true); setBusy("success") }
+  }
+
+  const switchMode = (m: Mode) => { setMode(m); setError(""); setBusy(""); setMagicSent(false); setFullName(""); setCompany("") }
 
   return (
     <div
@@ -232,12 +244,14 @@ export default function AuthModal() {
               </svg>
             </div>
             <div style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>
-              {mode === "register" ? "Controlla la tua email!" : "Accesso riuscito!"}
+              {mode === "register" || magicSent ? "Controlla la tua email!" : "Accesso riuscito!"}
             </div>
             <div style={{ fontFamily: DISPLAY, fontSize: 13, color: "rgba(255,255,255,0.50)" }}>
-              {mode === "register"
-                ? "Abbiamo inviato un link di conferma al tuo indirizzo email."
-                : "Benvenuto nel tuo Blueprint."
+              {magicSent
+                ? "Ti abbiamo inviato un link per accedere senza password."
+                : mode === "register"
+                  ? "Abbiamo inviato un link di conferma al tuo indirizzo email."
+                  : "Benvenuto nel tuo Blueprint."
               }
             </div>
           </div>
@@ -293,13 +307,42 @@ export default function AuthModal() {
               }
             </button>
 
+            {mode === "login" && (
+              <>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "2px 0" }}>
+                  <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.10)" }} />
+                  <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.14em", color: "rgba(255,255,255,0.32)" }}>OPPURE</span>
+                  <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.10)" }} />
+                </div>
+                <button
+                  type="button"
+                  onClick={sendMagicLink}
+                  disabled={busy === "loading"}
+                  style={{
+                    width: "100%", padding: 13,
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.16)",
+                    borderRadius: 10, cursor: busy === "loading" ? "not-allowed" : "pointer",
+                    fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 600, color: "rgba(255,255,255,0.82)",
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    transition: "all 0.18s ease",
+                  }}
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 7l-10 6L2 7" />
+                  </svg>
+                  Accedi con link magico
+                </button>
+              </>
+            )}
+
             <div style={{
               fontFamily: MONO, fontSize: 10, letterSpacing: "0.08em",
               textAlign: "center", color: "rgba(255,255,255,0.28)",
             }}>
               {mode === "register"
                 ? "Registrandoti accetti i nostri termini di servizio."
-                : "Nessun account? Clicca su Registrati."
+                : "Senza password: ti inviamo un link di accesso via email."
               }
             </div>
           </form>
