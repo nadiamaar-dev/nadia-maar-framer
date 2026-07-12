@@ -71,6 +71,9 @@ const HDR_STYLE = `
   .nm-hdr-dt      { display:none; }
   .nm-hdr-divider { display:none; }
   .nm-hdr-wordmark{ display:none; }
+}
+@media(max-width:560px){
+  .nm-hdr-foundry { display:none; }
 }`
 
 /* ── DateTimeWidget — minimal, no border ── */
@@ -203,7 +206,7 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
             <rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
             <path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
           </svg>
-          Accedi · Area Clienti
+          Area Clienti
         </button>
       )}
     </motion.div>
@@ -455,8 +458,28 @@ export default function Header() {
           </motion.span>
         </motion.a>
 
-        {/* ── right: auth pill + hamburger ── */}
+        {/* ── right: Foundry link + auth pill + hamburger ── */}
         <div style={{ flex: 1, display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 12 }}>
+
+          {/* Foundry — visible top-bar link (also in the menu) */}
+          <motion.a
+            href="/foundry" className="nm-hdr-foundry"
+            whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            style={{
+              padding: "6px 13px", borderRadius: 8, textDecoration: "none", cursor: "pointer",
+              background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.16)",
+              fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase" as const,
+              color: "rgba(255,255,255,0.82)", whiteSpace: "nowrap" as const,
+              display: "flex", alignItems: "center", gap: 8,
+              transition: "background 0.18s, border-color 0.18s, color 0.18s",
+            }}
+            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.10)"; el.style.borderColor = "rgba(255,255,255,0.30)"; el.style.color = "#fff" }}
+            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.05)"; el.style.borderColor = "rgba(255,255,255,0.16)"; el.style.color = "rgba(255,255,255,0.82)" }}
+          >
+            <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.accentLt, flexShrink: 0 }} />
+            Foundry
+          </motion.a>
 
           {/* Auth button */}
           <AnimatePresence mode="wait">
@@ -529,7 +552,7 @@ export default function Header() {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(90deg, rgba(196,84,66,0.85) 0%, rgba(196,84,66,0.70) 100%)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(196,84,66,0.90)" }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "linear-gradient(90deg, rgba(174,83,80,0.78) 0%, rgba(174,83,80,0.60) 100%)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(174,83,80,0.80)" }}
               >
-                Accedi
+                Area Clienti
               </motion.button>
             )}
           </AnimatePresence>

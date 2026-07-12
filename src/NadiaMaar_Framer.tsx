@@ -671,7 +671,7 @@ const HERO_STATS = [
   { value: "05+", label: "Anni" },
   { value: "30k+", label: "Prodotti" },
   { value: "100%", label: "Custom" },
-  { value: "50+", label: "Progetti" },
+  { value: "+40%", label: "Conversion" },
 ]
 
 /* Ultra-modern hero side panel */
@@ -891,7 +891,7 @@ function Hero() {
                   style={{ fontFamily: DISPLAY, fontSize: "clamp(34px, 5.4vw, 74px)", fontWeight: 800, lineHeight: 0.98, letterSpacing: "-0.04em", margin: 0, color: "#FFFFFF", textTransform: "uppercase" as const, filter: "drop-shadow(0 12px 34px rgba(0,0,0,0.6))" }}
                 >
                   <span>E-commerce</span><br />
-                  <span>Architect</span><br />
+                  <span style={{ color: "rgba(255,255,255,0.55)" }}>Architect</span><br />
                   <span style={{ fontWeight: 300 }}>{"& "}</span>
                   <span>Digital Strategist</span>
                 </motion.h1>
@@ -933,15 +933,15 @@ function Hero() {
               >
                 <span style={{ padding: "0 14px", borderRight: "1px solid rgba(115,54,53,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[01]</span>
                 <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
-                  <span>Avvia il tuo Progetto</span>
+                  <span>Prenota una Consultazione</span>
                   <span style={{ fontSize: 14, color: "rgba(255,255,255,0.92)" }}>→</span>
                 </span>
               </motion.button>
               <motion.a
-                href="/about" whileHover={{ y: -2, background: "rgba(255,255,255,0.10)", borderColor: "rgba(224,224,224,0.38)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
-                style={{ flex: "1 1 0", minHeight: 54, padding: "0 18px", borderRadius: 9, fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center" as const, textDecoration: "none", border: "1px solid rgba(255,255,255,0.20)", background: "rgba(255,255,255,0.04)", color: T.text }}
+                href="/foundry" whileHover={{ y: -2, background: "rgba(255,255,255,0.10)", borderColor: "rgba(224,224,224,0.38)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                style={{ flex: "1 1 0", minHeight: 54, padding: "0 18px", borderRadius: 9, fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, textAlign: "center" as const, textDecoration: "none", border: "1px solid rgba(255,255,255,0.20)", background: "rgba(255,255,255,0.04)", color: T.text }}
               >
-                About Me
+                Esplora la Foundry <span style={{ fontSize: 14 }}>→</span>
               </motion.a>
             </motion.div>
 
@@ -1006,72 +1006,8 @@ function Hero() {
           <span className="hp-hero-scroll" style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.52)" }}>Scorri ↓</span>
         </motion.div>
 
-        {/* ── All-In-One block: immediately after stats ── */}
-        <style>{`
-          .aio-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-          .ris-grid  { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-          @media(max-width:700px){
-            .aio-grid { grid-template-columns:1fr !important; gap:10px !important; }
-            .ris-grid  { grid-template-columns:1fr !important; gap:10px !important; }
-          }
-          @media(min-width:701px) and (max-width:960px){
-            .aio-grid { grid-template-columns:repeat(2,1fr) !important; }
-            .ris-grid  { grid-template-columns:repeat(2,1fr) !important; }
-          }
-        `}</style>
-        <div id="s3" style={{ marginTop: 64, paddingTop: 64, borderTop: `1px solid ${T.border}` }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
-            <span style={{ color: T.accentLt }}>//</span>
-            <span>[ The All-In-One Advantage ]</span>
-          </div>
-          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", marginBottom: 18, maxWidth: 780, color: T.text }}>
-            Perché i brand lungimiranti scelgono un unico Partner Strategico?
-          </h2>
-          <p style={{ fontFamily: MONO, fontSize: "clamp(12.5px,1.4vw,13.5px)", color: T.muted, lineHeight: 1.75, maxWidth: 740, marginBottom: 40 }}>
-            Gestire un business online oggi richiede uno sviluppatore, un designer, un esperto di automazioni API e un'agenzia di marketing. Risultato? Costi frammentati, problemi di comunicazione e ritardi continui. Ottieni tutto questo in un'unica soluzione integrata:
-          </p>
-          <div className="aio-grid">
-            {ADVANTAGES.map((a, i) => (
-              <CatalogCard key={a.n} index={a.n}>
-                <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, lineHeight: 1.25, margin: "0 0 10px", color: "#1A1410" }}>{a.title}</h3>
-                <p style={{ fontFamily: MONO, fontSize: 12.5, lineHeight: 1.68, color: "rgba(36,29,24,.68)", margin: 0 }}>{a.body}</p>
-              </CatalogCard>
-            ))}
-          </div>
-
-          {/* Risultati strip — V3 style */}
-          <div className="ris-grid" style={{ marginTop: 56, paddingTop: 56, borderTop: `1px solid ${T.border}` }}>
-            {RISULTATI.map((r, i) => {
-              const nm = statNumeric(r.value)
-              return (
-                <div
-                  key={r.label}
-                  style={{
-                    position: "relative",
-                    border: `1px solid rgba(255,255,255,0.13)`,
-                    borderRadius: 14,
-                    padding: "30px 26px",
-                    background: "rgba(255,255,255,.03)",
-                    boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.38), inset 1px 0 0 rgba(255,255,255,0.08)",
-                    overflow: "hidden",
-                  }}
-                >
-                  <span style={{ position: "absolute", inset: 0, borderRadius: 14, background: "linear-gradient(135deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.02) 28%, transparent 52%)", pointerEvents: "none" }} />
-                  <StatCorners />
-                  <div style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(36px,5vw,60px)", letterSpacing: "-.03em", color: T.accentLt, lineHeight: 1 }}>
-                    {nm.n !== null
-                      ? <>{nm.prefix}<StatCountUp target={nm.n} suffix={nm.suffix} /></>
-                      : r.value}
-                    {r.symbol && <span style={{ color: T.accentLt }}>{r.symbol}</span>}
-                  </div>
-                  <div style={{ fontFamily: MONO, fontSize: 12, lineHeight: 1.6, color: T.muted, marginTop: 14, letterSpacing: ".04em" }}>
-                    {r.label}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
+        {/* ── Social proof marquee — right under the stat cards ── */}
+        <SocialProof />
 
       </div>
 
@@ -1087,9 +1023,9 @@ function Hero() {
    §3  ALL-IN-ONE ADVANTAGE
 ══════════════════════════════════════════════════════════════════════════ */
 const ADVANTAGES = [
-  { n: "01", title: "Velocità di Esecuzione", body: "Nessun passaggio di consegne o perdita di informazioni. Dal codice alla campagna pubblicitaria, tutto è perfettamente allineato." },
-  { n: "02", title: "Infrastrutture Senza Errori", body: "Le automazioni e le connessioni ai fornitori vengono testate da chi ha progettato l'architettura del sito." },
-  { n: "03", title: "Ottimizzazione del Budget", body: "Meno intermediari significa che ogni euro investito va direttamente a potenziare il tuo ROI." },
+  { n: "01", title: "Infrastrutture Senza Errori", body: "Architetture testate da chi le ha progettate. Codice pulito, automazioni e connessioni ai fornitori affidabili: zero bug in produzione, sistemi che reggono la scala." },
+  { n: "02", title: "Velocità di Esecuzione", body: "Nessun passaggio di consegne né perdita di informazioni. Dal codice alla campagna di marketing, tutto vive in un unico flusso perfettamente allineato." },
+  { n: "03", title: "Unico Referente Strategico", body: "Sviluppo tecnico, logica di business, integrazione AI e SEO gestiti da un'unica mente. Nessun rimpallo di responsabilità, nessuna scusa." },
 ]
 
 const ADV_VARIANTS = {
@@ -1185,18 +1121,24 @@ function AllInOne() {
           {/* V3 eyebrow: // [ The All-In-One Advantage ] */}
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
-            <span>[ The All-In-One Advantage ]</span>
+            <span>[ Il Metodo — Manifesto ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", marginBottom: 18, maxWidth: 780, color: T.text }}>
-            Perché i brand lungimiranti scelgono un unico Partner Strategico?
+            Il Metodo: Un Solo Partner, Zero Scuse.
           </h2>
           <p style={{ fontFamily: MONO, fontSize: 13.5, color: T.muted, lineHeight: 1.75, maxWidth: 740, marginBottom: 40 }}>
-            Gestire un business online oggi richiede uno sviluppatore, un designer, un esperto di automazioni API e un'agenzia di marketing. Risultato? Costi frammentati, problemi di comunicazione e ritardi continui. Ottieni tutto questo in un'unica soluzione integrata:
+            Sviluppatore, designer, esperto di automazioni API e agenzia di marketing sono di solito quattro fornitori diversi — con costi frammentati, comunicazione lenta e responsabilità sfumate. Io li unisco in un'unica mente strategica.
           </p>
         </Reveal>
 
         {/* 3-column V3 catalog cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14 }}>
+        <style>{`
+          .aio-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+          .ris-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+          @media(max-width:700px){ .aio-grid{grid-template-columns:1fr!important;gap:10px!important;} .ris-grid{grid-template-columns:1fr!important;gap:10px!important;} }
+          @media(min-width:701px) and (max-width:960px){ .aio-grid{grid-template-columns:repeat(2,1fr)!important;} .ris-grid{grid-template-columns:repeat(2,1fr)!important;} }
+        `}</style>
+        <div className="aio-grid">
           {ADVANTAGES.map((a, i) => (
             <Reveal key={a.n} delay={i * 0.07}>
               <CatalogCard index={a.n}>
@@ -1206,9 +1148,6 @@ function AllInOne() {
             </Reveal>
           ))}
         </div>
-
-        {/* mobile: stack */}
-        <style>{`@media(max-width:680px){.ag-allinone-grid{grid-template-columns:1fr!important;}}`}</style>
       </div>
     </section>
   )
@@ -1581,20 +1520,6 @@ const SOLUZIONI = [
     num: "02",
     icon: (
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-      </svg>
-    ),
-    gradient: "linear-gradient(135deg, #AEB6C4 0%, #EDF1F7 100%)",
-    glow: "rgba(210,220,235,0.24)",
-    title: "Siti Corporate & Lead Generation",
-    desc: "Identità digitale d'élite per aziende e professionisti. Design esclusivo focalizzato sull'acquisizione di clienti qualificati.",
-    cta: "Potenzia il tuo Brand",
-    href: "/corporate",
-  },
-  {
-    num: "03",
-    icon: (
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
       </svg>
     ),
@@ -1606,21 +1531,7 @@ const SOLUZIONI = [
     href: "/web-app",
   },
   {
-    num: "04",
-    icon: (
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
-      </svg>
-    ),
-    gradient: "linear-gradient(135deg, #733635 0%, #DFA088 100%)",
-    glow: "rgba(115,54,53,0.28)",
-    title: "SEO Strategico & Performance Marketing",
-    desc: "Posizionamento organico integrato nel codice fin dal primo giorno. Scaliamo Google per intercettare traffico pronto a comprare.",
-    cta: "Scala le Classifiche",
-    href: "/seo",
-  },
-  {
-    num: "05",
+    num: "03",
     icon: (
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
@@ -1633,6 +1544,34 @@ const SOLUZIONI = [
     desc: "Soluzioni pratiche basate su Intelligenza Artificiale (Agenti AI, LLM). Abbattiamo i costi di gestione e ottimizziamo la routine.",
     cta: "Innova con l'AI",
     href: "/ai",
+  },
+  {
+    num: "04",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+      </svg>
+    ),
+    gradient: "linear-gradient(135deg, #733635 0%, #DFA088 100%)",
+    glow: "rgba(115,54,53,0.28)",
+    title: "SEO Strutturale & Performance",
+    desc: "Posizionamento organico integrato nel codice fin dal primo giorno. Scaliamo Google per intercettare traffico pronto a comprare.",
+    cta: "Scala le Classifiche",
+    href: "/seo",
+  },
+  {
+    num: "05",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+      </svg>
+    ),
+    gradient: "linear-gradient(135deg, #AEB6C4 0%, #EDF1F7 100%)",
+    glow: "rgba(210,220,235,0.24)",
+    title: "Corporate & Lead Generation",
+    desc: "Presenza digitale premium in React/Next.js: interfacce ad alte performance, Core Web Vitals ottimizzati e funnel di acquisizione pensati per generare lead qualificati.",
+    cta: "Potenzia il tuo Brand",
+    href: "/corporate",
   },
 ]
 
@@ -1729,53 +1668,82 @@ function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: t
 
 function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
   const [hover, setHover] = useState(false)
+  const featured = i === 0
+
+  /* route chip — neutral; signals each solution has its own dedicated page */
+  const RouteChip = (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontFamily: MONO, fontSize: 9.5, letterSpacing: ".04em", color: hover ? "rgba(255,255,255,0.72)" : "rgba(255,255,255,0.42)", border: `1px solid ${hover ? "rgba(255,255,255,0.26)" : "rgba(255,255,255,0.14)"}`, borderRadius: 6, padding: "3px 8px", transition: "color .3s, border-color .3s", whiteSpace: "nowrap" as const }}>
+      <span style={{ fontSize: 11 }}>↗</span>{s.href}
+    </span>
+  )
+
+  const IconBox = (
+    <div style={{ width: 38, height: 38, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: hover ? "rgba(255,255,255,0.09)" : "rgba(255,255,255,0.05)", border: `1px solid ${hover ? "rgba(255,255,255,0.24)" : "rgba(255,255,255,0.12)"}`, color: hover ? "#FFFFFF" : "rgba(255,255,255,0.75)", transition: "background .3s, border-color .3s, color .3s" }}>
+      {s.icon}
+    </div>
+  )
+
+  const Footer = (
+    <div style={{ marginTop: "auto", paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.09)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+      <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 600, letterSpacing: ".04em", textTransform: "uppercase" as const, color: hover ? "#FFFFFF" : "rgba(255,255,255,0.6)", transition: "color .3s" }}>{s.cta}</span>
+      {/* arrow — the one accent element */}
+      <motion.span animate={{ x: hover ? 4 : 0, borderColor: hover ? "rgba(115,54,53,0.7)" : "rgba(115,54,53,0.32)", background: hover ? "rgba(115,54,53,0.18)" : "rgba(115,54,53,0.08)" }} transition={{ duration: 0.25 }}
+        style={{ width: 30, height: 30, borderRadius: "50%", border: "1px solid", display: "flex", alignItems: "center", justifyContent: "center", color: T.accentLt, fontSize: 14, flexShrink: 0 }}>→</motion.span>
+    </div>
+  )
+
+  /* big index number — the other accent element */
+  const BigNum = (size: number) => (
+    <span style={{ fontFamily: MONO, fontWeight: 900, fontSize: size, letterSpacing: "-0.06em", lineHeight: 1, color: "rgba(174,83,80,0.34)" }}>{s.num}</span>
+  )
+
   return (
     <a
       href={s.href}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
-        position: "relative",
-        width: "100%",
-        height: "100%",
-        borderRadius: 16,
-        border: `1px solid ${hover ? "rgba(115,54,53,.55)" : T.border}`,
-        background: hover ? "rgba(255,255,255,.09)" : "rgba(255,255,255,.045)",
-        backdropFilter: "blur(28px)",
-        WebkitBackdropFilter: "blur(28px)",
+        position: "relative", width: "100%", height: "100%", borderRadius: 14, overflow: "hidden", boxSizing: "border-box" as const,
+        border: `1px solid ${hover ? "rgba(255,255,255,0.26)" : "rgba(255,255,255,0.12)"}`,
+        background: hover ? "rgba(255,255,255,.07)" : "rgba(255,255,255,.035)",
+        backdropFilter: "blur(28px)", WebkitBackdropFilter: "blur(28px)",
         boxShadow: hover
-          ? "inset 0 1.5px 0 rgba(255,255,255,0.55), inset 1px 0 0 rgba(255,255,255,0.14), 0 20px 50px rgba(0,0,0,0.45)"
-          : "inset 0 1.5px 0 rgba(255,255,255,0.38), inset 1px 0 0 rgba(255,255,255,0.08), 0 12px 36px rgba(0,0,0,0.35)",
-        padding: "26px 24px 24px",
-        overflow: "hidden",
-        display: "flex", flexDirection: "column",
+          ? "0 16px 40px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.18)"
+          : "0 8px 24px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.09)",
+        textDecoration: "none", cursor: "pointer",
         transition: "background .35s ease, border-color .35s ease, transform .35s ease, box-shadow .35s ease",
         transform: hover ? "translateY(-3px)" : "none",
-        boxSizing: "border-box" as const,
-        textDecoration: "none",
-        cursor: "pointer",
+        padding: featured ? "clamp(20px,2.4vw,26px)" : "20px 20px 18px",
+        display: "flex", flexDirection: featured ? "row" : "column", gap: featured ? 32 : 0, flexWrap: featured ? "wrap" as const : "nowrap" as const,
       }}
     >
-      {/* rim-light shimmer */}
-      <span style={{ position: "absolute", inset: 0, borderRadius: 16, background: "linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 30%, transparent 55%)", pointerEvents: "none" }} />
-      {/* brick glow */}
-      <span style={{ position: "absolute", inset: 0, borderRadius: 16, background: "radial-gradient(120% 90% at 50% 120%, rgba(115,54,53,.38), transparent 62%)", opacity: hover ? 1 : 0, transition: "opacity .35s ease", pointerEvents: "none" }} />
-      {/* scanline */}
-      <span style={{ position: "absolute", left: 24, bottom: 14, height: 2, width: hover ? "calc(100% - 48px)" : 0, background: "linear-gradient(90deg, #733635, #AE5350)", transition: "width .4s cubic-bezier(.2,.7,.2,1)", pointerEvents: "none" }} />
-      {/* corner brackets */}
-      <span style={{ position: "absolute", top: 9, left: 9, width: 10, height: 10, borderTop: "1.5px solid rgba(115,54,53,.55)", borderLeft: "1.5px solid rgba(115,54,53,.55)" }} />
-      <span style={{ position: "absolute", bottom: 9, right: 9, width: 10, height: 10, borderBottom: "1.5px solid rgba(115,54,53,.55)", borderRight: "1.5px solid rgba(115,54,53,.55)" }} />
-      {/* index */}
-      <div style={{ position: "relative", fontFamily: MONO, fontSize: 11, letterSpacing: ".14em", color: T.accentLt, marginBottom: 14 }}>[{s.num}]</div>
-      <h3 style={{ position: "relative", fontFamily: DISPLAY, fontWeight: 700, fontSize: i === 0 ? 22 : 18, lineHeight: 1.25, margin: "0 0 10px", color: T.text }}>
-        {s.title}
-      </h3>
-      <p style={{ position: "relative", fontFamily: MONO, fontSize: 12.5, lineHeight: 1.68, color: T.muted, margin: "0 0 18px", flex: 1 }}>
-        {s.desc}
-      </p>
-      <span style={{ position: "relative", fontFamily: MONO, fontSize: 12, letterSpacing: ".06em", color: T.accentLt, fontWeight: 600 }}>
-        {s.cta} →
-      </span>
+      {featured ? (
+        <>
+          <div style={{ display: "flex", flexDirection: "column", flex: "1 1 280px", minWidth: 220 }}>
+            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 14 }}>
+              {BigNum(72)}
+              {RouteChip}
+            </div>
+            {IconBox}
+            <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(20px,2.2vw,26px)", letterSpacing: "-0.02em", lineHeight: 1.14, color: T.text, margin: "14px 0 0" }}>{s.title}</h3>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", flex: "1 1 280px", minWidth: 220 }}>
+            <p style={{ fontFamily: MONO, fontSize: 12.5, lineHeight: 1.7, color: T.muted, margin: "0 0 16px", flex: 1 }}>{s.desc}</p>
+            {Footer}
+          </div>
+        </>
+      ) : (
+        <>
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 12 }}>
+            {BigNum(54)}
+            {RouteChip}
+          </div>
+          {IconBox}
+          <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 16.5, letterSpacing: "-0.018em", lineHeight: 1.25, color: T.text, margin: "14px 0 8px" }}>{s.title}</h3>
+          <p style={{ fontFamily: MONO, fontSize: 12, lineHeight: 1.62, color: T.muted, margin: "0 0 16px", flex: 1 }}>{s.desc}</p>
+          {Footer}
+        </>
+      )}
     </a>
   )
 }
@@ -1789,12 +1757,15 @@ function SoluzioniMatrix() {
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Core Skills &amp; Tech Stack ]</span>
           </div>
-          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.6vw,48px)", fontWeight: 700, lineHeight: 1.06, letterSpacing: "-0.025em", margin: "0 0 40px", maxWidth: 780, color: T.text }}>
-            Soluzioni su misura per scalare il tuo business online
+          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.6vw,48px)", fontWeight: 700, lineHeight: 1.06, letterSpacing: "-0.025em", margin: "0 0 16px", maxWidth: 780, color: T.text }}>
+            Soluzioni ad Alta Ingegneria
           </h2>
+          <p style={{ fontFamily: MONO, fontSize: "clamp(12.5px,1.4vw,13.5px)", color: T.muted, lineHeight: 1.8, maxWidth: 680, margin: "0 0 40px" }}>
+            Ogni soluzione è un servizio completo con la <span style={{ color: "#FFFFFF" }}>sua pagina dedicata</span> — architettura, stack tecnologico e casi d'uso spiegati in dettaglio. Clicca su una card per esplorarla.
+          </p>
         </Reveal>
 
-        {/* bento 6-col — first spans full, pairs of 3 after */}
+        {/* bento 6-col — first spans full, pairs of 2 after */}
         <style>{`
           .sol-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:14px; align-items:stretch; }
           .sol-grid > * { display:flex; }
@@ -2028,47 +1999,55 @@ function DiagnosiBlock() {
           </h2>
         </Reveal>
 
-        {/* 2-col bento, each cell split Problema | Soluzione */}
+        {/* 2-col bento — white manifesto-style cards, each split Problema | Soluzione */}
         <style>{`
           .diag-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
           @media(max-width:700px){ .diag-grid { grid-template-columns:1fr !important; gap:10px !important; } }
-          .diag-cell { border:1px solid ${T.border}; border-radius:16px; overflow:hidden; display:grid; grid-template-columns:1fr 1fr; }
-          @media(max-width:700px){ .diag-cell { grid-template-columns:1fr !important; } }
+          .diag-split { display:grid; grid-template-columns:1fr 1fr; }
+          .diag-split > div:first-child { border-right:1px solid rgba(36,29,24,0.12); }
+          @media(max-width:700px){
+            .diag-split { grid-template-columns:1fr !important; }
+            .diag-split > div:first-child { border-right:none !important; border-bottom:1px solid rgba(36,29,24,0.12) !important; }
+          }
         `}</style>
         <div className="diag-grid">
           {DIAGNOSI_PS.map((d, i) => (
             <motion.div
               key={i}
-              className="diag-cell"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.55, delay: (i % 2) * 0.07, ease }}
+              style={{ display: "flex" }}
             >
-              {/* Problema */}
-              <div style={{ padding: "24px 22px", borderRight: `1px solid ${T.border}` }}>
-                <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: ".16em", color: "rgba(255,255,255,.35)", textTransform: "uppercase" as const, marginBottom: 12 }}>
-                  [ Problema ]
+              <CatalogCard style={{ padding: 0, width: "100%" }}>
+                <div className="diag-split">
+                  {/* Problema */}
+                  <div style={{ padding: "24px 22px" }}>
+                    <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: ".16em", color: "rgba(36,29,24,0.42)", textTransform: "uppercase" as const, marginBottom: 12 }}>
+                      [ Problema ]
+                    </div>
+                    <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 15, margin: "0 0 8px", color: "#1A1410", lineHeight: 1.3 }}>
+                      {d.problem.title}
+                    </h4>
+                    <p style={{ fontFamily: MONO, fontSize: 11.5, lineHeight: 1.65, color: "rgba(36,29,24,0.6)", margin: 0 }}>
+                      {d.problem.body}
+                    </p>
+                  </div>
+                  {/* Soluzione — subtle garnet tint */}
+                  <div style={{ position: "relative", padding: "24px 22px", background: "rgba(115,54,53,0.06)" }}>
+                    <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: ".16em", color: T.accentLt, textTransform: "uppercase" as const, marginBottom: 12 }}>
+                      [ Soluzione ]
+                    </div>
+                    <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 15, margin: "0 0 8px", color: "#1A1410", lineHeight: 1.3 }}>
+                      {d.solution.title}
+                    </h4>
+                    <p style={{ fontFamily: MONO, fontSize: 11.5, lineHeight: 1.65, color: "rgba(36,29,24,0.72)", margin: 0 }}>
+                      {d.solution.body}
+                    </p>
+                  </div>
                 </div>
-                <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 15, margin: "0 0 8px", color: T.text, lineHeight: 1.3 }}>
-                  {d.problem.title}
-                </h4>
-                <p style={{ fontFamily: MONO, fontSize: 11.5, lineHeight: 1.65, color: "rgba(255,255,255,.45)", margin: 0 }}>
-                  {d.problem.body}
-                </p>
-              </div>
-              {/* Soluzione — brick glow */}
-              <div style={{ position: "relative", padding: "24px 22px", background: "radial-gradient(120% 100% at 100% 0%, rgba(115,54,53,.18), transparent 65%)" }}>
-                <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: ".16em", color: T.accentLt, textTransform: "uppercase" as const, marginBottom: 12 }}>
-                  [ Soluzione ]
-                </div>
-                <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 15, margin: "0 0 8px", color: T.text, lineHeight: 1.3 }}>
-                  {d.solution.title}
-                </h4>
-                <p style={{ fontFamily: MONO, fontSize: 11.5, lineHeight: 1.65, color: T.muted, margin: 0 }}>
-                  {d.solution.body}
-                </p>
-              </div>
+              </CatalogCard>
             </motion.div>
           ))}
         </div>
@@ -2745,13 +2724,14 @@ function Method() {
 
               <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.04em", margin: 0, fontSize: "clamp(30px,3.8vw,52px)" }}>
                 <span style={{ color: "#FFFFFF" }}>Una roadmap</span>{" "}
-                <span style={{ color: "rgba(255,255,255,0.35)", fontWeight: 300 }}>chiara e</span>
+                <span style={{ color: "rgba(255,255,255,0.35)", fontWeight: 300 }}>trasparente,</span>
                 <br />
-                <span style={{ color: "#FFFFFF" }}>trasparente,</span>{" "}
-                <span style={{ color: "rgba(255,255,255,0.35)", fontWeight: 300 }}>orientata</span>
-                <br />
-                <span style={{ color: T.accentLt }}>ai risultati</span>
+                <span style={{ color: "rgba(255,255,255,0.35)", fontWeight: 300 }}>gestita dal tuo</span>{" "}
+                <span style={{ color: "#FFFFFF" }}>Cabinet</span>
               </h2>
+              <p style={{ fontFamily: MONO, fontSize: "clamp(12px,1.3vw,13px)", color: T.muted, lineHeight: 1.8, maxWidth: 460, margin: "22px 0 0" }}>
+                Contratti, invoice e stato di ogni attività sono visibili in tempo reale nel tuo <span style={{ color: "#FFFFFF" }}>Area Clienti</span> privato. Zero sorprese, zero perdita di controllo: segui l'avanzamento del progetto fase per fase.
+              </p>
             </div>
 
             {/* right — editorial counter */}
@@ -2851,6 +2831,126 @@ function Portfolio() {
               </CatalogCard>
             </motion.div>
           ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   §6b  CASE STUDIES FEATURE — teaser → /projects
+══════════════════════════════════════════════════════════════════════════ */
+const CASE_LIST = [
+  { n: "01", cat: "CIVIC TECH · OPEN-GOV · SAAS",  title: "Piattaforma Civica Regionale",
+    metric: "131 Sub-Admin gestiti · dati isolati con RLS",
+    desc: "Architettura multi-ruolo su Supabase — Super Admin, 131 Sub-Admin e cabinet cliente — con progetti di donazione e bandi per giovani startup." },
+  { n: "02", cat: "E-COMMERCE · SHOPIFY PLUS",     title: "E-Commerce Enterprise",
+    metric: "32.000+ SKU senza latenza · TTI < 1.4s",
+    desc: "Piattaforma Shopify Plus scalabile: catalogo 32.000+ SKU, Core Web Vitals ottimizzati e architettura multi-country europea (OSS)." },
+  { n: "03", cat: "MIDDLEWARE · AUTOMAZIONE B2B",  title: "Middleware di Automazione Logistica",
+    metric: "Uptime 99.9% · ordini processati in < 3s",
+    desc: "Software di sincronizzazione stock in tempo reale, architettura fault-tolerant a doppia scrittura e uptime del servizio del 99.9%." },
+]
+
+function CaseMiniCard({ c, i }: { c: typeof CASE_LIST[number]; i: number }) {
+  const [h, setH] = useState(false)
+  return (
+    <motion.a
+      href={`/projects#case-${c.n}`}
+      initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.55, delay: i * 0.09, ease }}
+      onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}
+      animate={{ y: h ? -4 : 0 }}
+      className="cs-card"
+      style={{
+        position: "relative", overflow: "hidden", borderRadius: 18, textDecoration: "none",
+        background: h ? "rgba(14,24,31,0.34)" : "rgba(14,24,31,0.22)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)",
+        border: `1px solid ${h ? G.bdHov : G.bd}`,
+        boxShadow: h ? "inset 0 1px 0 rgba(255,255,255,0.08), 0 28px 70px rgba(0,0,0,0.34)" : "inset 0 1px 0 rgba(255,255,255,0.06), 0 20px 50px rgba(0,0,0,0.26)",
+        transition: "background .3s, border-color .3s, box-shadow .3s",
+      } as React.CSSProperties}
+    >
+      {/* ghost MAAR — vertical, right edge, sized to fit the card */}
+      <div aria-hidden style={{ position: "absolute", right: 18, top: 0, bottom: 0, display: "flex", alignItems: "center", pointerEvents: "none", zIndex: 0 }}>
+        <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(28px,3.6vw,40px)", letterSpacing: "-0.02em", color: "rgba(255,255,255,0.06)", userSelect: "none", lineHeight: 0.9 }}>MAAR</span>
+      </div>
+
+      {/* content — right padding reserves space for MAAR so the arrow sits to its left */}
+      <div className="cs-card-inner" style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: 28, padding: "30px 78px 30px 34px" }}>
+        {/* big index — muted garnet, matching the button (no glow) */}
+        <span style={{ fontFamily: MONO, fontSize: "clamp(40px,5vw,60px)", fontWeight: 900, letterSpacing: "-0.06em", color: "rgba(174,83,80,0.62)", lineHeight: 1, flexShrink: 0 }}>{c.n}</span>
+
+        {/* body */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: ".16em", color: "rgba(255,255,255,0.48)", marginBottom: 10 }}>{c.cat}</div>
+          <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(18px,2.2vw,24px)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "#FFFFFF", margin: "0 0 10px" }}>{c.title}</h3>
+          {/* result metric — sells the outcome */}
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "5px 11px", borderRadius: 7, background: "rgba(174,83,80,0.12)", border: "1px solid rgba(174,83,80,0.28)", marginBottom: 12 }}>
+            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "rgba(174,83,80,0.9)", flexShrink: 0 }} />
+            <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: ".04em", fontWeight: 500, color: "rgba(224,150,140,0.95)" }}>{c.metric}</span>
+          </div>
+          <p style={{ fontFamily: MONO, fontSize: 12.5, lineHeight: 1.75, color: T.muted, margin: 0, maxWidth: 520 }}>{c.desc}</p>
+        </div>
+
+        {/* arrow — placed left of the MAAR watermark */}
+        <motion.div animate={{ borderColor: h ? G.bdHov : "rgba(255,255,255,0.18)", background: h ? "rgba(255,255,255,0.09)" : "rgba(255,255,255,0.03)", x: h ? 4 : 0 }} transition={{ duration: 0.25 }}
+          className="cs-card-arrow"
+          style={{ flexShrink: 0, width: 44, height: 44, borderRadius: "50%", border: "1px solid", display: "flex", alignItems: "center", justifyContent: "center", color: T.accentLt, fontSize: 18 }}>→</motion.div>
+      </div>
+    </motion.a>
+  )
+}
+
+function ProjectsFeature() {
+  return (
+    <section style={{ ...SEC, borderTop: `1px solid ${T.border}` }} className="hp-sec">
+      <div style={WRAP} className="hp-wrap">
+        <style>{`
+          .cs-head { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; flex-wrap:wrap; margin-bottom:44px; }
+          .cs-cards { display:flex; flex-direction:column; gap:14px; }
+          @media(max-width:820px){ .cs-head{ margin-bottom:32px; } }
+          @media(max-width:600px){
+            .cs-card-inner { flex-wrap:wrap !important; gap:16px !important; padding:24px !important; }
+            .cs-card-arrow { display:none !important; }
+          }
+        `}</style>
+
+        <Reveal>
+          <div className="cs-head">
+            {/* title + subtitle */}
+            <div>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 18 }}>
+                <span style={{ color: T.accentLt }}>//</span>
+                <span>[ Case Studies ]</span>
+              </div>
+
+              <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(34px,5vw,66px)", lineHeight: 0.98, letterSpacing: "-0.04em", margin: 0 }}>
+                <span style={{ color: "#FFFFFF" }}>Progetti </span>
+                <span style={{ color: "rgba(255,255,255,0.32)", fontWeight: 300 }}>&amp; </span>
+                <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.55)" }}>Soluzioni</span>
+              </h2>
+
+              <p style={{ fontFamily: MONO, fontSize: "clamp(12.5px,1.4vw,14px)", color: T.muted, lineHeight: 1.8, maxWidth: 560, margin: "20px 0 0" }}>
+                Dall'obiettivo all'impatto: come risolviamo sfide tecniche complesse.
+              </p>
+            </div>
+
+            {/* CTA — top-right at title level */}
+            <motion.a
+              href="/projects" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
+              style={{ flexShrink: 0, minHeight: 52, borderRadius: 12, cursor: "pointer", textDecoration: "none", border: "1px solid rgba(115,54,53,0.80)", background: "linear-gradient(90deg, rgba(115,54,53,0.85) 0%, rgba(115,54,53,0.62) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(115,54,53,0.28), inset 0 1px 0 rgba(255,255,255,0.12)", display: "inline-flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
+            >
+              <span style={{ padding: "0 14px", borderRight: "1px solid rgba(115,54,53,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[→]</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 20px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
+                Scopri tutti i progetti <span style={{ fontSize: 14 }}>→</span>
+              </span>
+            </motion.a>
+          </div>
+        </Reveal>
+
+        {/* cards row */}
+        <div className="cs-cards">
+          {CASE_LIST.map((c, i) => <CaseMiniCard key={c.n} c={c} i={i} />)}
         </div>
       </div>
     </section>
@@ -3174,7 +3274,7 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
         </div>
         {/* label */}
         <div style={{ padding: "17px 28px", display: "flex", alignItems: "center", gap: 14, position: "relative", fontSize: 12, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase" as const }}>
-          Richiedi Piano d'Azione
+          Prenota un Audit Gratuito
           <motion.span
             animate={{ x: hov ? [0, 5, 0] : 0 }}
             transition={{ duration: 0.55, repeat: hov ? Infinity : 0, ease: "easeInOut" }}
@@ -3197,7 +3297,7 @@ function Contact() {
             <span>[ Call to Action ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.2vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 16px", color: "#FFFFFF" }}>
-            Mettiamo fine ai blocchi tecnici della tua azienda.
+            Pronto a scalare il tuo <span style={{ color: "#FFFFFF" }}>ecosistema digitale?</span>
           </h2>
         </Reveal>
         <motion.p
@@ -3205,7 +3305,7 @@ function Contact() {
           viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.16, ease }}
           style={{ fontSize: 15, color: T.muted, lineHeight: 1.82, marginBottom: 52, maxWidth: 580 }}
         >
-          Seleziona il problema principale che sta frenando la tua crescita. Riceverai un piano d'azione chiaro e orientato ai numeri.
+          Prenota un audit gratuito: analizzo la tua architettura attuale, individuo i colli di bottiglia e ti consegno un piano d'azione chiaro, orientato ai numeri.
         </motion.p>
 
         {/* CTA button */}
@@ -3867,6 +3967,233 @@ function ScrollProgress() {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
+   §1b  SOCIAL PROOF — tech / partner marquee
+══════════════════════════════════════════════════════════════════════════ */
+const SP_TECH = ["Shopify Plus", "Supabase", "Stripe", "Vercel", "Next.js", "Node.js", "React", "Framer Motion"]
+
+function SocialProof() {
+  return (
+    <div style={{ marginTop: 30, padding: "18px 26px", borderRadius: 14, background: "rgba(10,18,25,0.38)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)", position: "relative", overflow: "hidden" }}>
+      <style>{`
+        @keyframes sp-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .sp-row { display:flex; align-items:center; gap:32px; }
+        .sp-marquee { position:relative; flex:1; overflow:hidden; -webkit-mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+        .sp-track { display:flex; align-items:center; width:max-content; animation:sp-scroll 26s linear infinite; }
+        .sp-marquee:hover .sp-track { animation-play-state:paused; }
+        .sp-item { display:flex; align-items:center; gap:26px; padding-right:26px; }
+        @media(max-width:760px){
+          .sp-row { flex-direction:column; align-items:flex-start; gap:14px; }
+          .sp-label { width:100%; }
+          .sp-marquee { width:100%; }
+        }
+      `}</style>
+      <div className="sp-row">
+        {/* label */}
+        <div className="sp-label" style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.accentLt, flexShrink: 0 }} />
+          <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: ".1em", color: "rgba(255,255,255,0.55)" }}>
+            Tecnologie enterprise e brand che scalano con me:
+          </span>
+        </div>
+
+        {/* marquee */}
+        <div className="sp-marquee">
+          <div className="sp-track">
+            {[0, 1].map(dup => (
+              <div className="sp-item" key={dup} aria-hidden={dup === 1 ? true : undefined}>
+                {SP_TECH.map((t, i) => (
+                  <React.Fragment key={t}>
+                    <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 16, letterSpacing: "-0.01em", color: "rgba(255,255,255,0.72)", whiteSpace: "nowrap" as const }}>{t}</span>
+                    {i < SP_TECH.length - 1 && <span aria-hidden style={{ color: T.accentLt, fontSize: 10, opacity: 0.7 }}>◇</span>}
+                  </React.Fragment>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   §4b  DIGITAL FOUNDRY — interactive showcase
+══════════════════════════════════════════════════════════════════════════ */
+function MockPortal() {
+  return (
+    <svg viewBox="0 0 260 150" width="100%" height="100%">
+      <rect x="8" y="10" width="244" height="130" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)" />
+      <rect x="8" y="10" width="244" height="22" rx="10" fill="rgba(255,255,255,0.05)" />
+      {[20, 30, 40].map((cx, i) => <circle key={i} cx={cx} cy="21" r="2.6" fill={["#ff5f56", "#ffbd2e", "#27c93f"][i]} opacity="0.75" />)}
+      {/* sidebar */}
+      <rect x="8" y="32" width="60" height="108" fill="rgba(255,255,255,0.025)" />
+      {[44, 58, 72, 86].map((y, i) => (
+        <g key={y}>
+          <rect x="16" y={y} width="10" height="6" rx="1.5" fill={i === 0 ? "rgba(174,83,80,0.6)" : "rgba(255,255,255,0.12)"} />
+          <rect x="30" y={y + 1} width="28" height="4" rx="2" fill={i === 0 ? "rgba(174,83,80,0.45)" : "rgba(255,255,255,0.10)"} />
+        </g>
+      ))}
+      {/* rows */}
+      <rect x="78" y="42" width="80" height="8" rx="3" fill="rgba(255,255,255,0.14)" />
+      {[60, 78, 96, 114].map((y, i) => (
+        <g key={y}>
+          <rect x="78" y={y} width="164" height="16" rx="4" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.06)" />
+          <circle cx="88" cy={y + 8} r="3" fill="rgba(174,83,80,0.5)" />
+          <rect x="98" y={y + 5} width="70" height="4" rx="2" fill="rgba(255,255,255,0.14)" />
+          <rect x="210" y={y + 5} width="24" height="6" rx="3" fill={i % 2 ? "rgba(16,185,129,0.4)" : "rgba(255,255,255,0.10)"} />
+        </g>
+      ))}
+    </svg>
+  )
+}
+
+function MockCRM() {
+  const bars = [26, 40, 32, 54, 46, 64, 58]
+  return (
+    <svg viewBox="0 0 260 150" width="100%" height="100%">
+      <rect x="8" y="10" width="244" height="130" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)" />
+      <rect x="8" y="10" width="244" height="22" rx="10" fill="rgba(255,255,255,0.05)" />
+      {[20, 30, 40].map((cx, i) => <circle key={i} cx={cx} cy="21" r="2.6" fill={["#ff5f56", "#ffbd2e", "#27c93f"][i]} opacity="0.75" />)}
+      {/* KPI cards */}
+      {[0, 1, 2].map(i => (
+        <g key={i}>
+          <rect x={18 + i * 78} y="42" width="68" height="30" rx="6" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.07)" />
+          <rect x={26 + i * 78} y="49" width="30" height="8" rx="2" fill={i === 1 ? "rgba(174,83,80,0.6)" : "rgba(255,255,255,0.18)"} />
+          <rect x={26 + i * 78} y="61" width="46" height="4" rx="2" fill="rgba(255,255,255,0.10)" />
+        </g>
+      ))}
+      {/* chart */}
+      <rect x="18" y="82" width="224" height="50" rx="6" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.06)" />
+      {bars.map((h, i) => (
+        <motion.rect key={i} x={30 + i * 30} width="16" rx="2" fill={i === 5 ? "rgba(174,83,80,0.7)" : "rgba(255,255,255,0.16)"}
+          initial={{ height: 0, y: 126 }} whileInView={{ height: h, y: 126 - h }} viewport={{ once: true }} transition={{ delay: 0.1 + i * 0.06, duration: 0.5, ease }} />
+      ))}
+    </svg>
+  )
+}
+
+function MockHub() {
+  const nodes = [[70, 56], [190, 46], [206, 104], [64, 108]]
+  const cx = 130, cy = 82
+  return (
+    <svg viewBox="0 0 260 150" width="100%" height="100%">
+      <rect x="8" y="10" width="244" height="130" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)" />
+      <rect x="8" y="10" width="244" height="22" rx="10" fill="rgba(255,255,255,0.05)" />
+      {[20, 30, 40].map((c, i) => <circle key={i} cx={c} cy="21" r="2.6" fill={["#ff5f56", "#ffbd2e", "#27c93f"][i]} opacity="0.75" />)}
+      {nodes.map(([x, y], i) => (
+        <motion.path key={i} d={`M${cx},${cy}L${x},${y}`} stroke="rgba(174,83,80,0.30)" strokeWidth="1.2" strokeDasharray="4 3"
+          initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.1, duration: 0.6 }} />
+      ))}
+      {nodes.map(([x, y], i) => (
+        <g key={i}>
+          <motion.circle cx={x} cy={y} r="4" fill="rgba(255,255,255,0.6)"
+            initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 + i * 0.1, type: "spring", stiffness: 260 }} style={{ transformOrigin: `${x}px ${y}px` }} />
+          <motion.circle cx={cx} cy={cy} r="2.6" fill="rgba(174,83,80,0.9)"
+            animate={{ cx: [cx, x, cx], cy: [cy, y, cy], opacity: [0, 0.9, 0] }} transition={{ duration: 2, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }} />
+        </g>
+      ))}
+      <circle cx={cx} cy={cy} r="14" fill="rgba(174,83,80,0.14)" stroke="rgba(174,83,80,0.5)" strokeWidth="1.2" />
+      <text x={cx} y={cy + 3} textAnchor="middle" fontSize="7" fontWeight="700" fill="rgba(255,255,255,0.8)" fontFamily="Inter,sans-serif">HUB</text>
+    </svg>
+  )
+}
+
+const FOUNDRY_DEMOS = [
+  { tag: "B2B PORTAL", title: "Supplier Portal", desc: "Onboarding fornitori, listini e ordini sincronizzati in tempo reale.", Visual: MockPortal },
+  { tag: "CRM", title: "CRM Dashboard", desc: "Pipeline, clienti e metriche di vendita in un'unica dashboard.", Visual: MockCRM },
+  { tag: "DISTRIBUTION", title: "Distributor Hub", desc: "Rete distributori, stock multi-sede e logistica automatizzata.", Visual: MockHub },
+]
+
+function FoundryDemoCard({ d, i }: { d: typeof FOUNDRY_DEMOS[number]; i: number }) {
+  const [h, setH] = useState(false)
+  const { Visual } = d
+  return (
+    <motion.a
+      href="/foundry"
+      initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.55, delay: i * 0.09, ease }}
+      onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}
+      animate={{ y: h ? -2 : 0 }}
+      style={{
+        display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: 14, textDecoration: "none",
+        background: h ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.055)",
+        backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)",
+        border: `1px solid ${h ? "rgba(255,255,255,0.26)" : "rgba(255,255,255,0.12)"}`,
+        borderTop: `1px solid ${h ? "rgba(255,255,255,0.32)" : "rgba(255,255,255,0.18)"}`,
+        boxShadow: h ? "0 8px 32px rgba(0,0,0,0.26), inset 0 1px 0 rgba(255,255,255,0.14)" : "inset 0 1px 0 rgba(255,255,255,0.08)",
+        transition: "background .24s, border-color .24s, box-shadow .24s",
+      } as React.CSSProperties}
+    >
+      {/* preview */}
+      <div style={{ padding: 14, background: "rgba(0,0,0,0.10)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+        <div style={{ borderRadius: 10, overflow: "hidden", aspectRatio: "260 / 150" }}>
+          <Visual />
+        </div>
+      </div>
+      {/* body */}
+      <div style={{ padding: "20px 22px 22px", flex: 1, display: "flex", flexDirection: "column" }}>
+        <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", color: T.accentLt, marginBottom: 9 }}>{d.tag}</div>
+        <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", color: "#FFFFFF", margin: "0 0 8px" }}>{d.title}</h3>
+        <p style={{ fontFamily: MONO, fontSize: 12, lineHeight: 1.7, color: T.muted, margin: 0, flex: 1 }}>{d.desc}</p>
+        <motion.span animate={{ opacity: h ? 1 : 0.4, x: h ? 0 : -4 }} transition={{ duration: 0.25 }}
+          style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10, letterSpacing: ".16em", textTransform: "uppercase" as const, color: T.accentLt }}>
+          Apri demo <span style={{ fontSize: 14 }}>→</span>
+        </motion.span>
+      </div>
+    </motion.a>
+  )
+}
+
+function FoundryShowcase() {
+  return (
+    <section id="foundry-showcase" style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
+      <div style={WRAP} className="hp-wrap">
+        <style>{`
+          .foundry-head { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; flex-wrap:wrap; margin-bottom:44px; }
+          .foundry-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+          @media(max-width:900px){ .foundry-grid{ grid-template-columns:1fr !important; gap:12px !important; } .foundry-head{ margin-bottom:32px; } }
+          @media(min-width:901px) and (max-width:1100px){ .foundry-grid{ gap:12px; } }
+        `}</style>
+
+        <Reveal>
+          <div className="foundry-head">
+            {/* left — eyebrow + title + subtitle */}
+            <div>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
+                <span style={{ color: T.accentLt }}>//</span>
+                <span>[ Digital Foundry ]</span>
+              </div>
+              <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(28px,3.6vw,46px)", fontWeight: 800, lineHeight: 1.08, letterSpacing: "-0.035em", margin: "0 0 18px", maxWidth: 760, color: T.text }}>
+                Digital Foundry:<br />
+                <span style={{ color: "#FFFFFF" }}>Costruisci la tua architettura</span>
+              </h2>
+              <p style={{ fontFamily: MONO, fontSize: "clamp(12.5px,1.4vw,13.5px)", color: T.muted, lineHeight: 1.8, maxWidth: 620, margin: 0 }}>
+                Non comprare a scatola chiusa. Esplora la nostra libreria di soluzioni reali (CRM, Portali B2B, E-commerce), testa le demo e costruisci il tuo Blueprint per un preventivo istantaneo.
+              </p>
+            </div>
+
+            {/* right — CTA button, top-right at title level */}
+            <motion.a
+              href="/foundry" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
+              style={{ flexShrink: 0, minHeight: 52, borderRadius: 12, cursor: "pointer", textDecoration: "none", border: "1px solid rgba(115,54,53,0.80)", background: "linear-gradient(90deg, rgba(115,54,53,0.85) 0%, rgba(115,54,53,0.62) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(115,54,53,0.28), inset 0 1px 0 rgba(255,255,255,0.12)", display: "inline-flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
+            >
+              <span style={{ padding: "0 14px", borderRight: "1px solid rgba(115,54,53,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[→]</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 22px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
+                Entra nella Foundry <span style={{ fontSize: 14 }}>→</span>
+              </span>
+            </motion.a>
+          </div>
+        </Reveal>
+
+        <div className="foundry-grid">
+          {FOUNDRY_DEMOS.map((d, i) => <FoundryDemoCard key={d.title} d={d} i={i} />)}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
    ROOT EXPORT — default export for Framer
 ══════════════════════════════════════════════════════════════════════════ */
 export default function NadiaMaar() {
@@ -3892,12 +4219,13 @@ export default function NadiaMaar() {
       <Header />
       <div style={{ position: "relative", zIndex: 1, paddingTop: 64 }}>
         <Hero />
-        <SoluzioniMatrix />
         <DiagnosiBlock />
+        <FoundryShowcase />
+        <SoluzioniMatrix />
+        <AllInOne />
         <TechBlock />
-        <PurcheBlock />
+        <ProjectsFeature />
         <Method />
-        <Portfolio />
         <Contact />
         <Footer />
       </div>
