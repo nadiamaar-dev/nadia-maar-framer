@@ -808,19 +808,41 @@ function Hero() {
           .hp-hero-meta{ gap:14px; }
         }
 
-        /* ── Mobile hero (<768px): 1-col, vertical socials ──────── */
+        /* ── Mobile hero (<768px) ──────────────────────────────── */
         @media (max-width:768px){
-          .hp-hl{ padding:18px 14px 14px; }
-          .hp-hero-ed-grid{ grid-template-columns:1fr !important; gap:28px 0 !important; }
+          /* eyebrow — wrap instead of overflow */
+          .hp-hero-eyebrow{ font-size:9px !important; letter-spacing:.10em !important; flex-wrap:wrap; line-height:1.6; }
+          /* headline block */
+          .hp-hl{ padding:14px 12px 12px; width:100%; box-sizing:border-box; }
+          .hp-hl-tag{ font-size:7.5px !important; letter-spacing:.12em !important; left:14px !important; }
+          .hp-hl-dim{ display:none !important; }
+          /* description — full width, readable size */
+          .hp-hero-desc{ margin-top:14px !important; font-size:14px !important; line-height:1.7 !important; max-width:100% !important; }
+          /* grid: 1 column, hide empty meta panel */
+          .hp-hero-ed-grid{ grid-template-columns:1fr !important; gap:0 !important; }
+          .hp-hero-meta{ display:none !important; }
+          /* head row */
           .hp-hero-head-row{ gap:10px; justify-content:space-between; align-items:flex-start; }
-          .hp-hero-social-vert{ display:flex; flex-direction:column; gap:7px; flex-shrink:0; margin-top:0; }
+          .hp-hero-social-vert{ display:flex; flex-direction:column; gap:7px; flex-shrink:0; }
           .hp-hero-social-vert a{ width:36px !important; height:36px !important; }
-          .hp-hero-desc{ margin-top:20px !important; }
-          .hp-hero-spec-block{ display:none !important; }
-          .hp-hero-meta-social{ display:none !important; }
-          .hp-hero-botnav{ margin-top:20px; padding-top:16px; gap:10px; }
+          /* CTA — stack vertically, full width */
+          .hp-hero-cta-row{ flex-direction:column !important; max-width:100% !important; gap:8px !important; margin-top:18px !important; }
+          .hp-hero-cta-row > button,
+          .hp-hero-cta-row > a{ width:100% !important; flex:none !important; min-height:48px !important; }
+          .hp-hero-cta-index{ display:none !important; }
+          /* stats */
+          .hp-hero-botnav{ margin-top:20px; padding-top:14px; gap:8px; }
           .hp-hero-scroll{ display:none !important; }
           .hp-hero-stats-row{ display:grid !important; grid-template-columns:repeat(2,1fr) !important; gap:8px !important; width:100%; }
+          /* stat card — compact */
+          .hp-hero-stat-item{ padding:12px 12px 14px !important; border-radius:12px !important; }
+          .hp-hero-stat-value{ font-size:24px !important; }
+          .hp-hero-stat-label{ font-size:8.5px !important; letter-spacing:.12em !important; }
+        }
+        /* ── Small phones (<400px) ── */
+        @media (max-width:400px){
+          .hp-hero-h1{ font-size:28px !important; }
+          .hp-hero-stat-value{ font-size:20px !important; }
         }
       `}</style>
 
@@ -867,10 +889,10 @@ function Hero() {
         ))}
       </div>
 
-      <div style={{ ...WRAP, position: "relative", zIndex: 1 }} className="hp-wrap">
+      <div style={{ ...WRAP, width: "100%", minWidth: 0, boxSizing: "border-box", position: "relative", zIndex: 1 }} className="hp-wrap">
         {/* eyebrow */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }} style={{ marginBottom: 24 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
+          <div className="hp-hero-eyebrow" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Development · AI Automation · Performance Marketing ]</span>
           </div>
@@ -887,6 +909,7 @@ function Hero() {
                 <span className="hp-hl-tag">Fig. 01 — Identità</span>
                 <span className="hp-hl-dim">72PT / DISPLAY</span>
                 <motion.h1
+                  className="hp-hero-h1"
                   initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease }}
                   style={{ fontFamily: DISPLAY, fontSize: "clamp(34px, 5.4vw, 74px)", fontWeight: 800, lineHeight: 0.98, letterSpacing: "-0.04em", margin: 0, color: "#FFFFFF", textTransform: "uppercase" as const, filter: "drop-shadow(0 12px 34px rgba(0,0,0,0.6))" }}
                 >
@@ -923,6 +946,7 @@ function Hero() {
 
             {/* CTAs — under the description */}
             <motion.div
+              className="hp-hero-cta-row"
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.36, ease }}
               style={{ display: "flex", gap: 10, marginTop: 34, maxWidth: 440 }}
             >
@@ -931,7 +955,7 @@ function Hero() {
                 whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
                 style={{ flex: "1.5 1 0", minHeight: 54, padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(174,83,80,0.80)", background: "linear-gradient(90deg, rgba(174,83,80,0.78) 0%, rgba(174,83,80,0.60) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
               >
-                <span style={{ padding: "0 14px", borderRight: "1px solid rgba(115,54,53,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[01]</span>
+                <span className="hp-hero-cta-index" style={{ padding: "0 14px", borderRight: "1px solid rgba(115,54,53,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[01]</span>
                 <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
                   <span>Prenota una Consultazione</span>
                   <span style={{ fontSize: 14, color: "rgba(255,255,255,0.92)" }}>→</span>
@@ -3973,7 +3997,7 @@ const SP_TECH = ["Shopify Plus", "Supabase", "Stripe", "Vercel", "Next.js", "Nod
 
 function SocialProof() {
   return (
-    <div style={{ marginTop: 30, padding: "18px 26px", borderRadius: 14, background: "rgba(10,18,25,0.38)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)", position: "relative", overflow: "hidden" }}>
+    <div className="sp-root" style={{ marginTop: 30, padding: "18px 26px", borderRadius: 14, background: "rgba(10,18,25,0.38)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)", position: "relative", overflow: "hidden" }}>
       <style>{`
         @keyframes sp-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .sp-row { display:flex; align-items:center; gap:32px; }
@@ -3982,16 +4006,19 @@ function SocialProof() {
         .sp-marquee:hover .sp-track { animation-play-state:paused; }
         .sp-item { display:flex; align-items:center; gap:26px; padding-right:26px; }
         @media(max-width:760px){
-          .sp-row { flex-direction:column; align-items:flex-start; gap:14px; }
-          .sp-label { width:100%; }
-          .sp-marquee { width:100%; }
+          .sp-root{ padding:14px 14px !important; margin-top:18px !important; border-radius:10px !important; }
+          .sp-row{ flex-direction:column; align-items:flex-start; gap:10px; }
+          .sp-label{ width:100%; }
+          .sp-label-text{ font-size:9.5px !important; letter-spacing:.06em !important; white-space:normal !important; line-height:1.4; }
+          .sp-marquee{ width:100%; }
+          .sp-tech-name{ font-size:13px !important; }
         }
       `}</style>
       <div className="sp-row">
         {/* label */}
         <div className="sp-label" style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 10 }}>
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.accentLt, flexShrink: 0 }} />
-          <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: ".1em", color: "rgba(255,255,255,0.55)" }}>
+          <span className="sp-label-text" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: ".1em", color: "rgba(255,255,255,0.55)" }}>
             Tecnologie enterprise e brand che scalano con me:
           </span>
         </div>
@@ -4003,7 +4030,7 @@ function SocialProof() {
               <div className="sp-item" key={dup} aria-hidden={dup === 1 ? true : undefined}>
                 {SP_TECH.map((t, i) => (
                   <React.Fragment key={t}>
-                    <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 16, letterSpacing: "-0.01em", color: "rgba(255,255,255,0.72)", whiteSpace: "nowrap" as const }}>{t}</span>
+                    <span className="sp-tech-name" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 16, letterSpacing: "-0.01em", color: "rgba(255,255,255,0.72)", whiteSpace: "nowrap" as const }}>{t}</span>
                     {i < SP_TECH.length - 1 && <span aria-hidden style={{ color: T.accentLt, fontSize: 10, opacity: 0.7 }}>◇</span>}
                   </React.Fragment>
                 ))}
