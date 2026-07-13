@@ -34,10 +34,19 @@ function currentStep(home: ClientHome): number {
 export default function GuideStrip({ home }: { home: ClientHome }) {
   const cur = currentStep(home)
   return (
-    <div style={{
+    <div className="gs-root" style={{
       padding: "18px 20px", borderRadius: 16,
       background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`,
     }}>
+      <style>{`
+        @media (max-width: 600px) {
+          .gs-root { padding: 16px 15px !important; }
+          .gs-steps { flex-direction: column !important; gap: 4px !important; }
+          .gs-step { flex: 1 1 auto !important; width: 100% !important; flex-direction: row !important; align-items: center !important; text-align: left !important; gap: 12px !important; padding: 5px 0 !important; }
+          .gs-label { font-size: 13px !important; }
+          .gs-sep { display: none !important; }
+        }
+      `}</style>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
         <Icon name="flag" size={13} style={{ color: T.copperLt }} />
         <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.2em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>
@@ -45,7 +54,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
         </p>
       </div>
 
-      <div style={{ display: "flex", gap: 0, flexWrap: "wrap" }}>
+      <div className="gs-steps" style={{ display: "flex", gap: 0, flexWrap: "wrap" }}>
         {STEPS.map((s, i) => {
           const done = i < cur
           const active = i === cur
@@ -54,9 +63,9 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
           const bd = done ? "rgba(75,211,155,0.34)" : active ? "rgba(224,131,106,0.40)" : T.border
           return (
             <React.Fragment key={s.key}>
-              <div style={{ flex: "1 1 130px", minWidth: 120, display: "flex", flexDirection: "column", alignItems: "center", gap: 7, textAlign: "center" }}>
+              <div className="gs-step" style={{ flex: "1 1 130px", minWidth: 120, display: "flex", flexDirection: "column", alignItems: "center", gap: 7, textAlign: "center" }}>
                 <span style={{
-                  width: 38, height: 38, borderRadius: 11, position: "relative",
+                  width: 38, height: 38, borderRadius: 11, position: "relative", flexShrink: 0,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   background: bg, border: `1px solid ${bd}`, color: fg,
                   boxShadow: active ? "0 0 16px rgba(224,131,106,0.30)" : "none",
@@ -71,7 +80,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
                     fontFamily: MONO, fontSize: 8.5, fontWeight: 800,
                   }}>{i + 1}</span>
                 </span>
-                <span style={{
+                <span className="gs-label" style={{
                   fontFamily: DISPLAY, fontSize: 11.5, fontWeight: active ? 800 : 600,
                   color: active ? TL.text : done ? T.muted : T.faint, lineHeight: 1.25,
                 }}>
@@ -79,7 +88,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
                 </span>
               </div>
               {i < STEPS.length - 1 && (
-                <div style={{ flex: "0 0 16px", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: 18 }}>
+                <div className="gs-sep" style={{ flex: "0 0 16px", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: 18 }}>
                   <span style={{ color: i < cur ? T.green : T.ghost, opacity: 0.6, fontSize: 13 }}>›</span>
                 </div>
               )}
