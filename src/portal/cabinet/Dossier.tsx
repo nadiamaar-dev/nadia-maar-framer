@@ -282,7 +282,7 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
                       <span style={{ position: "relative", display: "inline-flex" }}>
                         <Btn size="sm" variant="ghost" icon="chat" onClick={() => openStageChat(s)}>Discussione</Btn>
                         {stageUnread(s) && (
-                          <span style={{ position: "absolute", top: -2, right: -2, width: 7, height: 7, borderRadius: 99, background: T.copperLt, boxShadow: "0 0 8px rgba(212,105,90,0.8)" }} />
+                          <span style={{ position: "absolute", top: -2, right: -2, width: 7, height: 7, borderRadius: 99, background: T.copperLt, boxShadow: "0 0 8px rgba(161,44,56,0.85)" }} />
                         )}
                       </span>
                     )

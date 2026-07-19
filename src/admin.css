@@ -2,9 +2,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-copper:      #B04A38;
-  --color-copper-lt:   #D4695A;
-  --color-copper-dim:  rgba(176, 74, 56, 0.14);
+  --color-copper:      #A12C38;
+  --color-copper-lt:   #A83040;
+  --color-copper-dim:  rgba(161, 44, 56, 0.14);
   --color-emerald:     #10B981;
   --color-steel:       rgba(255, 255, 255, 0.06);
   --color-border:      rgba(255, 255, 255, 0.09);
@@ -12,7 +12,7 @@
   --color-surface:     rgba(30, 37, 48, 0.55);
   --color-surface-low: rgba(22, 27, 34, 0.70);
   --font-display:      "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-mono:         "JetBrains Mono", monospace;
+  --font-mono:         "JetBrains Mono", "SF Mono", "Fira Code", ui-monospace, monospace;
 }
 
 /* ═══ Portal (cabinet + admin) base layer ═══════════════════════ */
@@ -20,7 +20,7 @@
 .portal-root {
   box-sizing: border-box;
   color-scheme: dark;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -31,15 +31,13 @@
 .portal-root ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 99px; border: 2px solid transparent; background-clip: content-box; }
 .portal-root ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); border: 2px solid transparent; background-clip: content-box; }
 .portal-root ::-webkit-scrollbar-track { background: transparent; }
-.portal-root ::selection { background: rgba(176,74,56,0.40); color: #fff; }
+.portal-root ::selection { background: rgba(161,44,56,0.40); color: #fff; }
 
-/* Dark glass card hover lift */
-.portal-glass-hover { transition: border-color 0.2s ease, box-shadow 0.25s ease, transform 0.2s ease, background 0.2s ease; cursor: pointer; }
+/* Glass card hover — DiagnosiCard style: lift only, no border change */
+.portal-glass-hover { transition: box-shadow 0.25s ease, transform 0.20s ease; cursor: pointer; }
 .portal-glass-hover:hover {
-  border-color: rgba(255,255,255,0.18) !important;
-  background: rgba(28,46,62,0.78) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 20px 48px rgba(0,0,0,0.40) !important;
-  transform: translateY(-1px);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.38) !important;
+  transform: translateY(-2px);
 }
 
 /* Buttons */
@@ -49,13 +47,13 @@
 .portal-btn:focus-visible,
 .portal-glass-hover:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(35,61,77,1), 0 0 0 4px rgba(212,105,90,0.75);
+  box-shadow: 0 0 0 2px rgba(35,61,77,1), 0 0 0 4px rgba(161,44,56,0.75);
 }
-.portal-btn-primary:hover:not(:disabled) { filter: brightness(1.14); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(194,86,64,0.40); }
+.portal-btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 24px rgba(161,44,56,0.35), inset 0 1px 0 rgba(255,255,255,0.18); }
 .portal-btn-ghost:hover:not(:disabled) { background: rgba(255,255,255,0.15) !important; color: rgba(255,255,255,0.98) !important; border-color: rgba(255,255,255,0.26) !important; }
 .portal-btn-outline:hover:not(:disabled) { background: rgba(255,255,255,0.10) !important; border-color: rgba(255,255,255,0.32) !important; color: rgba(255,255,255,0.96) !important; }
 .portal-btn-danger:hover:not(:disabled) { background: rgba(248,113,113,0.22) !important; border-color: rgba(248,113,113,0.50) !important; }
-.portal-btn-copper:hover:not(:disabled) { background: rgba(194,86,64,0.80) !important; border-color: rgba(224,131,106,0.70) !important; }
+.portal-btn-copper:hover:not(:disabled) { background: rgba(161,44,56,0.80) !important; border-color: rgba(168,48,64,0.80) !important; }
 
 /* Inputs */
 .portal-input {
@@ -65,7 +63,7 @@
   border-radius: 10px;
   color: #EEF2F7;
   font-family: var(--font-display);
-  font-size: 14.5px;
+  font-size: 15px;
   padding: 11px 13px;
   outline: none;
   transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
@@ -74,13 +72,13 @@
 
 /* Range slider — copper themed, for stage progress */
 .portal-range { -webkit-appearance: none; appearance: none; height: 8px; border-radius: 99px; background: rgba(255,255,255,0.10); outline: none; cursor: pointer; }
-.portal-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #E0836A, #B04A38); border: 2px solid rgba(255,255,255,0.85); box-shadow: 0 2px 8px rgba(176,74,56,0.45); cursor: pointer; }
-.portal-range::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #E0836A, #B04A38); border: 2px solid rgba(255,255,255,0.85); box-shadow: 0 2px 8px rgba(176,74,56,0.45); cursor: pointer; }
-.portal-range:focus-visible { box-shadow: 0 0 0 2px rgba(35,61,77,1), 0 0 0 4px rgba(212,105,90,0.75); }
+.portal-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #A83040, #A12C38); border: 2px solid rgba(255,255,255,0.85); box-shadow: 0 2px 8px rgba(161,44,56,0.45); cursor: pointer; }
+.portal-range::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #A83040, #A12C38); border: 2px solid rgba(255,255,255,0.85); box-shadow: 0 2px 8px rgba(161,44,56,0.45); cursor: pointer; }
+.portal-range:focus-visible { box-shadow: 0 0 0 2px rgba(35,61,77,1), 0 0 0 4px rgba(161,44,56,0.75); }
 .portal-input:focus {
-  border-color: rgba(224,131,106,0.60);
+  border-color: rgba(161,44,56,0.60);
   background: rgba(255,255,255,0.10);
-  box-shadow: 0 0 0 3px rgba(224,131,106,0.18);
+  box-shadow: 0 0 0 3px rgba(161,44,56,0.18);
 }
 select.portal-input option { background: #1B2E3E; color: #EEF2F7; }
 .portal-input:disabled { opacity: 0.4; }
@@ -92,11 +90,11 @@ input.portal-input[type="date"]::-webkit-calendar-picker-indicator { filter: inv
 .portal-nav-item:hover { background: rgba(255,255,255,0.055); color: rgba(255,255,255,0.78); }
 
 /* Table rows / list rows */
-.portal-row { transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease; }
-.portal-row:hover { background: rgba(255,255,255,0.07) !important; border-color: rgba(255,255,255,0.16) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06) !important; }
+.portal-row { transition: opacity 0.15s ease; }
+.portal-row:hover { opacity: 0.80; }
 
 .portal-link { transition: color 0.15s ease; cursor: pointer; }
-.portal-link:hover { color: #F4A882 !important; }
+.portal-link:hover { color: #A83040 !important; }
 
 /* Project switcher / segmented pills — hover feedback on inactive segments */
 .portal-pill:not(.is-active):hover { background: rgba(255,255,255,0.09) !important; color: rgba(255,255,255,0.90) !important; }

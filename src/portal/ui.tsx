@@ -11,9 +11,9 @@ import type {
    Graphite base · frosted silver glass · sparse copper ember
 ══════════════════════════════════════════════════════════════ */
 
-export const MONO = "'JetBrains Mono', ui-monospace, monospace"
+export const MONO = "'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace"
 export const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
-export const BODY = "'Inter', system-ui, sans-serif"
+export const BODY = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 /* ── Card content (dark glass surfaces) ── */
 export const T = {
@@ -25,10 +25,10 @@ export const T = {
   muted: "rgba(255,255,255,0.72)",
   faint: "rgba(255,255,255,0.48)",
   ghost: "rgba(255,255,255,0.28)",
-  copper: "#E0836A",
-  copperLt: "#F4A882",
-  green: "#4BD39B",
-  amber: "#FCD34D",
+  copper: "#A12C38",
+  copperLt: "#A83040",
+  green: "#10B981",
+  amber: "#F59E0B",
   red: "#F87171",
   silver: "rgba(255,255,255,0.60)",
 } as const
@@ -46,9 +46,9 @@ export const TL = {
 export type Tone = "copper" | "green" | "amber" | "red" | "silver" | "steel"
 
 export const TONE: Record<Tone, { fg: string; bg: string; bd: string }> = {
-  copper: { fg: "#E0836A", bg: "rgba(224,131,106,0.18)", bd: "rgba(224,131,106,0.38)" },
-  green:  { fg: "#4BD39B", bg: "rgba(75,211,155,0.15)", bd: "rgba(75,211,155,0.34)" },
-  amber:  { fg: "#FCD34D", bg: "rgba(252,211,77,0.14)", bd: "rgba(252,211,77,0.32)" },
+  copper: { fg: "#A12C38", bg: "rgba(161,44,56,0.09)", bd: "rgba(161,44,56,0.20)" },
+  green:  { fg: "#10B981", bg: "rgba(16,185,129,0.15)", bd: "rgba(16,185,129,0.34)" },
+  amber:  { fg: "#F59E0B", bg: "rgba(245,158,11,0.14)", bd: "rgba(245,158,11,0.32)" },
   red:    { fg: "#F87171", bg: "rgba(248,113,113,0.14)", bd: "rgba(248,113,113,0.32)" },
   silver: { fg: "rgba(255,255,255,0.68)", bg: "rgba(255,255,255,0.09)", bd: "rgba(255,255,255,0.20)" },
   steel:  { fg: "rgba(255,255,255,0.44)", bg: "rgba(255,255,255,0.05)", bd: "rgba(255,255,255,0.11)" },
@@ -57,24 +57,28 @@ export const TONE: Record<Tone, { fg: string; bg: string; bd: string }> = {
 /* ── Modal overlay backdrop ── */
 const GLASS_BLUR = "blur(32px) brightness(0.92) saturate(1.20)"
 
-/* ── DARK FROSTED GLASS CARD SYSTEM ──────────────────────────
-   Semi-transparent dark panels over the charcoal backdrop.
-   backdrop-filter creates depth while text stays crisp.
+/* ── GLASS CARD SYSTEM ─────────────────────────────────────────
+   panel / accent → exact DiagnosiCard 3-layer technique:
+     1. glass bg overlay: rgba(255,255,255,0.008) + blur(6px) brightness(1.03)
+        with mask-image fade black→transparent from 40% to 85%
+     2. gradient border overlay: white (panel) or crimson (accent) top
+        using WebkitMask xor trick, padding:1
+     3. content: position:relative zIndex:3
+   raised / outline → simple solid surfaces (modals, secondary)
    ─────────────────────────────────────────────────────────── */
 export const GLASS: Record<"panel" | "raised" | "outline" | "accent", React.CSSProperties> = {
   panel: {
-    background: "rgba(18,32,44,0.70)",
-    border: "1px solid rgba(255,255,255,0.09)",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 24px rgba(0,0,0,0.32)",
-    backdropFilter: "blur(16px) saturate(1.40)",
-    WebkitBackdropFilter: "blur(16px) saturate(1.40)",
+    background: "rgba(255,255,255,0.008)",
+    backdropFilter: "blur(6px) brightness(1.03)",
+    WebkitBackdropFilter: "blur(6px) brightness(1.03)",
+    boxShadow: "0 4px 24px rgba(0,0,0,0.22)",
   },
   raised: {
-    background: "rgba(12,24,36,0.82)",
+    background: "rgba(8,14,24,0.94)",
     border: "1px solid rgba(255,255,255,0.13)",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 8px 40px rgba(0,0,0,0.50)",
-    backdropFilter: "blur(24px) saturate(1.50)",
-    WebkitBackdropFilter: "blur(24px) saturate(1.50)",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 20px 60px rgba(0,0,0,0.65)",
+    backdropFilter: "blur(24px) brightness(1.01)",
+    WebkitBackdropFilter: "blur(24px) brightness(1.01)",
   },
   outline: {
     background: "rgba(255,255,255,0.04)",
@@ -82,14 +86,10 @@ export const GLASS: Record<"panel" | "raised" | "outline" | "accent", React.CSSP
     boxShadow: "none",
   },
   accent: {
-    background: "rgba(18,32,44,0.70)",
-    borderLeft: "1px solid rgba(255,255,255,0.09)",
-    borderRight: "1px solid rgba(255,255,255,0.09)",
-    borderBottom: "1px solid rgba(255,255,255,0.09)",
-    borderTop: "2px solid #E0836A",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 24px rgba(0,0,0,0.32)",
-    backdropFilter: "blur(16px) saturate(1.40)",
-    WebkitBackdropFilter: "blur(16px) saturate(1.40)",
+    background: "rgba(255,255,255,0.008)",
+    backdropFilter: "blur(6px) brightness(1.03)",
+    WebkitBackdropFilter: "blur(6px) brightness(1.03)",
+    boxShadow: "0 4px 24px rgba(0,0,0,0.22)",
   },
 }
 
@@ -103,13 +103,52 @@ export function Glass({
   children: React.ReactNode
   onClick?: () => void
 }) {
+  /* raised / outline — unchanged simple surface */
+  if (variant === "raised" || variant === "outline") {
+    return (
+      <div
+        onClick={onClick}
+        className={`rounded-2xl ${hover ? "portal-glass-hover" : ""} ${className}`}
+        style={{ ...GLASS[variant], ...style }}
+      >
+        {children}
+      </div>
+    )
+  }
+
+  /* panel / accent — DiagnosiCard 3-layer technique */
+  const v = GLASS[variant]
   return (
     <div
       onClick={onClick}
       className={`rounded-2xl ${hover ? "portal-glass-hover" : ""} ${className}`}
-      style={{ ...GLASS[variant], ...style }}
+      style={{ position: "relative", overflow: "hidden", boxShadow: v.boxShadow }}
     >
-      {children}
+      {/* Layer 1 — glass bg + blur + mask fade (black 40% → transparent 85%) */}
+      <div aria-hidden style={{
+        position: "absolute", inset: 0,
+        background: "rgba(255,255,255,0.008)",
+        backdropFilter: "blur(6px) brightness(1.03)",
+        WebkitBackdropFilter: "blur(6px) brightness(1.03)",
+        WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 85%)",
+        maskImage: "linear-gradient(to bottom, black 40%, transparent 85%)",
+        pointerEvents: "none",
+      }} />
+      {/* Layer 2 — gradient border via mask xor, padding:1 */}
+      <div aria-hidden style={{
+        position: "absolute", inset: 0, borderRadius: "inherit", padding: 1,
+        background: variant === "accent"
+          ? "linear-gradient(to bottom, rgba(161,44,56,0.60) 0%, rgba(255,255,255,0.05) 3px, transparent 50%)"
+          : "linear-gradient(to bottom, rgba(255,255,255,0.45) 0%, transparent 52%)",
+        WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+        WebkitMaskComposite: "xor",
+        maskComposite: "exclude",
+        pointerEvents: "none", zIndex: 1,
+      }} />
+      {/* Layer 3 — content above overlays, all layout styles go here */}
+      <div style={{ position: "relative", zIndex: 2, ...style }}>
+        {children}
+      </div>
     </div>
   )
 }
@@ -212,17 +251,19 @@ function btnBase(size: BtnSize): React.CSSProperties {
     borderRadius: size === "sm" ? 9 : 11,
     padding: size === "sm" ? "7px 13px" : "10px 18px",
     fontFamily: DISPLAY, fontWeight: 700,
-    fontSize: size === "sm" ? 12 : 13,
+    fontSize: size === "sm" ? 13 : 14,
     letterSpacing: "0.01em",
   }
 }
 
 const BTN_VARIANTS: Record<BtnVariant, React.CSSProperties> = {
   primary: {
-    background: "linear-gradient(135deg, #C25640, #9E3F2E)",
-    border: "1px solid rgba(224,131,106,0.55)",
-    color: "#FFF1ED",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.28), 0 4px 14px rgba(0,0,0,0.40)",
+    background: "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)",
+    border: "1px solid rgba(161,44,56,0.80)",
+    color: "#FFFFFF",
+    backdropFilter: "blur(20px)",
+    WebkitBackdropFilter: "blur(20px)",
+    boxShadow: "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",
   },
   ghost: {
     background: "rgba(255,255,255,0.08)",
@@ -240,8 +281,8 @@ const BTN_VARIANTS: Record<BtnVariant, React.CSSProperties> = {
     color: "#FCA5A5",
   },
   copper: {
-    background: "rgba(194,86,64,0.60)",
-    border: "1px solid rgba(224,131,106,0.55)",
+    background: "rgba(161,44,56,0.60)",
+    border: "1px solid rgba(161,44,56,0.80)",
     color: "#fff",
   },
 }
@@ -372,7 +413,7 @@ export function SectionTitle({ kicker, title, sub, right }: {
         <h2 style={{ fontFamily: DISPLAY, fontSize: 25, fontWeight: 800, letterSpacing: "-0.02em", color: TL.text, margin: 0, lineHeight: 1.15 }}>
           {title}
         </h2>
-        {sub && <p style={{ fontFamily: DISPLAY, fontSize: 14.5, color: TL.muted, margin: "7px 0 0", lineHeight: 1.5 }}>{sub}</p>}
+        {sub && <p style={{ fontFamily: DISPLAY, fontSize: 15, color: TL.muted, margin: "7px 0 0", lineHeight: 1.5 }}>{sub}</p>}
       </div>
       {right && <div style={{ display: "flex", gap: 8, alignItems: "center" }}>{right}</div>}
     </div>
@@ -492,24 +533,38 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
             style={{
               width: "100%", maxWidth: width, maxHeight: "88vh",
               display: "flex", flexDirection: "column",
-              borderRadius: 22, overflow: "hidden",
-              background: "rgba(16,30,44,0.96)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              backdropFilter: "blur(32px) saturate(1.50) brightness(0.96)",
-              WebkitBackdropFilter: "blur(32px) saturate(1.50) brightness(0.96)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 40px 100px rgba(0,0,0,0.72), 0 0 0 1px rgba(255,255,255,0.04)",
+              borderRadius: 20, overflow: "hidden",
+              position: "relative",
+              background: "rgba(255,255,255,0.008)",
+              backdropFilter: "blur(6px) brightness(1.03)",
+              WebkitBackdropFilter: "blur(6px) brightness(1.03)",
+              boxShadow: "0 4px 24px rgba(0,0,0,0.55), 0 40px 100px rgba(0,0,0,0.60)",
             }}
           >
+            {/* DiagnosiCard gradient top border */}
+            <div aria-hidden style={{
+              position: "absolute", inset: 0, borderRadius: "inherit", padding: 1,
+              background: "linear-gradient(to bottom, rgba(255,255,255,0.38) 0%, transparent 40%)",
+              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor", maskComposite: "exclude",
+              pointerEvents: "none", zIndex: 10,
+            }} />
+
             {/* Header */}
             <div style={{
               display: "flex", alignItems: "center", justifyContent: "space-between",
               padding: "20px 24px 16px",
-              borderBottom: "1px solid rgba(255,255,255,0.08)",
-              background: "rgba(255,255,255,0.025)",
+              borderBottom: "1px solid rgba(255,255,255,0.07)",
+              flexShrink: 0, position: "relative", zIndex: 2,
             }}>
               <div>
-                {kicker && <div style={{ marginBottom: 6 }}><Kicker>{kicker}</Kicker></div>}
-                <h3 style={{ fontFamily: DISPLAY, fontSize: 19, fontWeight: 800, color: TL.text, margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+                {kicker && (
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)" }}>
+                    <span style={{ color: "rgba(161,44,56,0.50)" }}>//</span>
+                    <span>[ {kicker} ]</span>
+                  </div>
+                )}
+                <h3 style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 800, color: TL.text, margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
                   {title}
                 </h3>
               </div>
@@ -517,17 +572,19 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
                 onClick={onClose}
                 className="portal-btn portal-btn-ghost"
                 style={{
-                  width: 32, height: 32, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", color: TL.muted,
-                  flexShrink: 0,
+                  width: 34, height: 34, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
+                  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)", color: TL.muted,
+                  flexShrink: 0, transition: "background 0.18s, border-color 0.18s, color 0.18s",
                 }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(161,44,56,0.14)"; el.style.borderColor = "rgba(161,44,56,0.45)"; el.style.color = "#fff" }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.10)"; el.style.color = TL.muted }}
               >
                 <Icon name="x" size={14} />
               </button>
             </div>
 
             {/* Content */}
-            <div style={{ padding: 24, overflowY: "auto" }}>{children}</div>
+            <div style={{ padding: "22px 24px", overflowY: "auto", position: "relative", zIndex: 2 }}>{children}</div>
 
             {/* Footer */}
             {footer && (
@@ -535,7 +592,7 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
                 display: "flex", justifyContent: "flex-end", gap: 10,
                 padding: "14px 24px",
                 borderTop: "1px solid rgba(255,255,255,0.07)",
-                background: "rgba(0,0,0,0.20)",
+                flexShrink: 0, position: "relative", zIndex: 2,
               }}>
                 {footer}
               </div>
@@ -611,8 +668,8 @@ export function Stat({ label, value, hint, icon, tone = "silver" }: {
         </span>
         {icon && (
           <span style={{
-            width: 32, height: 32, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
-            background: t.bg, border: `1px solid ${t.bd}`, color: t.fg,
+            width: 28, height: 28, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center",
+            color: t.fg,
           }}>
             <Icon name={icon} size={15} />
           </span>
@@ -645,8 +702,8 @@ export function Empty({ icon = "sparkle", title, hint, action }: {
       }}>
         <Icon name={icon} size={20} strokeWidth={1.5} />
       </div>
-      <p style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 700, color: T.muted, margin: 0 }}>{title}</p>
-      {hint && <p style={{ fontFamily: DISPLAY, fontSize: 13.5, color: T.faint, margin: "4px 0 0", maxWidth: 380, lineHeight: 1.6 }}>{hint}</p>}
+      <p style={{ fontFamily: DISPLAY, fontSize: 17, fontWeight: 700, color: T.muted, margin: 0 }}>{title}</p>
+      {hint && <p style={{ fontFamily: DISPLAY, fontSize: 14, color: T.faint, margin: "4px 0 0", maxWidth: 380, lineHeight: 1.6 }}>{hint}</p>}
       {action && <div style={{ marginTop: 16 }}>{action}</div>}
     </div>
   )
@@ -835,19 +892,19 @@ export function Timeline({ events, showProject = false, showClient = false, limi
                 width: 29, height: 29, borderRadius: "50%", flexShrink: 0,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 background: t.bg, border: `1px solid ${t.bd}`, color: t.fg,
-                boxShadow: "0 0 0 4px #1C3040",
+                boxShadow: "0 0 0 4px #1E3442",
               }}>
                 <Icon name={meta.icon} size={12.5} />
               </span>
               <div style={{ minWidth: 0, paddingTop: 3 }}>
-                <p style={{ fontFamily: DISPLAY, fontSize: 13, fontWeight: 600, color: T.text, margin: 0, lineHeight: 1.4 }}>
+                <p style={{ fontFamily: DISPLAY, fontSize: 14, fontWeight: 600, color: T.text, margin: 0, lineHeight: 1.4 }}>
                   {ev.title}
                 </p>
-                <p style={{ fontFamily: MONO, fontSize: 9.5, color: T.faint, margin: "3px 0 0", letterSpacing: "0.04em" }}>
+                <p style={{ fontFamily: MONO, fontSize: 10, color: T.faint, margin: "3px 0 0", letterSpacing: "0.04em" }}>
                   {relativeDate(ev.createdAt)}{context ? `  ·  ${context}` : ""}
                 </p>
                 {ev.detail && (
-                  <p style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.muted, margin: "4px 0 0", lineHeight: 1.5 }}>
+                  <p style={{ fontFamily: DISPLAY, fontSize: 13.5, color: T.muted, margin: "4px 0 0", lineHeight: 1.5 }}>
                     {ev.detail}
                   </p>
                 )}
@@ -886,7 +943,7 @@ export function BriefCard({ brief, description }: { brief?: ProjectBrief; descri
               padding: "10px 12px", borderRadius: 11,
               background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`,
             }}>
-              <span style={{ width: 30, height: 30, borderRadius: 9, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: TONE.copper.bg, border: `1px solid ${TONE.copper.bd}`, color: TONE.copper.fg }}>
+              <span style={{ width: 26, height: 26, borderRadius: 7, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", color: TONE.copper.fg }}>
                 <Icon name={f.icon} size={14} />
               </span>
               <div style={{ minWidth: 0 }}>
@@ -929,30 +986,31 @@ export function Row({ icon, iconTone = "steel", title, sub, right, onClick }: {
       className={onClick ? "portal-row" : undefined}
       style={{
         display: "flex", alignItems: "center", gap: 14,
-        padding: "14px 16px", borderRadius: 13,
-        border: `1px solid ${T.border}`, background: "rgba(255,255,255,0.05)",
+        padding: "12px 4px",
+        borderTop: `1px solid ${T.border}`,
+        background: "transparent",
         cursor: onClick ? "pointer" : "default",
       }}
     >
       {icon && (
         <span style={{
-          width: 38, height: 38, borderRadius: 11, flexShrink: 0,
+          width: 34, height: 34, borderRadius: 9, flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
-          background: t.bg, border: `1px solid ${t.bd}`, color: t.fg,
+          color: t.fg,
         }}>
-          <Icon name={icon} size={17} />
+          <Icon name={icon} size={16} />
         </span>
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
-          fontFamily: DISPLAY, fontSize: 15, fontWeight: 700, color: T.text,
+          fontFamily: DISPLAY, fontSize: 15.5, fontWeight: 700, color: T.text,
           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
         }}>
           {title}
         </div>
         {sub && (
           <div style={{
-            fontFamily: DISPLAY, fontSize: 13, color: T.faint, marginTop: 3,
+            fontFamily: DISPLAY, fontSize: 14, color: T.faint, marginTop: 3,
             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
           }}>
             {sub}

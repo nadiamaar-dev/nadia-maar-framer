@@ -59,21 +59,17 @@ function StageRow({ stage, index, isLast, renderAction }: {
 
   /* ── Circle config ── */
   const circle = isActive
-    ? { bg: "rgba(161,44,56,0.22)", border: "rgba(161,44,56,0.55)", color: "#B8384A", glow: "0 0 22px rgba(161,44,56,0.40), 0 0 6px rgba(161,44,56,0.25)", icon: PATH_UNLOCK }
+    ? { bg: "rgba(161,44,56,0.10)", border: "rgba(161,44,56,0.40)", color: "#B8384A", glow: "none", icon: PATH_UNLOCK }
     : isDone
-    ? { bg: "rgba(75,211,155,0.18)",  border: "rgba(75,211,155,0.46)",  color: "#4BD39B", glow: "0 0 16px rgba(75,211,155,0.28)", icon: PATH_CHECK }
-    : { bg: "rgba(255,255,255,0.04)", border: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.32)", glow: "none", icon: PATH_LOCK }
+    ? { bg: "transparent", border: "rgba(16,185,129,0.22)", color: "#10B981", glow: "none", icon: PATH_CHECK }
+    : { bg: "transparent", border: "rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.30)", glow: "none", icon: PATH_LOCK }
 
   /* ── Connector line ── */
-  const lineColor = isDone
-    ? "linear-gradient(180deg, rgba(75,211,155,0.45) 0%, rgba(75,211,155,0.20) 100%)"
-    : isActive
-    ? "linear-gradient(180deg, rgba(161,44,56,0.42) 0%, rgba(255,255,255,0.08) 100%)"
-    : "rgba(255,255,255,0.08)"
+  const lineColor = "rgba(255,255,255,0.07)"
 
   /* ── Content card (only active + done) ── */
-  const cardBg     = isActive ? "rgba(18,32,44,0.72)"   : "rgba(12,40,28,0.58)"
-  const cardBorder = isActive ? "rgba(161,44,56,0.32)" : "rgba(75,211,155,0.22)"
+  const cardBg     = "rgba(255,255,255,0.008)"
+  const cardBorder = isActive ? "rgba(161,44,56,0.18)" : "rgba(255,255,255,0.08)"
   const descColor  = "rgba(255,255,255,0.64)"
 
   const numLabel = String(index + 1).padStart(2, "0")
@@ -138,7 +134,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
             fontSize: isActive ? 17 : isLocked ? 14 : 15,
             fontWeight: isActive ? 800 : isLocked ? 500 : 700,
             letterSpacing: "-0.01em", lineHeight: 1.25,
-            color: isLocked ? "rgba(255,255,255,0.38)" : isActive ? "#F5EDE8" : "#D4EEE0",
+            color: isLocked ? "rgba(255,255,255,0.32)" : "rgba(255,255,255,0.90)",
             margin: 0, flex: 1, minWidth: 0,
           }}>
             {stage.title}
@@ -150,11 +146,11 @@ function StageRow({ stage, index, isLast, renderAction }: {
               <span style={{
                 display: "inline-flex", alignItems: "center", gap: 5,
                 padding: "3px 10px", borderRadius: 99,
-                background: "rgba(75,211,155,0.12)", border: "1px solid rgba(75,211,155,0.28)",
+                background: "transparent", border: "1px solid rgba(16,185,129,0.22)",
                 fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.06em",
-                color: "#4BD39B",
+                color: "#10B981",
               }}>
-                <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#4BD39B" }} />
+                <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#10B981", opacity: 0.7 }} />
                 Completata
               </span>
             )}
@@ -162,7 +158,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
               <span style={{
                 display: "inline-flex", alignItems: "center", gap: 5,
                 padding: "3px 10px", borderRadius: 99,
-                background: "rgba(161,44,56,0.14)", border: "1px solid rgba(161,44,56,0.34)",
+                background: "transparent", border: "1px solid rgba(161,44,56,0.25)",
                 fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.06em",
                 color: "#B8384A",
               }}>
@@ -201,12 +197,10 @@ function StageRow({ stage, index, isLast, renderAction }: {
             borderRadius: 16,
             background: cardBg,
             border: `1px solid ${cardBorder}`,
-            borderLeft: isActive ? "3px solid rgba(161,44,56,0.70)" : `1px solid ${cardBorder}`,
-            backdropFilter: "blur(14px) saturate(0.15)",
-            WebkitBackdropFilter: "blur(14px) saturate(0.15)",
-            boxShadow: isActive
-              ? "0 0 0 1px rgba(161,44,56,0.08), 0 8px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.07)"
-              : "inset 0 1px 0 rgba(75,211,155,0.07)",
+            borderLeft: isActive ? "3px solid rgba(161,44,56,0.50)" : `1px solid ${cardBorder}`,
+            backdropFilter: "blur(6px) brightness(1.03)",
+            WebkitBackdropFilter: "blur(6px) brightness(1.03)",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.22)",
             display: "flex", flexDirection: "column", gap: 14,
           }}>
             {/* Description */}

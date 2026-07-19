@@ -91,7 +91,7 @@ export default function Messages({ home, userId, reload }: {
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 8, width: "100%" }}>
-                      {unread && <span style={{ width: 7, height: 7, borderRadius: 99, background: T.copperLt, flexShrink: 0, boxShadow: "0 0 8px rgba(212,105,90,0.8)" }} />}
+                      {unread && <span style={{ width: 7, height: 7, borderRadius: 99, background: T.copperLt, flexShrink: 0, boxShadow: "0 0 8px rgba(161,44,56,0.85)" }} />}
                       <span style={{
                         flex: 1, minWidth: 0, fontFamily: DISPLAY, fontSize: 12.5, fontWeight: unread ? 800 : 600,
                         color: c.status === "closed" ? T.faint : T.text,

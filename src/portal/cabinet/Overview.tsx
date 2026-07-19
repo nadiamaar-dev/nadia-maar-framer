@@ -17,17 +17,22 @@ const ACTION_META: Record<string, { icon: IconName; tone: Tone }> = {
 }
 
 function Greeting({ name }: { name?: string }) {
-  const h = new Date().getHours()
+  const now = new Date()
+  const h = now.getHours()
   const saluto = h < 5 ? "Buonanotte" : h < 12 ? "Buongiorno" : h < 18 ? "Buon pomeriggio" : "Buona sera"
   const firstName = name?.split(" ")[0] ?? name?.split("@")[0]
   return (
     <div style={{ paddingBottom: 4 }}>
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 10, fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.22em", textTransform: "uppercase", color: T.faint }}>
+        <span style={{ color: T.copperLt }}>//</span>
+        <span>{now.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" })}</span>
+      </div>
       <h1 style={{
         fontFamily: DISPLAY, fontSize: 29, fontWeight: 800,
         color: TL.text, margin: 0, letterSpacing: "-0.025em", lineHeight: 1.15,
       }}>
         {saluto}{firstName ? (
-          <>, <span style={{ color: "#D4856A" }}>{firstName}</span></>
+          <>, <span style={{ color: T.copperLt }}>{firstName}</span></>
         ) : ""}
       </h1>
       <p style={{

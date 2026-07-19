@@ -120,7 +120,7 @@ function GeoDecoration() {
    BACKGROUND — single source of truth for all pages.
    Edit here → changes globally everywhere.
 ══════════════════════════════════════════════════════════════════════════ */
-export default function Background() {
+export default function Background({ portal = false }: { portal?: boolean }) {
   return (
     <>
       {/* 1 · Base dark surface + perspective grid + dot layer + edge vignette */}
@@ -164,17 +164,17 @@ export default function Background() {
       <div aria-hidden style={{ position: "fixed", inset: 0, background: "#060C18", opacity: 0.45, pointerEvents: "none", zIndex: 0 }} />
       <div aria-hidden style={{ position: "fixed", inset: 0, background: "#1A1A1E", opacity: 0.48, pointerEvents: "none", zIndex: 0 }} />
 
-      {/* 3 · Geometric ornaments */}
-      <GeoDecoration />
+      {/* 3 · Geometric ornaments — hidden in portal/cabinet mode */}
+      {!portal && <GeoDecoration />}
 
-      {/* 4 · Screen bezel — darkens all four edges */}
-      <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 200, pointerEvents: "none", boxShadow: "inset 0 0 150px rgba(0,0,0,0.95)" }} />
+      {/* 4 · Screen bezel — darkens edges; stronger in portal mode */}
+      <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 200, pointerEvents: "none", boxShadow: portal ? "inset 0 0 220px rgba(0,0,0,0.98)" : "inset 0 0 150px rgba(0,0,0,0.95)" }} />
 
       {/* 5 · Film grain */}
       <GrainOverlay />
 
       {/* 7 · MAAR watermark — centred, appears after hero */}
-      <MaarWatermark />
+      {!portal && <MaarWatermark />}
     </>
   )
 }
