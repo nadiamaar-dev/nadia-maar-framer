@@ -124,7 +124,7 @@ export default function DossierHandoverAdmin({ projectId, clientId }: { projectI
                   display: "flex", alignItems: "center", gap: 12, padding: "13px 15px", borderRadius: 12,
                   background: "rgba(255,255,255,0.05)", border: `1px solid ${T.border}`,
                 }}>
-                  <span style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(224,131,106,0.12)", border: "1px solid rgba(224,131,106,0.26)", color: T.copperLt }}>
+                  <span style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(161,44,56,0.12)", border: "1px solid rgba(161,44,56,0.26)", color: T.copperLt }}>
                     <Icon name={c.kind === "access" ? "lock" : "external"} size={15} />
                   </span>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -194,7 +194,7 @@ export default function DossierHandoverAdmin({ projectId, clientId }: { projectI
               </Field>
               {!draft.id && (
                 <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 13, color: T.muted }}>
-                  <input type="checkbox" checked={draft.release} onChange={e => setDraft({ ...draft, release: e.target.checked })} style={{ accentColor: "#E0836A", width: 16, height: 16 }} />
+                  <input type="checkbox" checked={draft.release} onChange={e => setDraft({ ...draft, release: e.target.checked })} style={{ accentColor: "#A12C38", width: 16, height: 16 }} />
                   Rilascia subito al cliente
                 </label>
               )}

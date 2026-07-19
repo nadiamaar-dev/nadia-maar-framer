@@ -4,7 +4,7 @@ import { useBlueprint } from "../../context/BlueprintContext"
 
 const MONO    = "'JetBrains Mono',monospace"
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
-const ACCENT  = "#AE5350"
+const ACCENT  = "#A12C38"
 
 const CATEGORIES: SandboxCategory[] = [
   "All",
@@ -37,14 +37,15 @@ const CSS = `
   background: transparent; border: 1px solid transparent;
   border-radius: 8px; cursor: pointer;
   font-family: ${DISPLAY}; font-size: 13px; font-weight: 500;
-  color: rgba(255,255,255,0.70);
+  color: rgba(255,255,255,0.55);
   text-align: left; transition: all 0.18s ease; position: relative;
 }
 .nm-sb-cat:hover {
-  background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.18); color: #fff;
+  background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.10); color: rgba(255,255,255,0.88);
 }
 .nm-sb-cat.active {
-  background: rgba(174,83,80,0.58); border-color: rgba(174,83,80,0.50); color: #fff;
+  background: linear-gradient(90deg, rgba(161,44,56,0.22), rgba(161,44,56,0.10));
+  border-color: rgba(161,44,56,0.35); color: #fff;
 }
 .nm-sb-cat.active::before {
   content: ''; position: absolute; left: -1px; top: 20%; bottom: 20%;
@@ -57,31 +58,47 @@ const CSS = `
   padding: 8px 12px; background: transparent; border: 1px solid transparent;
   border-radius: 6px; cursor: pointer;
   font-family: ${MONO}; font-size: 10px; font-weight: 500;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  color: rgba(255,255,255,0.55); transition: all 0.18s ease;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: rgba(255,255,255,0.45); transition: all 0.18s ease;
 }
 .nm-sb-type:hover {
-  color: rgba(255,255,255,0.88); border-color: rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.80); border-color: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
 }
 .nm-sb-type.active {
-  background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.28); color: #fff;
+  background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.18); color: #fff;
 }
 
-/* ── blueprint badge ── */
+/* ── blueprint badge — [→] mono glass style ── */
 .nm-blueprint-badge {
-  display: flex; align-items: center; gap: 8px; padding: 14px 16px;
-  background: rgba(174,83,80,0.56); border: 1px solid rgba(174,83,80,0.45);
+  display: flex; align-items: stretch; overflow: hidden;
   border-radius: 10px; cursor: pointer; text-decoration: none;
-  transition: all 0.18s ease;
+  border: 1px solid rgba(161,44,56,0.50);
+  background: linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.18) 100%);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 0 10px rgba(161,44,56,0.14), inset 0 1px 0 rgba(255,255,255,0.10);
+  transition: border-color 0.22s, box-shadow 0.22s, background 0.22s;
 }
 .nm-blueprint-badge:hover {
-  background: rgba(174,83,80,0.61); border-color: rgba(174,83,80,0.65);
+  border-color: rgba(161,44,56,0.80);
+  background: linear-gradient(90deg, rgba(161,44,56,0.50) 0%, rgba(161,44,56,0.30) 100%);
+  box-shadow: 0 0 20px rgba(161,44,56,0.28), inset 0 1px 0 rgba(255,255,255,0.14);
+}
+.nm-blueprint-tag {
+  padding: 12px 12px;
+  border-right: 1px solid rgba(161,44,56,0.38);
+  display: flex; align-items: center;
+  font-family: ${MONO}; font-size: 9px; letter-spacing: 0.20em;
+  color: rgba(255,255,255,0.70); flex-shrink: 0;
+}
+.nm-blueprint-body {
+  flex: 1; padding: 10px 14px;
+  display: flex; flex-direction: column; justify-content: center; gap: 2px;
 }
 
 /* ── responsive show/hide ── */
-.nm-sidebar-mobile  { display: flex; }   /* mobile segmented control */
-.nm-sidebar-desktop { display: none; }   /* sticky sidebar */
+.nm-sidebar-mobile  { display: flex; }
+.nm-sidebar-desktop { display: none; }
 
 @media (min-width: 768px) {
   .nm-sidebar-mobile  { display: none; }
@@ -109,27 +126,23 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
 
   const typeIndex = TYPE_OPTIONS.findIndex(t => t.value === activeType)
 
-  /* ── Blueprint badge (shared) ── */
+  /* ── Blueprint badge — [→] mono glass style ── */
   const BlueprintBadge = (
     <a href="/cabinet" className="nm-blueprint-badge">
-      <div style={{
-        width: 28, height: 28, borderRadius: 6,
-        background: "rgba(174,83,80,0.61)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        fontFamily: MONO, fontSize: 10, fontWeight: 700,
-        color: "#fff", flexShrink: 0,
-      }}>
-        {items.length}
-      </div>
-      <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: DISPLAY, fontSize: 12, fontWeight: 600, color: "#fff" }}>Blueprint</div>
-        <div style={{ fontFamily: MONO, fontSize: 10, color: "rgba(255,255,255,0.60)", letterSpacing: "0.06em" }}>
-          {items.length === 0 ? "vuoto" : `${items.length} element${items.length > 1 ? "i" : "o"}`}
-        </div>
-      </div>
-      <svg width="13" height="13" viewBox="0 0 14 14" fill="none" style={{ color: "rgba(255,255,255,0.30)", flexShrink: 0 }}>
-        <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
+      <span className="nm-blueprint-tag">
+        [{items.length}]
+      </span>
+      <span className="nm-blueprint-body">
+        <span style={{ fontFamily: DISPLAY, fontSize: 12, fontWeight: 700, color: "#fff", letterSpacing: "-0.01em" }}>Blueprint</span>
+        <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.12em", color: "rgba(255,255,255,0.55)" }}>
+          {items.length === 0 ? "vuoto · aggiungi" : `${items.length} element${items.length > 1 ? "i" : "o"}`}
+        </span>
+      </span>
+      <span style={{ padding: "0 14px", display: "flex", alignItems: "center", color: "rgba(255,255,255,0.50)", flexShrink: 0 }}>
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </span>
     </a>
   )
 
@@ -146,9 +159,9 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
         {/* Glass container wrapping both filter rows */}
         <div style={{
           width: "100%",
-          background: "rgba(35,61,77,0.75)",
-          backdropFilter: "blur(24px) saturate(110%)",
-          WebkitBackdropFilter: "blur(24px) saturate(110%)",
+          background: "rgba(13,18,30,0.88)",
+          backdropFilter: "blur(24px) saturate(0.15)",
+          WebkitBackdropFilter: "blur(24px) saturate(0.15)",
           border: "1px solid rgba(255,255,255,0.07)",
           borderRadius: 16,
           padding: 4,
@@ -163,8 +176,8 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
                 <button key={c} onClick={() => onCategoryChange(c)} style={{
                   flex: 1, minWidth: 0, padding: "8px 4px",
                   borderRadius: 11,
-                  border: "1px solid " + (active ? "rgba(174,83,80,0.55)" : "transparent"),
-                  background: active ? "rgba(174,83,80,0.60)" : "transparent",
+                  border: "1px solid " + (active ? "rgba(161,44,56,0.55)" : "transparent"),
+                  background: active ? "rgba(161,44,56,0.60)" : "transparent",
                   fontFamily: DISPLAY, fontSize: 11,
                   fontWeight: active ? 700 : 500,
                   color: active ? "#fff" : "rgba(255,255,255,0.52)",
@@ -188,8 +201,8 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
               position: "absolute",
               top: 2, bottom: 2, left: 2,
               width: "calc((100% - 4px) / 3)",
-              background: "rgba(174,83,80,0.61)",
-              border: "1px solid rgba(174,83,80,0.52)",
+              background: "rgba(161,44,56,0.61)",
+              border: "1px solid rgba(161,44,56,0.52)",
               borderRadius: 10,
               transform: `translateX(calc(${typeIndex} * 100%))`,
               transition: "transform 0.22s cubic-bezier(0.16,1,0.3,1)",

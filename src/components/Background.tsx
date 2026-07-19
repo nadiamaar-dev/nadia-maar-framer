@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion"
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const MONO    = "'JetBrains Mono',monospace"
 
-/* ── Grain ── */
+/* ── Animated film grain ── */
 function GrainOverlay() {
   const ref = useRef<HTMLCanvasElement | null>(null)
   useEffect(() => {
@@ -33,102 +33,148 @@ function GrainOverlay() {
   )
 }
 
-/* ── MAAR watermark — fixed, fades in after hero, fades before footer ── */
+/* ── MAAR watermark — centred, fades in after hero, fades before footer ── */
 function MaarWatermark() {
   const { scrollYProgress } = useScroll()
   const opacity = useTransform(scrollYProgress, [0.04, 0.14, 0.86, 0.96], [0, 1, 1, 0])
+  const y = useTransform(scrollYProgress, [0.04, 0.96], ["3%", "-3%"])
   return (
     <motion.div aria-hidden style={{
-      position: "fixed", top: 0, left: 0,
-      width: "100vw", height: "100vh",
-      zIndex: -1, pointerEvents: "none",
+      position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
       display: "flex", alignItems: "center", justifyContent: "center",
       opacity,
     }}>
-      <span style={{
+      <motion.span style={{
+        y,
         fontFamily: DISPLAY, fontWeight: 900,
         fontSize: "clamp(110px, 30vw, 460px)",
         letterSpacing: "-0.05em", lineHeight: 1,
-        color: "rgba(75,85,105,0.13)", filter: "blur(1px)",
+        color: "rgba(255,255,255,0.012)", filter: "blur(1px)",
         userSelect: "none", whiteSpace: "nowrap",
-      }}>MAAR</span>
+      }}>MAAR</motion.span>
     </motion.div>
   )
 }
 
-/* ── Geometric decoration — abstract shapes + mono labels ── */
+/* ── Thin geometric ornaments — Lab signature decorations ── */
 function GeoDecoration() {
   return (
     <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
-      <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} preserveAspectRatio="none">
-        {/* large circle — top left */}
-        <circle cx="9%" cy="18%" r="160" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-        <circle cx="9%" cy="18%" r="52"  fill="none" stroke="rgba(255,255,255,0.06)"    strokeWidth="1"/>
-        {/* diagonal line */}
-        <line x1="70%" y1="0%"   x2="100%" y2="50%" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
-        {/* rotated square — bottom right */}
-        <rect x="80%" y="65%" width="100" height="100" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1" transform="rotate(18,850,720)"/>
-        {/* crosshair */}
-        <line x1="86%" y1="28%"   x2="86%" y2="35%"   stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
-        <line x1="83%" y1="31.5%" x2="89%" y2="31.5%" stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
-        {/* left horizontal mark */}
-        <line x1="0%"  y1="55%"   x2="14%" y2="55%"   stroke="rgba(255,255,255,0.06)"    strokeWidth="1"/>
+
+      {/* Slowly rotating dashed ring — top-left */}
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 70, repeat: Infinity, ease: "linear" }}
+        style={{ position: "absolute", left: "-3%", top: "10%", width: 210, height: 210 }}
+      >
+        <svg width="210" height="210" viewBox="0 0 210 210">
+          <circle cx="105" cy="105" r="92" fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="1" strokeDasharray="2 11" />
+        </svg>
+      </motion.div>
+
+      {/* Small static circle */}
+      <svg style={{ position: "absolute", left: "4%", top: "28%" }} width="58" height="58">
+        <circle cx="29" cy="29" r="28" fill="none" stroke="rgba(255,255,255,0.13)" strokeWidth="1" />
       </svg>
-      {/* mono labels */}
-      <span style={{ position: "absolute", left: 18, top: "14%", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.12)", writingMode: "vertical-rl", transform: "rotate(180deg)" }}>
-        Digital Studio · 2026
-      </span>
-      <span style={{ position: "absolute", right: 18, top: "22%", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.10)", writingMode: "vertical-rl" }}>
-        Digital Architect · NM
-      </span>
+
+      {/* Rotated square — bottom-left */}
+      <svg style={{ position: "absolute", left: "5%", bottom: "22%" }} width="34" height="34">
+        <rect x="8" y="8" width="18" height="18" fill="none" stroke="rgba(255,255,255,0.13)" strokeWidth="1" transform="rotate(45 17 17)" />
+      </svg>
+
+      {/* Red accent triangle — mid-right */}
+      <svg style={{ position: "absolute", right: "12%", top: "52%" }} width="50" height="44">
+        <path d="M25 2 L48 42 L2 42 Z" fill="none" stroke="rgba(168,48,64,0.22)" strokeWidth="1" />
+      </svg>
+
+      {/* Crosshair markers */}
+      {([["10%","52%"],["48%","8%"],["70%","36%"],["88%","14%"]] as [string,string][]).map(([x,y],i) => (
+        <svg key={i} style={{ position: "absolute", left: x, top: y }} width="12" height="12">
+          <path d="M6 0 V12 M0 6 H12" stroke="rgba(255,255,255,0.22)" strokeWidth="1" />
+        </svg>
+      ))}
+
+      {/* Diagonal accent line */}
+      <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} preserveAspectRatio="none">
+        <line x1="72%" y1="0" x2="86%" y2="100%" stroke="rgba(255,255,255,0.012)" strokeWidth="1" />
+      </svg>
+
+      {/* Vertical mono labels */}
+      <span style={{
+        position: "absolute", left: 16, top: "14%",
+        fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", textTransform: "uppercase",
+        color: "rgba(255,255,255,0.12)", writingMode: "vertical-rl", transform: "rotate(180deg)",
+        userSelect: "none",
+      }}>Digital Studio · 2026</span>
+      <span style={{
+        position: "absolute", right: 16, top: "22%",
+        fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", textTransform: "uppercase",
+        color: "rgba(255,255,255,0.10)", writingMode: "vertical-rl",
+        userSelect: "none",
+      }}>Digital Architect · NM</span>
     </div>
   )
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   BACKGROUND — split panels + grid + grain + MAAR + geo
-   Used on About and all service pages. Main page keeps its own background.
+   BACKGROUND — single source of truth for all pages.
+   Edit here → changes globally everywhere.
 ══════════════════════════════════════════════════════════════════════════ */
 export default function Background() {
   return (
     <>
-      {/* ── Split panel base ── */}
+      {/* 1 · Base dark surface + perspective grid + dot layer + edge vignette */}
       <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
+        <div style={{ position: "absolute", inset: 0, background: "#060C18" }} />
 
-        <div style={{ position: "absolute", inset: 0, background: "#233D4D" }} />
-        <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "42%", background: "#2E4C5F", borderRight: "1px solid rgba(255,255,255,0.06)" }} />
-        <div style={{ position: "absolute", top: 0, bottom: 0, left: "34%", width: "16%", background: "linear-gradient(90deg, #2E4C5F, #233D4D)" }} />
+        {/* Perspective-warped line grid */}
+        <div style={{ position: "absolute", inset: 0, perspective: "820px" }}>
+          <motion.div
+            animate={{
+              rotateX: [7, 13, 7],
+              rotateY: [-0.8, -3, -0.8],
+              scale:   [1.06, 1.10, 1.06],
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              position: "absolute", inset: 0,
+              backgroundImage: "linear-gradient(rgba(255,255,255,0.09) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.09) 1px, transparent 1px)",
+              backgroundSize: "64px 64px",
+              WebkitMaskImage: "radial-gradient(ellipse 92% 80% at 50% 40%, black 22%, rgba(0,0,0,0.55) 60%, transparent 90%)",
+              maskImage: "radial-gradient(ellipse 92% 80% at 50% 40%, black 22%, rgba(0,0,0,0.55) 60%, transparent 90%)",
+              transformOrigin: "50% 62%",
+            }}
+          />
+        </div>
 
-        {/* Blue Lagoon bloom */}
-        <div style={{ position: "absolute", top: "-10%", left: "-8%", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(13,120,180,0.11) 0%, rgba(10,90,140,0.05) 50%, transparent 72%)", filter: "blur(90px)", pointerEvents: "none" }} />
-
-        {/* Grid */}
+        {/* Fine dot layer */}
         <div style={{
           position: "absolute", inset: 0,
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, #000 4%, #000 96%, transparent 100%), linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%)",
-          maskImage: "linear-gradient(to bottom, transparent 0%, #000 4%, #000 96%, transparent 100%), linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%)",
-          WebkitMaskComposite: "source-in",
-          maskComposite: "intersect",
-        }} />
-
-        {/* Dot layer */}
-        <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage: "radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1.4px)",
+          backgroundImage: "radial-gradient(rgba(255,255,255,0.018) 1px, transparent 1.4px)",
           backgroundSize: "26px 26px",
           WebkitMaskImage: "radial-gradient(ellipse 52% 48% at 50% 36%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 52%, transparent 76%)",
           maskImage: "radial-gradient(ellipse 52% 48% at 50% 36%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 52%, transparent 76%)",
         }} />
 
         {/* Edge vignette */}
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 108% 86% at 50% 42%, transparent 30%, rgba(10,10,13,0.80) 100%)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 108% 86% at 50% 42%, transparent 30%, rgba(10,14,23,0.80) 100%)" }} />
       </div>
 
-      <GrainOverlay />
-      <MaarWatermark />
+      {/* 2 · Depth washes */}
+      <div aria-hidden style={{ position: "fixed", inset: 0, background: "#060C18", opacity: 0.45, pointerEvents: "none", zIndex: 0 }} />
+      <div aria-hidden style={{ position: "fixed", inset: 0, background: "#1A1A1E", opacity: 0.48, pointerEvents: "none", zIndex: 0 }} />
+
+      {/* 3 · Geometric ornaments */}
       <GeoDecoration />
+
+      {/* 4 · Screen bezel — darkens all four edges */}
+      <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 200, pointerEvents: "none", boxShadow: "inset 0 0 150px rgba(0,0,0,0.95)" }} />
+
+      {/* 5 · Film grain */}
+      <GrainOverlay />
+
+      {/* 7 · MAAR watermark — centred, appears after hero */}
+      <MaarWatermark />
     </>
   )
 }

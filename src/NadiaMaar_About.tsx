@@ -88,8 +88,8 @@ function NMmark({ size = 32, id = "nm-g", hover = false }: { size?: number; id?:
         <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
           <stop offset="44%"  stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
-          <stop offset="56%"  stopColor="#AE5350" />
-          <stop offset="100%" stopColor={hover ? "#943830" : "#733635"} />
+          <stop offset="56%"  stopColor="#A83040" />
+          <stop offset="100%" stopColor={hover ? "#B8384A" : "#A12C38"} />
         </linearGradient>
       </defs>
       <motion.path
@@ -108,27 +108,27 @@ function NMmark({ size = 32, id = "nm-g", hover = false }: { size?: number; id?:
    DESIGN TOKENS — Obsidian + solar orange / copper aurora
 ══════════════════════════════════════════════════════════════════════════ */
 const T = {
-  bg:        "#1A1816",
-  surface:   "#262320",
+  bg:        "#060C18",
+  surface:   "#0A1020",
   border:    "rgba(255,255,255,0.11)",
   text:      "#FFFFFF",
   muted:     "rgba(255,255,255,0.78)",
   faint:     "rgba(255,255,255,0.58)",
-  accent:    "#733635",
-  accentGlo: "rgba(196,180,154,0.22)",
-  accentLt:  "#AE5350",
+  accent:    "#A12C38",
+  accentGlo: "rgba(161,44,56,0.45)",
+  accentLt:  "#A83040",
   green:     "#10B981",
 } as const
 
 // warm rgba helpers
-const AM = (a: number) => `rgba(115,54,53,${a})`
-const LT = (a: number) => `rgba(174,83,80,${a})`
-const OR = (a: number) => `rgba(115,54,53,${a})`
-const RD = (a: number) => `rgba(90,40,40,${a})`
+const AM = (a: number) => `rgba(161,44,56,${a})`
+const LT = (a: number) => `rgba(168,48,64,${a})`
+const OR = (a: number) => `rgba(161,44,56,${a})`
+const RD = (a: number) => `rgba(120,20,30,${a})`
 
 // white -> amber gradient text fill
 const gradText = (deg = 180): React.CSSProperties => ({
-  backgroundImage: `linear-gradient(${deg}deg, #FFFFFF 0%, #D4897A 48%, #733635 100%)`,
+  backgroundImage: `linear-gradient(${deg}deg, #FFFFFF 0%, rgba(255,255,255,0.70) 48%, #A12C38 100%)`,
   WebkitBackgroundClip: "text",
   backgroundClip: "text",
   WebkitTextFillColor: "transparent",
@@ -137,16 +137,17 @@ const gradText = (deg = 180): React.CSSProperties => ({
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1]
 const MONO = "'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace"
 const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const BODY: React.CSSProperties = { fontFamily: "'Geist', system-ui, sans-serif", fontSize: "clamp(15px, 1.4vw, 17px)", fontWeight: 400, lineHeight: 1.85, letterSpacing: "0.01em" }
 const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&/*+<>{}[]"
 
 const G = {
-  bg:        "rgba(138,143,149,0.7)",
-  bgHov:     "rgba(138,143,149,0.8)",
-  bd:        "rgba(255,255,255,0.28)",
-  bdHov:     "rgba(255,255,255,0.55)",
-  blur:      "blur(52px) saturate(2.2)",
-  shadow:    "0 16px 52px 0 rgba(4,2,0,0.58), inset 0 1px 0 rgba(255,255,255,0.50), inset 0 0 0 1px rgba(255,255,255,0.06)",
-  shadowHov: "0 32px 80px 0 rgba(0,0,0,0.72), inset 0 1px 0 rgba(255,255,255,0.64), inset 0 0 0 1px rgba(255,255,255,0.09)",
+  bg:        "rgba(255,255,255,0.06)",
+  bgHov:     "rgba(255,255,255,0.10)",
+  bd:        "rgba(255,255,255,0.18)",
+  bdHov:     "rgba(255,255,255,0.38)",
+  blur:      "blur(16px) saturate(0.15)",
+  shadow:    "0 16px 52px 0 rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.14), inset 0 0 0 1px rgba(255,255,255,0.05)",
+  shadowHov: "0 32px 80px 0 rgba(0,0,0,0.70), inset 0 1px 0 rgba(255,255,255,0.22), inset 0 0 0 1px rgba(255,255,255,0.08)",
 } as const
 
 const MONO_LABEL: React.CSSProperties = {
@@ -161,26 +162,27 @@ const GLOBAL_CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; scroll-behavior: smooth; }
   p, li { font-weight: 300; line-height: 1.8; }
   ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: #233D4D; }
+  ::-webkit-scrollbar-track { background: #060C18; }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
   :root { --x:-9999; --y:-9999; --xp:0; --yp:0; }
 
   /* brick text — semi-transparent + warm glow, matching button quality */
-  [style*="color: #AE5350"],
-  [style*='color: "#AE5350"'] {
-    color: rgba(174,83,80,0.82) !important;
+  [style*="color: #A83040"],
+  [style*='color: "#A83040"'] {
+    color: rgba(168,48,64,0.82) !important;
     text-shadow:
-      0 0 52px rgba(174,83,80,0.38),
-      0 0 18px rgba(174,83,80,0.26),
+      0 0 52px rgba(168,48,64,0.38),
+      0 0 18px rgba(168,48,64,0.26),
       0 2px 6px rgba(0,0,0,0.28);
   }
-  [style*="color: #733635"],
-  [style*='color: "#733635"'] {
-    text-shadow: 0 0 24px rgba(115,54,53,0.45), 0 0 8px rgba(115,54,53,0.26);
+  [style*="color: #A12C38"],
+  [style*='color: "#A12C38"'] {
+    text-shadow: 0 0 24px rgba(161,44,56,0.45), 0 0 8px rgba(161,44,56,0.26);
   }
 
   [data-glow] {
@@ -235,7 +237,7 @@ const GLOBAL_CSS = `
 
   /* interactive capability tag */
   .abt-tag { display: inline-block; padding: 5px 11px; border-radius: 9999px; font-weight: 400; line-height: 1.4; color: rgba(255,255,255,0.78); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); letter-spacing: 0.01em; cursor: default; transition: background .22s, border-color .22s, color .22s, transform .22s; }
-  .abt-tag:hover { background: rgba(174,83,80,0.20); border-color: rgba(174,83,80,0.48); color: #fff; transform: translateY(-1px); }
+  .abt-tag:hover { background: rgba(168,48,64,0.20); border-color: rgba(168,48,64,0.48); color: #fff; transform: translateY(-1px); }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -273,7 +275,7 @@ const GLOBAL_CSS = `
     display: flex; align-items: center; justify-content: space-around; overflow: hidden; }
 
   .abt-cursor-ring { position: fixed; top: 0; left: 0; width: 30px; height: 30px; border-radius: 50%;
-    border: 1px solid rgba(115,54,53,0.60); pointer-events: none; z-index: 600; mix-blend-mode: screen;
+    border: 1px solid rgba(124,34,43,0.60); pointer-events: none; z-index: 600; mix-blend-mode: screen;
     transform: translate(calc(var(--x) * 1px - 15px), calc(var(--y) * 1px - 15px));
     transition: transform 0.12s ease-out, width 0.2s, height 0.2s, opacity 0.2s; }
 
@@ -414,16 +416,16 @@ function PillCTA({ label, href, onClick, target }: { label: string; href?: strin
   const btnStyle: React.CSSProperties = {
     display: "inline-flex", alignItems: "stretch",
     borderRadius: 12, cursor: "pointer",
-    border: `1px solid ${h ? "rgba(174,83,80,0.90)" : "rgba(174,83,80,0.65)"}`,
-    background: "linear-gradient(90deg, rgba(174,83,80,0.78) 0%, rgba(174,83,80,0.60) 100%)",
+    border: `1px solid ${h ? "rgba(161,44,56,0.80)" : "rgba(161,44,56,0.50)"}`,
+    background: "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)",
     backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-    boxShadow: h ? "0 0 56px rgba(115,54,53,0.38), 0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18)" : "0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
+    boxShadow: h ? "0 0 24px rgba(161,44,56,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" : "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",
     textDecoration: "none", overflow: "hidden",
     transition: "border-color 0.25s, box-shadow 0.30s",
   }
   const inner = (
     <>
-      <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(115,54,53,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[01]</span>
+      <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(161,44,56,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[01]</span>
       <span style={{ padding: "14px 20px", display: "flex", alignItems: "center", gap: 12, fontFamily: MONO, fontSize: 12, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
         {label}
         <motion.span animate={{ x: h ? [0,4,0] : 0 }} transition={{ duration: 0.55, repeat: h ? Infinity : 0, ease: "easeInOut" }} style={{ fontSize: 14, color: "rgba(255,255,255,0.92)" }}>→</motion.span>
@@ -484,7 +486,7 @@ function DateTimeWidget() {
     <div className="abt-datetime" aria-label="Local time" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", alignItems: "center", gap: 10, padding: "5px 14px 5px 8px", borderRadius: 100, background: "rgba(255,255,255,0.04)", backdropFilter: "blur(22px) saturate(1.6)", WebkitBackdropFilter: "blur(22px) saturate(1.6)", border: "1px solid rgba(255,255,255,0.09)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 14px rgba(0,0,0,0.22)", whiteSpace: "nowrap", userSelect: "none", pointerEvents: "none", zIndex: 10 } as React.CSSProperties}>
       <svg width="22" height="22" viewBox="0 0 22 22" style={{ flexShrink: 0 }}>
         <circle cx="11" cy="11" r="8.5" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" />
-        <motion.circle cx="11" cy="11" r="8.5" fill="none" stroke="#AE5350" strokeWidth="1.5" strokeLinecap="round" transform="rotate(-90 11 11)" animate={{ pathLength: ss / 60 }} transition={{ duration: 0.85, ease: "easeOut" }} />
+        <motion.circle cx="11" cy="11" r="8.5" fill="none" stroke="#A83040" strokeWidth="1.5" strokeLinecap="round" transform="rotate(-90 11 11)" animate={{ pathLength: ss / 60 }} transition={{ duration: 0.85, ease: "easeOut" }} />
       </svg>
       <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.06em", color: "rgba(255,255,255,0.92)", display: "inline-flex", alignItems: "baseline", gap: 1 }}>
         {hh}
@@ -498,67 +500,6 @@ function DateTimeWidget() {
   )
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   BACKGROUND — identical to main page
-══════════════════════════════════════════════════════════════════════════ */
-function GrainOverlay() {
-  const ref = useRef<HTMLCanvasElement | null>(null)
-  useEffect(() => {
-    const c = ref.current; if (!c) return
-    const ctx = c.getContext("2d", { alpha: true }); if (!ctx) return
-    const S = 512; let id = 0; let frame = 0
-    const draw = () => {
-      c.width = S; c.height = S
-      const img = ctx.createImageData(S, S); const d = img.data
-      for (let i = 0; i < d.length; i += 4) {
-        const v = Math.random() * 255
-        d[i] = v; d[i+1] = v; d[i+2] = v; d[i+3] = 7
-      }
-      ctx.putImageData(img, 0, 0)
-    }
-    const loop = () => { if (frame % 3 === 0) draw(); frame++; id = requestAnimationFrame(loop) }
-    draw(); id = requestAnimationFrame(loop)
-    return () => cancelAnimationFrame(id)
-  }, [])
-  return (
-    <canvas ref={ref} aria-hidden style={{
-      position: "fixed", inset: 0, width: "100vw", height: "100vh",
-      pointerEvents: "none", opacity: 0.032, imageRendering: "pixelated" as const,
-      mixBlendMode: "overlay", zIndex: 1,
-    }} />
-  )
-}
-
-function AuroraBackground() {
-  return (
-    <>
-      <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
-        <div style={{ position: "absolute", inset: 0, background: "#233D4D" }} />
-        <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "42%", background: "#2E4C5F", borderRight: "1px solid rgba(255,255,255,0.06)" }} />
-        <div style={{ position: "absolute", top: 0, bottom: 0, left: "34%", width: "16%", background: "linear-gradient(90deg, #2E4C5F, #233D4D)" }} />
-        <div style={{ position: "absolute", top: "-10%", left: "-8%", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(13,120,180,0.11) 0%, rgba(10,90,140,0.05) 50%, transparent 72%)", filter: "blur(90px)", pointerEvents: "none" }} />
-        <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, #000 4%, #000 96%, transparent 100%), linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%)",
-          maskImage: "linear-gradient(to bottom, transparent 0%, #000 4%, #000 96%, transparent 100%), linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%)",
-          WebkitMaskComposite: "source-in",
-          maskComposite: "intersect",
-        }} />
-        <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage: "radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1.4px)",
-          backgroundSize: "26px 26px",
-          WebkitMaskImage: "radial-gradient(ellipse 52% 48% at 50% 36%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 52%, transparent 76%)",
-          maskImage: "radial-gradient(ellipse 52% 48% at 50% 36%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 52%, transparent 76%)",
-        }} />
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 108% 86% at 50% 42%, transparent 30%, rgba(10,10,13,0.80) 100%)" }} />
-      </div>
-      <GrainOverlay />
-    </>
-  )
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    SCROLL PROGRESS + CURSOR RING
@@ -571,8 +512,8 @@ function ScrollProgress() {
       style={{
         position: "fixed", top: 0, left: 0, right: 0, height: 2, zIndex: 500,
         transformOrigin: "0% 50%", scaleX,
-        background: "linear-gradient(90deg, rgba(90,40,40,1), #733635, #AE5350)",
-        boxShadow: "0 0 12px rgba(115,54,53,0.7)",
+        background: "linear-gradient(90deg, rgba(90,40,40,1), #7C222B, #A83040)",
+        boxShadow: "0 0 12px rgba(124,34,43,0.7)",
       }}
     />
   )
@@ -601,7 +542,7 @@ function Logo3D({ onClick }: { onClick: () => void }) {
           <motion.span aria-hidden
             animate={{ opacity: h ? 1 : 0 }}
             transition={{ duration: 0.30 }}
-            style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(115,54,53,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }}
+            style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(124,34,43,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }}
           />
         </span>
         <span aria-hidden style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
@@ -696,7 +637,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         {MENU_SOCIALS.map(({ label, href }) => (
           <a key={label} href={href} target="_blank" rel="noopener noreferrer"
             style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: "rgba(255,255,255,0.55)", background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", textDecoration: "none", transition: "all 0.18s" }}
-            onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color="#fff"; el.style.borderColor="rgba(115,54,53,0.55)"; el.style.background="rgba(115,54,53,0.14)" }}
+            onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color="#fff"; el.style.borderColor="rgba(124,34,43,0.55)"; el.style.background="rgba(124,34,43,0.14)" }}
             onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.color="rgba(255,255,255,0.55)"; el.style.borderColor="rgba(255,255,255,0.12)"; el.style.background="rgba(255,255,255,0.07)" }}
           >{label}</a>
         ))}
@@ -712,7 +653,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         style={{ position: "fixed", inset: 0, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 28px", overflow: "hidden", ...GLASS }}
       >
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(115,54,53,0.70), rgba(174,83,80,0.45), transparent)", flexShrink: 0 }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(124,34,43,0.70), rgba(168,48,64,0.45), transparent)", flexShrink: 0 }} />
         <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
           <NMmark size={26} id="nm-abt-menu-mob" hover={false} />
         </div>
@@ -740,14 +681,14 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         transition={{ type: "spring", stiffness: 320, damping: 36 }}
         style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: 460, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 40px", borderLeft: "1px solid rgba(255,255,255,0.14)", ...GLASS }}
       >
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(115,54,53,0.70) 40%, rgba(174,83,80,0.45) 70%, transparent)", flexShrink: 0 }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(124,34,43,0.70) 40%, rgba(168,48,64,0.45) 70%, transparent)", flexShrink: 0 }} />
         <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
           <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.26em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.36)" }}>Navigation</span>
         </div>
         <div aria-hidden style={{ position: "absolute", right: -8, top: 0, bottom: 0, display: "flex", alignItems: "center", pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
           <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,9vw,130px)", letterSpacing: "-0.04em", color: "rgba(74,94,118,0.15)", filter: "blur(0.8px)", userSelect: "none", lineHeight: 0.82 }}>MAAR</span>
         </div>
-        <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(115,54,53,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
+        <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(124,34,43,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 4 }}>
           {NAV.map((item, i) => (
             <MenuNavItem key={item.key} num={item.num} label={item.label} onClick={item.action} index={i} active={isAboutPage ? item.key === "About Me" : item.key === "Home"} />
@@ -816,10 +757,11 @@ function LiveTerminal() {
   return (
     <div style={{
       borderRadius: 16, padding: "18px 20px 20px",
-      background: "rgba(0,0,0,0.34)",
+      background: "rgba(0,0,0,0.12)",
+      backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
       border: "1px solid rgba(255,255,255,0.08)",
       fontFamily: MONO, fontSize: 12, lineHeight: 1.95,
-      boxShadow: "0 8px 32px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.05)",
+      boxShadow: "0 8px 32px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.05)",
       minHeight: 190,
     }}>
       <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
@@ -886,7 +828,7 @@ function HeroSection() {
             </motion.div>
 
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.80, delay: 0.30, ease }}
-              style={{ fontSize: "clamp(15px, 1.4vw, 18px)", color: T.muted, fontWeight: 300, maxWidth: 540, lineHeight: 1.86, margin: "0 0 44px" }}>
+              style={{ ...BODY, color: T.muted, maxWidth: 540, margin: "0 0 44px" }}>
               Costruisco ecosistemi digitali che vendono. Un solo punto di contatto dalla
               strategia al codice di produzione: design premium, sviluppo frontend solido,
               SEO e advertising — cuciti insieme in un unico flusso, guidato dalla logica
@@ -902,43 +844,72 @@ function HeroSection() {
           {/* RIGHT — frosted glass tablet + terminal */}
           <motion.div className="abt-hero-right" initial={{ opacity: 0, x: 32 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.90, delay: 0.30, ease }}
             style={{ position: "relative" }}>
-            {/* glow behind card */}
-            <div aria-hidden style={{ position: "absolute", inset: "-30px -20px", borderRadius: 28, background: `radial-gradient(circle at 70% 30%, ${OR(0.28)}, ${RD(0.12)} 45%, transparent 72%)`, filter: "blur(38px)", zIndex: -1 }} />
-
-            <div data-glow="" style={{
-              ...glowVars(22), position: "relative",
+            <div style={{
+              position: "relative",
               borderRadius: 22, padding: "28px 28px 24px",
-              background: "rgba(255,255,255,0.06)",
-              backdropFilter: "blur(40px) saturate(1.7)", WebkitBackdropFilter: "blur(40px) saturate(1.7)",
-              border: "1px solid rgba(255,255,255,0.14)",
-              borderTop: "1px solid rgba(255,255,255,0.30)",
-              boxShadow: "0 30px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.18)",
+              background: "rgba(6,12,24,0.08)",
+              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+              border: "1px solid rgba(255,255,255,0.07)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.05)",
             }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-                <span style={{ ...MONO_LABEL, fontSize: 9.5, color: T.faint }}>IDENTITY</span>
-                <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                  <PingDot color={T.green} size={6} />
-                  <span style={{ ...MONO_LABEL, fontSize: 9.5, color: T.green }}>AVAILABLE</span>
+              {/* ── Eyebrow ── */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
+                <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: T.faint }}>
+                  <span style={{ color: T.accentLt }}>//</span> [ IDENTITY ]
+                </span>
+                <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "4px 10px", borderRadius: 99, background: "rgba(75,211,155,0.08)", border: "1px solid rgba(75,211,155,0.22)" }}>
+                  <PingDot color={T.green} size={5} />
+                  <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.20em", textTransform: "uppercase", color: T.green }}>DISPONIBILE</span>
                 </div>
               </div>
-              <div style={{ marginBottom: 20 }}>
-                <div style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 800, letterSpacing: "-0.03em", color: T.text, marginBottom: 4 }}>Nadia Maar</div>
-                <div style={{ ...MONO_LABEL, fontSize: 9.5, color: T.faint }}>Digital Architect · E-Commerce Dev</div>
-              </div>
-              <div style={{ height: 1, background: T.border, margin: "0 0 20px" }} />
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24 }}>
-                {["React / Next.js", "Shopify Custom", "AI Automation", "SEO & Ads", "UI/UX Design"].map(tag => (
-                  <span key={tag} style={{ padding: "5px 12px", borderRadius: 9999, fontSize: 11, fontWeight: 500, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: T.muted, letterSpacing: "0.04em" }}>{tag}</span>
-                ))}
-              </div>
-              <div style={{ height: 1, background: T.border, margin: "0 0 20px" }} />
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(255,255,255,0.06)", border: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ color: T.faint }}>
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+
+              {/* ── Name block ── */}
+              <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 18 }}>
+                {/* NM badge */}
+                <div style={{ width: 44, height: 44, borderRadius: 12, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(161,44,56,0.14)", border: "1px solid rgba(161,44,56,0.35)" }}>
+                  <svg viewBox="0 2 28 22" width="22" height="18" fill="none" strokeLinecap="square" strokeLinejoin="miter">
+                    <defs>
+                      <linearGradient id="nm-about" x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="rgba(255,255,255,0.92)" />
+                        <stop offset="46%" stopColor="rgba(255,255,255,0.92)" />
+                        <stop offset="58%" stopColor="#A12C38" />
+                        <stop offset="100%" stopColor="#7C222B" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M 2,22 L 2,2 L 13,22 L 13,2 L 19.5,12 L 26,2 L 26,22" stroke="url(#nm-about)" strokeWidth="2" />
                   </svg>
                 </div>
-                <span style={{ ...MONO_LABEL, fontSize: 9.5, color: T.faint }}>Italy · Remote Worldwide</span>
+                <div>
+                  <div style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 800, letterSpacing: "-0.03em", color: T.text, lineHeight: 1.1 }}>Nadia Maar</div>
+                  <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: T.faint, marginTop: 4 }}>Digital Architect · E-Commerce Dev</div>
+                </div>
+              </div>
+
+              {/* ── Red accent divider ── */}
+              <div style={{ height: 1, background: `linear-gradient(90deg, rgba(161,44,56,0.70), rgba(161,44,56,0.20), transparent)`, margin: "0 0 18px" }} />
+
+              {/* ── Skills grid 2-col ── */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 12px", marginBottom: 18 }}>
+                {["React / Next.js", "Shopify Custom", "AI Automation", "SEO & Ads", "UI/UX Design", "TypeScript"].map(s => (
+                  <div key={s} style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                    <span style={{ width: 4, height: 4, borderRadius: "50%", background: AM(0.75), flexShrink: 0 }} />
+                    <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.10em", color: T.muted, whiteSpace: "nowrap" }}>{s}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* ── Location row ── */}
+              <div style={{ height: 1, background: "rgba(255,255,255,0.07)", margin: "0 0 16px" }} />
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 24, height: 24, borderRadius: 7, background: "rgba(255,255,255,0.05)", border: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ color: T.accentLt }}>
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                    </svg>
+                  </div>
+                  <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", color: T.faint }}>Italy · Remote Worldwide</span>
+                </div>
+                <span style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.18em", textTransform: "uppercase", color: AM(0.60), padding: "3px 8px", borderRadius: 6, border: `1px solid ${AM(0.22)}`, background: AM(0.08) }}>EU +</span>
               </div>
             </div>
 
@@ -963,18 +934,28 @@ const MARQUEE_ITEMS = [
 function MarqueeStrip() {
   const row = (
     <span className="abt-marquee-track">
-      {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((it, i) => (
-        <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 22, padding: "0 22px" }}>
-          <span style={{ fontFamily: DISPLAY, fontSize: 15, fontWeight: 800, letterSpacing: "-0.01em", color: i % 2 ? T.accentLt : "rgba(255,255,255,0.62)" }}>{it}</span>
-          <span style={{ color: T.accentLt, fontSize: 8 }}>◆</span>
-        </span>
-      ))}
+      {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((it, i) => {
+        const n = (i % MARQUEE_ITEMS.length) + 1
+        return (
+          <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 12, padding: "0 22px" }}>
+            <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 500, letterSpacing: "0.18em", color: T.accentLt }}>
+              {String(n).padStart(2, "0")}
+            </span>
+            <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.68)" }}>
+              {it}
+            </span>
+            <span aria-hidden style={{ width: 1, height: 13, background: "rgba(255,255,255,0.13)", marginLeft: 10 }} />
+          </span>
+        )
+      })}
     </span>
   )
   return (
-    <div className="abt-marquee" style={{ position: "relative", borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}`, overflow: "hidden", padding: "18px 0", background: "rgba(0,0,0,0.18)" }}>
-      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 140, background: "linear-gradient(90deg, #233D4D, transparent)", zIndex: 2, pointerEvents: "none" }} />
-      <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 140, background: "linear-gradient(270deg, #233D4D, transparent)", zIndex: 2, pointerEvents: "none" }} />
+    <div className="abt-marquee" style={{ position: "relative", borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}`, overflow: "hidden", padding: "15px 0", background: "transparent" }}>
+      {/* top red hairline accent */}
+      <div aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg, transparent, ${LT(0.45)} 30%, ${LT(0.45)} 70%, transparent)` }} />
+      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 160, background: "linear-gradient(90deg, #060C18, transparent)", zIndex: 2, pointerEvents: "none" }} />
+      <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 160, background: "linear-gradient(270deg, #060C18, transparent)", zIndex: 2, pointerEvents: "none" }} />
       {row}
     </div>
   )
@@ -985,9 +966,9 @@ function MarqueeStrip() {
 ══════════════════════════════════════════════════════════════════════════ */
 //PLACEHOLDER metrics
 const STATS = [
-  { n: 5,   pad: 2, suffix: "+",  sub: "Anni a costruire prodotti digitali" },
-  { n: 50,  pad: 0, suffix: "+",  sub: "Progetti spediti in produzione" },
-  { n: 30,  pad: 0, suffix: "k+", sub: "Prodotti e-commerce sincronizzati" },
+  { n: 5,   pad: 2, suffix: "+",  cat: "Esperienza", sub: "Anni a costruire prodotti digitali" },
+  { n: 50,  pad: 0, suffix: "+",  cat: "Delivery",   sub: "Progetti spediti in produzione" },
+  { n: 30,  pad: 0, suffix: "k+", cat: "Scala",      sub: "Prodotti e-commerce sincronizzati" },
 ]
 
 function useCountUp(target: number, run: boolean, dur = 1300) {
@@ -1013,7 +994,7 @@ function StatCard({ s, i }: { s: typeof STATS[number]; i: number }) {
   const inView = useInView(ref, { once: true, margin: "-60px" })
   const val = useCountUp(s.n, inView)
   const [hov, setHov] = useState(false)
-  const display = (s.pad ? String(val).padStart(s.pad, "0") : String(val)) + s.suffix
+  const numStr = s.pad ? String(val).padStart(s.pad, "0") : String(val)
   return (
     <motion.div ref={ref}
       initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -1021,29 +1002,39 @@ function StatCard({ s, i }: { s: typeof STATS[number]; i: number }) {
       onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
       animate={{ y: hov ? -5 : 0 }}
       style={{
-        position: "relative", overflow: "hidden", borderRadius: 16,
-        padding: "28px 28px 28px 32px", minHeight: 196,
-        display: "flex", flexDirection: "column", justifyContent: "space-between",
+        position: "relative", overflow: "hidden", borderRadius: 14,
+        padding: "16px 20px 18px", minHeight: 150,
+        display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 14,
         background: hov ? "rgba(255,255,255,0.035)" : "rgba(255,255,255,0.018)",
         border: "1px solid rgba(255,255,255,0.08)",
-        borderLeft: `3px solid rgba(255,255,255,${hov ? 0.28 : 0.14})`,
-        boxShadow: hov ? "0 20px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07)" : "0 8px 28px rgba(0,0,0,0.38)",
-        transition: "background .3s, border-color .3s, box-shadow .35s",
+        boxShadow: hov ? `0 20px 60px rgba(0,0,0,0.55), 0 0 34px ${OR(0.10)}, inset 0 1px 0 rgba(255,255,255,0.07)` : "0 8px 28px rgba(0,0,0,0.38)",
+        transition: "background .3s, box-shadow .35s",
       }}>
-      {/* index — top right */}
-      <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.20)", alignSelf: "flex-end" }}>0{i + 1} / 03</span>
+      {/* top accent line — lights up red on hover */}
+      <span aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${LT(hov ? 0.85 : 0.28)}, ${LT(hov ? 0.30 : 0.06)} 55%, transparent)`, transition: "background .4s" }} />
 
-      {/* giant number */}
-      <div style={{
-        fontFamily: DISPLAY, fontSize: "clamp(58px, 7vw, 90px)", fontWeight: 900,
-        lineHeight: 0.88, letterSpacing: "-0.055em", color: "#FFFFFF",
-        fontVariantNumeric: "tabular-nums",
-      }}>{display}</div>
+      {/* corner watermark digit */}
+      <span aria-hidden style={{ position: "absolute", right: -4, bottom: -12, fontFamily: DISPLAY, fontWeight: 900, fontSize: 92, lineHeight: 1, letterSpacing: "-0.06em", color: "transparent", WebkitTextStroke: `1px ${LT(hov ? 0.14 : 0.06)}`, userSelect: "none", pointerEvents: "none", transition: "all .4s" }}>{i + 1}</span>
 
-      {/* separator + label */}
-      <div>
-        <div style={{ height: 1, background: "rgba(255,255,255,0.08)", marginBottom: 14 }} />
-        <div style={{ fontSize: 13, color: "rgba(255,255,255,0.72)", lineHeight: 1.55, fontWeight: 300 }}>{s.sub}</div>
+      {/* top row — category + index */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative", zIndex: 1 }}>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em", textTransform: "uppercase", color: hov ? T.accentLt : T.faint, transition: "color .3s" }}>
+          <span style={{ width: 5, height: 5, borderRadius: "50%", background: AM(hov ? 0.95 : 0.55), boxShadow: hov ? `0 0 8px ${OR(0.7)}` : "none", transition: "all .3s" }} />
+          {s.cat}
+        </span>
+        <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.22)" }}>0{i + 1}/03</span>
+      </div>
+
+      {/* giant number with red-accent suffix */}
+      <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "baseline", gap: 2 }}>
+        <span style={{ fontFamily: DISPLAY, fontSize: "clamp(44px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 0.86, letterSpacing: "-0.055em", color: "#FFFFFF", fontVariantNumeric: "tabular-nums" }}>{numStr}</span>
+        <span style={{ fontFamily: DISPLAY, fontSize: "clamp(24px, 2.6vw, 34px)", fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", color: T.accentLt }}>{s.suffix}</span>
+      </div>
+
+      {/* red gradient divider + label */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <div style={{ height: 1.5, borderRadius: 2, marginBottom: 9, background: `linear-gradient(90deg, ${LT(hov ? 0.75 : 0.45)}, ${LT(0.12)} 45%, transparent)`, transition: "background .4s" }} />
+        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.72)", lineHeight: 1.5, fontWeight: 300, maxWidth: 220 }}>{s.sub}</div>
       </div>
     </motion.div>
   )
@@ -1080,9 +1071,9 @@ function StatBento() {
           <motion.div
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.24, ease }}
-            style={{ position: "relative", overflow: "hidden", borderRadius: 20, padding: "30px 28px", minHeight: 190, display: "flex", flexDirection: "column", justifyContent: "space-between", border: `1px solid ${LT(0.24)}`, borderTop: `1px solid ${LT(0.4)}`, background: `linear-gradient(135deg, ${AM(0.16)}, ${RD(0.08)} 60%, rgba(255,255,255,0.03))`, boxShadow: `0 8px 32px rgba(0,0,0,0.55), 0 0 40px ${OR(0.12)}, inset 0 1px 0 rgba(255,255,255,0.16)` }}>
-            <span style={{ ...MONO_LABEL, fontSize: 9.5, color: T.accentLt }}>100% CUSTOM</span>
-            <p style={{ fontFamily: DISPLAY, fontSize: "clamp(18px, 2vw, 23px)", fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.25, color: T.text, margin: 0, maxWidth: 260 }}>
+            style={{ position: "relative", overflow: "hidden", borderRadius: 14, padding: "18px 22px", minHeight: 150, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 12, border: `1px solid ${LT(0.24)}`, borderTop: `1px solid ${LT(0.4)}`, background: `linear-gradient(135deg, ${AM(0.16)}, ${RD(0.08)} 60%, rgba(255,255,255,0.03))`, boxShadow: `0 8px 32px rgba(0,0,0,0.55), 0 0 40px ${OR(0.12)}, inset 0 1px 0 rgba(255,255,255,0.16)` }}>
+            <span style={{ ...MONO_LABEL, fontSize: 9, color: T.accentLt }}>100% CUSTOM</span>
+            <p style={{ fontFamily: DISPLAY, fontSize: "clamp(16px, 1.7vw, 20px)", fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.25, color: T.text, margin: 0, maxWidth: 260 }}>
               Ogni progetto è su misura. Zero template, zero scorciatoie.
             </p>
             <AccentBars />
@@ -1130,13 +1121,9 @@ function PhilosophySection() {
               style={{ position: "relative" }}>
               <div style={{ height: 1, background: hov ? LT(0.50) : "rgba(255,255,255,0.09)", transition: "background .3s" }} />
               <div className="abt-approach-row" style={{
-                background: hov
-                  ? "rgba(46,76,95,0.55)"
-                  : "rgba(46,76,95,0.28)",
-                backdropFilter: hov ? "blur(14px)" : "blur(6px)",
-                WebkitBackdropFilter: hov ? "blur(14px)" : "blur(6px)",
-                boxShadow: hov ? "inset 0 1px 0 rgba(255,255,255,0.10), 0 6px 28px rgba(0,0,0,0.22)" : "inset 0 1px 0 rgba(255,255,255,0.04)",
-                transition: "background .35s, box-shadow .35s, backdrop-filter .35s",
+                background: "transparent",
+                boxShadow: "none",
+                transition: "box-shadow .35s",
                 position: "relative",
                 borderRadius: 2,
               }}>
@@ -1157,7 +1144,7 @@ function PhilosophySection() {
                     <h3 style={{ fontFamily: DISPLAY, fontSize: "clamp(20px, 2.2vw, 28px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#FFFFFF", margin: 0, lineHeight: 1.1 }}>{p.label}</h3>
                     <span aria-hidden style={{ flex: 1, height: 1, maxWidth: 60, background: `linear-gradient(90deg, ${LT(hov ? 0.50 : 0.22)}, transparent)`, transition: "background .3s" }} />
                   </div>
-                  <p style={{ fontSize: "clamp(14px, 1.2vw, 16px)", color: T.muted, lineHeight: 1.9, fontWeight: 300, margin: 0 }}>{p.text}</p>
+                  <p style={{ ...BODY, color: T.muted, margin: 0 }}>{p.text}</p>
                 </div>
               </div>
             </motion.div>
@@ -1181,51 +1168,44 @@ const PROCESS = [
 ]
 
 function ProcessCard({ p, i }: { p: typeof PROCESS[number]; i: number }) {
-  const [hov, setHov] = useState(false)
+  const [hover, setHover] = useState(false)
+  const SANS = "'Inter', system-ui, sans-serif"
   return (
     <motion.div
       initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, delay: i * 0.09, ease }}
-      onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
-      animate={{ y: hov ? -3 : 0 }}
+      onHoverStart={() => setHover(true)} onHoverEnd={() => setHover(false)}
+      animate={{ y: hover ? -3 : 0 }}
       style={{
-        position: "relative", borderRadius: 16, overflow: "hidden",
-        padding: "26px 24px 24px",
-        borderTop:    `1px solid ${hov ? "rgba(224,224,224,0.55)" : "rgba(224,224,224,0.22)"}`,
-        borderRight:  `1px solid ${hov ? "rgba(115,54,53,.55)" : "rgba(255,255,255,0.12)"}`,
-        borderBottom: `1px solid ${hov ? "rgba(115,54,53,.55)" : "rgba(255,255,255,0.08)"}`,
-        borderLeft:   `1px solid ${hov ? "rgba(115,54,53,.55)" : "rgba(255,255,255,0.12)"}`,
-        background: hov ? "rgba(255,255,255,.58)" : "rgba(255,255,255,.50)",
-        backdropFilter: "blur(36px) saturate(1.1)",
-        WebkitBackdropFilter: "blur(36px) saturate(1.1)",
-        boxShadow: hov
-          ? "inset 0 1.5px 0 rgba(255,255,255,0.95), inset 1px 0 0 rgba(255,255,255,0.35), 0 20px 50px rgba(0,0,0,0.22)"
-          : "inset 0 1.5px 0 rgba(255,255,255,0.80), inset 1px 0 0 rgba(255,255,255,0.22), 0 12px 36px rgba(0,0,0,0.16)",
-        display: "flex", flexDirection: "column",
-        transition: "background .3s, border-color .3s, box-shadow .3s",
-      }}>
+        position: "relative", width: "100%", height: "100%", borderRadius: 16, overflow: "hidden",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.22)", boxSizing: "border-box" as const,
+      }}
+    >
+      {/* Glass background — bottom fade mask */}
+      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, background: "rgba(255,255,255,0.008)", backdropFilter: "blur(6px) brightness(1.03)", WebkitBackdropFilter: "blur(6px) brightness(1.03)", WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", maskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", pointerEvents: "none" }} />
 
-      {/* rim-light shimmer */}
-      <span aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 30%, transparent 55%)", pointerEvents: "none" }} />
+      {/* Gradient border — top + sides fade to mid */}
+      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, padding: 1, background: "linear-gradient(to bottom, rgba(255,255,255,0.45) 0%, transparent 52%)", WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" as const, pointerEvents: "none", zIndex: 2 }} />
 
-      {/* corner brackets — brick */}
-      <span aria-hidden style={{ position: "absolute", top: 9, left: 9, width: 10, height: 10, borderTop: "1.5px solid rgba(115,54,53,.55)", borderLeft: "1.5px solid rgba(115,54,53,.55)" }} />
-      <span aria-hidden style={{ position: "absolute", bottom: 9, right: 9, width: 10, height: 10, borderBottom: "1.5px solid rgba(115,54,53,.55)", borderRight: "1.5px solid rgba(115,54,53,.55)" }} />
+      {/* Content */}
+      <div style={{ position: "relative", zIndex: 3, width: "100%", height: "100%", padding: "20px 20px 18px", display: "flex", flexDirection: "column", boxSizing: "border-box" as const }}>
+        {/* top row — duration chip */}
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "flex-end", gap: 10, marginBottom: 12 }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontFamily: MONO, fontSize: 9.5, letterSpacing: ".04em", color: hover ? "rgba(255,255,255,0.72)" : "rgba(255,255,255,0.42)", border: `1px solid ${hover ? "rgba(255,255,255,0.26)" : "rgba(255,255,255,0.14)"}`, borderRadius: 6, padding: "3px 8px", transition: "color .3s, border-color .3s", whiteSpace: "nowrap" as const }}>{p.dur}</span>
+        </div>
 
-      {/* [01] tag */}
-      <div style={{ position: "relative", fontFamily: MONO, fontSize: 11, letterSpacing: ".14em", color: T.accentLt, marginBottom: 14 }}>[{p.n}]</div>
+        {/* metric block */}
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(28px, 3.6vw, 40px)", letterSpacing: "-0.04em", color: T.accentLt, lineHeight: 1 }}>{p.metric}</div>
+          <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.50)", marginTop: 7 }}>{p.metricLabel}</div>
+        </div>
 
-      {/* brick metric */}
-      <div style={{ position: "relative", marginBottom: 16 }}>
-        <div style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(34px, 5vw, 50px)", letterSpacing: "-0.04em", color: T.accentLt, lineHeight: 1 }}>{p.metric}</div>
-        <div style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: T.accentLt, marginTop: 8, opacity: 0.80 }}>{p.metricLabel}</div>
+        {/* title */}
+        <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 16.5, letterSpacing: "-0.018em", lineHeight: 1.25, color: T.text, margin: "0 0 8px" }}>{p.title}</h3>
+
+        {/* body */}
+        <p style={{ fontFamily: SANS, fontSize: "clamp(13px, 1.3vw, 15px)", lineHeight: 1.62, color: T.muted, margin: 0, flex: 1 }}>{p.desc}</p>
       </div>
-
-      {/* title */}
-      <h3 style={{ position: "relative", fontFamily: DISPLAY, fontWeight: 700, fontSize: 17, lineHeight: 1.25, margin: "0 0 10px", color: "#1A1410" }}>{p.title}</h3>
-
-      {/* body */}
-      <p style={{ position: "relative", fontFamily: MONO, fontSize: 12.5, lineHeight: 1.68, color: "rgba(36,29,24,.68)", margin: 0, flex: 1 }}>{p.desc}</p>
     </motion.div>
   )
 }
@@ -1329,11 +1309,12 @@ function ToolkitPanel({ data, i }: { data: typeof TOOLKIT[number]; i: number }) 
       animate={{ y: hov ? -5 : 0 }}
       style={{
         borderRadius: 16, overflow: "hidden",
-        background: hov ? "rgba(0,0,0,0.50)" : "rgba(0,0,0,0.36)",
+        background: hov ? "rgba(0,0,0,0.20)" : "rgba(0,0,0,0.10)",
+        backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
         border: `1px solid rgba(255,255,255,${hov ? 0.13 : 0.07})`,
         boxShadow: hov
-          ? "0 24px 60px rgba(0,0,0,0.58), inset 0 1px 0 rgba(255,255,255,0.08)"
-          : "0 8px 24px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04)",
+          ? "0 24px 60px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)"
+          : "0 8px 24px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.04)",
         fontFamily: MONO, display: "flex", flexDirection: "column",
         transition: "background .3s, border-color .3s, box-shadow .35s",
       }}>
@@ -1458,7 +1439,7 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
             initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.36, ease }}
             style={{ overflow: "hidden" }}>
-            <p style={{ fontSize: "clamp(14px, 1.1vw, 15.5px)", color: T.muted, lineHeight: 1.88, margin: 0, fontWeight: 300, paddingLeft: 38, paddingBottom: 24 }}>{a}</p>
+            <p style={{ ...BODY, color: T.muted, margin: 0, paddingLeft: 38, paddingBottom: 24 }}>{a}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1477,7 +1458,7 @@ function FAQSection() {
             <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px, 3vw, 44px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
               LOGICA&<br /><span style={{ color: "#FFFFFF" }}>TRASPARENZA</span>
             </h2>
-            <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.75, marginTop: 20, fontWeight: 300, maxWidth: 240 }}>
+            <p style={{ ...BODY, color: T.muted, marginTop: 20, maxWidth: 240 }}>
               Risposte dirette alle domande che contano davvero.
             </p>
           </motion.div>
@@ -1555,7 +1536,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
       onClick={e => { if (e.target === overlayRef.current) onClose() }}
       style={{ position: "fixed", inset: 0, zIndex: 500, display: "flex", alignItems: "flex-start", justifyContent: "center", overflowY: "auto", padding: "16px", background: "rgba(0,0,0,0.75)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" } as React.CSSProperties}>
       <motion.div initial={{ opacity: 0, scale: 0.93, y: 28 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.93, y: 16 }} transition={{ duration: 0.38, ease }}
-        style={{ width: "100%", maxWidth: 600, marginTop: "auto", marginBottom: "auto", flexShrink: 0, position: "relative", borderRadius: 20, background: "rgba(30,37,50,0.88)", backdropFilter: "blur(72px) brightness(1.12) saturate(0.80)", WebkitBackdropFilter: "blur(72px) brightness(1.12) saturate(0.80)", border: "1px solid rgba(255,255,255,0.14)", boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.22), inset 1px 0 0 rgba(255,255,255,0.08), 0 40px 100px rgba(0,0,0,0.65)", overflow: "hidden" } as React.CSSProperties}>
+        style={{ width: "100%", maxWidth: 600, marginTop: "auto", marginBottom: "auto", flexShrink: 0, position: "relative", borderRadius: 20, background: "rgba(13,18,30,0.94)", backdropFilter: "blur(72px) brightness(0.92) saturate(1.10)", WebkitBackdropFilter: "blur(72px) brightness(0.92) saturate(1.10)", border: "1px solid rgba(255,255,255,0.12)", boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.22), inset 1px 0 0 rgba(255,255,255,0.08), 0 40px 100px rgba(0,0,0,0.65)", overflow: "hidden" } as React.CSSProperties}>
         <div style={{ height: 2, background: `linear-gradient(90deg, transparent, ${OR(1)} 28%, ${T.accentLt} 72%, transparent)`, borderRadius: "24px 24px 0 0" }} />
         <div className="contact-modal-content" style={{ padding: "30px 34px 34px", position: "relative" }}>
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 26 }}>
@@ -1581,8 +1562,8 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               <GlassSelect label="Cosa dobbiamo risolvere?" value={fields.area} onChange={set("area")} />
               <GlassTextarea label="Messaggio" placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={set("msg")} />
               <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 380, damping: 18 }}
-                style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(174,83,80,0.80)", background: "linear-gradient(90deg, rgba(174,83,80,0.78) 0%, rgba(174,83,80,0.60) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
-                <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(115,54,53,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[→]</span>
+                style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(161,44,56,0.80)", background: "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
+                <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(161,44,56,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[→]</span>
                 <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF", padding: "14px 0" }}>Invia Richiesta →</span>
               </motion.button>
             </form>
@@ -1648,46 +1629,6 @@ function FinalCTA({ onOpenModal }: { onOpenModal: () => void }) {
   )
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   MAAR WATERMARK — центральный, как на главной
-══════════════════════════════════════════════════════════════════════════ */
-function MaarWatermark() {
-  const { scrollYProgress } = useScroll()
-  const opacity = useTransform(scrollYProgress, [0.04, 0.14, 0.86, 0.96], [0, 1, 1, 0])
-  const y = useTransform(scrollYProgress, [0.04, 0.96], ["3%", "-3%"])
-  return (
-    <motion.div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", display: "flex", alignItems: "center", justifyContent: "center", opacity }}>
-      <motion.span style={{ y, fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(110px, 30vw, 460px)", letterSpacing: "-0.05em", lineHeight: 1, color: "rgba(74,94,118,0.15)", filter: "blur(1px)", userSelect: "none", whiteSpace: "nowrap" }}>MAAR</motion.span>
-    </motion.div>
-  )
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   GEO DECORATION — мелкие фигуры и надписи как на главной
-══════════════════════════════════════════════════════════════════════════ */
-function GeoDecoration() {
-  return (
-    <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
-      <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} preserveAspectRatio="none">
-        {/* большой круг — левый верх */}
-        <circle cx="9%" cy="18%" r="160" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-        <circle cx="9%" cy="18%" r="52" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-        {/* диагональная линия */}
-        <line x1="70%" y1="0%" x2="100%" y2="50%" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
-        {/* повёрнутый квадрат — правый низ */}
-        <rect x="80%" y="65%" width="100" height="100" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1" transform="rotate(18,850,720)"/>
-        {/* крестик */}
-        <line x1="86%" y1="28%" x2="86%" y2="35%" stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
-        <line x1="83%" y1="31.5%" x2="89%" y2="31.5%" stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
-        {/* горизонтальная метка слева */}
-        <line x1="0%" y1="55%" x2="14%" y2="55%" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-      </svg>
-      {/* мелкие mono-надписи */}
-      <span style={{ position: "absolute", left: 18, top: "14%", fontFamily: "'JetBrains Mono',monospace", fontSize: 8, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.12)", writingMode: "vertical-rl", transform: "rotate(180deg)" }}>About / Studio · 2026</span>
-      <span style={{ position: "absolute", right: 18, top: "22%", fontFamily: "'JetBrains Mono',monospace", fontSize: 8, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.10)", writingMode: "vertical-rl" }}>Digital Architect · NM</span>
-    </div>
-  )
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    ROOT EXPORT
@@ -1709,7 +1650,7 @@ export default function NadiaMaarAbout() {
 
   return (
     <div style={{
-      background: "#233D4D", color: T.text,
+      background: T.bg, color: T.text,
       fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
       overflowX: "clip", minHeight: "100vh", position: "relative",
     }}>

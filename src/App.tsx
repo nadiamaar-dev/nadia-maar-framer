@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react"
-import NadiaMaar from "./NadiaMaar_Framer" // landing: eager, protects the homepage LCP
+import NadiaMaar from "./NadiaMaar_Lab" // landing: eager, protects the homepage LCP
 
 /* Every non-home route is a separate chunk, fetched only when visited.
    This keeps the portal (Supabase + cabinet/admin UI) and the service
@@ -17,7 +17,7 @@ const DashboardGate     = lazy(() => import("./DashboardGate"))
 
 /** Neutral, on-brand placeholder while a route chunk loads (no white flash). */
 function RouteFallback() {
-  return <div style={{ minHeight: "100vh", background: "#233D4D" }} aria-hidden />
+  return <div style={{ minHeight: "100vh", background: "#060C18" }} aria-hidden />
 }
 
 export default function App() {

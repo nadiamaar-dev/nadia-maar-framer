@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import Background from "../components/Background"
 import { Avatar, DISPLAY, Icon, MONO, T, TL, type IconName } from "./ui"
 
 export interface ShellNavItem {
@@ -8,34 +9,6 @@ export interface ShellNavItem {
   badge?: number
 }
 
-/* Layered graphite backdrop: neutral base, one silver bloom, one copper ember, technical grid. */
-function Backdrop() {
-  return (
-    <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", background: "#233D4D" }}>
-      <div style={{
-        position: "absolute", inset: 0,
-        background: "linear-gradient(180deg, #233D4D 0%, #233D4D 55%, #1E3544 100%)",
-      }} />
-      <div style={{
-        position: "absolute", top: "-20%", left: "-10%", width: "55%", height: "60%",
-        background: "radial-gradient(ellipse, rgba(226,230,238,0.055) 0%, transparent 65%)",
-      }} />
-      <div style={{
-        position: "absolute", bottom: "-25%", right: "-12%", width: "60%", height: "70%",
-        background: "radial-gradient(ellipse, rgba(224,131,106,0.075) 0%, transparent 62%)",
-      }} />
-      <div style={{
-        position: "absolute", inset: 0, opacity: 0.05,
-        backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-        backgroundSize: "64px 64px",
-      }} />
-      <div style={{
-        position: "absolute", inset: 0,
-        background: "radial-gradient(ellipse at 50% 42%, transparent 55%, rgba(10,10,13,0.55) 100%)",
-      }} />
-    </div>
-  )
-}
 
 export default function Shell({
   items, active, onSelect,
@@ -102,11 +75,11 @@ export default function Shell({
               style={{
                 display: "flex", alignItems: "center", gap: 12,
                 padding: "11px 14px", borderRadius: 11, textAlign: "left",
-                background: isActive ? "rgba(224,131,106,0.14)" : "transparent",
-                border: `1px solid ${isActive ? "rgba(224,131,106,0.30)" : "transparent"}`,
-                borderLeft: isActive ? "3px solid #E0836A" : "3px solid transparent",
+                background: isActive ? "rgba(161,44,56,0.14)" : "transparent",
+                border: `1px solid ${isActive ? "rgba(161,44,56,0.30)" : "transparent"}`,
+                borderLeft: isActive ? "3px solid #A12C38" : "3px solid transparent",
                 boxShadow: isActive ? "0 2px 8px rgba(0,0,0,0.14)" : "none",
-                color: isActive ? "#F4C5B4" : TL.muted,
+                color: isActive ? "rgba(255,255,255,0.92)" : TL.muted,
                 cursor: "pointer", transition: "all 0.16s ease",
               }}
             >
@@ -116,7 +89,7 @@ export default function Shell({
                 <span style={{
                   minWidth: 18, height: 18, padding: "0 5px", borderRadius: 99,
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(212,105,90,0.88)",
+                  background: "rgba(161,44,56,0.85)",
                   color: "#FFF", fontFamily: MONO, fontSize: 9.5, fontWeight: 700,
                 }}>
                   {item.badge}
@@ -161,7 +134,7 @@ export default function Shell({
 
   return (
     <div className="portal-root" style={{ display: "flex", height: "100vh", overflow: "hidden", background: T.bg, fontFamily: DISPLAY }}>
-      <Backdrop />
+      <Background />
 
       {/* Desktop sidebar — solid, not glass */}
       <aside
@@ -169,7 +142,7 @@ export default function Shell({
         style={{
           position: "relative", zIndex: 2, width: 268, flexShrink: 0,
           flexDirection: "column",
-          background: "linear-gradient(180deg, #1B2C37 0%, #182833 100%)",
+          background: "linear-gradient(180deg, #0C1020 0%, #080E1C 100%)",
           borderRight: `1px solid ${TL.borderHi}`,
         }}
       >
@@ -186,7 +159,7 @@ export default function Shell({
           <aside style={{
             position: "absolute", top: 0, bottom: 0, left: 0, width: 280,
             display: "flex", flexDirection: "column",
-            background: "linear-gradient(180deg, #1B2C37 0%, #182833 100%)",
+            background: "linear-gradient(180deg, #0C1020 0%, #080E1C 100%)",
             borderRight: `1px solid ${TL.borderHi}`,
           }}>
             {sidebar}
@@ -199,7 +172,7 @@ export default function Shell({
         <header style={{
           flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
           padding: "14px 28px",
-          background: "linear-gradient(180deg, #1A2C38 0%, #162830 100%)",
+          background: "linear-gradient(180deg, #0C1020 0%, #080E1C 100%)",
           borderBottom: "1px solid rgba(255,255,255,0.07)",
           boxShadow: "0 1px 0 rgba(0,0,0,0.22)",
         }}>

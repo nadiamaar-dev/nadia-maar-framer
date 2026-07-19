@@ -7,13 +7,14 @@ import Background from "./components/Background"
 
 /* ── tokens ── */
 const T = {
-  bg: "#233D4D", text: "#FFFFFF", muted: "rgba(255,255,255,0.78)",
+  bg: "#060C18", text: "#FFFFFF", muted: "rgba(255,255,255,0.78)",
   faint: "rgba(255,255,255,0.58)", border: "rgba(255,255,255,0.11)",
-  accent: "#733635", accentLt: "#AE5350", green: "#10B981",
+  accent: "#A12C38", accentLt: "#A83040", green: "#10B981",
   surface: "rgba(255,255,255,0.055)", surfaceHi: "rgba(255,255,255,0.10)",
 } as const
 const MONO = "'JetBrains Mono','SF Mono',ui-monospace,monospace"
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
+const BODY: React.CSSProperties = { fontFamily: "'Geist', system-ui, sans-serif", fontSize: "clamp(15px, 1.4vw, 17px)", fontWeight: 400, lineHeight: 1.85, letterSpacing: "0.01em" }
 const WRAP: React.CSSProperties = { maxWidth: 1120, margin: "0 auto", padding: "0 32px" }
 const ease: [number,number,number,number] = [0.16,1,0.3,1]
 
@@ -21,28 +22,29 @@ const SVC_CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { -webkit-font-smoothing: antialiased; overflow-x: hidden; scroll-behavior: smooth; }
   body { overflow-x: clip; }
   #root { overflow-x: clip; }
   p, li { font-weight: 300; line-height: 1.75; }
   ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: #233D4D; }
+  ::-webkit-scrollbar-track { background: #060C18; }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); border-radius: 4px; }
   ::placeholder { color: rgba(255,255,255,0.22) !important; }
   :root { --x:-9999; --y:-9999; }
   /* brick text — semi-transparent + warm glow, matching button quality */
-  [style*="color: #AE5350"],
-  [style*='color: "#AE5350"'] {
-    color: rgba(174,83,80,0.82) !important;
+  [style*="color: #A83040"],
+  [style*='color: "#A83040"'] {
+    color: rgba(161,44,56,0.82) !important;
     text-shadow:
-      0 0 52px rgba(174,83,80,0.38),
-      0 0 18px rgba(174,83,80,0.26),
+      0 0 52px rgba(161,44,56,0.38),
+      0 0 18px rgba(161,44,56,0.26),
       0 2px 6px rgba(0,0,0,0.28);
   }
-  [style*="color: #733635"],
-  [style*='color: "#733635"'] {
-    text-shadow: 0 0 24px rgba(115,54,53,0.45), 0 0 8px rgba(115,54,53,0.26);
+  [style*="color: #7C222B"],
+  [style*='color: "#7C222B"'] {
+    text-shadow: 0 0 24px rgba(161,44,56,0.45), 0 0 8px rgba(161,44,56,0.26);
   }
   [data-glow] {
     --border-size: calc(var(--border,1.5) * 1px);
@@ -141,8 +143,8 @@ function NMmark({size=32,id="nm-sg",hover=false}:{size?:number;id?:string;hover?
         <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stopColor={hover?"#ffffff":"rgba(255,255,255,0.90)"} />
           <stop offset="44%"  stopColor={hover?"#ffffff":"rgba(255,255,255,0.90)"} />
-          <stop offset="56%"  stopColor="#AE5350" />
-          <stop offset="100%" stopColor={hover?"#943830":"#733635"} />
+          <stop offset="56%"  stopColor="#A83040" />
+          <stop offset="100%" stopColor={hover?"#943830":"#7C222B"} />
         </linearGradient>
       </defs>
       <motion.path d="M 2,22 L 2,2 L 13,22 L 13,2 L 19.5,12 L 26,2 L 26,22"
@@ -178,45 +180,12 @@ function Reveal({children,delay=0}:{children:React.ReactNode;delay?:number}) {
   )
 }
 
-/* ── GrainOverlay ── */
-function GrainOverlay() {
-  const ref = useRef<HTMLCanvasElement|null>(null)
-  useEffect(() => {
-    const c=ref.current; if(!c) return
-    const ctx=c.getContext("2d",{alpha:true}); if(!ctx) return
-    const S=512; let id=0; let frame=0
-    const draw=()=>{ c.width=S; c.height=S; const img=ctx.createImageData(S,S); const d=img.data; for(let i=0;i<d.length;i+=4){const v=Math.random()*255; d[i]=v;d[i+1]=v;d[i+2]=v;d[i+3]=7} ctx.putImageData(img,0,0) }
-    const loop=()=>{ if(frame%3===0)draw(); frame++; id=requestAnimationFrame(loop) }
-    draw(); id=requestAnimationFrame(loop)
-    return ()=>cancelAnimationFrame(id)
-  },[])
-  return <canvas ref={ref} aria-hidden style={{position:"fixed",inset:0,width:"100vw",height:"100vh",pointerEvents:"none",opacity:0.032,imageRendering:"pixelated" as const,mixBlendMode:"overlay",zIndex:1}} />
-}
-
-/* ── AnimatedBackground ── */
-function AnimatedBackground() {
-  return (
-    <>
-      <div aria-hidden style={{position:"fixed",inset:0,zIndex:0,overflow:"hidden",pointerEvents:"none"}}>
-        <div style={{position:"absolute",inset:0,background:"#233D4D"}} />
-        <div style={{position:"absolute",top:0,left:0,bottom:0,width:"42%",background:"#2E4C5F",borderRight:"1px solid rgba(255,255,255,0.06)"}} />
-        <div style={{position:"absolute",top:0,bottom:0,left:"34%",width:"16%",background:"linear-gradient(90deg,#2E4C5F,#233D4D)"}} />
-        <div style={{position:"absolute",top:"-10%",left:"-8%",width:700,height:700,borderRadius:"50%",background:"radial-gradient(circle,rgba(13,120,180,0.11) 0%,rgba(10,90,140,0.05) 50%,transparent 72%)",filter:"blur(90px)",pointerEvents:"none"}} />
-        <div style={{position:"absolute",inset:0,backgroundImage:"linear-gradient(rgba(255,255,255,0.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.055) 1px,transparent 1px)",backgroundSize:"64px 64px",WebkitMaskImage:"linear-gradient(to bottom,transparent 0%,#000 4%,#000 96%,transparent 100%),linear-gradient(to right,transparent 0%,#000 4%,#000 96%,transparent 100%)",maskImage:"linear-gradient(to bottom,transparent 0%,#000 4%,#000 96%,transparent 100%),linear-gradient(to right,transparent 0%,#000 4%,#000 96%,transparent 100%)",WebkitMaskComposite:"source-in",maskComposite:"intersect"}} />
-        <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(255,255,255,0.04) 1px,transparent 1.4px)",backgroundSize:"26px 26px",WebkitMaskImage:"radial-gradient(ellipse 52% 48% at 50% 36%,rgba(0,0,0,1) 0%,rgba(0,0,0,0.5) 52%,transparent 76%)",maskImage:"radial-gradient(ellipse 52% 48% at 50% 36%,rgba(0,0,0,1) 0%,rgba(0,0,0,0.5) 52%,transparent 76%)"}} />
-        <div style={{position:"absolute",inset:0,background:"radial-gradient(circle 780px at 50% -6%,rgba(230,232,240,0.06),transparent 56%)"}} />
-        <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 108% 86% at 50% 42%,transparent 30%,rgba(10,10,13,0.80) 100%)"}} />
-      </div>
-      <GrainOverlay />
-    </>
-  )
-}
 
 /* ── ScrollProgress ── */
 function ScrollProgress() {
   const {scrollYProgress} = useScroll()
   const scaleX = useSpring(scrollYProgress,{stiffness:140,damping:26,mass:0.3})
-  return <motion.div aria-hidden style={{position:"fixed",top:0,left:0,right:0,height:2,zIndex:500,transformOrigin:"0% 50%",scaleX,background:"linear-gradient(90deg,rgba(90,40,40,1),#733635,#AE5350)",boxShadow:"0 0 12px rgba(115,54,53,0.7)"}} />
+  return <motion.div aria-hidden style={{position:"fixed",top:0,left:0,right:0,height:2,zIndex:500,transformOrigin:"0% 50%",scaleX,background:"linear-gradient(90deg,rgba(90,40,40,1),#7C222B,#A83040)",boxShadow:"0 0 12px rgba(161,44,56,0.7)"}} />
 }
 
 /* ── DateTimeWidget ── */
@@ -262,7 +231,7 @@ function MenuOverlay({onClose}:{onClose:()=>void}) {
               style={{display:"flex",alignItems:"center",gap:12,padding:"13px 0",textDecoration:"none",borderBottom:"1px solid rgba(255,255,255,0.05)",fontFamily:MONO,fontSize:12,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:T.muted,transition:"color 0.18s"}}
               onMouseEnter={e=>(e.currentTarget.style.color="#fff")}
               onMouseLeave={e=>(e.currentTarget.style.color=T.muted)}>
-              <span style={{width:16,height:1,background:"rgba(115,54,53,0.60)",display:"inline-block"}} aria-hidden />
+              <span style={{width:16,height:1,background:"rgba(161,44,56,0.60)",display:"inline-block"}} aria-hidden />
               {label}
             </motion.a>
           ))}
@@ -335,7 +304,8 @@ function ContactModal({onClose}:{onClose:()=>void}) {
       onClick={e=>{if(e.target===e.currentTarget)onClose()}}>
       <div style={{position:"absolute",inset:0,background:"rgba(10,12,16,0.75)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)"}} onClick={onClose} />
       <motion.div initial={{opacity:0,y:24,scale:0.96}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:16,scale:0.97}} transition={{duration:0.32,ease}}
-        style={{position:"relative",width:"100%",maxWidth:520,background:"rgba(30,37,50,0.88)",backdropFilter:"blur(72px) brightness(1.12) saturate(0.80)",WebkitBackdropFilter:"blur(72px) brightness(1.12) saturate(0.80)",borderRadius:20,padding:"36px 36px 32px",border:"1px solid rgba(255,255,255,0.13)",boxShadow:"0 32px 80px rgba(0,0,0,0.70),inset 0 1px 0 rgba(255,255,255,0.18)"}}>
+        style={{position:"relative",width:"100%",maxWidth:520,background:"rgba(13,18,30,0.94)",backdropFilter:"blur(72px) brightness(0.92) saturate(1.10)",WebkitBackdropFilter:"blur(72px) brightness(0.92) saturate(1.10)",borderRadius:20,padding:"36px 36px 32px",border:"1px solid rgba(255,255,255,0.12)",boxShadow:"inset 0 1.5px 0 rgba(255,255,255,0.22), inset 1px 0 0 rgba(255,255,255,0.08), 0 40px 100px rgba(0,0,0,0.65)",overflow:"hidden"}}>
+        <div aria-hidden style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg, transparent, ${T.accent} 28%, ${T.accentLt} 72%, transparent)`}} />
         <button onClick={onClose} style={{position:"absolute",top:16,right:16,background:"none",border:"none",cursor:"pointer",color:T.faint,display:"flex",alignItems:"center",justifyContent:"center",width:28,height:28,borderRadius:8,transition:"color 0.18s"}}
           onMouseEnter={e=>(e.currentTarget.style.color="#fff")} onMouseLeave={e=>(e.currentTarget.style.color=T.faint)}>
           <XIcon size={14} />
@@ -354,19 +324,19 @@ function ContactModal({onClose}:{onClose:()=>void}) {
             <div style={{display:"flex",flexDirection:"column",gap:12}}>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
                 <input placeholder="Nome" value={form.name} onChange={set("name")} style={inp}
-                  onFocus={e=>(e.target.style.borderColor="rgba(115,54,53,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
+                  onFocus={e=>(e.target.style.borderColor="rgba(161,44,56,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
                 <input placeholder="Email" type="email" value={form.email} onChange={set("email")} style={inp}
-                  onFocus={e=>(e.target.style.borderColor="rgba(115,54,53,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
+                  onFocus={e=>(e.target.style.borderColor="rgba(161,44,56,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               </div>
               <input placeholder="Azienda (opzionale)" value={form.company} onChange={set("company")} style={inp}
-                onFocus={e=>(e.target.style.borderColor="rgba(115,54,53,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
+                onFocus={e=>(e.target.style.borderColor="rgba(161,44,56,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               <textarea placeholder="Descrivi il tuo progetto o problema principale..." value={form.message} onChange={set("message")} rows={4}
                 style={{...inp,resize:"none" as const,lineHeight:1.65}}
-                onFocus={e=>(e.target.style.borderColor="rgba(115,54,53,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
+                onFocus={e=>(e.target.style.borderColor="rgba(161,44,56,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                 onClick={()=>setSent(true)}
-                style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(174,83,80,0.80)",background:"linear-gradient(90deg,rgba(174,83,80,0.78) 0%,rgba(174,83,80,0.60) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden",marginTop:4}}>
-                <span style={{padding:"12px 14px 12px 16px",borderRight:"1px solid rgba(115,54,53,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[→]</span>
+                style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(161,44,56,0.80)",background:"linear-gradient(90deg,rgba(161,44,56,0.34) 0%,rgba(161,44,56,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden",marginTop:4}}>
+                <span style={{padding:"12px 14px 12px 16px",borderRight:"1px solid rgba(161,44,56,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[→]</span>
                 <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 20px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.90)",fontWeight:500}}>Invia Messaggio</span>
               </motion.button>
             </div>
@@ -409,8 +379,8 @@ const SERVICES: Record<string, ServiceData> = {
     title:"E-commerce ad Alta Conversione",
     subtitle:"Architetture Shopify custom e headless commerce scalabili. Automazione totale di magazzini, cataloghi massivi e logistica multi-corriere. Costruiamo infrastrutture che convertono e scalano senza attriti.",
     eyebrow:"E-Commerce · Shopify · Automazione",
-    gradient:"linear-gradient(135deg,#733635 0%,#AE5350 100%)",
-    accentColor:"rgba(115,54,53,0.60)",
+    gradient:"linear-gradient(135deg,#7C222B 0%,#A83040 100%)",
+    accentColor:"rgba(161,44,56,0.60)",
     whatWeDo:{
       heading:"Il tuo e-commerce è un asset — non un sito.",
       body:[
@@ -551,8 +521,8 @@ const SERVICES: Record<string, ServiceData> = {
     title:"SEO Strategico & Performance Marketing",
     subtitle:"Posizionamento organico integrato nell'architettura dal primo giorno. Google Ads e Meta Ads scalabili a costi decrescenti. Costruiamo canali di acquisizione che lavorano anche mentre dormi.",
     eyebrow:"SEO Tecnico · Google Ads · Meta Ads",
-    gradient:"linear-gradient(135deg,#733635 0%,#DFA088 100%)",
-    accentColor:"rgba(115,54,53,0.60)",
+    gradient:"linear-gradient(135deg,#7C222B 0%,#DFA088 100%)",
+    accentColor:"rgba(161,44,56,0.60)",
     whatWeDo:{
       heading:"Il traffico organico è il tuo asset più redditizio.",
       body:[
@@ -598,8 +568,8 @@ const SERVICES: Record<string, ServiceData> = {
     title:"Integrazione AI & Sistemi Intelligenti",
     subtitle:"Agenti AI, LLM e sistemi RAG integrati nei tuoi processi aziendali. Riduciamo i costi operativi, acceleriamo le decisioni e liberiamo il tuo team per il lavoro ad alto valore strategico.",
     eyebrow:"AI Agents · LLM · Automazione Intelligente",
-    gradient:"linear-gradient(135deg,#AE5350 0%,#DFA088 100%)",
-    accentColor:"rgba(174,83,80,0.60)",
+    gradient:"linear-gradient(135deg,#A83040 0%,#DFA088 100%)",
+    accentColor:"rgba(161,44,56,0.60)",
     whatWeDo:{
       heading:"L'AI non è il futuro. È il vantaggio competitivo di oggi.",
       body:[
@@ -700,7 +670,7 @@ function ServicePage({data}:{data:ServiceData}) {
             </Reveal>
 
             <Reveal delay={0.14}>
-              <p style={{fontFamily:"'Inter',sans-serif",fontSize:"clamp(15px,1.3vw,18px)",color:T.muted,lineHeight:1.75,maxWidth:620,marginBottom:40}}>
+              <p style={{...BODY,color:T.muted,maxWidth:620,marginBottom:40}}>
                 {data.subtitle}
               </p>
             </Reveal>
@@ -709,8 +679,8 @@ function ServicePage({data}:{data:ServiceData}) {
               <div style={{display:"flex",gap:12,flexWrap:"wrap" as const,alignItems:"center"}}>
                 <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                   onClick={()=>setModalOpen(true)}
-                  style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(174,83,80,0.80)",background:"linear-gradient(90deg,rgba(174,83,80,0.78) 0%,rgba(174,83,80,0.60) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
-                  <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(115,54,53,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
+                  style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(161,44,56,0.80)",background:"linear-gradient(90deg,rgba(161,44,56,0.34) 0%,rgba(161,44,56,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
+                  <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(161,44,56,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
                   <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 22px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.92)",fontWeight:500}}>
                     {data.cta.btn} <ArrowRightIcon size={11} />
                   </span>
@@ -741,7 +711,7 @@ function ServicePage({data}:{data:ServiceData}) {
                     {data.whatWeDo.heading}
                   </h2>
                   {data.whatWeDo.body.map((p,i)=>(
-                    <p key={i} style={{fontFamily:"'Inter',sans-serif",fontSize:15,color:T.muted,lineHeight:1.80,marginBottom:i<data.whatWeDo.body.length-1?20:0}}>
+                    <p key={i} style={{...BODY,color:T.muted,marginBottom:i<data.whatWeDo.body.length-1?20:0}}>
                       {p}
                     </p>
                   ))}
@@ -799,7 +769,7 @@ function ServicePage({data}:{data:ServiceData}) {
             </Reveal>
             <div style={{position:"relative"}}>
               {/* vertical connector line */}
-              <div aria-hidden style={{position:"absolute",left:28,top:48,bottom:48,width:1,background:`linear-gradient(180deg, ${data.accentColor}, rgba(115,54,53,0.08))`,zIndex:0}} />
+              <div aria-hidden style={{position:"absolute",left:28,top:48,bottom:48,width:1,background:`linear-gradient(180deg, ${data.accentColor}, rgba(161,44,56,0.08))`,zIndex:0}} />
               <div style={{display:"flex",flexDirection:"column",gap:0}}>
                 {data.howWeDoIt.steps.map((step,i)=>(
                   <Reveal key={i} delay={i*0.07}>
@@ -822,21 +792,21 @@ function ServicePage({data}:{data:ServiceData}) {
                 <div aria-hidden style={{position:"absolute",bottom:0,left:0,right:0,height:1,background:`linear-gradient(90deg,transparent,${data.accentColor},transparent)`}} />
 
                 <div style={{position:"relative",zIndex:1}}>
-                  <div style={{display:"inline-flex",alignItems:"center",gap:10,padding:"7px 16px",borderRadius:9999,background:"rgba(115,54,53,0.10)",border:"1px solid rgba(115,54,53,0.35)",marginBottom:24}}>
+                  <div style={{display:"inline-flex",alignItems:"center",gap:10,padding:"7px 16px",borderRadius:9999,background:"rgba(161,44,56,0.10)",border:"1px solid rgba(161,44,56,0.35)",marginBottom:24}}>
                     <PingDot color={T.accentLt} size={6} />
                     <span style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.20em",textTransform:"uppercase" as const,color:T.accentLt}}>Disponibile · 2026</span>
                   </div>
                   <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(24px,3.2vw,44px)",fontWeight:800,lineHeight:1.1,letterSpacing:"-0.025em",color:"#FFFFFF",marginBottom:18,maxWidth:640,margin:"0 auto 18px"}}>
                     {data.cta.heading}
                   </h2>
-                  <p style={{fontFamily:"'Inter',sans-serif",fontSize:16,color:T.muted,lineHeight:1.72,maxWidth:500,margin:"0 auto 36px"}}>
+                  <p style={{...BODY,color:T.muted,maxWidth:500,margin:"0 auto 36px"}}>
                     {data.cta.sub}
                   </p>
                   <div style={{display:"flex",justifyContent:"center",gap:12,flexWrap:"wrap" as const}}>
                     <motion.button whileHover={{scale:1.03}} whileTap={{scale:0.97}}
                       onClick={()=>setModalOpen(true)}
-                      style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(174,83,80,0.80)",background:"linear-gradient(90deg,rgba(174,83,80,0.78) 0%,rgba(174,83,80,0.60) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
-                      <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(115,54,53,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
+                      style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(161,44,56,0.80)",background:"linear-gradient(90deg,rgba(161,44,56,0.34) 0%,rgba(161,44,56,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
+                      <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(161,44,56,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
                       <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 24px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.92)",fontWeight:500}}>
                         {data.cta.btn} <ArrowRightIcon size={11} />
                       </span>

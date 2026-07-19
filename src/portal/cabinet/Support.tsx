@@ -120,7 +120,7 @@ export default function Support({ home, userId, reload }: {
                     {(t.estimateAmount != null || t.estimateHours != null) && (
                       <div style={{
                         display: "flex", alignItems: "center", gap: 10, marginTop: 12, padding: "10px 14px", borderRadius: 11,
-                        background: "rgba(224,131,106,0.08)", border: "1px solid rgba(224,131,106,0.24)",
+                        background: "rgba(161,44,56,0.08)", border: "1px solid rgba(161,44,56,0.24)",
                       }}>
                         <Icon name="euro" size={15} style={{ color: T.copperLt }} />
                         <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: T.copperLt }}>Preventivo</span>
@@ -136,8 +136,8 @@ export default function Support({ home, userId, reload }: {
                     {t.adminNote && (
                       <div style={{
                         marginTop: 12, padding: "12px 15px", borderRadius: 11,
-                        background: "rgba(224,131,106,0.10)", border: "1px solid rgba(224,131,106,0.26)",
-                        borderLeft: "3px solid #E0836A",
+                        background: "rgba(161,44,56,0.10)", border: "1px solid rgba(161,44,56,0.26)",
+                        borderLeft: "3px solid #A12C38",
                       }}>
                         <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: T.copper, margin: 0 }}>
                           <Icon name="sparkle" size={10} /> Risposta dello studio

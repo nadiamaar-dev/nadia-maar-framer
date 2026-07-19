@@ -59,8 +59,8 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
           const done = i < cur
           const active = i === cur
           const fg = done ? T.green : active ? T.copperLt : T.faint
-          const bg = done ? "rgba(75,211,155,0.14)" : active ? "rgba(224,131,106,0.16)" : "rgba(255,255,255,0.05)"
-          const bd = done ? "rgba(75,211,155,0.34)" : active ? "rgba(224,131,106,0.40)" : T.border
+          const bg = done ? "rgba(75,211,155,0.14)" : active ? "rgba(161,44,56,0.16)" : "rgba(255,255,255,0.05)"
+          const bd = done ? "rgba(75,211,155,0.34)" : active ? "rgba(161,44,56,0.40)" : T.border
           return (
             <React.Fragment key={s.key}>
               <div className="gs-step" style={{ flex: "1 1 130px", minWidth: 120, display: "flex", flexDirection: "column", alignItems: "center", gap: 7, textAlign: "center" }}>
@@ -68,7 +68,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
                   width: 38, height: 38, borderRadius: 11, position: "relative", flexShrink: 0,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   background: bg, border: `1px solid ${bd}`, color: fg,
-                  boxShadow: active ? "0 0 16px rgba(224,131,106,0.30)" : "none",
+                  boxShadow: active ? "0 0 16px rgba(161,44,56,0.30)" : "none",
                 }}>
                   <Icon name={done ? "check" : s.icon} size={17} />
                   <span style={{
@@ -99,7 +99,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
 
       <div style={{
         marginTop: 14, padding: "10px 14px", borderRadius: 11,
-        background: "rgba(224,131,106,0.08)", border: "1px solid rgba(224,131,106,0.20)",
+        background: "rgba(161,44,56,0.08)", border: "1px solid rgba(161,44,56,0.20)",
         display: "flex", gap: 9, alignItems: "flex-start",
       }}>
         <Icon name="sparkle" size={14} style={{ color: T.copperLt, marginTop: 2 }} />

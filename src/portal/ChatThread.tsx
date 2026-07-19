@@ -116,12 +116,12 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
             const bubbleBg = m.isDeleted
               ? "rgba(255,255,255,0.03)"
               : own
-              ? "linear-gradient(145deg, rgba(194,86,64,0.36), rgba(174,83,80,0.22))"
+              ? "linear-gradient(145deg, rgba(161,44,56,0.36), rgba(161,44,56,0.22))"
               : "rgba(255,255,255,0.09)"
             const bubbleBorder = m.isDeleted
               ? "rgba(255,255,255,0.07)"
               : own
-              ? "rgba(224,131,106,0.40)"
+              ? "rgba(161,44,56,0.40)"
               : "rgba(255,255,255,0.13)"
             return (
               <div key={m.id} style={{ display: "flex", flexDirection: "column", alignItems: own ? "flex-end" : "flex-start" }}>
@@ -131,7 +131,7 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                   background: bubbleBg,
                   border: `1px solid ${bubbleBorder}`,
                   boxShadow: m.isDeleted ? "none" : own
-                    ? "0 4px 16px rgba(194,86,64,0.18), inset 0 1px 0 rgba(255,255,255,0.14)"
+                    ? "0 4px 16px rgba(161,44,56,0.18), inset 0 1px 0 rgba(255,255,255,0.14)"
                     : "inset 0 1px 0 rgba(255,255,255,0.10)",
                   backdropFilter: m.isDeleted ? "none" : "blur(8px)",
                   WebkitBackdropFilter: m.isDeleted ? "none" : "blur(8px)",
@@ -240,7 +240,7 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                 <span key={i} style={{
                   display: "inline-flex", alignItems: "center", gap: 6,
                   padding: "4px 10px", borderRadius: 8,
-                  background: "rgba(224,131,106,0.12)", border: "1px solid rgba(224,131,106,0.28)",
+                  background: "rgba(161,44,56,0.12)", border: "1px solid rgba(161,44,56,0.28)",
                   fontFamily: MONO, fontSize: 10, color: T.copperLt,
                 }}>
                   <Icon name="paperclip" size={10} />

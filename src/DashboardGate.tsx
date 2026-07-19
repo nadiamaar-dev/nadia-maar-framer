@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import Background from "./components/Background"
 import { useBlueprint } from "./context/BlueprintContext"
 import { supabase, SUPABASE_READY } from "./lib/supabase"
 import AdminApp from "./portal/admin/AdminApp"
@@ -48,13 +49,14 @@ export default function DashboardGate() {
     return (
       <div style={{
         minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-        background: "#233D4D",
+        background: "#060C18", position: "relative",
       }}>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
+        <Background />
+        <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
           <div style={{
             width: 36, height: 36, borderRadius: "50%",
-            border: "2px solid rgba(174,83,80,0.25)",
-            borderTopColor: "#AE5350",
+            border: "2px solid rgba(161,44,56,0.25)",
+            borderTopColor: "#A12C38",
             animation: "spin 0.8s linear infinite",
           }} />
           <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", color: "rgba(255,255,255,0.30)", textTransform: "uppercase" }}>

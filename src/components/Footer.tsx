@@ -19,13 +19,14 @@ const T = {
   muted:    "rgba(255,255,255,0.78)",
   faint:    "rgba(255,255,255,0.58)",
   border:   "rgba(255,255,255,0.11)",
-  accent:   "#733635",
-  accentLt: "#AE5350",
+  accent:   "#7C222B",
+  accentLt: "#A83040",
   green:    "#10B981",
 } as const
 
 const MONO    = "'JetBrains Mono','SF Mono',ui-monospace,monospace"
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
+const SANS    = "'Geist','Space Grotesk',system-ui,sans-serif"
 
 /* ── scoped CSS injected once per mount ── */
 const FOOTER_CSS = `
@@ -34,7 +35,7 @@ const FOOTER_CSS = `
     overflow: hidden;
     width: 100%;
     box-sizing: border-box;
-    background: linear-gradient(180deg, transparent 0%, rgba(14,25,32,0.10) 8%, rgba(14,25,32,0.32) 22%, rgba(12,21,28,0.60) 42%, rgba(10,18,24,0.82) 65%, rgba(10,18,24,0.99) 100%);
+    background: linear-gradient(180deg, transparent 0%, rgba(6,12,24,0.35) 22%, rgba(6,12,24,0.80) 50%, #060C18 100%);
   }
   .nm-footer-wrap {
     max-width: 1120px;
@@ -124,8 +125,8 @@ function NMmark({ size = 30, id = "nm-ft" }: { size?: number; id?: string }) {
         <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stopColor="rgba(255,255,255,0.90)" />
           <stop offset="44%"  stopColor="rgba(255,255,255,0.90)" />
-          <stop offset="56%"  stopColor="#AE5350" />
-          <stop offset="100%" stopColor="#733635" />
+          <stop offset="56%"  stopColor="#A83040" />
+          <stop offset="100%" stopColor="#7C222B" />
         </linearGradient>
       </defs>
       <path d="M 2,22 L 2,2 L 13,22 L 13,2 L 19.5,12 L 26,2 L 26,22"
@@ -172,7 +173,7 @@ export default function Footer({ onContact }: FooterProps) {
     <footer className="nm-footer">
 
       {/* ── accent top line ── */}
-      <div style={{ height: 1, background: "linear-gradient(90deg, transparent 0%, rgba(115,54,53,0.55) 28%, rgba(174,83,80,0.80) 50%, rgba(115,54,53,0.55) 72%, transparent 100%)" }} />
+      <div style={{ height: 1, background: "linear-gradient(90deg, transparent 0%, rgba(124,34,43,0.70) 28%, rgba(168,48,64,0.95) 50%, rgba(124,34,43,0.70) 72%, transparent 100%)", boxShadow: "0 0 8px rgba(124,34,43,0.30)" }} />
 
       {/* ── main grid ── */}
       <div className="nm-footer-wrap">
@@ -188,7 +189,7 @@ export default function Footer({ onContact }: FooterProps) {
                   Nadia Maar
                 </span>
               </div>
-              <p className="nm-footer-hide-mobile" style={{ fontFamily: MONO, fontSize: 11, color: T.faint, lineHeight: 1.8, maxWidth: 280, letterSpacing: "0.04em", flexDirection: "column" }}>
+              <p className="nm-footer-hide-mobile" style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.faint, lineHeight: 1.85, maxWidth: 280, letterSpacing: "0.01em", flexDirection: "column" }}>
                 E-commerce, Web Apps, AI e Performance Marketing.<br />Architettura digitale ad alte prestazioni.
               </p>
             </div>
@@ -211,35 +212,52 @@ export default function Footer({ onContact }: FooterProps) {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "#fff" }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = T.faint }}
               >
-                <span style={{ width: 14, height: 1, background: "rgba(115,54,53,0.60)", display: "inline-block" }} aria-hidden />
+                <span style={{ width: 14, height: 1, background: "rgba(161,44,56,0.45)", display: "inline-block" }} aria-hidden />
                 {label}
               </motion.a>
             ))}
           </div>
 
           {/* col 3 — contact */}
-          <div className="nm-footer-hide-mobile" style={{ flexDirection: "column", gap: 16 }}>
+          <div className="nm-footer-hide-mobile" style={{ flexDirection: "column", gap: 14 }}>
             <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.24em", textTransform: "uppercase", color: "rgba(255,255,255,0.30)", marginBottom: 4 }}>
               Contatti
             </div>
+
             <a href="mailto:nadiamaar.dev@gmail.com"
               style={{ fontFamily: MONO, fontSize: 11.5, color: T.faint, textDecoration: "none", letterSpacing: "0.04em", transition: "color 0.2s" }}
               onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
               onMouseLeave={e => (e.currentTarget.style.color = T.faint)}
             >nadiamaar.dev@gmail.com</a>
 
-            {/* stat card */}
-            <div style={{ padding: "12px 16px", borderRadius: 12, background: "linear-gradient(90deg, rgba(174,83,80,0.78) 0%, rgba(174,83,80,0.60) 100%)", border: "1px solid rgba(174,83,80,0.80)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", flexDirection: "column", gap: 4 }}>
-              <span style={{ fontFamily: MONO, fontSize: 20, fontWeight: 700, color: "#fff", letterSpacing: "0.02em" }}>50+</span>
-              <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em", textTransform: "uppercase", color: "rgba(255,255,255,0.85)" }}>Progetti Completati</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ width: 5, height: 5, borderRadius: "50%", background: "rgba(161,44,56,0.60)", flexShrink: 0 }} />
+              <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.10em", color: "rgba(255,255,255,0.35)" }}>Remote · Europa</span>
             </div>
 
-            {/* contact button — only shown when onContact prop is provided */}
+            <div style={{ height: 1, background: "rgba(255,255,255,0.07)", margin: "2px 0" }} />
+
+            <motion.a
+              href="/#s9"
+              whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 400, damping: 22 }}
+              style={{ display: "inline-flex", alignItems: "stretch", borderRadius: 10, textDecoration: "none", border: "1px solid rgba(161,44,56,0.50)", background: "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", overflow: "hidden", width: "fit-content", transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s" }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "linear-gradient(90deg, rgba(161,44,56,0.50) 0%, rgba(161,44,56,0.34) 100%)"; el.style.borderColor = "rgba(161,44,56,0.80)"; el.style.boxShadow = "0 0 24px rgba(161,44,56,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)"; el.style.borderColor = "rgba(161,44,56,0.50)"; el.style.boxShadow = "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)" }}
+            >
+              <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(161,44,56,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[01]</span>
+              <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>Prenota una Call</span>
+            </motion.a>
+
             {onContact && (
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onContact}
-                style={{ display: "flex", alignItems: "stretch", borderRadius: 10, border: "1px solid rgba(174,83,80,0.80)", background: "linear-gradient(90deg, rgba(174,83,80,0.78) 0%, rgba(174,83,80,0.60) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 36px rgba(115,54,53,0.22), inset 0 1px 0 rgba(255,255,255,0.12)", cursor: "pointer", overflow: "hidden", width: "fit-content" }}>
-                <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(115,54,53,0.35)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[→]</span>
-                <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.85)" }}>Scrivimi</span>
+              <motion.button whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }} onClick={onContact}
+                transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                style={{ display: "flex", alignItems: "stretch", borderRadius: 10, border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.04)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", cursor: "pointer", overflow: "hidden", width: "fit-content", transition: "background 0.25s, border-color 0.25s" }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.08)"; el.style.borderColor = "rgba(255,255,255,0.22)" }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.12)" }}
+              >
+                <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "rgba(255,255,255,0.40)", flexShrink: 0 }}>[✉]</span>
+                <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.faint }}>Scrivimi</span>
               </motion.button>
             )}
           </div>
@@ -265,7 +283,7 @@ export default function Footer({ onContact }: FooterProps) {
                   backdropFilter: "blur(12px)",
                   textDecoration: "none", flexShrink: 0,
                 } as React.CSSProperties}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.accentLt; el.style.borderColor = "rgba(115,54,53,0.55)"; el.style.backgroundColor = "rgba(115,54,53,0.12)"; el.style.boxShadow = "0 0 16px rgba(115,54,53,0.25)" }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.accentLt; el.style.borderColor = "rgba(161,44,56,0.45)"; el.style.backgroundColor = "rgba(161,44,56,0.10)"; el.style.boxShadow = "0 0 14px rgba(161,44,56,0.18)" }}
                 onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.faint; el.style.borderColor = T.border; el.style.backgroundColor = "rgba(255,255,255,0.03)"; el.style.boxShadow = "none" }}
               >
                 <Icon />
@@ -278,7 +296,7 @@ export default function Footer({ onContact }: FooterProps) {
 
       {/* ── giant MAAR watermark ── */}
       <div aria-hidden style={{ position: "absolute", bottom: 0, left: 0, right: 0, textAlign: "center", lineHeight: 0.85, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
-        <span style={{ display: "block", fontFamily: DISPLAY, fontWeight: 900, letterSpacing: "-0.04em", fontSize: "clamp(88px,20vw,300px)", color: "rgba(75,85,105,0.13)", filter: "blur(1px)", userSelect: "none", transform: "translateY(28%)", WebkitMaskImage: "linear-gradient(180deg,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.5) 60%,transparent 100%)", maskImage: "linear-gradient(180deg,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.5) 60%,transparent 100%)" }}>MAAR</span>
+        <span style={{ display: "block", fontFamily: DISPLAY, fontWeight: 900, letterSpacing: "-0.04em", fontSize: "clamp(88px,20vw,300px)", color: "rgba(255,255,255,0.012)", filter: "blur(1px)", userSelect: "none", transform: "translateY(28%)" }}>MAAR</span>
       </div>
     </footer>
   )

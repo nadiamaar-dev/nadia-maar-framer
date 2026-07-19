@@ -43,15 +43,15 @@ function CredCard({ c }: { c: ProjectCredential }) {
   return (
     <div style={{
       padding: "16px 18px", borderRadius: 14,
-      background: "rgba(224,131,106,0.06)", border: "1px solid rgba(224,131,106,0.22)",
-      borderLeft: "2px solid rgba(224,131,106,0.6)",
+      background: "rgba(161,44,56,0.06)", border: "1px solid rgba(161,44,56,0.22)",
+      borderLeft: "2px solid rgba(161,44,56,0.6)",
       display: "flex", flexDirection: "column", gap: 12,
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <span style={{
           width: 34, height: 34, borderRadius: 10, flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
-          background: "rgba(224,131,106,0.14)", border: "1px solid rgba(224,131,106,0.30)", color: T.copperLt,
+          background: "rgba(161,44,56,0.14)", border: "1px solid rgba(161,44,56,0.30)", color: T.copperLt,
         }}>
           <Icon name={isAccess ? "lock" : "external"} size={16} />
         </span>

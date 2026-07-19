@@ -59,7 +59,7 @@ export default function Documenti({ home, reload }: { home: ClientHome; userId: 
                   <span style={{
                     width: 38, height: 38, borderRadius: 11, flexShrink: 0,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    background: `rgba(224,131,106,0.12)`, border: `1px solid rgba(224,131,106,0.28)`, color: T.copperLt,
+                    background: `rgba(161,44,56,0.12)`, border: `1px solid rgba(161,44,56,0.28)`, color: T.copperLt,
                   }}>
                     <Icon name={meta.icon} size={17} />
                   </span>

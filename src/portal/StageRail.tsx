@@ -26,9 +26,9 @@ function ProgressBar({ value, tone }: { value: number; tone: "copper" | "green" 
   const pct = Math.max(0, Math.min(100, value))
   const fill = tone === "green"
     ? "linear-gradient(90deg,#2DA870,#4BD39B)"
-    : "linear-gradient(90deg,#B04A38,#E0836A)"
-  const glow = tone === "green" ? "rgba(75,211,155,0.40)" : "rgba(224,131,106,0.45)"
-  const label = tone === "green" ? "#4BD39B" : "#F4A882"
+    : "linear-gradient(90deg,#7C222B,#A12C38)"
+  const glow = tone === "green" ? "rgba(75,211,155,0.40)" : "rgba(161,44,56,0.45)"
+  const label = tone === "green" ? "#4BD39B" : "#B8384A"
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
       <div style={{ flex: 1, height: 4, borderRadius: 99, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
@@ -60,14 +60,14 @@ export default function StageRail({ stages, renderAction }: {
         const node = isDone
           ? { d: SVG_CHECK,  bg: "rgba(75,211,155,0.18)",   bd: "rgba(75,211,155,0.46)",   fg: "#4BD39B", glow: "0 0 14px rgba(75,211,155,0.28)" }
           : isActive
-          ? { d: SVG_UNLOCK, bg: "rgba(224,131,106,0.22)",  bd: "rgba(224,131,106,0.52)",  fg: "#F4A882", glow: "0 0 18px rgba(224,131,106,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" }
+          ? { d: SVG_UNLOCK, bg: "rgba(161,44,56,0.22)",  bd: "rgba(161,44,56,0.52)",  fg: "#B8384A", glow: "0 0 18px rgba(161,44,56,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" }
           : { d: SVG_LOCK,   bg: "rgba(255,255,255,0.05)",  bd: "rgba(255,255,255,0.10)",  fg: "rgba(255,255,255,0.35)", glow: "none" }
 
         /* Line below this node */
         const lineGrad = isDone
           ? "linear-gradient(180deg,rgba(75,211,155,0.40) 0%,rgba(75,211,155,0.18) 100%)"
           : isActive
-          ? "linear-gradient(180deg,rgba(224,131,106,0.38) 0%,rgba(255,255,255,0.07) 100%)"
+          ? "linear-gradient(180deg,rgba(161,44,56,0.38) 0%,rgba(255,255,255,0.07) 100%)"
           : "rgba(255,255,255,0.08)"
 
         return (
@@ -128,9 +128,9 @@ export default function StageRail({ stages, renderAction }: {
               {(s.deliverableUrl || s.deliverableNote) && (
                 <div style={{
                   marginTop: 10, padding: "10px 13px", borderRadius: 11,
-                  background: isActive ? "rgba(224,131,106,0.08)" : "rgba(255,255,255,0.05)",
-                  border: `1px solid ${isActive ? "rgba(224,131,106,0.22)" : "rgba(255,255,255,0.09)"}`,
-                  borderLeft: isActive ? "2px solid rgba(224,131,106,0.55)" : undefined,
+                  background: isActive ? "rgba(161,44,56,0.08)" : "rgba(255,255,255,0.05)",
+                  border: `1px solid ${isActive ? "rgba(161,44,56,0.22)" : "rgba(255,255,255,0.09)"}`,
+                  borderLeft: isActive ? "2px solid rgba(161,44,56,0.55)" : undefined,
                 }}>
                   {s.deliverableNote && (
                     <p style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>

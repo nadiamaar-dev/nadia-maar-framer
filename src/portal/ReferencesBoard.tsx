@@ -116,7 +116,7 @@ export default function ReferencesBoard({ projectId, clientId, role, foundryItem
           <button
             onClick={importFoundry}
             className="portal-nav-item"
-            style={{ alignSelf: "flex-start", display: "inline-flex", alignItems: "center", gap: 7, padding: "7px 12px", borderRadius: 9, background: "rgba(224,131,106,0.10)", border: "1px solid rgba(224,131,106,0.24)", color: T.copperLt, fontFamily: DISPLAY, fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}
+            style={{ alignSelf: "flex-start", display: "inline-flex", alignItems: "center", gap: 7, padding: "7px 12px", borderRadius: 9, background: "rgba(161,44,56,0.10)", border: "1px solid rgba(161,44,56,0.24)", color: T.copperLt, fontFamily: DISPLAY, fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}
           >
             <Icon name="sparkle" size={13} /> Importa {foundryItems.length} element{foundryItems.length === 1 ? "o" : "i"} dal Foundry
           </button>
