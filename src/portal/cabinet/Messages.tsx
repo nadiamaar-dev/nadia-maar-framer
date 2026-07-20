@@ -86,12 +86,12 @@ export default function Messages({ home, userId, reload }: {
                     style={{
                       display: "flex", flexDirection: "column", gap: 5, textAlign: "left",
                       padding: "11px 13px", borderRadius: 11, cursor: "pointer",
-                      background: isSel ? "rgba(161,44,56,0.14)" : "transparent",
-                      border: `1px solid ${isSel ? "rgba(161,44,56,0.32)" : "transparent"}`,
+                      background: isSel ? "rgba(184,50,64,0.14)" : "transparent",
+                      border: `1px solid ${isSel ? "rgba(184,50,64,0.32)" : "transparent"}`,
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 8, width: "100%" }}>
-                      {unread && <span style={{ width: 7, height: 7, borderRadius: 99, background: T.copperLt, flexShrink: 0, boxShadow: "0 0 8px rgba(161,44,56,0.85)" }} />}
+                      {unread && <span style={{ width: 7, height: 7, borderRadius: 99, background: T.copperLt, flexShrink: 0, boxShadow: "0 0 8px rgba(184,50,64,0.85)" }} />}
                       <span style={{
                         flex: 1, minWidth: 0, fontFamily: DISPLAY, fontSize: 12.5, fontWeight: unread ? 800 : 600,
                         color: c.status === "closed" ? T.faint : T.text,

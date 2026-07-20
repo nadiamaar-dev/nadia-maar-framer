@@ -4,7 +4,7 @@ import { useBlueprint } from "../../context/BlueprintContext"
 
 const MONO    = "'JetBrains Mono',monospace"
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
-const ACCENT  = "#A12C38"
+const ACCENT  = "#B83240"
 
 const CATEGORIES: SandboxCategory[] = [
   "All",
@@ -37,15 +37,15 @@ const CSS = `
   background: transparent; border: 1px solid transparent;
   border-radius: 8px; cursor: pointer;
   font-family: ${DISPLAY}; font-size: 13px; font-weight: 500;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.63);
   text-align: left; transition: all 0.18s ease; position: relative;
 }
 .nm-sb-cat:hover {
   background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.10); color: rgba(255,255,255,0.88);
 }
 .nm-sb-cat.active {
-  background: linear-gradient(90deg, rgba(161,44,56,0.22), rgba(161,44,56,0.10));
-  border-color: rgba(161,44,56,0.35); color: #fff;
+  background: linear-gradient(90deg, rgba(184,50,64,0.22), rgba(184,50,64,0.10));
+  border-color: rgba(184,50,64,0.35); color: #fff;
 }
 .nm-sb-cat.active::before {
   content: ''; position: absolute; left: -1px; top: 20%; bottom: 20%;
@@ -59,7 +59,7 @@ const CSS = `
   border-radius: 6px; cursor: pointer;
   font-family: ${MONO}; font-size: 10px; font-weight: 500;
   letter-spacing: 0.10em; text-transform: uppercase;
-  color: rgba(255,255,255,0.45); transition: all 0.18s ease;
+  color: rgba(255,255,255,0.53); transition: all 0.18s ease;
 }
 .nm-sb-type:hover {
   color: rgba(255,255,255,0.80); border-color: rgba(255,255,255,0.12);
@@ -73,20 +73,20 @@ const CSS = `
 .nm-blueprint-badge {
   display: flex; align-items: stretch; overflow: hidden;
   border-radius: 10px; cursor: pointer; text-decoration: none;
-  border: 1px solid rgba(161,44,56,0.50);
-  background: linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.18) 100%);
+  border: 1px solid rgba(184,50,64,0.50);
+  background: linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.18) 100%);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 0 10px rgba(161,44,56,0.14), inset 0 1px 0 rgba(255,255,255,0.10);
+  box-shadow: 0 0 10px rgba(184,50,64,0.14), inset 0 1px 0 rgba(255,255,255,0.10);
   transition: border-color 0.22s, box-shadow 0.22s, background 0.22s;
 }
 .nm-blueprint-badge:hover {
-  border-color: rgba(161,44,56,0.80);
-  background: linear-gradient(90deg, rgba(161,44,56,0.50) 0%, rgba(161,44,56,0.30) 100%);
-  box-shadow: 0 0 20px rgba(161,44,56,0.28), inset 0 1px 0 rgba(255,255,255,0.14);
+  border-color: rgba(184,50,64,0.80);
+  background: linear-gradient(90deg, rgba(184,50,64,0.50) 0%, rgba(184,50,64,0.30) 100%);
+  box-shadow: 0 0 20px rgba(184,50,64,0.28), inset 0 1px 0 rgba(255,255,255,0.14);
 }
 .nm-blueprint-tag {
   padding: 12px 12px;
-  border-right: 1px solid rgba(161,44,56,0.38);
+  border-right: 1px solid rgba(184,50,64,0.38);
   display: flex; align-items: center;
   font-family: ${MONO}; font-size: 9px; letter-spacing: 0.20em;
   color: rgba(255,255,255,0.70); flex-shrink: 0;
@@ -134,11 +134,11 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
       </span>
       <span className="nm-blueprint-body">
         <span style={{ fontFamily: DISPLAY, fontSize: 12, fontWeight: 700, color: "#fff", letterSpacing: "-0.01em" }}>Blueprint</span>
-        <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.12em", color: "rgba(255,255,255,0.55)" }}>
+        <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.12em", color: "rgba(255,255,255,0.63)" }}>
           {items.length === 0 ? "vuoto · aggiungi" : `${items.length} element${items.length > 1 ? "i" : "o"}`}
         </span>
       </span>
-      <span style={{ padding: "0 14px", display: "flex", alignItems: "center", color: "rgba(255,255,255,0.50)", flexShrink: 0 }}>
+      <span style={{ padding: "0 14px", display: "flex", alignItems: "center", color: "rgba(255,255,255,0.58)", flexShrink: 0 }}>
         <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
           <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
@@ -176,8 +176,8 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
                 <button key={c} onClick={() => onCategoryChange(c)} style={{
                   flex: 1, minWidth: 0, padding: "8px 4px",
                   borderRadius: 11,
-                  border: "1px solid " + (active ? "rgba(161,44,56,0.55)" : "transparent"),
-                  background: active ? "rgba(161,44,56,0.60)" : "transparent",
+                  border: "1px solid " + (active ? "rgba(184,50,64,0.55)" : "transparent"),
+                  background: active ? "rgba(184,50,64,0.60)" : "transparent",
                   fontFamily: DISPLAY, fontSize: 11,
                   fontWeight: active ? 700 : 500,
                   color: active ? "#fff" : "rgba(255,255,255,0.52)",
@@ -201,8 +201,8 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
               position: "absolute",
               top: 2, bottom: 2, left: 2,
               width: "calc((100% - 4px) / 3)",
-              background: "rgba(161,44,56,0.61)",
-              border: "1px solid rgba(161,44,56,0.52)",
+              background: "rgba(184,50,64,0.61)",
+              border: "1px solid rgba(184,50,64,0.52)",
               borderRadius: 10,
               transform: `translateX(calc(${typeIndex} * 100%))`,
               transition: "transform 0.22s cubic-bezier(0.16,1,0.3,1)",

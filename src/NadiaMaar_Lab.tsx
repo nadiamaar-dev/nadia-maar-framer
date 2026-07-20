@@ -944,7 +944,7 @@ function Hero() {
                   initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease }}
                   style={{ fontFamily: DISPLAY, fontSize: "clamp(42px, 5.4vw, 82px)", fontWeight: 900, lineHeight: 0.95, letterSpacing: "-0.045em", margin: 0, color: "#F0F3F9", textTransform: "uppercase" as const, filter: "drop-shadow(0 12px 34px rgba(0,0,0,0.6))", textShadow: "0 4px 12px rgba(0, 0, 0, 0.8)" }}
                 >
-                  <span>E-commerce</span><br />
+                  <span style={{ whiteSpace: "nowrap" }}>E&#8209;commerce</span><br />
                   <span>Architect</span><br />
                   <span>{"& "}</span>
                   <span>Digital Strategist</span>

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion"
 const MONO = "'JetBrains Mono','SF Mono',ui-monospace,monospace"
 
 const T = {
-  accentLt: "#A12C38",
+  accentLt: "#B83240",
   muted: "rgba(245,245,247,0.52)",
   text: "#F5F5F7",
 } as const
@@ -152,7 +152,7 @@ export default function FloatingContact() {
             transition={{ type: "spring", stiffness: 520, damping: 28 }}
           >
             {/* accent top line */}
-            <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(120,20,30,0.80), rgba(161,44,56,0.55), transparent)" }} />
+            <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(120,20,30,0.80), rgba(184,50,64,0.55), transparent)" }} />
 
             {/* header */}
             <div style={{ padding: "14px 14px 12px", display: "flex", alignItems: "center", gap: 11 }}>
@@ -175,7 +175,7 @@ export default function FloatingContact() {
               </div>
               <motion.button onClick={() => setOpen(false)}
                 whileHover={{ scale: 1.14, background: "rgba(255,255,255,0.10)" }} whileTap={{ scale: 0.90 }}
-                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 7, width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: T.muted, flexShrink: 0, transition: "background 0.16s" }}>
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.16)", borderRadius: 7, width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: T.muted, flexShrink: 0, transition: "background 0.16s" }}>
                 <XIcon size={11} />
               </motion.button>
             </div>
@@ -216,8 +216,8 @@ export default function FloatingContact() {
           transform: isMobile ? "none" : "translateY(-50%)",
           zIndex: 401,
           borderRadius: 12,
-          border: `1px solid ${open ? "rgba(161,44,56,0.90)" : "rgba(161,44,56,0.65)"}`,
-          background: "linear-gradient(90deg, rgba(120,20,30,0.55) 0%, rgba(161,44,56,0.28) 100%)",
+          border: `1px solid ${open ? "rgba(184,50,64,0.90)" : "rgba(184,50,64,0.65)"}`,
+          background: "linear-gradient(90deg, rgba(120,20,30,0.55) 0%, rgba(184,50,64,0.28) 100%)",
           backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
           boxShadow: open
             ? "0 0 56px rgba(120,20,30,0.38), 0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18)"

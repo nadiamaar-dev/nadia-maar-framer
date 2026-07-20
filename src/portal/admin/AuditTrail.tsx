@@ -57,7 +57,7 @@ export default function AuditTrail({ projectId }: { projectId: string }) {
                 padding: "11px 13px", borderRadius: 11,
                 background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`,
               }}>
-                <span style={{ width: 28, height: 28, borderRadius: 8, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(161,44,56,0.10)", border: "1px solid rgba(161,44,56,0.22)", color: T.copperLt }}>
+                <span style={{ width: 28, height: 28, borderRadius: 8, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(184,50,64,0.10)", border: "1px solid rgba(184,50,64,0.22)", color: T.copperLt }}>
                   <Icon name="check" size={13} />
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>

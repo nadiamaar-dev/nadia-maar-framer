@@ -25,8 +25,8 @@ export const T = {
   muted: "rgba(255,255,255,0.72)",
   faint: "rgba(255,255,255,0.48)",
   ghost: "rgba(255,255,255,0.28)",
-  copper: "#A12C38",
-  copperLt: "#A83040",
+  copper: "#B83240",
+  copperLt: "#BE3648",
   green: "#10B981",
   amber: "#F59E0B",
   red: "#F87171",
@@ -37,7 +37,7 @@ export const T = {
 export const TL = {
   text: "#F1F5F9",
   muted: "rgba(255,255,255,0.72)",
-  faint: "rgba(255,255,255,0.50)",
+  faint: "rgba(255,255,255,0.58)",
   ghost: "rgba(255,255,255,0.34)",
   border: "rgba(255,255,255,0.08)",
   borderHi: "rgba(255,255,255,0.15)",
@@ -46,7 +46,7 @@ export const TL = {
 export type Tone = "copper" | "green" | "amber" | "red" | "silver" | "steel"
 
 export const TONE: Record<Tone, { fg: string; bg: string; bd: string }> = {
-  copper: { fg: "#A12C38", bg: "rgba(161,44,56,0.09)", bd: "rgba(161,44,56,0.20)" },
+  copper: { fg: "#B83240", bg: "rgba(184,50,64,0.09)", bd: "rgba(184,50,64,0.20)" },
   green:  { fg: "#10B981", bg: "rgba(16,185,129,0.15)", bd: "rgba(16,185,129,0.34)" },
   amber:  { fg: "#F59E0B", bg: "rgba(245,158,11,0.14)", bd: "rgba(245,158,11,0.32)" },
   red:    { fg: "#F87171", bg: "rgba(248,113,113,0.14)", bd: "rgba(248,113,113,0.32)" },
@@ -71,11 +71,11 @@ export const GLASS: Record<"panel" | "raised" | "outline" | "accent", React.CSSP
     background: "rgba(255,255,255,0.008)",
     backdropFilter: "blur(6px) brightness(1.03)",
     WebkitBackdropFilter: "blur(6px) brightness(1.03)",
-    boxShadow: "0 4px 24px rgba(0,0,0,0.22)",
+    boxShadow: "0 4px 24px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)",
   },
   raised: {
     background: "rgba(8,14,24,0.94)",
-    border: "1px solid rgba(255,255,255,0.13)",
+    border: "1px solid rgba(255,255,255,0.20)",
     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 20px 60px rgba(0,0,0,0.65)",
     backdropFilter: "blur(24px) brightness(1.01)",
     WebkitBackdropFilter: "blur(24px) brightness(1.01)",
@@ -89,7 +89,7 @@ export const GLASS: Record<"panel" | "raised" | "outline" | "accent", React.CSSP
     background: "rgba(255,255,255,0.008)",
     backdropFilter: "blur(6px) brightness(1.03)",
     WebkitBackdropFilter: "blur(6px) brightness(1.03)",
-    boxShadow: "0 4px 24px rgba(0,0,0,0.22)",
+    boxShadow: "0 4px 24px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)",
   },
 }
 
@@ -138,8 +138,8 @@ export function Glass({
       <div aria-hidden style={{
         position: "absolute", inset: 0, borderRadius: "inherit", padding: 1,
         background: variant === "accent"
-          ? "linear-gradient(to bottom, rgba(161,44,56,0.60) 0%, rgba(255,255,255,0.05) 3px, transparent 50%)"
-          : "linear-gradient(to bottom, rgba(255,255,255,0.45) 0%, transparent 52%)",
+          ? "linear-gradient(to bottom, rgba(184,50,64,0.60) 0%, rgba(255,255,255,0.05) 3px, transparent 50%)"
+          : "linear-gradient(to bottom, rgba(255,255,255,0.53) 0%, transparent 52%)",
         WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
         WebkitMaskComposite: "xor",
         maskComposite: "exclude",
@@ -258,12 +258,12 @@ function btnBase(size: BtnSize): React.CSSProperties {
 
 const BTN_VARIANTS: Record<BtnVariant, React.CSSProperties> = {
   primary: {
-    background: "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)",
-    border: "1px solid rgba(161,44,56,0.80)",
-    color: "#FFFFFF",
+    background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)",
+    border: "1px solid rgba(184,50,64,0.80)",
+    color: "#F0F3F9",
     backdropFilter: "blur(20px)",
     WebkitBackdropFilter: "blur(20px)",
-    boxShadow: "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",
+    boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",
   },
   ghost: {
     background: "rgba(255,255,255,0.08)",
@@ -281,8 +281,8 @@ const BTN_VARIANTS: Record<BtnVariant, React.CSSProperties> = {
     color: "#FCA5A5",
   },
   copper: {
-    background: "rgba(161,44,56,0.60)",
-    border: "1px solid rgba(161,44,56,0.80)",
+    background: "rgba(184,50,64,0.60)",
+    border: "1px solid rgba(184,50,64,0.80)",
     color: "#fff",
   },
 }
@@ -456,7 +456,7 @@ export function Tabs<Id extends string>({ items, value, onChange }: {
   return (
     <div style={{
       display: "inline-flex", gap: 3, padding: 4, borderRadius: 13,
-      background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)",
+      background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.17)",
       maxWidth: "100%", overflowX: "auto",
     }}>
       {items.map(it => {
@@ -544,7 +544,7 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
             {/* DiagnosiCard gradient top border */}
             <div aria-hidden style={{
               position: "absolute", inset: 0, borderRadius: "inherit", padding: 1,
-              background: "linear-gradient(to bottom, rgba(255,255,255,0.38) 0%, transparent 40%)",
+              background: "linear-gradient(to bottom, rgba(255,255,255,0.46) 0%, transparent 40%)",
               WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               WebkitMaskComposite: "xor", maskComposite: "exclude",
               pointerEvents: "none", zIndex: 10,
@@ -560,7 +560,7 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
               <div>
                 {kicker && (
                   <div style={{ display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)" }}>
-                    <span style={{ color: "rgba(161,44,56,0.50)" }}>//</span>
+                    <span style={{ color: "rgba(184,50,64,0.50)" }}>//</span>
                     <span>[ {kicker} ]</span>
                   </div>
                 )}
@@ -573,10 +573,10 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
                 className="portal-btn portal-btn-ghost"
                 style={{
                   width: 34, height: 34, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)", color: TL.muted,
+                  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.17)", color: TL.muted,
                   flexShrink: 0, transition: "background 0.18s, border-color 0.18s, color 0.18s",
                 }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(161,44,56,0.14)"; el.style.borderColor = "rgba(161,44,56,0.45)"; el.style.color = "#fff" }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(184,50,64,0.14)"; el.style.borderColor = "rgba(184,50,64,0.45)"; el.style.color = "#fff" }}
                 onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.10)"; el.style.color = TL.muted }}
               >
                 <Icon name="x" size={14} />

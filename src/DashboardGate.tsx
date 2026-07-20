@@ -55,11 +55,11 @@ export default function DashboardGate() {
         <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
           <div style={{
             width: 36, height: 36, borderRadius: "50%",
-            border: "2px solid rgba(161,44,56,0.25)",
-            borderTopColor: "#A12C38",
+            border: "2px solid rgba(184,50,64,0.25)",
+            borderTopColor: "#B83240",
             animation: "spin 0.8s linear infinite",
           }} />
-          <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", color: "rgba(255,255,255,0.30)", textTransform: "uppercase" }}>
+          <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", color: "rgba(255,255,255,0.37)", textTransform: "uppercase" }}>
             Verifica accesso...
           </span>
           <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>

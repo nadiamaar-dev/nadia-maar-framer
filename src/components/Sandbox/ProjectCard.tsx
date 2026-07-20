@@ -11,7 +11,7 @@ const CSS = `
 .nm-card {
   position: relative; overflow: hidden;
   border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.22);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09);
   display: flex; flex-direction: column;
   cursor: default;
   transition: transform 0.28s ease, box-shadow 0.28s ease;
@@ -54,10 +54,10 @@ const CSS = `
   display: inline-flex; align-items: center;
   padding: 3px 8px;
   background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.20);
   border-radius: 4px;
   font-family: ${MONO}; font-size: 9.5px;
-  color: rgba(255,255,255,0.55); letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.63); letter-spacing: 0.06em;
 }
 
 /* Blueprint CTA button — [01] style */
@@ -68,15 +68,15 @@ const CSS = `
   display: flex; align-items: center; justify-content: center; gap: 6px;
   padding: 10px 14px;
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.22);
   border-radius: 8px; cursor: pointer;
   font-family: ${MONO}; font-size: 9.5px; font-weight: 500;
   letter-spacing: 0.12em; text-transform: uppercase;
-  color: rgba(255,255,255,0.55); text-decoration: none;
+  color: rgba(255,255,255,0.63); text-decoration: none;
   transition: all 0.18s ease; flex-shrink: 0;
 }
 .nm-card-btn-outline:hover {
-  border-color: rgba(255,255,255,0.30);
+  border-color: rgba(255,255,255,0.37);
   color: rgba(255,255,255,0.88);
   background: rgba(255,255,255,0.05);
 }
@@ -86,20 +86,20 @@ const CSS = `
   flex: 1;
   display: flex; align-items: stretch; overflow: hidden;
   border-radius: 9px; cursor: pointer;
-  border: 1px solid rgba(161,44,56,0.50);
-  background: linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.18) 100%);
+  border: 1px solid rgba(184,50,64,0.50);
+  background: linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.18) 100%);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 0 10px rgba(161,44,56,0.15), inset 0 1px 0 rgba(255,255,255,0.10);
+  box-shadow: 0 0 10px rgba(184,50,64,0.15), inset 0 1px 0 rgba(255,255,255,0.10);
   transition: border-color 0.22s, box-shadow 0.22s, background 0.22s;
 }
 .nm-card-btn-bp:hover {
-  border-color: rgba(161,44,56,0.80);
-  background: linear-gradient(90deg, rgba(161,44,56,0.50) 0%, rgba(161,44,56,0.30) 100%);
-  box-shadow: 0 0 20px rgba(161,44,56,0.28), inset 0 1px 0 rgba(255,255,255,0.14);
+  border-color: rgba(184,50,64,0.80);
+  background: linear-gradient(90deg, rgba(184,50,64,0.50) 0%, rgba(184,50,64,0.30) 100%);
+  box-shadow: 0 0 20px rgba(184,50,64,0.28), inset 0 1px 0 rgba(255,255,255,0.14);
 }
 .nm-card-btn-bp-tag {
   padding: 9px 10px;
-  border-right: 1px solid rgba(161,44,56,0.38);
+  border-right: 1px solid rgba(184,50,64,0.38);
   display: flex; align-items: center;
   font-family: ${MONO}; font-size: 8.5px; letter-spacing: 0.20em;
   color: rgba(255,255,255,0.70); flex-shrink: 0;
@@ -113,7 +113,7 @@ const CSS = `
 
 /* In-blueprint glow border */
 .nm-card-inbp {
-  box-shadow: 0 0 0 1px rgba(161,44,56,0.45), 0 8px 32px rgba(161,44,56,0.12) !important;
+  box-shadow: 0 0 0 1px rgba(184,50,64,0.45), 0 8px 32px rgba(184,50,64,0.12) !important;
 }
 
 /* Bottom accent line when in blueprint */
@@ -169,7 +169,7 @@ export default function ProjectCard({ item }: { item: SandboxItem }) {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
           <span style={{
             fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em",
-            textTransform: "uppercase", color: "rgba(255,255,255,0.45)",
+            textTransform: "uppercase", color: "rgba(255,255,255,0.53)",
           }}>
             {item.category}
           </span>
@@ -177,7 +177,7 @@ export default function ProjectCard({ item }: { item: SandboxItem }) {
             fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.12em",
             textTransform: "uppercase", color: "rgba(255,255,255,0.40)",
             padding: "2px 7px",
-            border: "1px solid rgba(255,255,255,0.12)",
+            border: "1px solid rgba(255,255,255,0.20)",
             borderRadius: 4,
           }}>
             {item.type === "full-site" ? "Full Site" : "Component"}

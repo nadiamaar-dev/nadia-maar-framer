@@ -124,7 +124,7 @@ export default function DossierHandoverAdmin({ projectId, clientId }: { projectI
                   display: "flex", alignItems: "center", gap: 12, padding: "13px 15px", borderRadius: 12,
                   background: "rgba(255,255,255,0.05)", border: `1px solid ${T.border}`,
                 }}>
-                  <span style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(161,44,56,0.12)", border: "1px solid rgba(161,44,56,0.26)", color: T.copperLt }}>
+                  <span style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(184,50,64,0.12)", border: "1px solid rgba(184,50,64,0.26)", color: T.copperLt }}>
                     <Icon name={c.kind === "access" ? "lock" : "external"} size={15} />
                   </span>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -157,7 +157,7 @@ export default function DossierHandoverAdmin({ projectId, clientId }: { projectI
           <div onClick={e => e.stopPropagation()} style={{
             width: "100%", maxWidth: 520, maxHeight: "88vh", overflowY: "auto",
             borderRadius: 22, padding: 24,
-            background: "rgba(16,30,44,0.98)", border: "1px solid rgba(255,255,255,0.12)",
+            background: "rgba(16,30,44,0.98)", border: "1px solid rgba(255,255,255,0.20)",
             boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 40px 100px rgba(0,0,0,0.72)",
           }}>
             <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>Consegna</p>
@@ -194,7 +194,7 @@ export default function DossierHandoverAdmin({ projectId, clientId }: { projectI
               </Field>
               {!draft.id && (
                 <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 13, color: T.muted }}>
-                  <input type="checkbox" checked={draft.release} onChange={e => setDraft({ ...draft, release: e.target.checked })} style={{ accentColor: "#A12C38", width: 16, height: 16 }} />
+                  <input type="checkbox" checked={draft.release} onChange={e => setDraft({ ...draft, release: e.target.checked })} style={{ accentColor: "#B83240", width: 16, height: 16 }} />
                   Rilascia subito al cliente
                 </label>
               )}

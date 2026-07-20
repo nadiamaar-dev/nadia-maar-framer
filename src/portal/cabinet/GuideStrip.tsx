@@ -43,7 +43,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
     <div style={{
       borderRadius: 16,
       background: "rgba(255,255,255,0.008)",
-      border: "1px solid rgba(255,255,255,0.09)",
+      border: "1px solid rgba(255,255,255,0.16)",
       overflow: "hidden",
     }}>
 
@@ -59,13 +59,13 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
           textTransform: "uppercase" as const,
           color: "rgba(255,255,255,0.40)",
         }}>
-          <span style={{ color: "rgba(161,44,56,0.60)" }}>//</span>
+          <span style={{ color: "rgba(184,50,64,0.60)" }}>//</span>
           <span>Come procede il tuo progetto</span>
         </div>
         <span style={{
           fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em",
           fontWeight: 600,
-          color: cur === STEPS.length - 1 ? "#10B981" : "rgba(161,44,56,0.70)",
+          color: cur === STEPS.length - 1 ? "#10B981" : "rgba(184,50,64,0.70)",
         }}>
           {cur + 1} / {STEPS.length}
         </span>
@@ -92,14 +92,14 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
             const nodeBg  = done
               ? "#10B981"
               : active
-              ? "rgba(161,44,56,0.18)"
+              ? "rgba(184,50,64,0.18)"
               : "rgba(255,255,255,0.04)"
             const nodeBd  = done
               ? "#10B981"
               : active
-              ? "rgba(161,44,56,0.70)"
+              ? "rgba(184,50,64,0.70)"
               : "rgba(255,255,255,0.12)"
-            const nodeCol = done ? "#fff" : active ? "#A83040" : "rgba(255,255,255,0.32)"
+            const nodeCol = done ? "#fff" : active ? "#BE3648" : "rgba(255,255,255,0.32)"
 
             /* line colour */
             const lineCol = done
@@ -123,7 +123,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
                     background: nodeBg,
                     border: `2px solid ${nodeBd}`,
                     color: nodeCol,
-                    boxShadow: active ? "0 0 0 4px rgba(161,44,56,0.10)" : "none",
+                    boxShadow: active ? "0 0 0 4px rgba(184,50,64,0.10)" : "none",
                     transition: "all 0.3s ease",
                   }}>
                     {done
@@ -165,9 +165,9 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
                 <div style={{
                   width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  background: done ? "#10B981" : active ? "rgba(161,44,56,0.18)" : "rgba(255,255,255,0.04)",
-                  border: `2px solid ${done ? "#10B981" : active ? "rgba(161,44,56,0.70)" : "rgba(255,255,255,0.10)"}`,
-                  color: done ? "#fff" : active ? "#A83040" : "rgba(255,255,255,0.32)",
+                  background: done ? "#10B981" : active ? "rgba(184,50,64,0.18)" : "rgba(255,255,255,0.04)",
+                  border: `2px solid ${done ? "#10B981" : active ? "rgba(184,50,64,0.70)" : "rgba(255,255,255,0.10)"}`,
+                  color: done ? "#fff" : active ? "#BE3648" : "rgba(255,255,255,0.32)",
                 }}>
                   {done
                     ? <Check />
@@ -197,8 +197,8 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
         <div style={{
           width: 36, height: 36, borderRadius: 10, flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
-          border: "1px solid rgba(161,44,56,0.25)",
-          color: "rgba(161,44,56,0.70)",
+          border: "1px solid rgba(184,50,64,0.25)",
+          color: "rgba(184,50,64,0.70)",
         }}>
           <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700 }}>
             {String(cur + 1).padStart(2, "0")}
@@ -208,7 +208,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
           <p style={{
             fontFamily: MONO, fontSize: 10, letterSpacing: "0.12em",
             textTransform: "uppercase" as const,
-            color: "rgba(161,44,56,0.60)", margin: "0 0 5px",
+            color: "rgba(184,50,64,0.60)", margin: "0 0 5px",
           }}>
             Passo {cur + 1} · {STEPS[cur].label}
           </p>

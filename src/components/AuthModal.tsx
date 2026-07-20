@@ -4,7 +4,7 @@ import { useBlueprint } from "../context/BlueprintContext"
 
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const MONO    = "'JetBrains Mono',monospace"
-const ACCENT  = "#A12C38"
+const ACCENT  = "#B83240"
 
 const STYLE_ID = "nm-auth-modal-styles"
 const CSS = `
@@ -19,7 +19,7 @@ const CSS = `
   background: rgba(13,18,30,0.94);
   backdrop-filter: blur(72px) brightness(0.92) saturate(1.10);
   -webkit-backdrop-filter: blur(72px) brightness(0.92) saturate(1.10);
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.20);
   border-radius: 20px;
   padding: 40px;
   overflow: hidden;
@@ -27,7 +27,7 @@ const CSS = `
 }
 .nm-auth-card::before {
   content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, #A12C38 28%, #A83040 72%, transparent);
+  background: linear-gradient(90deg, transparent, #B83240 28%, #BE3648 72%, transparent);
 }
 .nm-auth-input {
   width: 100%; padding: 13px 16px;
@@ -42,7 +42,7 @@ const CSS = `
 }
 .nm-auth-input::placeholder { color: rgba(255,255,255,0.32); }
 .nm-auth-input:focus {
-  border-color: rgba(161,44,56,0.60);
+  border-color: rgba(184,50,64,0.60);
   background: rgba(255,255,255,0.07);
 }
 .nm-auth-tab {
@@ -50,12 +50,12 @@ const CSS = `
   background: transparent; border: none;
   border-radius: 8px; cursor: pointer;
   font-family: ${DISPLAY}; font-size: 13px; font-weight: 600;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.53);
   transition: all 0.18s ease;
 }
 .nm-auth-tab.active {
-  background: linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%);
-  border: 1px solid rgba(161,44,56,0.80);
+  background: linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%);
+  border: 1px solid rgba(184,50,64,0.80);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   color: #fff;
@@ -63,11 +63,11 @@ const CSS = `
 .nm-auth-tab:not(.active):hover { color: rgba(255,255,255,0.80); }
 .nm-auth-submit {
   width: 100%; padding: 15px;
-  background: linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%);
-  border: 1px solid rgba(161,44,56,0.80);
+  background: linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%);
+  border: 1px solid rgba(184,50,64,0.80);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12);
+  box-shadow: 0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12);
   border-radius: 10px; cursor: pointer;
   font-family: ${MONO}; font-size: 11px; font-weight: 600;
   color: #fff; letter-spacing: 0.14em; text-transform: uppercase;
@@ -75,8 +75,8 @@ const CSS = `
   position: relative; overflow: hidden;
 }
 .nm-auth-submit:hover:not(:disabled) {
-  background: linear-gradient(90deg, rgba(161,44,56,0.50) 0%, rgba(161,44,56,0.34) 100%);
-  box-shadow: 0 0 24px rgba(161,44,56,0.35), inset 0 1px 0 rgba(255,255,255,0.18);
+  background: linear-gradient(90deg, rgba(184,50,64,0.50) 0%, rgba(184,50,64,0.34) 100%);
+  box-shadow: 0 0 24px rgba(184,50,64,0.35), inset 0 1px 0 rgba(255,255,255,0.18);
   transform: translateY(-1px);
 }
 .nm-auth-submit:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
@@ -84,9 +84,9 @@ const CSS = `
   position: absolute; top: 16px; right: 16px;
   width: 32px; height: 32px; border-radius: 8px;
   background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.20);
   cursor: pointer; display: flex; align-items: center; justify-content: center;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.63);
   transition: all 0.16s;
 }
 .nm-auth-close:hover {
@@ -185,8 +185,8 @@ export default function AuthModal() {
         <div style={{ marginBottom: 28, textAlign: "center" }}>
           <div style={{
             width: 48, height: 48, borderRadius: 14,
-            background: "rgba(161,44,56,0.16)",
-            border: "1px solid rgba(161,44,56,0.35)",
+            background: "rgba(184,50,64,0.16)",
+            border: "1px solid rgba(184,50,64,0.35)",
             display: "flex", alignItems: "center", justifyContent: "center",
             margin: "0 auto 18px",
           }}>
@@ -195,7 +195,7 @@ export default function AuthModal() {
                 <linearGradient id="nm-modal-grad" x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
                   <stop offset="0%"   stopColor="rgba(255,255,255,0.90)" />
                   <stop offset="55%"  stopColor="rgba(255,255,255,0.90)" />
-                  <stop offset="100%" stopColor="#A12C38" />
+                  <stop offset="100%" stopColor="#B83240" />
                 </linearGradient>
               </defs>
               <path d="M 2,22 L 2,2 L 13,22 L 13,2 L 19.5,12 L 26,2 L 26,22"
@@ -210,7 +210,7 @@ export default function AuthModal() {
           </h2>
           <p style={{
             fontFamily: DISPLAY, fontSize: 13.5, lineHeight: 1.6,
-            color: "rgba(255,255,255,0.55)", margin: 0,
+            color: "rgba(255,255,255,0.63)", margin: 0,
           }}>
             {mode === "login"
               ? "Accedi per salvare il tuo Blueprint e gestire i progetti."
@@ -223,7 +223,7 @@ export default function AuthModal() {
         <div style={{
           display: "flex", gap: 6, padding: 4,
           background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.10)",
+          border: "1px solid rgba(255,255,255,0.17)",
           borderRadius: 12, marginBottom: 24,
         }}>
           <button className={`nm-auth-tab${mode === "login" ? " active" : ""}`} onClick={() => switchMode("login")}>
@@ -251,7 +251,7 @@ export default function AuthModal() {
             <div style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>
               {mode === "register" || magicSent ? "Controlla la tua email!" : "Accesso riuscito!"}
             </div>
-            <div style={{ fontFamily: DISPLAY, fontSize: 13, color: "rgba(255,255,255,0.50)" }}>
+            <div style={{ fontFamily: DISPLAY, fontSize: 13, color: "rgba(255,255,255,0.58)" }}>
               {magicSent
                 ? "Ti abbiamo inviato un link per accedere senza password."
                 : mode === "register"
@@ -295,8 +295,8 @@ export default function AuthModal() {
             {error && (
               <div style={{
                 padding: "10px 14px",
-                background: "rgba(161,44,56,0.12)",
-                border: "1px solid rgba(161,44,56,0.35)",
+                background: "rgba(184,50,64,0.12)",
+                border: "1px solid rgba(184,50,64,0.35)",
                 borderRadius: 8,
                 fontFamily: DISPLAY, fontSize: 12.5,
                 color: "#E07060",
@@ -326,7 +326,7 @@ export default function AuthModal() {
                   style={{
                     width: "100%", padding: 13,
                     background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.16)",
+                    border: "1px solid rgba(255,255,255,0.24)",
                     borderRadius: 10, cursor: busy === "loading" ? "not-allowed" : "pointer",
                     fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 600, color: "rgba(255,255,255,0.82)",
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 8,

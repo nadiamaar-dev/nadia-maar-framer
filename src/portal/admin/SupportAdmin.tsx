@@ -110,7 +110,7 @@ export default function SupportAdmin({ home, reload }: {
                   {t.adminNote && (
                     <div style={{
                       marginTop: 10, padding: "10px 13px", borderRadius: 10,
-                      background: "rgba(161,44,56,0.10)", borderLeft: `2px solid ${T.copper}`,
+                      background: "rgba(184,50,64,0.10)", borderLeft: `2px solid ${T.copper}`,
                     }}>
                       <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.16em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>
                         <Icon name="sparkle" size={10} /> La tua risposta

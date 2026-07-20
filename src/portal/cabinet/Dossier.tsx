@@ -35,7 +35,7 @@ function ProjectSwitcher({ projects, currentId, onSwitch, onNew }: {
           aria-label="Seleziona progetto"
           style={{
             display: "flex", gap: 4, padding: 4, borderRadius: 14, maxWidth: "100%",
-            overflowX: "auto", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)",
+            overflowX: "auto", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.17)",
           }}
         >
           {projects.map(p => {
@@ -282,7 +282,7 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
                       <span style={{ position: "relative", display: "inline-flex" }}>
                         <Btn size="sm" variant="ghost" icon="chat" onClick={() => openStageChat(s)}>Discussione</Btn>
                         {stageUnread(s) && (
-                          <span style={{ position: "absolute", top: -2, right: -2, width: 7, height: 7, borderRadius: 99, background: T.copperLt, boxShadow: "0 0 8px rgba(161,44,56,0.85)" }} />
+                          <span style={{ position: "absolute", top: -2, right: -2, width: 7, height: 7, borderRadius: 99, background: T.copperLt, boxShadow: "0 0 8px rgba(184,50,64,0.85)" }} />
                         )}
                       </span>
                     )

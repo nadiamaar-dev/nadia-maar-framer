@@ -13,11 +13,11 @@ export interface ShellNavItem {
    Menu panel   → rgba(18,20,24,0.92) + blur(32px) saturate(0.15)
    Header bar   → rgba(18,20,24,0.88) + blur(32px) saturate(0.15)
    Border       → rgba(255,255,255,0.08)
-   Accent line  → 2px crimson gradient + 0 0 18px rgba(161,44,56,0.30) glow
-   Eyebrow      → // in rgba(161,44,56,0.70) + label in rgba(255,255,255,0.28)
+   Accent line  → 2px crimson gradient + 0 0 18px rgba(184,50,64,0.30) glow
+   Eyebrow      → // in rgba(184,50,64,0.70) + label in rgba(255,255,255,0.28)
    MAAR ghost   → vertical-rl, rgba(255,255,255,0.025), blur(0.8px)
-   Glow BL      → rgba(161,44,56,0.12) radial, blur(70px)
-   Glow TR      → rgba(161,44,56,0.06) radial, blur(50px)
+   Glow BL      → rgba(184,50,64,0.12) radial, blur(70px)
+   Glow TR      → rgba(184,50,64,0.06) radial, blur(50px)
 ───────────────────────────────────────────────────────────────────────── */
 const GLASS_BG     = "rgba(6,12,24,0.90)"
 const GLASS_FILTER = "blur(24px) saturate(1.0)"
@@ -29,8 +29,8 @@ function AccentLine() {
   return (
     <div aria-hidden style={{
       height: 2, flexShrink: 0,
-      background: "linear-gradient(90deg, transparent, rgba(161,44,56,0.60) 35%, rgba(161,44,56,0.60) 65%, transparent)",
-      boxShadow: "0 0 10px rgba(161,44,56,0.14)",
+      background: "linear-gradient(90deg, transparent, rgba(184,50,64,0.60) 35%, rgba(184,50,64,0.60) 65%, transparent)",
+      boxShadow: "0 0 10px rgba(184,50,64,0.14)",
     }} />
   )
 }
@@ -108,7 +108,7 @@ export default function Shell({
           fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em",
           textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)",
         }}>
-          <span style={{ color: "rgba(161,44,56,0.50)" }}>//</span>
+          <span style={{ color: "rgba(184,50,64,0.50)" }}>//</span>
           <span>[ Area Clienti ]</span>
         </div>
       </div>
@@ -122,7 +122,7 @@ export default function Shell({
           title={onEditProfile ? "Modifica il tuo profilo" : undefined}
           style={{
             display: "flex", alignItems: "center", gap: 11, width: "100%", textAlign: "left",
-            background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.22)",
+            background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.32)",
             borderRadius: 11, padding: "9px 11px",
             cursor: onEditProfile ? "pointer" : "default",
             transition: "background 0.18s, border-color 0.18s",
@@ -148,7 +148,7 @@ export default function Shell({
               {roleLabel}
             </p>
             <p style={{
-              fontFamily: MONO, fontSize: 9.5, color: "rgba(255,255,255,0.38)",
+              fontFamily: MONO, fontSize: 9.5, color: "rgba(255,255,255,0.46)",
               margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>
               {email ?? "—"}
@@ -171,9 +171,9 @@ export default function Shell({
               style={{
                 display: "flex", alignItems: "center", gap: 11,
                 padding: "10px 12px", borderRadius: 10, textAlign: "left",
-                background: isActive ? "rgba(161,44,56,0.07)" : "transparent",
-                border: `1px solid ${isActive ? "rgba(161,44,56,0.16)" : "transparent"}`,
-                borderLeft: isActive ? "3px solid rgba(161,44,56,0.70)" : "3px solid transparent",
+                background: isActive ? "rgba(184,50,64,0.07)" : "transparent",
+                border: `1px solid ${isActive ? "rgba(184,50,64,0.16)" : "transparent"}`,
+                borderLeft: isActive ? "3px solid rgba(184,50,64,0.70)" : "3px solid transparent",
                 boxShadow: "none",
                 color: isActive ? "rgba(255,255,255,0.95)" : TL.muted,
                 cursor: "pointer", transition: "all 0.16s ease",
@@ -182,7 +182,7 @@ export default function Shell({
               {/* [01] index — matches Header menu [01] style */}
               <span style={{
                 fontFamily: MONO, fontSize: 9, letterSpacing: "0.08em", flexShrink: 0, width: 22,
-                color: isActive ? "rgba(161,44,56,0.55)" : "rgba(255,255,255,0.20)",
+                color: isActive ? "rgba(184,50,64,0.55)" : "rgba(255,255,255,0.20)",
               }}>
                 [{num}]
               </span>
@@ -194,7 +194,7 @@ export default function Shell({
                 <span style={{
                   minWidth: 18, height: 18, padding: "0 5px", borderRadius: 99,
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(161,44,56,0.55)",
+                  background: "rgba(184,50,64,0.55)",
                   color: "#FFF", fontFamily: MONO, fontSize: 9.5, fontWeight: 700,
                 }}>
                   {item.badge}
@@ -220,9 +220,9 @@ export default function Shell({
             style={{
               flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
               padding: "9px 10px", borderRadius: 9, textDecoration: "none",
-              border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.04)",
               fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.10em",
-              textTransform: "uppercase" as const, color: "rgba(255,255,255,0.38)",
+              textTransform: "uppercase" as const, color: "rgba(255,255,255,0.46)",
               transition: "all 0.18s",
             }}
             onMouseEnter={e => {
@@ -232,7 +232,7 @@ export default function Shell({
             }}
             onMouseLeave={e => {
               const el = e.currentTarget as HTMLElement
-              el.style.color = "rgba(255,255,255,0.38)"; el.style.borderColor = "rgba(255,255,255,0.08)"
+              el.style.color = "rgba(255,255,255,0.46)"; el.style.borderColor = "rgba(255,255,255,0.08)"
               el.style.background = "rgba(255,255,255,0.04)"
             }}
           >
@@ -245,19 +245,19 @@ export default function Shell({
           style={{
             flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
             padding: "9px 10px", borderRadius: 9,
-            border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.04)",
             fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.10em",
-            textTransform: "uppercase" as const, color: "rgba(255,255,255,0.38)",
+            textTransform: "uppercase" as const, color: "rgba(255,255,255,0.46)",
             cursor: "pointer", transition: "all 0.18s",
           }}
           onMouseEnter={e => {
             const el = e.currentTarget as HTMLElement
-            el.style.color = "#fff"; el.style.borderColor = "rgba(161,44,56,0.45)"
-            el.style.background = "rgba(161,44,56,0.10)"
+            el.style.color = "#fff"; el.style.borderColor = "rgba(184,50,64,0.45)"
+            el.style.background = "rgba(184,50,64,0.10)"
           }}
           onMouseLeave={e => {
             const el = e.currentTarget as HTMLElement
-            el.style.color = "rgba(255,255,255,0.38)"; el.style.borderColor = "rgba(255,255,255,0.08)"
+            el.style.color = "rgba(255,255,255,0.46)"; el.style.borderColor = "rgba(255,255,255,0.08)"
             el.style.background = "rgba(255,255,255,0.04)"
           }}
         >
@@ -293,13 +293,13 @@ export default function Shell({
         {/* Ambient glow bottom-left */}
         <div aria-hidden style={{
           position: "absolute", bottom: "20%", left: -55, width: 220, height: 220, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(161,44,56,0.06) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(184,50,64,0.06) 0%, transparent 70%)",
           filter: "blur(65px)", pointerEvents: "none",
         }} />
         {/* Ambient glow top-right */}
         <div aria-hidden style={{
           position: "absolute", top: "8%", right: -10, width: 150, height: 150, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(161,44,56,0.03) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(184,50,64,0.03) 0%, transparent 70%)",
           filter: "blur(45px)", pointerEvents: "none",
         }} />
         <div style={{ position: "relative", zIndex: 1, flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minHeight: 0 }}>
@@ -329,7 +329,7 @@ export default function Shell({
             <MaarGhost direction="horizontal" />
             <div aria-hidden style={{
               position: "absolute", bottom: "18%", left: -55, width: 200, height: 200, borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(161,44,56,0.06) 0%, transparent 70%)",
+              background: "radial-gradient(circle, rgba(184,50,64,0.06) 0%, transparent 70%)",
               filter: "blur(60px)", pointerEvents: "none",
             }} />
             <div style={{ position: "relative", zIndex: 1, flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minHeight: 0 }}>
@@ -358,14 +358,14 @@ export default function Shell({
               style={{
                 width: 36, height: 36, borderRadius: 9, flexShrink: 0,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                border: "1px solid rgba(255,255,255,0.10)", background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.17)", background: "rgba(255,255,255,0.04)",
                 color: TL.muted, cursor: "pointer",
                 transition: "background 0.18s, border-color 0.18s, color 0.18s",
               }}
               onMouseEnter={e => {
                 const el = e.currentTarget as HTMLElement
-                el.style.background = "rgba(161,44,56,0.14)"
-                el.style.borderColor = "rgba(161,44,56,0.45)"
+                el.style.background = "rgba(184,50,64,0.14)"
+                el.style.borderColor = "rgba(184,50,64,0.45)"
                 el.style.color = "#fff"
               }}
               onMouseLeave={e => {
@@ -385,7 +385,7 @@ export default function Shell({
                 fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em",
                 textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)",
               }}>
-                <span style={{ color: "rgba(161,44,56,0.50)" }}>//</span>
+                <span style={{ color: "rgba(184,50,64,0.50)" }}>//</span>
                 <span>[ {current?.label ?? ""} ]</span>
               </div>
               <h1 style={{

@@ -62,7 +62,7 @@ const CSS = `
 }
 .nm-foundry-count::before {
   content: ''; display: inline-block; width: 4px; height: 4px;
-  border-radius: 50%; background: rgba(161,44,56,0.70);
+  border-radius: 50%; background: rgba(184,50,64,0.70);
 }
 @media (max-width: 767px) {
   .nm-foundry-count { margin-bottom: 14px; }
@@ -121,10 +121,10 @@ export default function DigitalFoundry() {
             <div style={{
               display: "inline-flex", alignItems: "center", gap: 8,
               fontFamily: MONO, fontSize: 11, letterSpacing: ".20em",
-              textTransform: "uppercase", color: "rgba(255,255,255,0.55)",
+              textTransform: "uppercase", color: "rgba(255,255,255,0.63)",
               marginBottom: 22,
             }}>
-              <span style={{ color: "#A83040" }}>//</span>
+              <span style={{ color: "#BE3648" }}>//</span>
               <span>[ Digital Foundry · Sandbox ]</span>
             </div>
 
@@ -152,7 +152,7 @@ export default function DigitalFoundry() {
             {/* thin accent divider */}
             <div style={{
               marginTop: 40, height: 1,
-              background: "linear-gradient(90deg, rgba(161,44,56,0.60), rgba(161,44,56,0.15) 50%, transparent)",
+              background: "linear-gradient(90deg, rgba(184,50,64,0.60), rgba(184,50,64,0.15) 50%, transparent)",
               maxWidth: 500,
             }} />
           </div>

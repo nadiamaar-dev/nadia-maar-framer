@@ -129,7 +129,7 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
         <div style={{
           display: "flex", gap: 0,
           padding: "12px 16px", borderRadius: 12,
-          background: "rgba(161,44,56,0.08)", border: "1px solid rgba(161,44,56,0.20)",
+          background: "rgba(184,50,64,0.08)", border: "1px solid rgba(184,50,64,0.20)",
         }}>
           {[
             { icon: "send" as const, label: "Invii il brief" },
@@ -141,7 +141,7 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
                 <span style={{
                   width: 30, height: 30, borderRadius: 9,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(161,44,56,0.16)", border: "1px solid rgba(161,44,56,0.28)",
+                  background: "rgba(184,50,64,0.16)", border: "1px solid rgba(184,50,64,0.28)",
                   color: T.copperLt,
                 }}>
                   <Icon name={step.icon} size={13} />
@@ -151,7 +151,7 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
                 </span>
               </div>
               {i < 2 && (
-                <div style={{ display: "flex", alignItems: "center", paddingBottom: 20, color: "rgba(161,44,56,0.35)", fontSize: 14, flexShrink: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", paddingBottom: 20, color: "rgba(184,50,64,0.35)", fontSize: 14, flexShrink: 0 }}>
                   →
                 </div>
               )}
@@ -192,7 +192,7 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
         </Field>
 
         {/* Blueprint — reference sites/layouts */}
-        <div style={{ padding: "13px 15px", borderRadius: 12, background: "rgba(161,44,56,0.06)", border: "1px solid rgba(161,44,56,0.20)", display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ padding: "13px 15px", borderRadius: 12, background: "rgba(184,50,64,0.06)", border: "1px solid rgba(184,50,64,0.20)", display: "flex", flexDirection: "column", gap: 10 }}>
           <p style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>
             <Icon name="sparkle" size={12} /> Blueprint · siti e layout di riferimento
           </p>
@@ -215,7 +215,7 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
           )}
           {items.length > 0 && (
             <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 12.5, color: T.muted }}>
-              <input type="checkbox" checked={includeFoundry} onChange={e => setIncludeFoundry(e.target.checked)} style={{ accentColor: "#A12C38", width: 15, height: 15 }} />
+              <input type="checkbox" checked={includeFoundry} onChange={e => setIncludeFoundry(e.target.checked)} style={{ accentColor: "#B83240", width: 15, height: 15 }} />
               Includi i miei {items.length} element{items.length === 1 ? "o" : "i"} dal Foundry
               <Badge tone="copper">Blueprint</Badge>
             </label>
@@ -230,7 +230,7 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
 
         <div style={{
           padding: "10px 14px", borderRadius: 11,
-          background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)",
+          background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.16)",
         }}>
           <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.faint, margin: 0 }}>
             Il progetto entra <span style={{ color: T.text, fontWeight: 600 }}>in valutazione</span>: definiamo insieme le fasi e ricevi una notifica appena è attivo.

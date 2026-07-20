@@ -68,8 +68,8 @@ export default function MessagesAdmin({ home, adminId, reload }: {
                     style={{
                       display: "flex", flexDirection: "column", gap: 5, textAlign: "left",
                       padding: "11px 13px", borderRadius: 11, cursor: "pointer",
-                      background: sel ? "rgba(161,44,56,0.14)" : "transparent",
-                      border: `1px solid ${sel ? "rgba(161,44,56,0.32)" : "transparent"}`,
+                      background: sel ? "rgba(184,50,64,0.14)" : "transparent",
+                      border: `1px solid ${sel ? "rgba(184,50,64,0.32)" : "transparent"}`,
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 8, width: "100%" }}>

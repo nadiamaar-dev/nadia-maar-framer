@@ -177,7 +177,7 @@ export default function CabinetApp() {
                 <span style={{
                   width: 36, height: 36, borderRadius: 10,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(161,44,56,0.08)", border: "1px solid rgba(161,44,56,0.20)", color: T.copper,
+                  background: "rgba(184,50,64,0.08)", border: "1px solid rgba(184,50,64,0.20)", color: T.copper,
                 }}>
                   <Icon name={item.icon} size={16} />
                 </span>
@@ -231,7 +231,7 @@ export default function CabinetApp() {
           style={{
             display: "inline-flex", alignItems: "center", gap: 7,
             padding: "7px 12px", borderRadius: 99, cursor: "pointer",
-            background: "rgba(161,44,56,0.06)", border: "1px solid rgba(161,44,56,0.16)",
+            background: "rgba(184,50,64,0.06)", border: "1px solid rgba(184,50,64,0.16)",
             fontFamily: MONO, fontSize: 10, fontWeight: 700, color: T.copperLt,
           }}
         >
