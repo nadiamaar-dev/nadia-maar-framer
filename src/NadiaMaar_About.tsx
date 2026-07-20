@@ -137,7 +137,7 @@ const gradText = (deg = 180): React.CSSProperties => ({
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1]
 const MONO = "'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace"
 const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
-const BODY: React.CSSProperties = { fontFamily: "'Geist', system-ui, sans-serif", fontSize: "clamp(15px, 1.4vw, 17px)", fontWeight: 400, lineHeight: 1.85, letterSpacing: "0.01em" }
+const BODY: React.CSSProperties = { fontFamily: "'Geist', system-ui, sans-serif", fontSize: "clamp(16px, 1.4vw, 17px)", fontWeight: 400, lineHeight: 1.85, letterSpacing: "0.01em" }
 const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&/*+<>{}[]"
 
 const G = {

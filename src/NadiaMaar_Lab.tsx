@@ -280,8 +280,8 @@ const GLOBAL_CSS = `
     .hp-hero-stat-label { font-size: 10px !important; }
     .hp-method-row-num { font-size: 26px !important; width: 40px !important; }
     .hp-method-row-accent { width: 16px !important; }
-    .hp-method-row-title { font-size: 13px !important; }
-    .hp-method-body { font-size: 12px !important; line-height: 1.6 !important; }
+    .hp-method-row-title { font-size: 14px !important; }
+    .hp-method-body { font-size: 13px !important; line-height: 1.6 !important; }
     .hp-method-expanded-inner { padding-left: 0 !important; grid-template-columns: 1fr !important; gap: 14px !important; padding-bottom: 16px !important; }
     .hp-method-visual { min-height: unset !important; max-height: unset !important; aspect-ratio: 16/9 !important; }
     .hp-skillcards { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
@@ -291,8 +291,8 @@ const GLOBAL_CSS = `
     .hp-sol-card-head { flex-direction: column !important; align-items: center !important; margin-bottom: 0 !important; margin-right: 14px !important; gap: 8px !important; flex-shrink: 0 !important; width: 42px !important; }
     .hp-sol-card-num { display: none !important; }
     .hp-sol-card-body { flex: 1 !important; }
-    .hp-sol-card-title { font-size: 14px !important; margin-bottom: 8px !important; }
-    .hp-sol-card-desc { font-size: 12px !important; margin-bottom: 12px !important; }
+    .hp-sol-card-title { font-size: 15px !important; margin-bottom: 8px !important; }
+    .hp-sol-card-desc { font-size: 13px !important; margin-bottom: 12px !important; }
     .hp-diagnosi-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
     .hp-diagnosi-col-headers { display: none !important; }
     .hp-diagnosi-row { grid-template-columns: 1fr !important; }
@@ -307,7 +307,7 @@ const GLOBAL_CSS = `
     .hp-tc-icon { width: 24px !important; height: 24px !important; border-radius: 6px !important; }
     .hp-tc-icon svg { width: 12px !important; height: 12px !important; }
     .hp-tc-title { font-size: 11px !important; margin-bottom: 2px !important; }
-    .hp-tc-body { font-size: 10.5px !important; margin-bottom: 8px !important; line-height: 1.5 !important; }
+    .hp-tc-body { font-size: 12px !important; margin-bottom: 8px !important; line-height: 1.5 !important; }
     .hp-tc-score > div:first-child { margin-bottom: 3px !important; }
     .hp-grid-3 { gap: 7px !important; }
     .hp-purche-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
@@ -329,7 +329,7 @@ const GLOBAL_CSS = `
     .hp-risultati-label { font-size: 11px !important; }
     .hp-risultati-sep { display: none !important; }
     .hp-skillcard { padding: 14px !important; aspect-ratio: auto !important; }
-    .hp-skillcard h3 { font-size: 12px !important; }
+    .hp-skillcard h3 { font-size: 13px !important; }
     .hp-skillcard-icon { width: 30px !important; height: 30px !important; border-radius: 8px !important; }
   }
 
@@ -865,7 +865,7 @@ function Hero() {
           .hp-hl-dim{ display:none !important; }
           .hp-hero-h1{ font-size:44px !important; line-height:0.93 !important; letter-spacing:-0.04em !important; }
           /* description — full width, readable size */
-          .hp-hero-desc{ margin-top:14px !important; font-size:14px !important; line-height:1.7 !important; max-width:100% !important; }
+          .hp-hero-desc{ margin-top:14px !important; font-size:15px !important; line-height:1.7 !important; max-width:100% !important; }
           /* grid: 1 column, hide empty meta panel */
           .hp-hero-ed-grid{ grid-template-columns:1fr !important; gap:0 !important; }
           .hp-hero-meta{ display:none !important; }
@@ -970,7 +970,7 @@ function Hero() {
 
             <motion.p className="hp-hero-desc"
               initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, delay: 0.22, ease }}
-              style={{ fontSize: "clamp(15px, 1.4vw, 17px)", color: "rgba(255,255,255,0.82)", fontWeight: 400, fontFamily: "'Geist', system-ui, sans-serif", maxWidth: 500, lineHeight: 1.85, margin: "28px 0 0", letterSpacing: "0.01em", WebkitFontSmoothing: "antialiased" } as React.CSSProperties}
+              style={{ fontSize: "clamp(16px, 1.4vw, 17px)", color: "rgba(255,255,255,0.82)", fontWeight: 400, fontFamily: "'Geist', system-ui, sans-serif", maxWidth: 500, lineHeight: 1.85, margin: "28px 0 0", letterSpacing: "0.01em", WebkitFontSmoothing: "antialiased" } as React.CSSProperties}
             >
               E-commerce, Web Apps, AI e Performance Marketing. Un'unica mente strategica e codice ad alte prestazioni per il pieno controllo su advertising, promozione e scalabilità del tuo business.
             </motion.p>
@@ -1217,7 +1217,7 @@ function MetodoCard({ n, title, body, icon, i }: { n: string; title: string; bod
         <div style={{ width: 28, height: 1.5, background: `linear-gradient(90deg, ${T.accent}, transparent)`, marginBottom: 14, borderRadius: 2, opacity: hov ? 1 : 0.55, transition: "opacity 0.28s" }} />
 
         {/* Body */}
-        <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.72, color: T.muted, margin: 0, flex: 1 }}>{body}</p>
+        <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.72, color: T.muted, margin: 0, flex: 1 }}>{body}</p>
       </div>
     </motion.div>
   )
@@ -1235,7 +1235,7 @@ function AllInOne() {
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", marginBottom: 18, maxWidth: 780, color: T.text }}>
             Il Metodo: Un Solo Partner, Zero Scuse.
           </h2>
-          <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.75, maxWidth: 740, marginBottom: 40 }}>
+          <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.75, maxWidth: 740, marginBottom: 40 }}>
             Sviluppatore, designer, esperto di automazioni API e agenzia di marketing sono di solito quattro fornitori diversi — con costi frammentati, comunicazione lenta e responsabilità sfumate. Io li unisco in un'unica mente strategica.
           </p>
         </Reveal>
@@ -1395,7 +1395,7 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
           </div>
           <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", color: "#F0F3F9", margin: 0, lineHeight: 1.2 }}>{title}</h3>
         </div>
-        <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.68, color: T.muted, margin: 0 }}>{body}</p>
+        <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.68, color: T.muted, margin: 0 }}>{body}</p>
       </div>
 
       {/* Score ring */}
@@ -1448,7 +1448,7 @@ function TechBlock() {
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(30px,3.4vw,50px)", fontWeight: 800, lineHeight: 1.06, letterSpacing: "-0.03em", margin: "0 0 18px", maxWidth: "min(680px,100%)", color: T.text }}>
             Perché la Velocità Determina il tuo Fatturato
           </h2>
-          <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.75, maxWidth: "min(740px,100%)", marginBottom: 40 }}>
+          <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.75, maxWidth: "min(740px,100%)", marginBottom: 40 }}>
             Ogni millisecondo conta. Un&apos;architettura tecnica di alto livello non è un lusso — è il fondamento su cui si costruisce la crescita del fatturato.
           </p>
         </Reveal>
@@ -1794,7 +1794,7 @@ function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
               <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(20px,2.2vw,26px)", letterSpacing: "-0.02em", lineHeight: 1.14, color: T.text, margin: "14px 0 0" }}>{s.title}</h3>
             </div>
             <div style={{ display: "flex", flexDirection: "column", flex: "1 1 280px", minWidth: 220 }}>
-              <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.7, color: T.muted, margin: "0 0 16px", flex: 1 }}>{s.desc}</p>
+              <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.7, color: T.muted, margin: "0 0 16px", flex: 1 }}>{s.desc}</p>
               {Footer}
             </div>
           </>
@@ -1806,7 +1806,7 @@ function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
             </div>
             {IconBox}
             <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 16.5, letterSpacing: "-0.018em", lineHeight: 1.25, color: T.text, margin: "14px 0 8px" }}>{s.title}</h3>
-            <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.62, color: T.muted, margin: "0 0 16px", flex: 1 }}>{s.desc}</p>
+            <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.62, color: T.muted, margin: "0 0 16px", flex: 1 }}>{s.desc}</p>
             {Footer}
           </>
         )}
@@ -1827,7 +1827,7 @@ function SoluzioniMatrix() {
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.6vw,48px)", fontWeight: 700, lineHeight: 1.06, letterSpacing: "-0.025em", margin: "0 0 16px", maxWidth: 780, color: T.text }}>
             Soluzioni ad Alta Ingegneria
           </h2>
-          <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 680, margin: "0 0 40px" }}>
+          <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 680, margin: "0 0 40px" }}>
             Ogni soluzione è un servizio completo con la <span style={{ color: "#F0F3F9" }}>sua pagina dedicata</span> — architettura, stack tecnologico e casi d'uso spiegati in dettaglio. Clicca su una card per esplorarla.
           </p>
         </Reveal>
@@ -1988,7 +1988,7 @@ function DiagnosiCard({ d, i }: { d: typeof DIAGNOSI_PS[0]; i: number }) {
             </div>
             <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", margin: 0, color: "#F0F3F9", lineHeight: 1.25 }}>{d.problem.title}</h4>
           </div>
-          <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.68, color: T.muted, margin: 0 }}>{d.problem.body}</p>
+          <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.68, color: T.muted, margin: 0 }}>{d.problem.body}</p>
         </div>
         <div style={{ margin: "0 26px", height: 1, background: `linear-gradient(90deg, transparent, ${hov ? "rgba(255,60,92,0.35)" : "rgba(255,255,255,0.07)"}, transparent)`, transition: "background 0.30s" }} />
         <div style={{ padding: "20px 26px 26px" }}>
@@ -2001,7 +2001,7 @@ function DiagnosiCard({ d, i }: { d: typeof DIAGNOSI_PS[0]; i: number }) {
             </div>
             <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", margin: 0, color: "#F0F3F9", lineHeight: 1.25 }}>{d.solution.title}</h4>
           </div>
-          <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.68, color: T.muted, margin: 0 }}>{d.solution.body}</p>
+          <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.68, color: T.muted, margin: 0 }}>{d.solution.body}</p>
         </div>
       </div>
     </motion.div>
@@ -2189,7 +2189,7 @@ function PurcheBlock() {
                   {item.metricLabel}
                 </div>
                 <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 17, margin: "0 0 8px", color: "#060C18", lineHeight: 1.3 }}>{item.title}</h3>
-                <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.65, color: "rgba(15,23,42,.65)", margin: 0, flex: 1 }}>{item.body}</p>
+                <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.65, color: "rgba(15,23,42,.65)", margin: 0, flex: 1 }}>{item.body}</p>
               </CatalogCard>
             </motion.div>
           ))}
@@ -2606,7 +2606,7 @@ function MethodCarousel() {
                   className="hp-method-row-title"
                   animate={{ color: isActive ? "#F0F3F9" : "rgba(255,255,255,0.42)" }}
                   transition={{ duration: 0.35 }}
-                  style={{ fontFamily: DISPLAY, fontSize: "clamp(13px,1.5vw,17px)", fontWeight: isActive ? 700 : 400, letterSpacing: "-0.015em", lineHeight: 1.2 }}
+                  style={{ fontFamily: DISPLAY, fontSize: "clamp(14px,1.5vw,17px)", fontWeight: isActive ? 700 : 400, letterSpacing: "-0.015em", lineHeight: 1.2 }}
                 >{s.title}</motion.span>
                 <motion.span
                   animate={{ opacity: isActive ? 0.7 : 0.22 }}
@@ -2650,7 +2650,7 @@ function MethodCarousel() {
                       transition={{ delay: 0.18, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                       style={{ display: "flex", flexDirection: "column" as const, justifyContent: "space-between" }}
                     >
-                      <p className="hp-method-body" style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.7, margin: "0 0 16px" }}>{s.body}</p>
+                      <p className="hp-method-body" style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.7, margin: "0 0 16px" }}>{s.body}</p>
                       <div style={{ height: 2, background: "rgba(255,255,255,0.012)", borderRadius: 2, overflow: "hidden" }}>
                         <motion.div
                           key={tick}
@@ -2706,7 +2706,7 @@ function Method() {
                 <span style={{ color: "rgba(255,255,255,0.42)", fontWeight: 300 }}>gestita dal tuo</span>{" "}
                 <span style={{ color: "#F0F3F9" }}>Cabinet</span>
               </h2>
-              <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 460, margin: "22px 0 0" }}>
+              <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 460, margin: "22px 0 0" }}>
                 Contratti, invoice e stato di ogni attività sono visibili in tempo reale nel tuo <span style={{ color: "#F0F3F9" }}>Area Clienti</span> privato. Zero sorprese, zero perdita di controllo: segui l'avanzamento del progetto fase per fase.
               </p>
             </div>
@@ -2768,7 +2768,7 @@ function Portfolio() {
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 18px", maxWidth: 680, color: T.text }}>
             Piattaforme che Guidano la Crescita
           </h2>
-          <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.75, maxWidth: 620, marginBottom: 40 }}>
+          <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.75, maxWidth: 620, marginBottom: 40 }}>
             Esplora i progetti commerciali e corporate che ho ingegnerizzato, trasformandoli in asset digitali ad alto rendimento.
           </p>
         </Reveal>
@@ -2795,7 +2795,7 @@ function Portfolio() {
                 <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, margin: "0 0 10px", color: "#060C18", lineHeight: 1.25 }}>
                   {p.title}
                 </h3>
-                <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.65, color: "rgba(15,23,42,.65)", margin: "0 0 16px", flex: 1 }}>
+                <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.65, color: "rgba(15,23,42,.65)", margin: "0 0 16px", flex: 1 }}>
                   {p.desc}
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
@@ -2860,7 +2860,7 @@ function CaseMiniCard({ c, i }: { c: typeof CASE_LIST[number]; i: number }) {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.42)", marginBottom: 10 }}>{c.cat}</div>
           <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(18px,2.2vw,24px)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "#F0F3F9", margin: "0 0 14px" }}>{c.title}</h3>
-          <p style={{ fontFamily: SANS, fontSize: "clamp(14px, 1.3vw, 16px)", lineHeight: 1.72, color: T.muted, margin: 0, maxWidth: 500 }}>{c.desc}</p>
+          <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.3vw, 16px)", lineHeight: 1.72, color: T.muted, margin: 0, maxWidth: 500 }}>{c.desc}</p>
         </div>
 
         {/* Result callout */}
@@ -2909,7 +2909,7 @@ function ProjectsFeature() {
                 <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.63)" }}>Soluzioni</span>
               </h2>
 
-              <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 560, margin: "20px 0 0" }}>
+              <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 560, margin: "20px 0 0" }}>
                 Dall'obiettivo all'impatto: come risolviamo sfide tecniche complesse.
               </p>
             </div>
@@ -3185,7 +3185,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               style={{ textAlign: "center", padding: "36px 0" }}>
               <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(16,185,129,0.10)", border: "1px solid rgba(16,185,129,0.30)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: 24, color: T.green }}>✓</div>
               <h4 style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 700, color: T.green, marginBottom: 10 }}>Richiesta inviata!</h4>
-              <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, margin: 0 }}>Riceverai un piano d'azione chiaro entro 24 ore lavorative.</p>
+              <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, margin: 0 }}>Riceverai un piano d'azione chiaro entro 24 ore lavorative.</p>
             </motion.div>
           )}
         </div>
@@ -4014,7 +4014,7 @@ function FoundryDemoCard({ d, i }: { d: typeof FOUNDRY_DEMOS[number]; i: number 
       <div style={{ padding: "20px 22px 22px", flex: 1, display: "flex", flexDirection: "column" }}>
         <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", color: T.green, marginBottom: 9 }}>{d.tag}</div>
         <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", color: "#F0F3F9", margin: "0 0 8px" }}>{d.title}</h3>
-        <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.7, color: T.muted, margin: 0, flex: 1 }}>{d.desc}</p>
+        <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.7, color: T.muted, margin: 0, flex: 1 }}>{d.desc}</p>
         <motion.span animate={{ opacity: h ? 1 : 0.4, x: h ? 0 : -4 }} transition={{ duration: 0.25 }}
           style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10, letterSpacing: ".16em", textTransform: "uppercase" as const, color: T.green }}>
           Apri demo <span style={{ fontSize: 14 }}>→</span>
@@ -4047,7 +4047,7 @@ function FoundryShowcase() {
                 Digital Foundry:<br />
                 <span style={{ color: "#F0F3F9" }}>Costruisci la tua architettura</span>
               </h2>
-              <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 620, margin: 0 }}>
+              <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 620, margin: 0 }}>
                 Non comprare a scatola chiusa. Esplora la nostra libreria di soluzioni reali (CRM, Portali B2B, E-commerce), testa le demo e costruisci il tuo Blueprint per un preventivo istantaneo.
               </p>
             </div>

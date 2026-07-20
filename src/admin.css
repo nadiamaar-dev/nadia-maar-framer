@@ -1,6 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
+/* Prevent white overscroll bars on iOS Safari */
+html, body {
+  background-color: #060C18;
+  overscroll-behavior: none;
+}
+
 @theme {
   --color-copper:      #B83240;
   --color-copper-lt:   #BE3648;
@@ -114,4 +120,8 @@ input.portal-input[type="date"]::-webkit-calendar-picker-indicator { filter: inv
 @keyframes portal-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.35; }
+}
+
+@media (max-width: 768px) {
+  .portal-root { font-size: 16px; }
 }

@@ -14,7 +14,7 @@ const T = {
 } as const
 const MONO = "'JetBrains Mono','SF Mono',ui-monospace,monospace"
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
-const BODY: React.CSSProperties = { fontFamily: "'Geist', system-ui, sans-serif", fontSize: "clamp(15px, 1.4vw, 17px)", fontWeight: 400, lineHeight: 1.85, letterSpacing: "0.01em" }
+const BODY: React.CSSProperties = { fontFamily: "'Geist', system-ui, sans-serif", fontSize: "clamp(16px, 1.4vw, 17px)", fontWeight: 400, lineHeight: 1.85, letterSpacing: "0.01em" }
 const WRAP: React.CSSProperties = { maxWidth: 1120, margin: "0 auto", padding: "0 32px" }
 const ease: [number,number,number,number] = [0.16,1,0.3,1]
 
