@@ -16,9 +16,9 @@ import FloatingContact from "./components/FloatingContact"
 
 /* ── tokens ── */
 const T = {
-  bg: "#060C18", text: "#FFFFFF", muted: "rgba(255,255,255,0.78)",
+  bg: "#060C18", text: "#F0F3F9", muted: "rgba(255,255,255,0.78)",
   faint: "rgba(255,255,255,0.58)", border: "rgba(255,255,255,0.11)",
-  accent: "#A12C38", accentLt: "#A83040", green: "#10B981",
+  accent: "#B83240", accentLt: "#BE3648", green: "#10B981",
   surface: "rgba(255,255,255,0.055)", surfaceHi: "rgba(255,255,255,0.10)",
 } as const
 const MONO = "'JetBrains Mono','SF Mono',ui-monospace,monospace"
@@ -33,7 +33,7 @@ const GLASS: React.CSSProperties = {
   background: "rgba(14,24,31,0.22)",
   backdropFilter: "blur(2px)",
   WebkitBackdropFilter: "blur(2px)",
-  border: "1px solid rgba(255,255,255,0.10)",
+  border: "1px solid rgba(255,255,255,0.17)",
   boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 20px 50px rgba(0,0,0,0.24)",
 }
 
@@ -42,7 +42,7 @@ const GLASS_SOLID: React.CSSProperties = {
   background: "rgba(255,255,255,0.055)",
   backdropFilter: "blur(30px) brightness(1.10) saturate(0.80)",
   WebkitBackdropFilter: "blur(30px) brightness(1.10) saturate(0.80)",
-  border: "1px solid rgba(255,255,255,0.10)",
+  border: "1px solid rgba(255,255,255,0.17)",
   boxShadow: "inset 0 1px 0 rgba(255,255,255,0.14), 0 20px 50px rgba(0,0,0,0.30)",
 }
 
@@ -62,12 +62,12 @@ const PROJECTS_CSS = `
   :root { --x:-9999; --y:-9999; --xp:0; --yp:0; }
 
   /* brick text — semi-transparent + warm glow, matching button quality */
-  [style*="color: #A83040"],
-  [style*='color: "#A83040"'] {
-    color: rgba(168,48,64,0.82) !important;
+  [style*="color: #BE3648"],
+  [style*='color: "#BE3648"'] {
+    color: rgba(190,54,72,0.82) !important;
     text-shadow:
-      0 0 52px rgba(168,48,64,0.38),
-      0 0 18px rgba(168,48,64,0.26),
+      0 0 52px rgba(190,54,72,0.38),
+      0 0 18px rgba(190,54,72,0.26),
       0 2px 6px rgba(0,0,0,0.28);
   }
   [style*="color: #7C222B"],
@@ -110,7 +110,7 @@ function ScrollProgress() {
     <motion.div aria-hidden style={{
       position: "fixed", top: 0, left: 0, right: 0, height: 2, zIndex: 500,
       transformOrigin: "0% 50%", scaleX,
-      background: "linear-gradient(90deg, rgba(90,40,40,1), #7C222B, #A83040)",
+      background: "linear-gradient(90deg, rgba(90,40,40,1), #7C222B, #BE3648)",
       boxShadow: "0 0 12px rgba(124,34,43,0.7)",
     }} />
   )
@@ -133,7 +133,7 @@ function Chip({ text }: { text: string }) {
     <span style={{
       fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.04em",
       color: "rgba(255,255,255,0.72)", padding: "5px 11px", borderRadius: 7,
-      border: "1px solid rgba(255,255,255,0.13)", background: "rgba(255,255,255,0.035)",
+      border: "1px solid rgba(255,255,255,0.20)", background: "rgba(255,255,255,0.035)",
       whiteSpace: "nowrap" as const,
     }}>{text}</span>
   )
@@ -156,8 +156,8 @@ function VisualEcommerce() {
             style={{ transformOrigin: `${x + 18}px ${y + 18}px` }}
           >
             <rect x={x} y={y} width={36} height={36} rx={7}
-              fill={i === 4 ? "rgba(168,48,64,0.16)" : "rgba(255,255,255,0.045)"}
-              stroke={i === 4 ? "rgba(168,48,64,0.45)" : "rgba(255,255,255,0.10)"} strokeWidth="1" />
+              fill={i === 4 ? "rgba(190,54,72,0.16)" : "rgba(255,255,255,0.045)"}
+              stroke={i === 4 ? "rgba(190,54,72,0.45)" : "rgba(255,255,255,0.10)"} strokeWidth="1" />
             <rect x={x + 7} y={y + 24} width={22} height={3} rx={1.5} fill="rgba(255,255,255,0.16)" />
           </motion.g>
         )
@@ -172,13 +172,13 @@ function VisualEcommerce() {
       </motion.g>
       {/* SKU counter */}
       <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}>
-        <rect x={210} y={102} width={92} height={64} rx={11} fill="rgba(168,48,64,0.10)" stroke="rgba(168,48,64,0.30)" strokeWidth="1" />
+        <rect x={210} y={102} width={92} height={64} rx={11} fill="rgba(190,54,72,0.10)" stroke="rgba(190,54,72,0.30)" strokeWidth="1" />
         <text x={256} y={128} textAnchor="middle" fontSize={19} fontWeight="800" fill="rgba(255,255,255,0.90)" fontFamily="Inter,sans-serif">32.000</text>
-        <text x={256} y={146} textAnchor="middle" fontSize={8} fill="rgba(168,48,64,0.72)" fontFamily="Inter,sans-serif">SKU · Multi-country EU</text>
+        <text x={256} y={146} textAnchor="middle" fontSize={8} fill="rgba(190,54,72,0.72)" fontFamily="Inter,sans-serif">SKU · Multi-country EU</text>
       </motion.g>
       <defs>
         <linearGradient id="pr-e-grad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#7C222B" /><stop offset="100%" stopColor="#A83040" />
+          <stop offset="0%" stopColor="#7C222B" /><stop offset="100%" stopColor="#BE3648" />
         </linearGradient>
       </defs>
     </svg>
@@ -195,19 +195,19 @@ function VisualMiddleware() {
     <svg viewBox="0 0 320 190" width="100%" height="100%">
       {/* connectors */}
       {[[84, 92, 128, 92], [192, 92, 236, 92]].map(([x1, y1, x2, y2], i) => (
-        <motion.path key={i} d={`M${x1},${y1}L${x2},${y2}`} stroke="rgba(168,48,64,0.28)" strokeWidth="1.5" strokeDasharray="5 3"
+        <motion.path key={i} d={`M${x1},${y1}L${x2},${y2}`} stroke="rgba(190,54,72,0.28)" strokeWidth="1.5" strokeDasharray="5 3"
           initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.3 + i * 0.15, duration: 0.6 }} />
       ))}
       {/* flowing packets */}
       {[0, 1].map(edge => [0, 1, 2].map(j => (
-        <motion.rect key={`${edge}-${j}`} x={edge === 0 ? 84 : 192} y={89} width={8} height={6} rx={2} fill="rgba(168,48,64,0.7)"
+        <motion.rect key={`${edge}-${j}`} x={edge === 0 ? 84 : 192} y={89} width={8} height={6} rx={2} fill="rgba(190,54,72,0.7)"
           animate={{ x: [0, 44, 44], opacity: [0, 1, 0] }} transition={{ duration: 1.2, repeat: Infinity, delay: j * 0.4 + edge * 0.22, ease: "easeInOut" }} />
       )))}
       {nodes.map((n, i) => (
         <motion.g key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.14, duration: 0.45, ease }}>
           <rect x={n.x} y={n.y} width={64} height={i === 1 ? 56 : 40} rx={11}
-            fill={i === 1 ? "rgba(168,48,64,0.14)" : "rgba(255,255,255,0.05)"}
-            stroke={i === 1 ? "rgba(168,48,64,0.42)" : "rgba(255,255,255,0.13)"} strokeWidth="1" />
+            fill={i === 1 ? "rgba(190,54,72,0.14)" : "rgba(255,255,255,0.05)"}
+            stroke={i === 1 ? "rgba(190,54,72,0.42)" : "rgba(255,255,255,0.13)"} strokeWidth="1" />
           <text x={n.x + 32} y={n.y + (i === 1 ? 26 : 18)} textAnchor="middle" fontSize={8.5} fontWeight="600" fill="rgba(255,255,255,0.88)" fontFamily="Inter,sans-serif">{n.label}</text>
           <text x={n.x + 32} y={n.y + (i === 1 ? 38 : 30)} textAnchor="middle" fontSize={7} fill="rgba(255,255,255,0.40)" fontFamily="Inter,sans-serif">{n.sub}</text>
           <motion.circle cx={n.x + 54} cy={n.y + 10} r={3.2} fill="#10B981" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.4 }} />
@@ -236,14 +236,14 @@ function VisualCivic() {
   return (
     <svg viewBox="0 0 320 190" width="100%" height="100%">
       {/* ── role hierarchy ── */}
-      <motion.path d="M40,50 L40,98 M40,98 L40,146" stroke="rgba(168,48,64,0.30)" strokeWidth="1.4"
+      <motion.path d="M40,50 L40,98 M40,98 L40,146" stroke="rgba(190,54,72,0.30)" strokeWidth="1.4"
         initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.3, duration: 0.7 }} />
       {roles.map((r, i) => (
         <motion.g key={i} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 + i * 0.14, duration: 0.45, ease }}>
           <rect x={22} y={r.y} width={116} height={36} rx={9}
-            fill={r.accent ? "rgba(168,48,64,0.16)" : "rgba(255,255,255,0.05)"}
-            stroke={r.accent ? "rgba(168,48,64,0.45)" : "rgba(255,255,255,0.12)"} strokeWidth="1" />
-          <circle cx={40} cy={r.y + 18} r={5.5} fill={r.accent ? "rgba(168,48,64,0.85)" : "rgba(255,255,255,0.14)"} stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
+            fill={r.accent ? "rgba(190,54,72,0.16)" : "rgba(255,255,255,0.05)"}
+            stroke={r.accent ? "rgba(190,54,72,0.45)" : "rgba(255,255,255,0.12)"} strokeWidth="1" />
+          <circle cx={40} cy={r.y + 18} r={5.5} fill={r.accent ? "rgba(190,54,72,0.85)" : "rgba(255,255,255,0.14)"} stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
           <text x={54} y={r.y + 15} fontSize={8.5} fontWeight="600" fill="rgba(255,255,255,0.88)" fontFamily="Inter,sans-serif">{r.label}</text>
           <text x={54} y={r.y + 26} fontSize={7} fill="rgba(255,255,255,0.42)" fontFamily="Inter,sans-serif">{r.sub}</text>
         </motion.g>
@@ -251,11 +251,11 @@ function VisualCivic() {
 
       {/* ── region (no cities) ── */}
       <g transform="translate(62,2) scale(0.82)">
-        <motion.path d={region} fill="rgba(168,48,64,0.09)" stroke="rgba(168,48,64,0.40)" strokeWidth="1.6" strokeLinejoin="round"
+        <motion.path d={region} fill="rgba(190,54,72,0.09)" stroke="rgba(190,54,72,0.40)" strokeWidth="1.6" strokeLinejoin="round"
           initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 1.4, ease }} />
-        <motion.circle cx={162} cy={100} r={20} fill="rgba(168,48,64,0.16)"
+        <motion.circle cx={162} cy={100} r={20} fill="rgba(190,54,72,0.16)"
           animate={{ r: [20, 34, 20], opacity: [0.5, 0, 0.5] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }} />
-        <motion.circle cx={162} cy={100} r={5} fill="rgba(168,48,64,0.9)" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5"
+        <motion.circle cx={162} cy={100} r={5} fill="rgba(190,54,72,0.9)" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5"
           initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.9, type: "spring", stiffness: 240 }} style={{ transformOrigin: "162px 100px" }} />
       </g>
       <motion.text x={228} y={150} textAnchor="middle" fontSize={8} fontWeight="500" fill="rgba(255,255,255,0.5)" fontFamily="Inter,sans-serif"
@@ -342,14 +342,14 @@ function BlueprintRail() {
   return (
     <div className="pr-hero-rail" aria-hidden style={{ position: "relative", flexShrink: 0, width: 46, flexDirection: "column", justifyContent: "space-between", paddingTop: 6, paddingBottom: 6 }}>
       {/* vertical bar + glow */}
-      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 2, borderRadius: 2, background: "linear-gradient(180deg, rgba(168,48,64,0) 0%, rgba(168,48,64,0.75) 14%, rgba(124,34,43,0.75) 86%, rgba(124,34,43,0) 100%)", boxShadow: "0 0 16px rgba(168,48,64,0.35)" }} />
+      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 2, borderRadius: 2, background: "linear-gradient(180deg, rgba(190,54,72,0) 0%, rgba(190,54,72,0.75) 14%, rgba(124,34,43,0.75) 86%, rgba(124,34,43,0) 100%)", boxShadow: "0 0 16px rgba(190,54,72,0.35)" }} />
       {["01", "02", "03"].map((n, i) => (
         <motion.div key={n}
           initial={{ opacity: 0, x: -8 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 + i * 0.12, ease }}
           style={{ position: "relative", display: "flex", alignItems: "center", gap: 9 }}>
-          <span style={{ width: 12, height: 1, background: T.accentLt, boxShadow: "0 0 8px rgba(168,48,64,0.6)" }} />
-          <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", color: "rgba(168,48,64,0.85)" }}>{n}</span>
+          <span style={{ width: 12, height: 1, background: T.accentLt, boxShadow: "0 0 8px rgba(190,54,72,0.6)" }} />
+          <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", color: "rgba(190,54,72,0.85)" }}>{n}</span>
         </motion.div>
       ))}
     </div>
@@ -369,26 +369,26 @@ function Hero() {
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 14, marginBottom: 22 }}>
             <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", color: T.accentLt }}>§00</span>
-            <span aria-hidden style={{ width: 30, height: 1, background: "linear-gradient(90deg, rgba(168,48,64,0.6), rgba(168,48,64,0.1))" }} />
+            <span aria-hidden style={{ width: 30, height: 1, background: "linear-gradient(90deg, rgba(190,54,72,0.6), rgba(190,54,72,0.1))" }} />
             <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.52)" }}>Case Studies</span>
           </div>
         </Reveal>
 
         {/* headline — §04 typographic composition (outlined + solid white) */}
         <div style={{ position: "relative" }}>
-          <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.26em", color: "rgba(255,255,255,0.50)", marginBottom: 10, textTransform: "uppercase" as const }}>Il mio</div>
+          <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.26em", color: "rgba(255,255,255,0.58)", marginBottom: 10, textTransform: "uppercase" as const }}>Il mio</div>
 
           <motion.h1
             initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.08, ease }}
-            style={{ margin: 0, fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(48px,9vw,120px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.50)", userSelect: "none" }}>
+            style={{ margin: 0, fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(48px,9vw,120px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.58)", userSelect: "none" }}>
             SELECTED
           </motion.h1>
 
           <motion.div
             initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.18, ease }}
-            style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(48px,9vw,120px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "#FFFFFF", userSelect: "none" }}>
+            style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(48px,9vw,120px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "#F0F3F9", userSelect: "none" }}>
             WORKS
           </motion.div>
         </div>
@@ -396,7 +396,7 @@ function Hero() {
         <Reveal delay={0.16}>
           <p style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "clamp(18px,2.4vw,28px)", lineHeight: 1.28, letterSpacing: "-0.02em", color: "rgba(255,255,255,0.86)", margin: "22px 0 0", maxWidth: 720 }}>
             Ingegneria e scaling di{" "}
-            <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 300 }}>prodotti digitali complessi.</span>
+            <span style={{ color: "rgba(255,255,255,0.53)", fontWeight: 300 }}>prodotti digitali complessi.</span>
           </p>
         </Reveal>
 
@@ -414,10 +414,10 @@ function Hero() {
               <a key={c.n} href={`#case-${c.n}`}
                 style={{ textDecoration: "none", display: "block", padding: "18px 20px", borderRadius: 14, ...GLASS }}>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 8 }}>
-                  <span style={{ fontFamily: MONO, fontSize: 26, fontWeight: 900, letterSpacing: "-0.05em", color: "rgba(168,48,64,0.55)" }}>{c.n}</span>
+                  <span style={{ fontFamily: MONO, fontSize: 26, fontWeight: 900, letterSpacing: "-0.05em", color: "rgba(190,54,72,0.55)" }}>{c.n}</span>
                   <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: ".13em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.62)" }}>{c.category}</span>
                 </div>
-                <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 17.5, letterSpacing: "-0.015em", lineHeight: 1.3, color: "#FFFFFF", display: "block" }}>{c.title}</span>
+                <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 17.5, letterSpacing: "-0.015em", lineHeight: 1.3, color: "#F0F3F9", display: "block" }}>{c.title}</span>
               </a>
             ))}
           </div>
@@ -436,7 +436,7 @@ function CaseBlock({ label, mark, children }: { label: string; mark: string; chi
   return (
     <div style={{ marginBottom: 30 }}>
       <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-        <span style={{ width: 30, height: 30, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, background: "rgba(168,48,64,0.12)", border: "1px solid rgba(168,48,64,0.30)" }}>{mark}</span>
+        <span style={{ width: 30, height: 30, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, background: "rgba(190,54,72,0.12)", border: "1px solid rgba(190,54,72,0.30)" }}>{mark}</span>
         <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: ".22em", textTransform: "uppercase" as const, color: T.accentLt }}>{label}</span>
       </div>
       <p style={{ ...BODY, color: T.muted, margin: 0 }}>{children}</p>
@@ -453,21 +453,21 @@ function SolutionCard({ s, i }: { s: { t: string; d: string }; i: number }) {
       transition={{ duration: 0.6, delay: i * 0.08, ease }}
       onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
       animate={{ y: hov ? -3 : 0 }}
-      style={{ position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 4px 24px rgba(0,0,0,0.22)" }}>
+      style={{ position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 4px 24px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)" }}>
 
       {/* Glass background — bottom fade mask (text above unaffected) */}
       <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, background: "rgba(255,255,255,0.008)", backdropFilter: "blur(6px) brightness(1.03)", WebkitBackdropFilter: "blur(6px) brightness(1.03)", WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", maskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", pointerEvents: "none" }} />
 
       {/* Gradient border — top + sides fade to mid */}
-      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, padding: 1, background: "linear-gradient(to bottom, rgba(255,255,255,0.45) 0%, transparent 52%)", WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" as const, pointerEvents: "none", zIndex: 2 }} />
+      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, padding: 1, background: "linear-gradient(to bottom, rgba(255,255,255,0.53) 0%, transparent 52%)", WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" as const, pointerEvents: "none", zIndex: 2 }} />
 
       {/* Content — full opacity above the fading glass */}
       <div style={{ position: "relative", zIndex: 3, padding: "24px 22px" }}>
         {/* [0X] tag */}
-        <div style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: hov ? T.accentLt : "rgba(161,44,56,0.55)", marginBottom: 14, transition: "color 0.28s" }}>[ 0{i + 1} ]</div>
+        <div style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: hov ? T.accentLt : "rgba(184,50,64,0.55)", marginBottom: 14, transition: "color 0.28s" }}>[ 0{i + 1} ]</div>
 
         {/* title */}
-        <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", lineHeight: 1.25, margin: "0 0 9px", color: "#FFFFFF" }}>{s.t}</h4>
+        <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", lineHeight: 1.25, margin: "0 0 9px", color: "#F0F3F9" }}>{s.t}</h4>
 
         {/* body */}
         <p style={{ ...BODY, color: T.muted, margin: 0 }}>{s.d}</p>
@@ -501,7 +501,7 @@ function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
                 <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.5)" }}>{c.category}</span>
               </div>
 
-              <h2 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(26px,3.2vw,42px)", lineHeight: 1.06, letterSpacing: "-0.035em", color: "#FFFFFF", margin: "0 0 16px" }}>{c.title}</h2>
+              <h2 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(26px,3.2vw,42px)", lineHeight: 1.06, letterSpacing: "-0.035em", color: "#F0F3F9", margin: "0 0 16px" }}>{c.title}</h2>
 
               <p style={{ ...BODY, color: T.faint, margin: "0 0 26px", maxWidth: 420 }}>{c.subtitle}</p>
             </Reveal>
@@ -526,12 +526,12 @@ function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
 
                 {/* screen */}
                 <div style={{ padding: 14 }}>
-                  <div style={{ position: "relative", borderRadius: 10, background: "radial-gradient(ellipse at 50% -10%, rgba(161,44,56,0.07), rgba(0,0,0,0.22) 70%)", border: "1px solid rgba(255,255,255,0.06)", aspectRatio: "320 / 190", minHeight: 160, overflow: "hidden" }}>
+                  <div style={{ position: "relative", borderRadius: 10, background: "radial-gradient(ellipse at 50% -10%, rgba(184,50,64,0.07), rgba(0,0,0,0.22) 70%)", border: "1px solid rgba(255,255,255,0.12)", aspectRatio: "320 / 190", minHeight: 160, overflow: "hidden" }}>
                     {/* faint grid */}
                     <div aria-hidden style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px)", backgroundSize: "28px 28px", pointerEvents: "none" }} />
                     {/* corner ticks */}
-                    <span aria-hidden style={{ position: "absolute", top: 8, left: 8, width: 8, height: 8, borderTop: "1px solid rgba(255,255,255,0.20)", borderLeft: "1px solid rgba(255,255,255,0.20)" }} />
-                    <span aria-hidden style={{ position: "absolute", bottom: 8, right: 8, width: 8, height: 8, borderBottom: "1px solid rgba(255,255,255,0.20)", borderRight: "1px solid rgba(255,255,255,0.20)" }} />
+                    <span aria-hidden style={{ position: "absolute", top: 8, left: 8, width: 8, height: 8, borderTop: "1px solid rgba(255,255,255,0.28)", borderLeft: "1px solid rgba(255,255,255,0.28)" }} />
+                    <span aria-hidden style={{ position: "absolute", bottom: 8, right: 8, width: 8, height: 8, borderBottom: "1px solid rgba(255,255,255,0.28)", borderRight: "1px solid rgba(255,255,255,0.28)" }} />
                     {/* edge vignette */}
                     <div aria-hidden style={{ position: "absolute", inset: 0, boxShadow: "inset 0 0 40px rgba(0,0,0,0.35)", borderRadius: 10, pointerEvents: "none" }} />
                     <div style={{ position: "relative", zIndex: 1, width: "100%", height: "100%" }}><Visual /></div>
@@ -545,7 +545,7 @@ function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
               <div className="pr-metrics" style={{ marginBottom: 18 }}>
                 {c.metrics.map((m, i) => (
                   <div key={i} style={{ padding: "14px 12px", borderRadius: 12, ...GLASS }}>
-                    <div style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 22, letterSpacing: "-0.03em", color: "#FFFFFF", lineHeight: 1 }}>{m.v}</div>
+                    <div style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 22, letterSpacing: "-0.03em", color: "#F0F3F9", lineHeight: 1 }}>{m.v}</div>
                     <div style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: ".08em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.5)", marginTop: 7 }}>{m.l}</div>
                   </div>
                 ))}
@@ -572,7 +572,7 @@ function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
 
             <Reveal delay={0.14}>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 16, marginTop: 4 }}>
-                <span style={{ width: 30, height: 30, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, background: "rgba(168,48,64,0.12)", border: "1px solid rgba(168,48,64,0.30)" }}>🚀</span>
+                <span style={{ width: 30, height: 30, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, background: "rgba(190,54,72,0.12)", border: "1px solid rgba(190,54,72,0.30)" }}>🚀</span>
                 <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: ".22em", textTransform: "uppercase" as const, color: T.accentLt }}>Soluzioni & Impatto Business</span>
               </div>
             </Reveal>
@@ -609,7 +609,7 @@ function FinalCTA() {
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10.5, letterSpacing: ".2em", textTransform: "uppercase" as const, color: T.accentLt, marginBottom: 20 }}>
                 <span>●</span><span>Prossimo Progetto</span>
               </div>
-              <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(28px,4vw,50px)", lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 18px" }}>
+              <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(28px,4vw,50px)", lineHeight: 1.06, letterSpacing: "-0.04em", color: "#F0F3F9", margin: "0 0 18px" }}>
                 Pronto a discutere il tuo prossimo progetto?
               </h2>
               <p style={{ ...BODY, color: T.muted, margin: "0 0 34px", maxWidth: 520 }}>
@@ -618,15 +618,15 @@ function FinalCTA() {
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
                 <motion.a href="/#s9" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
-                  style={{ minHeight: 54, padding: 0, borderRadius: 12, cursor: "pointer", textDecoration: "none", border: "1px solid rgba(161,44,56,0.80)", background: "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", display: "inline-flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
-                  <span style={{ padding: "0 14px", borderRight: "1px solid rgba(161,44,56,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[→]</span>
-                  <span style={{ display: "flex", alignItems: "center", gap: 14, padding: "0 20px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
+                  style={{ minHeight: 54, padding: 0, borderRadius: 12, cursor: "pointer", textDecoration: "none", border: "1px solid rgba(184,50,64,0.80)", background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", display: "inline-flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
+                  <span style={{ padding: "0 14px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[→]</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 14, padding: "0 20px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#F0F3F9" }}>
                     Avvia il tuo Progetto <span style={{ fontSize: 14 }}>→</span>
                   </span>
                 </motion.a>
 
                 <motion.a href="mailto:nadiamaar.dev@gmail.com" whileHover={{ y: -2, background: "rgba(255,255,255,0.09)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
-                  style={{ minHeight: 54, padding: "0 22px", borderRadius: 12, fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, display: "inline-flex", alignItems: "center", textDecoration: "none", border: "1px solid rgba(255,255,255,0.20)", background: "rgba(255,255,255,0.04)", color: T.text }}>
+                  style={{ minHeight: 54, padding: "0 22px", borderRadius: 12, fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, display: "inline-flex", alignItems: "center", textDecoration: "none", border: "1px solid rgba(255,255,255,0.28)", background: "rgba(255,255,255,0.04)", color: T.text }}>
                   Scrivimi via Email
                 </motion.a>
               </div>

@@ -353,6 +353,38 @@ const GLOBAL_CSS = `
     }
   }
 
+  /* ── TechRow cards: mobile layout (<680px) ── */
+  @media (max-width: 680px) {
+    .hp-tech-row  { flex-wrap: wrap !important; }
+    .hp-tech-stripe {
+      order: 0;
+      width: 100% !important; height: 3px !important;
+      border-radius: 14px 14px 0 0 !important;
+    }
+    .hp-tech-metric {
+      order: 1;
+      flex: 1 1 auto !important; min-width: 0 !important;
+      border-right: none !important;
+      flex-direction: row !important; align-items: center !important;
+      justify-content: flex-start !important; gap: 16px !important;
+      padding: 16px 18px !important;
+    }
+    .hp-tech-metric-progress { flex: 1; }
+    .hp-tech-ring {
+      order: 2;
+      border-left: none !important;
+      padding: 16px 18px 16px 0 !important;
+      align-self: center !important;
+    }
+    .hp-tech-content {
+      order: 3;
+      width: 100% !important; flex: 0 0 100% !important;
+      border-top: 1px solid rgba(255,255,255,0.07) !important;
+      padding: 14px 18px 18px !important;
+    }
+    .hp-tech-metric span:first-child { font-size: 26px !important; }
+  }
+
   html { overflow-x: hidden; max-width: 100%; }
   body { overflow-x: clip; max-width: 100%; touch-action: pan-y; }
   #root { overflow-x: clip; }
@@ -831,6 +863,7 @@ function Hero() {
           .hp-hl{ padding:14px 12px 12px; width:100%; box-sizing:border-box; }
           .hp-hl-tag{ font-size:7.5px !important; letter-spacing:.12em !important; left:14px !important; }
           .hp-hl-dim{ display:none !important; }
+          .hp-hero-h1{ font-size:44px !important; line-height:0.93 !important; letter-spacing:-0.04em !important; }
           /* description — full width, readable size */
           .hp-hero-desc{ margin-top:14px !important; font-size:14px !important; line-height:1.7 !important; max-width:100% !important; }
           /* grid: 1 column, hide empty meta panel */
@@ -856,7 +889,7 @@ function Hero() {
         }
         /* ── Small phones (<400px) ── */
         @media (max-width:400px){
-          .hp-hero-h1{ font-size:28px !important; }
+          .hp-hero-h1{ font-size:36px !important; line-height:0.92 !important; }
           .hp-hero-stat-value{ font-size:20px !important; }
         }
       `}</style>
@@ -909,7 +942,7 @@ function Hero() {
                 <motion.h1
                   className="hp-hero-h1"
                   initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease }}
-                  style={{ fontFamily: DISPLAY, fontSize: "clamp(34px, 5.4vw, 74px)", fontWeight: 800, lineHeight: 0.98, letterSpacing: "-0.04em", margin: 0, color: "#F0F3F9", textTransform: "uppercase" as const, filter: "drop-shadow(0 12px 34px rgba(0,0,0,0.6))", textShadow: "0 4px 12px rgba(0, 0, 0, 0.8)" }}
+                  style={{ fontFamily: DISPLAY, fontSize: "clamp(42px, 5.4vw, 82px)", fontWeight: 900, lineHeight: 0.95, letterSpacing: "-0.045em", margin: 0, color: "#F0F3F9", textTransform: "uppercase" as const, filter: "drop-shadow(0 12px 34px rgba(0,0,0,0.6))", textShadow: "0 4px 12px rgba(0, 0, 0, 0.8)" }}
                 >
                   <span>E-commerce</span><br />
                   <span>Architect</span><br />
@@ -1327,6 +1360,7 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
       viewport={{ once: true }}
       transition={{ duration: 0.55, delay: index * 0.10, ease }}
       onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
+      className="hp-tech-row"
       style={{
         position: "relative", display: "flex", alignItems: "stretch",
         borderRadius: 14, overflow: "hidden",
@@ -1337,13 +1371,13 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
       } as React.CSSProperties}
     >
       {/* Left accent stripe */}
-      <div aria-hidden style={{ width: 3, flexShrink: 0, background: color, opacity: hov ? 1 : 0.55, transition: "opacity 0.28s", borderRadius: "14px 0 0 14px" }} />
+      <div aria-hidden className="hp-tech-stripe" style={{ width: 3, flexShrink: 0, background: color, opacity: hov ? 1 : 0.55, transition: "opacity 0.28s", borderRadius: "14px 0 0 14px" }} />
 
       {/* Metric block */}
-      <div style={{ padding: "26px 28px", borderRight: "1px solid rgba(255,255,255,0.07)", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", minWidth: 148, flexShrink: 0, gap: 6 }}>
+      <div className="hp-tech-metric" style={{ padding: "26px 28px", borderRight: "1px solid rgba(255,255,255,0.07)", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", minWidth: 148, flexShrink: 0, gap: 6 }}>
         <span style={{ fontFamily: MONO, fontSize: 34, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.03em", color: hov ? color : "#F0F3F9", transition: "color 0.28s", whiteSpace: "nowrap" as const }}>{metric}</span>
         <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.32)" }}>{scoreLabel}</span>
-        <div style={{ width: "100%", height: 2, background: "rgba(255,255,255,0.11)", borderRadius: 1, overflow: "hidden", marginTop: 2 }}>
+        <div className="hp-tech-metric-progress" style={{ width: "100%", height: 2, background: "rgba(255,255,255,0.11)", borderRadius: 1, overflow: "hidden", marginTop: 2 }}>
           <motion.div
             initial={{ width: "0%" }}
             animate={{ width: inView ? `${score}%` : "0%" }}
@@ -1354,7 +1388,7 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
       </div>
 
       {/* Content */}
-      <div style={{ padding: "26px 28px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 10 }}>
+      <div className="hp-tech-content" style={{ padding: "26px 28px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 10 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", background: colorDim, border: `1px solid ${colorBd}`, color, flexShrink: 0, transition: "background 0.25s" }}>
             {icon}
@@ -1365,7 +1399,7 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
       </div>
 
       {/* Score ring */}
-      <div style={{ padding: "26px 28px", borderLeft: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+      <div className="hp-tech-ring" style={{ padding: "26px 28px", borderLeft: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
         <div style={{ position: "relative", width: 64, height: 64 }}>
           <svg viewBox="0 0 64 64" width="64" height="64" style={{ transform: "rotate(-90deg)" }}>
             <circle cx="32" cy="32" r={R} fill="none" stroke="rgba(255,255,255,0.11)" strokeWidth="2.5" />
@@ -1407,14 +1441,14 @@ function TechBlock() {
     <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Tecnologia all&apos;Avanguardia ]</span>
           </div>
-          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,46px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 18px", maxWidth: 680, color: T.text }}>
+          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(30px,3.4vw,50px)", fontWeight: 800, lineHeight: 1.06, letterSpacing: "-0.03em", margin: "0 0 18px", maxWidth: "min(680px,100%)", color: T.text }}>
             Perché la Velocità Determina il tuo Fatturato
           </h2>
-          <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.75, maxWidth: 740, marginBottom: 40 }}>
+          <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.75, maxWidth: "min(740px,100%)", marginBottom: 40 }}>
             Ogni millisecondo conta. Un&apos;architettura tecnica di alto livello non è un lusso — è il fondamento su cui si costruisce la crescita del fatturato.
           </p>
         </Reveal>

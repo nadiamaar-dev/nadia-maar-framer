@@ -7,9 +7,9 @@ import Background from "./components/Background"
 
 /* ── tokens ── */
 const T = {
-  bg: "#060C18", text: "#FFFFFF", muted: "rgba(255,255,255,0.78)",
+  bg: "#060C18", text: "#F0F3F9", muted: "rgba(255,255,255,0.78)",
   faint: "rgba(255,255,255,0.58)", border: "rgba(255,255,255,0.11)",
-  accent: "#A12C38", accentLt: "#A83040", green: "#10B981",
+  accent: "#B83240", accentLt: "#BE3648", green: "#10B981",
   surface: "rgba(255,255,255,0.055)", surfaceHi: "rgba(255,255,255,0.10)",
 } as const
 const MONO = "'JetBrains Mono','SF Mono',ui-monospace,monospace"
@@ -34,17 +34,17 @@ const SVC_CSS = `
   ::placeholder { color: rgba(255,255,255,0.22) !important; }
   :root { --x:-9999; --y:-9999; }
   /* brick text — semi-transparent + warm glow, matching button quality */
-  [style*="color: #A83040"],
-  [style*='color: "#A83040"'] {
-    color: rgba(161,44,56,0.82) !important;
+  [style*="color: #BE3648"],
+  [style*='color: "#BE3648"'] {
+    color: rgba(184,50,64,0.82) !important;
     text-shadow:
-      0 0 52px rgba(161,44,56,0.38),
-      0 0 18px rgba(161,44,56,0.26),
+      0 0 52px rgba(184,50,64,0.38),
+      0 0 18px rgba(184,50,64,0.26),
       0 2px 6px rgba(0,0,0,0.28);
   }
   [style*="color: #7C222B"],
   [style*='color: "#7C222B"'] {
-    text-shadow: 0 0 24px rgba(161,44,56,0.45), 0 0 8px rgba(161,44,56,0.26);
+    text-shadow: 0 0 24px rgba(184,50,64,0.45), 0 0 8px rgba(184,50,64,0.26);
   }
   [data-glow] {
     --border-size: calc(var(--border,1.5) * 1px);
@@ -141,9 +141,9 @@ function NMmark({size=32,id="nm-sg",hover=false}:{size?:number;id?:string;hover?
     <svg viewBox="0 2 28 22" width={size} height={Math.round(size*22/28)} fill="none" strokeLinecap="square" strokeLinejoin="miter">
       <defs>
         <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor={hover?"#ffffff":"rgba(255,255,255,0.90)"} />
-          <stop offset="44%"  stopColor={hover?"#ffffff":"rgba(255,255,255,0.90)"} />
-          <stop offset="56%"  stopColor="#A83040" />
+          <stop offset="0%"   stopColor={hover?"#F0F3F9":"rgba(255,255,255,0.90)"} />
+          <stop offset="44%"  stopColor={hover?"#F0F3F9":"rgba(255,255,255,0.90)"} />
+          <stop offset="56%"  stopColor="#BE3648" />
           <stop offset="100%" stopColor={hover?"#943830":"#7C222B"} />
         </linearGradient>
       </defs>
@@ -185,7 +185,7 @@ function Reveal({children,delay=0}:{children:React.ReactNode;delay?:number}) {
 function ScrollProgress() {
   const {scrollYProgress} = useScroll()
   const scaleX = useSpring(scrollYProgress,{stiffness:140,damping:26,mass:0.3})
-  return <motion.div aria-hidden style={{position:"fixed",top:0,left:0,right:0,height:2,zIndex:500,transformOrigin:"0% 50%",scaleX,background:"linear-gradient(90deg,rgba(90,40,40,1),#7C222B,#A83040)",boxShadow:"0 0 12px rgba(161,44,56,0.7)"}} />
+  return <motion.div aria-hidden style={{position:"fixed",top:0,left:0,right:0,height:2,zIndex:500,transformOrigin:"0% 50%",scaleX,background:"linear-gradient(90deg,rgba(90,40,40,1),#7C222B,#BE3648)",boxShadow:"0 0 12px rgba(184,50,64,0.7)"}} />
 }
 
 /* ── DateTimeWidget ── */
@@ -195,10 +195,10 @@ function DateTimeWidget() {
   const pad = (n: number) => String(n).padStart(2, "0")
   return (
     <div style={{display:"flex",flexDirection:"column",gap:1}}>
-      <span style={{fontFamily:MONO,fontSize:9,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.30)"}}>
+      <span style={{fontFamily:MONO,fontSize:9,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.37)"}}>
         {now.toLocaleDateString("it-IT",{day:"2-digit",month:"short",year:"numeric"})}
       </span>
-      <span style={{fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",color:"rgba(255,255,255,0.55)"}}>
+      <span style={{fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",color:"rgba(255,255,255,0.63)"}}>
         {pad(now.getHours())}<span className="dt-colon">:</span>{pad(now.getMinutes())}<span className="dt-colon">:</span>{pad(now.getSeconds())}
       </span>
     </div>
@@ -223,7 +223,7 @@ function MenuOverlay({onClose}:{onClose:()=>void}) {
       onClick={e=>{ if(e.target===e.currentTarget) onClose() }}>
       <div style={{position:"absolute",inset:0,background:"rgba(11,13,16,0.72)",backdropFilter:"blur(6px)",WebkitBackdropFilter:"blur(6px)"}} onClick={onClose} />
       <motion.div initial={{x:"100%"}} animate={{x:0}} exit={{x:"100%"}} transition={{duration:0.38,ease}}
-        style={{position:"absolute",right:0,top:0,bottom:0,width:"min(360px,90vw)",background:"rgba(22,27,34,0.82)",backdropFilter:"blur(40px) saturate(0.80)",WebkitBackdropFilter:"blur(40px) saturate(0.80)",borderLeft:"1px solid rgba(255,255,255,0.09)",display:"flex",flexDirection:"column",padding:"80px 40px 40px"}}>
+        style={{position:"absolute",right:0,top:0,bottom:0,width:"min(360px,90vw)",background:"rgba(22,27,34,0.82)",backdropFilter:"blur(40px) saturate(0.80)",WebkitBackdropFilter:"blur(40px) saturate(0.80)",borderLeft:"1px solid rgba(255,255,255,0.16)",display:"flex",flexDirection:"column",padding:"80px 40px 40px"}}>
         <nav style={{display:"flex",flexDirection:"column",gap:4}}>
           {SVC_MENU_LINKS.map(({label,href}) => (
             <motion.a key={label} href={href}
@@ -231,7 +231,7 @@ function MenuOverlay({onClose}:{onClose:()=>void}) {
               style={{display:"flex",alignItems:"center",gap:12,padding:"13px 0",textDecoration:"none",borderBottom:"1px solid rgba(255,255,255,0.05)",fontFamily:MONO,fontSize:12,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:T.muted,transition:"color 0.18s"}}
               onMouseEnter={e=>(e.currentTarget.style.color="#fff")}
               onMouseLeave={e=>(e.currentTarget.style.color=T.muted)}>
-              <span style={{width:16,height:1,background:"rgba(161,44,56,0.60)",display:"inline-block"}} aria-hidden />
+              <span style={{width:16,height:1,background:"rgba(184,50,64,0.60)",display:"inline-block"}} aria-hidden />
               {label}
             </motion.a>
           ))}
@@ -297,14 +297,14 @@ function ContactModal({onClose}:{onClose:()=>void}) {
   const [sent,setSent] = useState(false)
   const [form,setForm] = useState({name:"",email:"",company:"",message:""})
   const set=(k:keyof typeof form)=>(e:React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)=>setForm(f=>({...f,[k]:e.target.value}))
-  const inp:React.CSSProperties={width:"100%",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,padding:"12px 16px",color:"#fff",fontFamily:MONO,fontSize:12,letterSpacing:"0.06em",outline:"none",transition:"border-color 0.2s"}
+  const inp:React.CSSProperties={width:"100%",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.20)",borderRadius:10,padding:"12px 16px",color:"#fff",fontFamily:MONO,fontSize:12,letterSpacing:"0.06em",outline:"none",transition:"border-color 0.2s"}
   return createPortalIfNeeded(
     <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
       style={{position:"fixed",inset:0,zIndex:900,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}
       onClick={e=>{if(e.target===e.currentTarget)onClose()}}>
       <div style={{position:"absolute",inset:0,background:"rgba(10,12,16,0.75)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)"}} onClick={onClose} />
       <motion.div initial={{opacity:0,y:24,scale:0.96}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:16,scale:0.97}} transition={{duration:0.32,ease}}
-        style={{position:"relative",width:"100%",maxWidth:520,background:"rgba(13,18,30,0.94)",backdropFilter:"blur(72px) brightness(0.92) saturate(1.10)",WebkitBackdropFilter:"blur(72px) brightness(0.92) saturate(1.10)",borderRadius:20,padding:"36px 36px 32px",border:"1px solid rgba(255,255,255,0.12)",boxShadow:"inset 0 1.5px 0 rgba(255,255,255,0.22), inset 1px 0 0 rgba(255,255,255,0.08), 0 40px 100px rgba(0,0,0,0.65)",overflow:"hidden"}}>
+        style={{position:"relative",width:"100%",maxWidth:520,background:"rgba(13,18,30,0.94)",backdropFilter:"blur(72px) brightness(0.92) saturate(1.10)",WebkitBackdropFilter:"blur(72px) brightness(0.92) saturate(1.10)",borderRadius:20,padding:"36px 36px 32px",border:"1px solid rgba(255,255,255,0.20)",boxShadow:"inset 0 1.5px 0 rgba(255,255,255,0.22), inset 1px 0 0 rgba(255,255,255,0.08), 0 40px 100px rgba(0,0,0,0.65)",overflow:"hidden"}}>
         <div aria-hidden style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg, transparent, ${T.accent} 28%, ${T.accentLt} 72%, transparent)`}} />
         <button onClick={onClose} style={{position:"absolute",top:16,right:16,background:"none",border:"none",cursor:"pointer",color:T.faint,display:"flex",alignItems:"center",justifyContent:"center",width:28,height:28,borderRadius:8,transition:"color 0.18s"}}
           onMouseEnter={e=>(e.currentTarget.style.color="#fff")} onMouseLeave={e=>(e.currentTarget.style.color=T.faint)}>
@@ -324,19 +324,19 @@ function ContactModal({onClose}:{onClose:()=>void}) {
             <div style={{display:"flex",flexDirection:"column",gap:12}}>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
                 <input placeholder="Nome" value={form.name} onChange={set("name")} style={inp}
-                  onFocus={e=>(e.target.style.borderColor="rgba(161,44,56,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
+                  onFocus={e=>(e.target.style.borderColor="rgba(184,50,64,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
                 <input placeholder="Email" type="email" value={form.email} onChange={set("email")} style={inp}
-                  onFocus={e=>(e.target.style.borderColor="rgba(161,44,56,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
+                  onFocus={e=>(e.target.style.borderColor="rgba(184,50,64,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               </div>
               <input placeholder="Azienda (opzionale)" value={form.company} onChange={set("company")} style={inp}
-                onFocus={e=>(e.target.style.borderColor="rgba(161,44,56,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
+                onFocus={e=>(e.target.style.borderColor="rgba(184,50,64,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               <textarea placeholder="Descrivi il tuo progetto o problema principale..." value={form.message} onChange={set("message")} rows={4}
                 style={{...inp,resize:"none" as const,lineHeight:1.65}}
-                onFocus={e=>(e.target.style.borderColor="rgba(161,44,56,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
+                onFocus={e=>(e.target.style.borderColor="rgba(184,50,64,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                 onClick={()=>setSent(true)}
-                style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(161,44,56,0.80)",background:"linear-gradient(90deg,rgba(161,44,56,0.34) 0%,rgba(161,44,56,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden",marginTop:4}}>
-                <span style={{padding:"12px 14px 12px 16px",borderRight:"1px solid rgba(161,44,56,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[→]</span>
+                style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(184,50,64,0.80)",background:"linear-gradient(90deg,rgba(184,50,64,0.34) 0%,rgba(184,50,64,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden",marginTop:4}}>
+                <span style={{padding:"12px 14px 12px 16px",borderRight:"1px solid rgba(184,50,64,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[→]</span>
                 <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 20px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.90)",fontWeight:500}}>Invia Messaggio</span>
               </motion.button>
             </div>
@@ -379,8 +379,8 @@ const SERVICES: Record<string, ServiceData> = {
     title:"E-commerce ad Alta Conversione",
     subtitle:"Architetture Shopify custom e headless commerce scalabili. Automazione totale di magazzini, cataloghi massivi e logistica multi-corriere. Costruiamo infrastrutture che convertono e scalano senza attriti.",
     eyebrow:"E-Commerce · Shopify · Automazione",
-    gradient:"linear-gradient(135deg,#7C222B 0%,#A83040 100%)",
-    accentColor:"rgba(161,44,56,0.60)",
+    gradient:"linear-gradient(135deg,#7C222B 0%,#BE3648 100%)",
+    accentColor:"rgba(184,50,64,0.60)",
     whatWeDo:{
       heading:"Il tuo e-commerce è un asset — non un sito.",
       body:[
@@ -522,7 +522,7 @@ const SERVICES: Record<string, ServiceData> = {
     subtitle:"Posizionamento organico integrato nell'architettura dal primo giorno. Google Ads e Meta Ads scalabili a costi decrescenti. Costruiamo canali di acquisizione che lavorano anche mentre dormi.",
     eyebrow:"SEO Tecnico · Google Ads · Meta Ads",
     gradient:"linear-gradient(135deg,#7C222B 0%,#DFA088 100%)",
-    accentColor:"rgba(161,44,56,0.60)",
+    accentColor:"rgba(184,50,64,0.60)",
     whatWeDo:{
       heading:"Il traffico organico è il tuo asset più redditizio.",
       body:[
@@ -568,8 +568,8 @@ const SERVICES: Record<string, ServiceData> = {
     title:"Integrazione AI & Sistemi Intelligenti",
     subtitle:"Agenti AI, LLM e sistemi RAG integrati nei tuoi processi aziendali. Riduciamo i costi operativi, acceleriamo le decisioni e liberiamo il tuo team per il lavoro ad alto valore strategico.",
     eyebrow:"AI Agents · LLM · Automazione Intelligente",
-    gradient:"linear-gradient(135deg,#A83040 0%,#DFA088 100%)",
-    accentColor:"rgba(161,44,56,0.60)",
+    gradient:"linear-gradient(135deg,#BE3648 0%,#DFA088 100%)",
+    accentColor:"rgba(184,50,64,0.60)",
     whatWeDo:{
       heading:"L'AI non è il futuro. È il vantaggio competitivo di oggi.",
       body:[
@@ -642,7 +642,7 @@ function ServicePage({data}:{data:ServiceData}) {
       <div style={{position:"relative",zIndex:1,paddingTop:64}}>
 
         {/* ── HERO ── */}
-        <section style={{padding:"80px 0 72px",borderBottom:`1px solid rgba(255,255,255,0.06)`}}>
+        <section style={{padding:"80px 0 72px",borderBottom:`1px solid rgba(255,255,255,0.12)`}}>
           <div style={{...WRAP,position:"relative"}} className="svc-wrap">
             {/* breadcrumb */}
             <Reveal>
@@ -657,14 +657,14 @@ function ServicePage({data}:{data:ServiceData}) {
             </Reveal>
 
             <Reveal delay={0.04}>
-              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.38)",marginBottom:20}}>
+              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.46)",marginBottom:20}}>
                 <span style={{color:T.accentLt}}>//</span>
                 <span>[ {data.num} · Servizio ]</span>
               </div>
             </Reveal>
 
             <Reveal delay={0.08}>
-              <h1 className="svc-hero-title" style={{fontFamily:DISPLAY,fontSize:"clamp(36px,5.5vw,72px)",fontWeight:800,lineHeight:1.05,letterSpacing:"-0.03em",color:"#FFFFFF",maxWidth:840,marginBottom:24}}>
+              <h1 className="svc-hero-title" style={{fontFamily:DISPLAY,fontSize:"clamp(36px,5.5vw,72px)",fontWeight:800,lineHeight:1.05,letterSpacing:"-0.03em",color:"#F0F3F9",maxWidth:840,marginBottom:24}}>
                 {data.title}
               </h1>
             </Reveal>
@@ -679,8 +679,8 @@ function ServicePage({data}:{data:ServiceData}) {
               <div style={{display:"flex",gap:12,flexWrap:"wrap" as const,alignItems:"center"}}>
                 <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                   onClick={()=>setModalOpen(true)}
-                  style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(161,44,56,0.80)",background:"linear-gradient(90deg,rgba(161,44,56,0.34) 0%,rgba(161,44,56,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
-                  <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(161,44,56,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
+                  style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(184,50,64,0.80)",background:"linear-gradient(90deg,rgba(184,50,64,0.34) 0%,rgba(184,50,64,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
+                  <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(184,50,64,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
                   <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 22px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.92)",fontWeight:500}}>
                     {data.cta.btn} <ArrowRightIcon size={11} />
                   </span>
@@ -698,16 +698,16 @@ function ServicePage({data}:{data:ServiceData}) {
         </section>
 
         {/* ── COSA FACCIAMO ── */}
-        <section style={{padding:"88px 0",borderBottom:`1px solid rgba(255,255,255,0.06)`}}>
+        <section style={{padding:"88px 0",borderBottom:`1px solid rgba(255,255,255,0.12)`}}>
           <div style={{...WRAP}} className="svc-wrap">
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"64px 80px",alignItems:"start"}} className="svc-what-grid">
               <style>{`.svc-what-grid{@media(max-width:768px){grid-template-columns:1fr!important}}`}</style>
               <div>
                 <Reveal>
-                  <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.38)",marginBottom:20}}>
+                  <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.46)",marginBottom:20}}>
                     <span style={{color:T.accentLt}}>//</span><span>[ Cosa Facciamo ]</span>
                   </div>
-                  <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:28}}>
+                  <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#F0F3F9",marginBottom:28}}>
                     {data.whatWeDo.heading}
                   </h2>
                   {data.whatWeDo.body.map((p,i)=>(
@@ -721,10 +721,10 @@ function ServicePage({data}:{data:ServiceData}) {
                 {data.whatWeDo.stats.map((s,i)=>(
                   <Reveal key={i} delay={i*0.08}>
                     <motion.div data-glow="" whileHover={{x:6,scale:1.02}} transition={{duration:0.25,ease}}
-                      style={{"--base":"28","--spread":"36","--radius":"16","--border":"1","--size":"180",display:"flex",alignItems:"center",gap:20,padding:"22px 24px",borderRadius:16,background:"rgba(255,255,255,0.055)",border:"1px solid rgba(255,255,255,0.12)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",position:"relative",overflow:"hidden"} as React.CSSProperties}>
+                      style={{"--base":"28","--spread":"36","--radius":"16","--border":"1","--size":"180",display:"flex",alignItems:"center",gap:20,padding:"22px 24px",borderRadius:16,background:"rgba(255,255,255,0.055)",border:"1px solid rgba(255,255,255,0.20)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",position:"relative",overflow:"hidden"} as React.CSSProperties}>
                       <div style={{position:"absolute",left:0,top:0,bottom:0,width:3,background:data.gradient,borderRadius:"16px 0 0 16px"}} />
                       <div style={{paddingLeft:8}}>
-                        <div style={{fontFamily:DISPLAY,fontSize:32,fontWeight:800,color:"#FFFFFF",letterSpacing:"-0.03em",lineHeight:1}}>{s.value}</div>
+                        <div style={{fontFamily:DISPLAY,fontSize:32,fontWeight:800,color:"#F0F3F9",letterSpacing:"-0.03em",lineHeight:1}}>{s.value}</div>
                         <div style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:T.faint,marginTop:6}}>{s.label}</div>
                       </div>
                     </motion.div>
@@ -736,13 +736,13 @@ function ServicePage({data}:{data:ServiceData}) {
         </section>
 
         {/* ── COSA OFFRIAMO ── */}
-        <section style={{padding:"88px 0",borderBottom:`1px solid rgba(255,255,255,0.06)`}}>
+        <section style={{padding:"88px 0",borderBottom:`1px solid rgba(255,255,255,0.12)`}}>
           <div style={{...WRAP}} className="svc-wrap">
             <Reveal>
-              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.38)",marginBottom:20}}>
+              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.46)",marginBottom:20}}>
                 <span style={{color:T.accentLt}}>//</span><span>[ Cosa Offriamo ]</span>
               </div>
-              <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:48}}>
+              <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#F0F3F9",marginBottom:48}}>
                 {data.whatWeOffer.heading}
               </h2>
             </Reveal>
@@ -757,19 +757,19 @@ function ServicePage({data}:{data:ServiceData}) {
         </section>
 
         {/* ── COME LO REALIZZIAMO ── */}
-        <section style={{padding:"88px 0",borderBottom:`1px solid rgba(255,255,255,0.06)`}}>
+        <section style={{padding:"88px 0",borderBottom:`1px solid rgba(255,255,255,0.12)`}}>
           <div style={{...WRAP}} className="svc-wrap">
             <Reveal>
-              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.38)",marginBottom:20}}>
+              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.46)",marginBottom:20}}>
                 <span style={{color:T.accentLt}}>//</span><span>[ Come lo Realizziamo ]</span>
               </div>
-              <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:56}}>
+              <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#F0F3F9",marginBottom:56}}>
                 {data.howWeDoIt.heading}
               </h2>
             </Reveal>
             <div style={{position:"relative"}}>
               {/* vertical connector line */}
-              <div aria-hidden style={{position:"absolute",left:28,top:48,bottom:48,width:1,background:`linear-gradient(180deg, ${data.accentColor}, rgba(161,44,56,0.08))`,zIndex:0}} />
+              <div aria-hidden style={{position:"absolute",left:28,top:48,bottom:48,width:1,background:`linear-gradient(180deg, ${data.accentColor}, rgba(184,50,64,0.08))`,zIndex:0}} />
               <div style={{display:"flex",flexDirection:"column",gap:0}}>
                 {data.howWeDoIt.steps.map((step,i)=>(
                   <Reveal key={i} delay={i*0.07}>
@@ -786,17 +786,17 @@ function ServicePage({data}:{data:ServiceData}) {
           <div style={{...WRAP}} className="svc-wrap">
             <Reveal>
               <motion.div data-glow="" whileHover={{scale:1.005}} transition={{duration:0.4,ease}}
-                style={{"--base":"28","--spread":"60","--radius":"24","--border":"1.5","--size":"400",position:"relative",borderRadius:24,padding:"64px 56px",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.13)",backdropFilter:"blur(40px)",WebkitBackdropFilter:"blur(40px)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.55),0 32px 80px rgba(0,0,0,0.50)",overflow:"hidden",textAlign:"center"} as React.CSSProperties}>
+                style={{"--base":"28","--spread":"60","--radius":"24","--border":"1.5","--size":"400",position:"relative",borderRadius:24,padding:"64px 56px",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.20)",backdropFilter:"blur(40px)",WebkitBackdropFilter:"blur(40px)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.63),0 32px 80px rgba(0,0,0,0.50)",overflow:"hidden",textAlign:"center"} as React.CSSProperties}>
                 {/* glow orbs */}
                 <div aria-hidden style={{position:"absolute",top:"-30%",left:"50%",transform:"translateX(-50%)",width:600,height:400,borderRadius:"50%",background:`radial-gradient(ellipse,${data.accentColor} 0%,transparent 60%)`,filter:"blur(60px)",pointerEvents:"none"}} />
                 <div aria-hidden style={{position:"absolute",bottom:0,left:0,right:0,height:1,background:`linear-gradient(90deg,transparent,${data.accentColor},transparent)`}} />
 
                 <div style={{position:"relative",zIndex:1}}>
-                  <div style={{display:"inline-flex",alignItems:"center",gap:10,padding:"7px 16px",borderRadius:9999,background:"rgba(161,44,56,0.10)",border:"1px solid rgba(161,44,56,0.35)",marginBottom:24}}>
+                  <div style={{display:"inline-flex",alignItems:"center",gap:10,padding:"7px 16px",borderRadius:9999,background:"rgba(184,50,64,0.10)",border:"1px solid rgba(184,50,64,0.35)",marginBottom:24}}>
                     <PingDot color={T.accentLt} size={6} />
                     <span style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.20em",textTransform:"uppercase" as const,color:T.accentLt}}>Disponibile · 2026</span>
                   </div>
-                  <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(24px,3.2vw,44px)",fontWeight:800,lineHeight:1.1,letterSpacing:"-0.025em",color:"#FFFFFF",marginBottom:18,maxWidth:640,margin:"0 auto 18px"}}>
+                  <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(24px,3.2vw,44px)",fontWeight:800,lineHeight:1.1,letterSpacing:"-0.025em",color:"#F0F3F9",marginBottom:18,maxWidth:640,margin:"0 auto 18px"}}>
                     {data.cta.heading}
                   </h2>
                   <p style={{...BODY,color:T.muted,maxWidth:500,margin:"0 auto 36px"}}>
@@ -805,8 +805,8 @@ function ServicePage({data}:{data:ServiceData}) {
                   <div style={{display:"flex",justifyContent:"center",gap:12,flexWrap:"wrap" as const}}>
                     <motion.button whileHover={{scale:1.03}} whileTap={{scale:0.97}}
                       onClick={()=>setModalOpen(true)}
-                      style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(161,44,56,0.80)",background:"linear-gradient(90deg,rgba(161,44,56,0.34) 0%,rgba(161,44,56,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
-                      <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(161,44,56,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
+                      style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(184,50,64,0.80)",background:"linear-gradient(90deg,rgba(184,50,64,0.34) 0%,rgba(184,50,64,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
+                      <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(184,50,64,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
                       <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 24px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.92)",fontWeight:500}}>
                         {data.cta.btn} <ArrowRightIcon size={11} />
                       </span>
@@ -836,11 +836,11 @@ function OfferCard({item,gradient}:{item:OfferItem;gradient:string}) {
   return (
     <motion.div data-glow="" onHoverStart={()=>setHov(true)} onHoverEnd={()=>setHov(false)}
       whileHover={{y:-6,scale:1.015}} transition={{duration:0.28,ease}}
-      style={{"--base":"28","--spread":"36","--radius":"18","--border":"1","--size":"200",height:"100%",position:"relative",borderRadius:18,padding:"28px 24px",background:hov?"rgba(255,255,255,0.09)":"rgba(255,255,255,0.05)",border:`1px solid ${hov?"rgba(255,255,255,0.35)":"rgba(255,255,255,0.12)"}`,backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",boxShadow:hov?"inset 0 1px 0 rgba(255,255,255,0.55),0 20px 50px rgba(0,0,0,0.42)":"inset 0 1px 0 rgba(255,255,255,0.28),0 12px 36px rgba(0,0,0,0.28)",display:"flex",flexDirection:"column",gap:0,overflow:"hidden",transition:"background 0.25s,border-color 0.25s,box-shadow 0.3s"} as React.CSSProperties}>
+      style={{"--base":"28","--spread":"36","--radius":"18","--border":"1","--size":"200",height:"100%",position:"relative",borderRadius:18,padding:"28px 24px",background:hov?"rgba(255,255,255,0.09)":"rgba(255,255,255,0.05)",border:`1px solid ${hov?"rgba(255,255,255,0.42)":"rgba(255,255,255,0.12)"}`,backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",boxShadow:hov?"inset 0 1px 0 rgba(255,255,255,0.63),0 20px 50px rgba(0,0,0,0.42)":"inset 0 1px 0 rgba(255,255,255,0.28),0 12px 36px rgba(0,0,0,0.28)",display:"flex",flexDirection:"column",gap:0,overflow:"hidden",transition:"background 0.25s,border-color 0.25s,box-shadow 0.3s"} as React.CSSProperties}>
       <div style={{width:44,height:44,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",background:hov?gradient:"rgba(255,255,255,0.06)",border:`1px solid ${hov?"transparent":"rgba(255,255,255,0.12)"}`,color:hov?"#fff":"rgba(255,255,255,0.70)",marginBottom:18,flexShrink:0,transition:"background 0.3s,color 0.3s,border-color 0.3s"}}>
         {item.icon}
       </div>
-      <h3 style={{fontFamily:DISPLAY,fontSize:16,fontWeight:700,color:"#FFFFFF",marginBottom:10,lineHeight:1.25}}>{item.title}</h3>
+      <h3 style={{fontFamily:DISPLAY,fontSize:16,fontWeight:700,color:"#F0F3F9",marginBottom:10,lineHeight:1.25}}>{item.title}</h3>
       <p style={{fontFamily:"'Inter',sans-serif",fontSize:13.5,color:T.muted,lineHeight:1.75,flex:1}}>{item.desc}</p>
       <motion.div animate={{scaleX:hov?1:0}} transition={{duration:0.3,ease}}
         style={{position:"absolute",bottom:0,left:0,right:0,height:2,background:gradient,transformOrigin:"left",borderRadius:"0 0 18px 18px"}} />
@@ -858,14 +858,14 @@ function ProcessStep({step,index,total,gradient,accentColor}:{step:Step;index:nu
       {/* step number circle */}
       <div className="svc-step-num" style={{display:"flex",justifyContent:"center",paddingTop:4}}>
         <motion.div animate={{scale:hov?1.08:1,background:hov?gradient:"rgba(255,255,255,0.06)"}} transition={{duration:0.25}}
-          style={{width:36,height:36,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",border:`1px solid ${hov?accentColor:"rgba(255,255,255,0.16)"}`,flexShrink:0,position:"relative",zIndex:2,fontFamily:MONO,fontSize:10,fontWeight:600,color:hov?"#fff":"rgba(255,255,255,0.45)",letterSpacing:"0.10em",boxShadow:hov?`0 0 20px ${accentColor}`:"none",transition:"box-shadow 0.25s,border-color 0.25s"}}>
+          style={{width:36,height:36,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",border:`1px solid ${hov?accentColor:"rgba(255,255,255,0.16)"}`,flexShrink:0,position:"relative",zIndex:2,fontFamily:MONO,fontSize:10,fontWeight:600,color:hov?"#fff":"rgba(255,255,255,0.53)",letterSpacing:"0.10em",boxShadow:hov?`0 0 20px ${accentColor}`:"none",transition:"box-shadow 0.25s,border-color 0.25s"}}>
           {String(index+1).padStart(2,"0")}
         </motion.div>
       </div>
       {/* content */}
       <motion.div animate={{x:hov?4:0}} transition={{duration:0.22}}
         style={{padding:"0 0 0 4px"}}>
-        <h3 style={{fontFamily:DISPLAY,fontSize:18,fontWeight:700,color:"#FFFFFF",lineHeight:1.25,marginBottom:10}}>{step.title}</h3>
+        <h3 style={{fontFamily:DISPLAY,fontSize:18,fontWeight:700,color:"#F0F3F9",lineHeight:1.25,marginBottom:10}}>{step.title}</h3>
         <p style={{fontFamily:"'Inter',sans-serif",fontSize:14.5,color:T.muted,lineHeight:1.78}}>{step.desc}</p>
         {!isLast && <div style={{width:"100%",height:1,background:"rgba(255,255,255,0.05)",marginTop:32}} />}
       </motion.div>

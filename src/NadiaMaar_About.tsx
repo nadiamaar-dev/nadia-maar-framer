@@ -86,10 +86,10 @@ function NMmark({ size = 32, id = "nm-g", hover = false }: { size?: number; id?:
     <svg viewBox="0 2 28 22" width={size} height={Math.round(size * 22 / 28)} fill="none" strokeLinecap="square" strokeLinejoin="miter">
       <defs>
         <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
-          <stop offset="44%"  stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
-          <stop offset="56%"  stopColor="#A83040" />
-          <stop offset="100%" stopColor={hover ? "#B8384A" : "#A12C38"} />
+          <stop offset="0%"   stopColor={hover ? "#F0F3F9" : "rgba(255,255,255,0.90)"} />
+          <stop offset="44%"  stopColor={hover ? "#F0F3F9" : "rgba(255,255,255,0.90)"} />
+          <stop offset="56%"  stopColor="#BE3648" />
+          <stop offset="100%" stopColor={hover ? "#B8384A" : "#B83240"} />
         </linearGradient>
       </defs>
       <motion.path
@@ -111,24 +111,24 @@ const T = {
   bg:        "#060C18",
   surface:   "#0A1020",
   border:    "rgba(255,255,255,0.11)",
-  text:      "#FFFFFF",
+  text:      "#F0F3F9",
   muted:     "rgba(255,255,255,0.78)",
   faint:     "rgba(255,255,255,0.58)",
-  accent:    "#A12C38",
-  accentGlo: "rgba(161,44,56,0.45)",
-  accentLt:  "#A83040",
+  accent:    "#B83240",
+  accentGlo: "rgba(184,50,64,0.45)",
+  accentLt:  "#BE3648",
   green:     "#10B981",
 } as const
 
 // warm rgba helpers
-const AM = (a: number) => `rgba(161,44,56,${a})`
-const LT = (a: number) => `rgba(168,48,64,${a})`
-const OR = (a: number) => `rgba(161,44,56,${a})`
+const AM = (a: number) => `rgba(184,50,64,${a})`
+const LT = (a: number) => `rgba(190,54,72,${a})`
+const OR = (a: number) => `rgba(184,50,64,${a})`
 const RD = (a: number) => `rgba(120,20,30,${a})`
 
 // white -> amber gradient text fill
 const gradText = (deg = 180): React.CSSProperties => ({
-  backgroundImage: `linear-gradient(${deg}deg, #FFFFFF 0%, rgba(255,255,255,0.70) 48%, #A12C38 100%)`,
+  backgroundImage: `linear-gradient(${deg}deg, #F0F3F9 0%, rgba(255,255,255,0.70) 48%, #B83240 100%)`,
   WebkitBackgroundClip: "text",
   backgroundClip: "text",
   WebkitTextFillColor: "transparent",
@@ -144,7 +144,7 @@ const G = {
   bg:        "rgba(255,255,255,0.06)",
   bgHov:     "rgba(255,255,255,0.10)",
   bd:        "rgba(255,255,255,0.18)",
-  bdHov:     "rgba(255,255,255,0.38)",
+  bdHov:     "rgba(255,255,255,0.46)",
   blur:      "blur(16px) saturate(0.15)",
   shadow:    "0 16px 52px 0 rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.14), inset 0 0 0 1px rgba(255,255,255,0.05)",
   shadowHov: "0 32px 80px 0 rgba(0,0,0,0.70), inset 0 1px 0 rgba(255,255,255,0.22), inset 0 0 0 1px rgba(255,255,255,0.08)",
@@ -172,17 +172,17 @@ const GLOBAL_CSS = `
   :root { --x:-9999; --y:-9999; --xp:0; --yp:0; }
 
   /* brick text — semi-transparent + warm glow, matching button quality */
-  [style*="color: #A83040"],
-  [style*='color: "#A83040"'] {
-    color: rgba(168,48,64,0.82) !important;
+  [style*="color: #BE3648"],
+  [style*='color: "#BE3648"'] {
+    color: rgba(190,54,72,0.82) !important;
     text-shadow:
-      0 0 52px rgba(168,48,64,0.38),
-      0 0 18px rgba(168,48,64,0.26),
+      0 0 52px rgba(190,54,72,0.38),
+      0 0 18px rgba(190,54,72,0.26),
       0 2px 6px rgba(0,0,0,0.28);
   }
-  [style*="color: #A12C38"],
-  [style*='color: "#A12C38"'] {
-    text-shadow: 0 0 24px rgba(161,44,56,0.45), 0 0 8px rgba(161,44,56,0.26);
+  [style*="color: #B83240"],
+  [style*='color: "#B83240"'] {
+    text-shadow: 0 0 24px rgba(184,50,64,0.45), 0 0 8px rgba(184,50,64,0.26);
   }
 
   [data-glow] {
@@ -236,8 +236,8 @@ const GLOBAL_CSS = `
   @keyframes abt-bar { 0%,100% { transform: scaleY(0.35); opacity:0.5; } 50% { transform: scaleY(1); opacity:1; } }
 
   /* interactive capability tag */
-  .abt-tag { display: inline-block; padding: 5px 11px; border-radius: 9999px; font-weight: 400; line-height: 1.4; color: rgba(255,255,255,0.78); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); letter-spacing: 0.01em; cursor: default; transition: background .22s, border-color .22s, color .22s, transform .22s; }
-  .abt-tag:hover { background: rgba(168,48,64,0.20); border-color: rgba(168,48,64,0.48); color: #fff; transform: translateY(-1px); }
+  .abt-tag { display: inline-block; padding: 5px 11px; border-radius: 9999px; font-weight: 400; line-height: 1.4; color: rgba(255,255,255,0.78); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.14); letter-spacing: 0.01em; cursor: default; transition: background .22s, border-color .22s, color .22s, transform .22s; }
+  .abt-tag:hover { background: rgba(190,54,72,0.20); border-color: rgba(190,54,72,0.48); color: #fff; transform: translateY(-1px); }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -416,17 +416,17 @@ function PillCTA({ label, href, onClick, target }: { label: string; href?: strin
   const btnStyle: React.CSSProperties = {
     display: "inline-flex", alignItems: "stretch",
     borderRadius: 12, cursor: "pointer",
-    border: `1px solid ${h ? "rgba(161,44,56,0.80)" : "rgba(161,44,56,0.50)"}`,
-    background: "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)",
+    border: `1px solid ${h ? "rgba(184,50,64,0.80)" : "rgba(184,50,64,0.50)"}`,
+    background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)",
     backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-    boxShadow: h ? "0 0 24px rgba(161,44,56,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" : "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",
+    boxShadow: h ? "0 0 24px rgba(184,50,64,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" : "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",
     textDecoration: "none", overflow: "hidden",
     transition: "border-color 0.25s, box-shadow 0.30s",
   }
   const inner = (
     <>
-      <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(161,44,56,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[01]</span>
-      <span style={{ padding: "14px 20px", display: "flex", alignItems: "center", gap: 12, fontFamily: MONO, fontSize: 12, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
+      <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[01]</span>
+      <span style={{ padding: "14px 20px", display: "flex", alignItems: "center", gap: 12, fontFamily: MONO, fontSize: 12, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#F0F3F9" }}>
         {label}
         <motion.span animate={{ x: h ? [0,4,0] : 0 }} transition={{ duration: 0.55, repeat: h ? Infinity : 0, ease: "easeInOut" }} style={{ fontSize: 14, color: "rgba(255,255,255,0.92)" }}>→</motion.span>
       </span>
@@ -483,14 +483,14 @@ function DateTimeWidget() {
   const date = now.getDate()
   const mon = new Intl.DateTimeFormat("en", { month: "short" }).format(now).toUpperCase()
   return (
-    <div className="abt-datetime" aria-label="Local time" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", alignItems: "center", gap: 10, padding: "5px 14px 5px 8px", borderRadius: 100, background: "rgba(255,255,255,0.04)", backdropFilter: "blur(22px) saturate(1.6)", WebkitBackdropFilter: "blur(22px) saturate(1.6)", border: "1px solid rgba(255,255,255,0.09)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 14px rgba(0,0,0,0.22)", whiteSpace: "nowrap", userSelect: "none", pointerEvents: "none", zIndex: 10 } as React.CSSProperties}>
+    <div className="abt-datetime" aria-label="Local time" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", alignItems: "center", gap: 10, padding: "5px 14px 5px 8px", borderRadius: 100, background: "rgba(255,255,255,0.04)", backdropFilter: "blur(22px) saturate(1.6)", WebkitBackdropFilter: "blur(22px) saturate(1.6)", border: "1px solid rgba(255,255,255,0.16)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 14px rgba(0,0,0,0.22)", whiteSpace: "nowrap", userSelect: "none", pointerEvents: "none", zIndex: 10 } as React.CSSProperties}>
       <svg width="22" height="22" viewBox="0 0 22 22" style={{ flexShrink: 0 }}>
         <circle cx="11" cy="11" r="8.5" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" />
-        <motion.circle cx="11" cy="11" r="8.5" fill="none" stroke="#A83040" strokeWidth="1.5" strokeLinecap="round" transform="rotate(-90 11 11)" animate={{ pathLength: ss / 60 }} transition={{ duration: 0.85, ease: "easeOut" }} />
+        <motion.circle cx="11" cy="11" r="8.5" fill="none" stroke="#BE3648" strokeWidth="1.5" strokeLinecap="round" transform="rotate(-90 11 11)" animate={{ pathLength: ss / 60 }} transition={{ duration: 0.85, ease: "easeOut" }} />
       </svg>
       <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.06em", color: "rgba(255,255,255,0.92)", display: "inline-flex", alignItems: "baseline", gap: 1 }}>
         {hh}
-        <motion.span animate={{ opacity: [1, 0.2, 1] }} transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }} style={{ margin: "0 1px", color: "rgba(255,255,255,0.30)" }}>:</motion.span>
+        <motion.span animate={{ opacity: [1, 0.2, 1] }} transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }} style={{ margin: "0 1px", color: "rgba(255,255,255,0.37)" }}>:</motion.span>
         {mm}
         <span style={{ fontSize: 9, opacity: 0.36, marginLeft: 4, letterSpacing: "0.04em" }}>{ssStr}</span>
       </span>
@@ -512,7 +512,7 @@ function ScrollProgress() {
       style={{
         position: "fixed", top: 0, left: 0, right: 0, height: 2, zIndex: 500,
         transformOrigin: "0% 50%", scaleX,
-        background: "linear-gradient(90deg, rgba(90,40,40,1), #7C222B, #A83040)",
+        background: "linear-gradient(90deg, rgba(90,40,40,1), #7C222B, #BE3648)",
         boxShadow: "0 0 12px rgba(124,34,43,0.7)",
       }}
     />
@@ -573,7 +573,7 @@ function MenuNavItem({ num, label, onClick, index, active = false }: { num: stri
           transition={{ duration: 0.2 }}
           style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-50%)", width: 2, height: "60%", background: T.accent, borderRadius: 2, transformOrigin: "center" }}
         />
-        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", color: active ? T.accentLt : lit ? T.accent : "rgba(255,255,255,0.30)", transition: "color 0.22s", minWidth: 26, flexShrink: 0 }}>[{num}]</span>
+        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", color: active ? T.accentLt : lit ? T.accent : "rgba(255,255,255,0.37)", transition: "color 0.22s", minWidth: 26, flexShrink: 0 }}>[{num}]</span>
         <span style={{ fontFamily: DISPLAY, fontSize: "clamp(28px, 8vw, 46px)", fontWeight: 800, letterSpacing: "-0.032em", lineHeight: 1.1, color: lit ? "#fff" : "rgba(255,255,255,0.75)", transition: "color 0.22s" }}>{label}</span>
         <motion.span animate={{ x: lit ? 6 : 0, opacity: lit ? 1 : 0 }} transition={{ duration: 0.20 }} style={{ marginLeft: "auto", color: T.accentLt, fontSize: 20, lineHeight: 1 }}>→</motion.span>
       </button>
@@ -620,12 +620,12 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
     <motion.div
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.42, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      style={{ paddingBottom: 36, paddingTop: 22, borderTop: "1px solid rgba(255,255,255,0.10)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}
+      style={{ paddingBottom: 36, paddingTop: 22, borderTop: "1px solid rgba(255,255,255,0.17)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
         <a href="mailto:nadiamaar.dev@gmail.com"
-          style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em", color: "rgba(255,255,255,0.50)", textDecoration: "none", transition: "color 0.18s" }}
-          onMouseEnter={e => (e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.50)")}>
+          style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em", color: "rgba(255,255,255,0.58)", textDecoration: "none", transition: "color 0.18s" }}
+          onMouseEnter={e => (e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.58)")}>
           nadiamaar.dev@gmail.com
         </a>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
@@ -636,9 +636,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
       <div style={{ display: "flex", gap: 10 }}>
         {MENU_SOCIALS.map(({ label, href }) => (
           <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-            style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: "rgba(255,255,255,0.55)", background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", textDecoration: "none", transition: "all 0.18s" }}
+            style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: "rgba(255,255,255,0.63)", background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.20)", textDecoration: "none", transition: "all 0.18s" }}
             onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color="#fff"; el.style.borderColor="rgba(124,34,43,0.55)"; el.style.background="rgba(124,34,43,0.14)" }}
-            onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.color="rgba(255,255,255,0.55)"; el.style.borderColor="rgba(255,255,255,0.12)"; el.style.background="rgba(255,255,255,0.07)" }}
+            onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.color="rgba(255,255,255,0.63)"; el.style.borderColor="rgba(255,255,255,0.12)"; el.style.background="rgba(255,255,255,0.07)" }}
           >{label}</a>
         ))}
       </div>
@@ -653,7 +653,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         style={{ position: "fixed", inset: 0, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 28px", overflow: "hidden", ...GLASS }}
       >
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(124,34,43,0.70), rgba(168,48,64,0.45), transparent)", flexShrink: 0 }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(124,34,43,0.70), rgba(190,54,72,0.45), transparent)", flexShrink: 0 }} />
         <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
           <NMmark size={26} id="nm-abt-menu-mob" hover={false} />
         </div>
@@ -679,9 +679,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
       <motion.div
         initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
         transition={{ type: "spring", stiffness: 320, damping: 36 }}
-        style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: 460, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 40px", borderLeft: "1px solid rgba(255,255,255,0.14)", ...GLASS }}
+        style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: 460, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 40px", borderLeft: "1px solid rgba(255,255,255,0.22)", ...GLASS }}
       >
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(124,34,43,0.70) 40%, rgba(168,48,64,0.45) 70%, transparent)", flexShrink: 0 }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(124,34,43,0.70) 40%, rgba(190,54,72,0.45) 70%, transparent)", flexShrink: 0 }} />
         <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
           <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.26em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.36)" }}>Navigation</span>
         </div>
@@ -759,7 +759,7 @@ function LiveTerminal() {
       borderRadius: 16, padding: "18px 20px 20px",
       background: "rgba(0,0,0,0.12)",
       backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-      border: "1px solid rgba(255,255,255,0.08)",
+      border: "1px solid rgba(255,255,255,0.14)",
       fontFamily: MONO, fontSize: 12, lineHeight: 1.95,
       boxShadow: "0 8px 32px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.05)",
       minHeight: 190,
@@ -774,7 +774,7 @@ function LiveTerminal() {
         const shown = i < lineIdx ? full : full.slice(0, charIdx)
         return (
           <div key={i} style={{ whiteSpace: "pre-wrap" }}>
-            <span style={{ color: ln.p === "$" ? "rgba(255,255,255,0.30)" : ln.c }}>{shown.slice(0, 1)}</span>
+            <span style={{ color: ln.p === "$" ? "rgba(255,255,255,0.37)" : ln.c }}>{shown.slice(0, 1)}</span>
             <span style={{ color: ln.p === "$" ? "rgba(255,255,255,0.85)" : ln.c }}>{shown.slice(1)}</span>
             {i === lineIdx && <span className="abt-caret" />}
           </div>
@@ -813,10 +813,10 @@ function HeroSection() {
               }}
             >
               <ScrambleLine text="DIGITAL" delay={280} /><br />
-              <ScrambleLine text="ARCHITECT" delay={430} style={{ color: "#FFFFFF" }} /><br />
+              <ScrambleLine text="ARCHITECT" delay={430} style={{ color: "#F0F3F9" }} /><br />
               <ScrambleLine text="&" delay={560} style={{ color: "rgba(255,255,255,0.24)", fontWeight: 300 }} />{" "}
-              <ScrambleLine text="E-COM" delay={620} style={{ color: "#FFFFFF" }} /><br />
-              <ScrambleLine text="DEVELOPER" delay={760} style={{ color: "#FFFFFF" }} />
+              <ScrambleLine text="E-COM" delay={620} style={{ color: "#F0F3F9" }} /><br />
+              <ScrambleLine text="DEVELOPER" delay={760} style={{ color: "#F0F3F9" }} />
             </motion.h1>
 
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.22, ease }}
@@ -866,13 +866,13 @@ function HeroSection() {
               {/* ── Name block ── */}
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 18 }}>
                 {/* NM badge */}
-                <div style={{ width: 44, height: 44, borderRadius: 12, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(161,44,56,0.14)", border: "1px solid rgba(161,44,56,0.35)" }}>
+                <div style={{ width: 44, height: 44, borderRadius: 12, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(184,50,64,0.14)", border: "1px solid rgba(184,50,64,0.35)" }}>
                   <svg viewBox="0 2 28 22" width="22" height="18" fill="none" strokeLinecap="square" strokeLinejoin="miter">
                     <defs>
                       <linearGradient id="nm-about" x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
                         <stop offset="0%" stopColor="rgba(255,255,255,0.92)" />
                         <stop offset="46%" stopColor="rgba(255,255,255,0.92)" />
-                        <stop offset="58%" stopColor="#A12C38" />
+                        <stop offset="58%" stopColor="#B83240" />
                         <stop offset="100%" stopColor="#7C222B" />
                       </linearGradient>
                     </defs>
@@ -886,7 +886,7 @@ function HeroSection() {
               </div>
 
               {/* ── Red accent divider ── */}
-              <div style={{ height: 1, background: `linear-gradient(90deg, rgba(161,44,56,0.70), rgba(161,44,56,0.20), transparent)`, margin: "0 0 18px" }} />
+              <div style={{ height: 1, background: `linear-gradient(90deg, rgba(184,50,64,0.70), rgba(184,50,64,0.20), transparent)`, margin: "0 0 18px" }} />
 
               {/* ── Skills grid 2-col ── */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 12px", marginBottom: 18 }}>
@@ -1006,7 +1006,7 @@ function StatCard({ s, i }: { s: typeof STATS[number]; i: number }) {
         padding: "16px 20px 18px", minHeight: 150,
         display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 14,
         background: hov ? "rgba(255,255,255,0.035)" : "rgba(255,255,255,0.018)",
-        border: "1px solid rgba(255,255,255,0.08)",
+        border: "1px solid rgba(255,255,255,0.14)",
         boxShadow: hov ? `0 20px 60px rgba(0,0,0,0.55), 0 0 34px ${OR(0.10)}, inset 0 1px 0 rgba(255,255,255,0.07)` : "0 8px 28px rgba(0,0,0,0.38)",
         transition: "background .3s, box-shadow .35s",
       }}>
@@ -1027,7 +1027,7 @@ function StatCard({ s, i }: { s: typeof STATS[number]; i: number }) {
 
       {/* giant number with red-accent suffix */}
       <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "baseline", gap: 2 }}>
-        <span style={{ fontFamily: DISPLAY, fontSize: "clamp(44px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 0.86, letterSpacing: "-0.055em", color: "#FFFFFF", fontVariantNumeric: "tabular-nums" }}>{numStr}</span>
+        <span style={{ fontFamily: DISPLAY, fontSize: "clamp(44px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 0.86, letterSpacing: "-0.055em", color: "#F0F3F9", fontVariantNumeric: "tabular-nums" }}>{numStr}</span>
         <span style={{ fontFamily: DISPLAY, fontSize: "clamp(24px, 2.6vw, 34px)", fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", color: T.accentLt }}>{s.suffix}</span>
       </div>
 
@@ -1058,7 +1058,7 @@ function StatBento() {
           <div>
             <Kicker index="02" text="By The Numbers" />
             <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px, 3vw, 44px)", fontWeight: 900, lineHeight: 1.02, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-              IMPATTO <span style={{ color: "#FFFFFF" }}>MISURABILE</span>
+              IMPATTO <span style={{ color: "#F0F3F9" }}>MISURABILE</span>
             </h2>
           </div>
           <span style={{ ...MONO_LABEL, fontSize: 10.5, color: T.faint, paddingBottom: 6 }}>Aggiornato · 2026</span>
@@ -1141,7 +1141,7 @@ function PhilosophySection() {
                 {/* label + text */}
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
-                    <h3 style={{ fontFamily: DISPLAY, fontSize: "clamp(20px, 2.2vw, 28px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#FFFFFF", margin: 0, lineHeight: 1.1 }}>{p.label}</h3>
+                    <h3 style={{ fontFamily: DISPLAY, fontSize: "clamp(20px, 2.2vw, 28px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#F0F3F9", margin: 0, lineHeight: 1.1 }}>{p.label}</h3>
                     <span aria-hidden style={{ flex: 1, height: 1, maxWidth: 60, background: `linear-gradient(90deg, ${LT(hov ? 0.50 : 0.22)}, transparent)`, transition: "background .3s" }} />
                   </div>
                   <p style={{ ...BODY, color: T.muted, margin: 0 }}>{p.text}</p>
@@ -1178,14 +1178,14 @@ function ProcessCard({ p, i }: { p: typeof PROCESS[number]; i: number }) {
       animate={{ y: hover ? -3 : 0 }}
       style={{
         position: "relative", width: "100%", height: "100%", borderRadius: 16, overflow: "hidden",
-        boxShadow: "0 4px 24px rgba(0,0,0,0.22)", boxSizing: "border-box" as const,
+        boxShadow: "0 4px 24px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)", boxSizing: "border-box" as const,
       }}
     >
       {/* Glass background — bottom fade mask */}
       <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, background: "rgba(255,255,255,0.008)", backdropFilter: "blur(6px) brightness(1.03)", WebkitBackdropFilter: "blur(6px) brightness(1.03)", WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", maskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", pointerEvents: "none" }} />
 
       {/* Gradient border — top + sides fade to mid */}
-      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, padding: 1, background: "linear-gradient(to bottom, rgba(255,255,255,0.45) 0%, transparent 52%)", WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" as const, pointerEvents: "none", zIndex: 2 }} />
+      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, padding: 1, background: "linear-gradient(to bottom, rgba(255,255,255,0.53) 0%, transparent 52%)", WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" as const, pointerEvents: "none", zIndex: 2 }} />
 
       {/* Content */}
       <div style={{ position: "relative", zIndex: 3, width: "100%", height: "100%", padding: "20px 20px 18px", display: "flex", flexDirection: "column", boxSizing: "border-box" as const }}>
@@ -1197,7 +1197,7 @@ function ProcessCard({ p, i }: { p: typeof PROCESS[number]; i: number }) {
         {/* metric block */}
         <div style={{ marginBottom: 14 }}>
           <div style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(28px, 3.6vw, 40px)", letterSpacing: "-0.04em", color: T.accentLt, lineHeight: 1 }}>{p.metric}</div>
-          <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.50)", marginTop: 7 }}>{p.metricLabel}</div>
+          <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.58)", marginTop: 7 }}>{p.metricLabel}</div>
         </div>
 
         {/* title */}
@@ -1231,13 +1231,13 @@ function ProcessSection() {
 
           {/* typographic composition */}
           <div style={{ position: "relative" }}>
-            <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.26em", color: "rgba(255,255,255,0.50)", marginBottom: 10, textTransform: "uppercase" as const }}>Il tuo</div>
+            <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.26em", color: "rgba(255,255,255,0.58)", marginBottom: 10, textTransform: "uppercase" as const }}>Il tuo</div>
 
             {/* outlined */}
             <motion.div
               initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.08, ease }}
-              style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(50px, 8.5vw, 116px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.50)", userSelect: "none" }}>
+              style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(50px, 8.5vw, 116px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.58)", userSelect: "none" }}>
               PROSSIMO
             </motion.div>
 
@@ -1245,7 +1245,7 @@ function ProcessSection() {
             <motion.div
               initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.18, ease }}
-              style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(50px, 8.5vw, 116px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "#FFFFFF", userSelect: "none" }}>
+              style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(50px, 8.5vw, 116px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "#F0F3F9", userSelect: "none" }}>
               PRODOTTO
             </motion.div>
 
@@ -1262,10 +1262,10 @@ function ProcessSection() {
             <motion.div
               initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.42, ease }}
-              style={{ display: "flex", alignItems: "center", gap: 0, marginTop: 32, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.09)" }}>
+              style={{ display: "flex", alignItems: "center", gap: 0, marginTop: 32, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.16)" }}>
               {(["strategico", "elegante", "redditizio"] as const).map((w, i) => (
                 <React.Fragment key={w}>
-                  <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: i === 2 ? "rgba(255,255,255,0.88)" : "rgba(255,255,255,0.55)" }}>{w}</span>
+                  <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: i === 2 ? "rgba(255,255,255,0.88)" : "rgba(255,255,255,0.63)" }}>{w}</span>
                   {i < 2 && <span aria-hidden style={{ margin: "0 22px", width: 1, height: 12, background: "rgba(255,255,255,0.15)", display: "inline-block" }} />}
                 </React.Fragment>
               ))}
@@ -1333,7 +1333,7 @@ function ToolkitPanel({ data, i }: { data: typeof TOOLKIT[number]; i: number }) 
       <div style={{ padding: "16px 18px 20px", flex: 1, fontSize: 12.5, lineHeight: 1.85 }}>
         {/* command line */}
         <div style={{ marginBottom: 10 }}>
-          <span style={{ color: "rgba(255,255,255,0.30)" }}>$ </span>
+          <span style={{ color: "rgba(255,255,255,0.37)" }}>$ </span>
           <span style={{ color: "rgba(255,255,255,0.85)" }}>{cmd}</span>
         </div>
         {/* output — category title */}
@@ -1424,11 +1424,11 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
         }}>
         {/* brick accent dot when open */}
         <span aria-hidden style={{ flexShrink: 0, width: 6, height: 6, borderRadius: "50%", marginTop: 7, background: open ? T.accentLt : "rgba(255,255,255,0.20)", transition: "background .3s" }} />
-        <span style={{ flex: 1, fontSize: "clamp(14px, 1.2vw, 16px)", fontWeight: 500, lineHeight: 1.45, letterSpacing: "-0.01em", color: open ? "#FFFFFF" : T.muted, transition: "color .3s" }}>{q}</span>
+        <span style={{ flex: 1, fontSize: "clamp(14px, 1.2vw, 16px)", fontWeight: 500, lineHeight: 1.45, letterSpacing: "-0.01em", color: open ? "#F0F3F9" : T.muted, transition: "color .3s" }}>{q}</span>
         <motion.span
           animate={{ rotate: open ? 45 : 0 }}
           transition={{ duration: 0.28, ease }}
-          style={{ flexShrink: 0, marginTop: 4, fontSize: 20, lineHeight: 1, color: open ? T.accentLt : "rgba(255,255,255,0.35)", transition: "color .3s" }}>
+          style={{ flexShrink: 0, marginTop: 4, fontSize: 20, lineHeight: 1, color: open ? T.accentLt : "rgba(255,255,255,0.42)", transition: "color .3s" }}>
           +
         </motion.span>
       </button>
@@ -1456,7 +1456,7 @@ function FAQSection() {
             className="abt-faq-sticky" style={{ position: "sticky", top: 100 }}>
             <Kicker index="07" text="FAQ" />
             <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px, 3vw, 44px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-              LOGICA&<br /><span style={{ color: "#FFFFFF" }}>TRASPARENZA</span>
+              LOGICA&<br /><span style={{ color: "#F0F3F9" }}>TRASPARENZA</span>
             </h2>
             <p style={{ ...BODY, color: T.muted, marginTop: 20, maxWidth: 240 }}>
               Risposte dirette alle domande che contano davvero.
@@ -1536,7 +1536,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
       onClick={e => { if (e.target === overlayRef.current) onClose() }}
       style={{ position: "fixed", inset: 0, zIndex: 500, display: "flex", alignItems: "flex-start", justifyContent: "center", overflowY: "auto", padding: "16px", background: "rgba(0,0,0,0.75)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" } as React.CSSProperties}>
       <motion.div initial={{ opacity: 0, scale: 0.93, y: 28 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.93, y: 16 }} transition={{ duration: 0.38, ease }}
-        style={{ width: "100%", maxWidth: 600, marginTop: "auto", marginBottom: "auto", flexShrink: 0, position: "relative", borderRadius: 20, background: "rgba(13,18,30,0.94)", backdropFilter: "blur(72px) brightness(0.92) saturate(1.10)", WebkitBackdropFilter: "blur(72px) brightness(0.92) saturate(1.10)", border: "1px solid rgba(255,255,255,0.12)", boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.22), inset 1px 0 0 rgba(255,255,255,0.08), 0 40px 100px rgba(0,0,0,0.65)", overflow: "hidden" } as React.CSSProperties}>
+        style={{ width: "100%", maxWidth: 600, marginTop: "auto", marginBottom: "auto", flexShrink: 0, position: "relative", borderRadius: 20, background: "rgba(13,18,30,0.94)", backdropFilter: "blur(72px) brightness(0.92) saturate(1.10)", WebkitBackdropFilter: "blur(72px) brightness(0.92) saturate(1.10)", border: "1px solid rgba(255,255,255,0.20)", boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.22), inset 1px 0 0 rgba(255,255,255,0.08), 0 40px 100px rgba(0,0,0,0.65)", overflow: "hidden" } as React.CSSProperties}>
         <div style={{ height: 2, background: `linear-gradient(90deg, transparent, ${OR(1)} 28%, ${T.accentLt} 72%, transparent)`, borderRadius: "24px 24px 0 0" }} />
         <div className="contact-modal-content" style={{ padding: "30px 34px 34px", position: "relative" }}>
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 26 }}>
@@ -1548,7 +1548,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               <h3 style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.025em", color: T.text, margin: 0, lineHeight: 1.22 }}>Raccontami il tuo progetto</h3>
             </div>
             <motion.button onClick={onClose} whileHover={{ scale: 1.10, background: "rgba(255,255,255,0.10)" }} whileTap={{ scale: 0.92 }}
-              style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 10, border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.05)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, transition: "background 0.18s" }}>
+              style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 10, border: "1px solid rgba(255,255,255,0.20)", background: "rgba(255,255,255,0.05)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, transition: "background 0.18s" }}>
               <XIcon size={13} />
             </motion.button>
           </div>
@@ -1562,9 +1562,9 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               <GlassSelect label="Cosa dobbiamo risolvere?" value={fields.area} onChange={set("area")} />
               <GlassTextarea label="Messaggio" placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={set("msg")} />
               <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 380, damping: 18 }}
-                style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(161,44,56,0.80)", background: "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
-                <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(161,44,56,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[→]</span>
-                <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF", padding: "14px 0" }}>Invia Richiesta →</span>
+                style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(184,50,64,0.80)", background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
+                <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[→]</span>
+                <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#F0F3F9", padding: "14px 0" }}>Invia Richiesta →</span>
               </motion.button>
             </form>
           ) : (
@@ -1617,7 +1617,7 @@ function FinalCTA({ onOpenModal }: { onOpenModal: () => void }) {
       <div className="abt-wrap abt-cta-section" style={{ paddingTop: isMobile ? 150 : 120, paddingBottom: isMobile ? 200 : 60, position: "relative", zIndex: 1, textAlign: "center" }}>
         <motion.h2 className="abt-cta-h2" initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.90, ease }}
           style={{ fontFamily: DISPLAY, fontSize: "clamp(44px, 7vw, 100px)", fontWeight: 900, lineHeight: 0.94, letterSpacing: "-0.045em", color: T.text, margin: "0 auto 52px", maxWidth: 920 }}>
-          HAI QUALCOSA<br /><span style={{ color: "#FFFFFF" }}>DA COSTRUIRE?</span>
+          HAI QUALCOSA<br /><span style={{ color: "#F0F3F9" }}>DA COSTRUIRE?</span>
         </motion.h2>
 
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.70, delay: 0.18, ease }}

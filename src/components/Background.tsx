@@ -145,6 +145,7 @@ export default function Background({ portal = false }: { portal?: boolean }) {
           .bg-dots {
             background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1.4px) !important;
           }
+          .bg-vignette { opacity: 0 !important; }
         }
       `}</style>
 
@@ -183,7 +184,7 @@ export default function Background({ portal = false }: { portal?: boolean }) {
         }} />
 
         {/* Edge vignette */}
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 108% 86% at 50% 42%, transparent 30%, rgba(10,14,23,0.80) 100%)" }} />
+        <div className="bg-vignette" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 108% 86% at 50% 42%, transparent 30%, rgba(10,14,23,0.80) 100%)" }} />
 
       </div>
 

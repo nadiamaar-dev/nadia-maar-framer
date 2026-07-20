@@ -15,12 +15,12 @@ import { useBlueprint } from "../context/BlueprintContext"
 
 /* ── tokens ── */
 const T = {
-  text:     "#FFFFFF",
+  text:     "#F0F3F9",
   muted:    "rgba(255,255,255,0.78)",
   faint:    "rgba(255,255,255,0.58)",
   border:   "rgba(255,255,255,0.11)",
-  accent:   "#A12C38",
-  accentLt: "#A83040",
+  accent:   "#B83240",
+  accentLt: "#BE3648",
   green:    "#10B981",
 } as const
 
@@ -34,10 +34,10 @@ function NMmark({ size = 30, id = "nm-h", hover = false }: { size?: number; id?:
     <svg viewBox="0 2 28 22" width={size} height={Math.round(size * 22 / 28)} fill="none" strokeLinecap="square" strokeLinejoin="miter">
       <defs>
         <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
-          <stop offset="44%"  stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
-          <stop offset="56%"  stopColor="#A83040" />
-          <stop offset="100%" stopColor={hover ? "#A12C38" : "#7C222B"} />
+          <stop offset="0%"   stopColor={hover ? "#F0F3F9" : "rgba(255,255,255,0.90)"} />
+          <stop offset="44%"  stopColor={hover ? "#F0F3F9" : "rgba(255,255,255,0.90)"} />
+          <stop offset="56%"  stopColor="#BE3648" />
+          <stop offset="100%" stopColor={hover ? "#B83240" : "#7C222B"} />
         </linearGradient>
       </defs>
       <motion.path
@@ -89,10 +89,10 @@ function DateTimeWidget() {
   const pad = (n: number) => String(n).padStart(2, "0")
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 1, userSelect: "none", pointerEvents: "none" }}>
-      <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.30)" }}>
+      <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.37)" }}>
         {now.toLocaleDateString("it-IT", { day: "2-digit", month: "short", year: "numeric" })}
       </span>
-      <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.18em", color: "rgba(255,255,255,0.55)" }}>
+      <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.18em", color: "rgba(255,255,255,0.63)" }}>
         {pad(now.getHours())}<span style={{ animation: "hdr-colon-blink 1s ease-in-out infinite", display: "inline-block" }}>:</span>{pad(now.getMinutes())}<span style={{ animation: "hdr-colon-blink 1s ease-in-out infinite", display: "inline-block" }}>:</span>{pad(now.getSeconds())}
       </span>
     </div>
@@ -110,12 +110,12 @@ function MenuNavItem({ num, label, onClick, index, active = false }: {
       initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.06 + index * 0.08, duration: 0.55, ease }}>
       <button onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
-        style={{ background: h ? "rgba(161,44,56,0.07)" : "transparent", border: "none", cursor: "pointer", width: "100%", display: "flex", alignItems: "baseline", gap: 18, padding: "14px 0", borderBottom: `1px solid ${lit ? "rgba(161,44,56,0.45)" : "rgba(255,255,255,0.08)"}`, transition: "border-color 0.22s, background 0.28s", textAlign: "left" as const, position: "relative" }}>
+        style={{ background: h ? "rgba(184,50,64,0.07)" : "transparent", border: "none", cursor: "pointer", width: "100%", display: "flex", alignItems: "baseline", gap: 18, padding: "14px 0", borderBottom: `1px solid ${lit ? "rgba(184,50,64,0.45)" : "rgba(255,255,255,0.08)"}`, transition: "border-color 0.22s, background 0.28s", textAlign: "left" as const, position: "relative" }}>
         {/* accent left bar */}
         <motion.span aria-hidden
           animate={{ scaleY: lit ? 1 : 0, opacity: lit ? 1 : 0 }} transition={{ duration: 0.2 }}
           style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-50%)", width: 2, height: "60%", background: T.accent, borderRadius: 2, transformOrigin: "center" }} />
-        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", color: lit ? T.accent : "rgba(255,255,255,0.30)", transition: "color 0.22s", minWidth: 26, flexShrink: 0 }}>[{num}]</span>
+        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", color: lit ? T.accent : "rgba(255,255,255,0.37)", transition: "color 0.22s", minWidth: 26, flexShrink: 0 }}>[{num}]</span>
         <span style={{ fontFamily: DISPLAY, fontSize: "clamp(28px,8vw,46px)", fontWeight: 800, letterSpacing: "-0.032em", lineHeight: 1.1, color: active ? T.accentLt : h ? "#fff" : "rgba(255,255,255,0.75)", transition: "color 0.22s" }}>{label}</span>
         <motion.span animate={{ x: lit ? 10 : 0, opacity: lit ? 1 : 0 }} transition={{ duration: 0.18 }}
           style={{ marginLeft: "auto", color: T.accent, fontSize: 20, lineHeight: 1, flexShrink: 0 }}>→</motion.span>
@@ -144,7 +144,7 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
             onClick={onClose}
             style={{
               flex: 1, padding: "11px 16px",
-              background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.20)",
+              background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.28)",
               borderRadius: 10, textDecoration: "none", cursor: "pointer",
               fontFamily: DISPLAY, fontSize: 13, fontWeight: 700,
               color: "rgba(255,255,255,0.88)",
@@ -167,7 +167,7 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
             title="Esci"
             style={{
               padding: "11px 16px",
-              background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)",
+              background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.20)",
               borderRadius: 10, cursor: "pointer",
               fontFamily: MONO, fontSize: 11, fontWeight: 600,
               color: "rgba(255,255,255,0.40)",
@@ -191,18 +191,18 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
           transition={{ type: "spring", stiffness: 400, damping: 22 }}
           style={{
             width: "100%", padding: "13px 20px",
-            background: "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)",
-            border: "1px solid rgba(161,44,56,0.80)",
+            background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)",
+            border: "1px solid rgba(184,50,64,0.80)",
             backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-            boxShadow: "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",
+            boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",
             borderRadius: 12, cursor: "pointer",
             fontFamily: DISPLAY, fontSize: 13, fontWeight: 700,
             color: "#fff",
             display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
             transition: "box-shadow 0.18s",
           }}
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 24px rgba(161,44,56,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)" }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 24px rgba(184,50,64,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)" }}
         >
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
             <rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
@@ -293,9 +293,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
       style={{ paddingBottom: 32, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.07)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" as const }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
         <a href="mailto:nadiamaar.dev@gmail.com"
-          style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em", color: "rgba(255,255,255,0.38)", textDecoration: "none", transition: "color 0.18s" }}
+          style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em", color: "rgba(255,255,255,0.46)", textDecoration: "none", transition: "color 0.18s" }}
           onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-          onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.38)")}>
+          onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.46)")}>
           nadiamaar.dev@gmail.com
         </a>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
@@ -306,8 +306,8 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
       <div style={{ display: "flex", gap: 8 }}>
         {MENU_SOCIALS.map(({ label, href }) => (
           <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-            style={{ width: 36, height: 36, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "rgba(255,255,255,0.42)", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)", textDecoration: "none", transition: "all 0.18s" }}
-            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = "#fff"; el.style.borderColor = "rgba(161,44,56,0.55)"; el.style.background = "rgba(161,44,56,0.14)"; el.style.boxShadow = "0 0 10px rgba(161,44,56,0.18)" }}
+            style={{ width: 36, height: 36, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "rgba(255,255,255,0.42)", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.17)", textDecoration: "none", transition: "all 0.18s" }}
+            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = "#fff"; el.style.borderColor = "rgba(184,50,64,0.55)"; el.style.background = "rgba(184,50,64,0.14)"; el.style.boxShadow = "0 0 10px rgba(184,50,64,0.18)" }}
             onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = "rgba(255,255,255,0.42)"; el.style.borderColor = "rgba(255,255,255,0.10)"; el.style.background = "rgba(255,255,255,0.05)"; el.style.boxShadow = "none" }}>
             {label}
           </a>
@@ -325,20 +325,20 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         style={{ position: "fixed", inset: 0, zIndex: 500, display: "flex", flexDirection: "column", padding: "0 28px", overflow: "hidden", ...GLASS }}>
 
         {/* top accent line */}
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(161,44,56,0.90) 40%, rgba(161,44,56,0.90) 60%, transparent)", flexShrink: 0, boxShadow: "0 0 18px rgba(161,44,56,0.30)" }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(184,50,64,0.90) 40%, rgba(184,50,64,0.90) 60%, transparent)", flexShrink: 0, boxShadow: "0 0 18px rgba(184,50,64,0.30)" }} />
 
         {/* header row */}
         <div style={{ height: 64, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
             <NMmark size={26} id="nm-mob-menu-logo" />
-            <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.55)" }}>Nadia Maar</span>
+            <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.63)" }}>Nadia Maar</span>
           </a>
           <motion.button onClick={onClose}
             whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             aria-label="Chiudi menu"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 9, width: 36, height: 36, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.60)", flexShrink: 0, transition: "background 0.18s, border-color 0.18s, color 0.18s" }}
-            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(161,44,56,0.14)"; el.style.borderColor = "rgba(161,44,56,0.45)"; el.style.color = "#fff" }}
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.17)", borderRadius: 9, width: 36, height: 36, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.60)", flexShrink: 0, transition: "background 0.18s, border-color 0.18s, color 0.18s" }}
+            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(184,50,64,0.14)"; el.style.borderColor = "rgba(184,50,64,0.45)"; el.style.color = "#fff" }}
             onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.10)"; el.style.color = "rgba(255,255,255,0.60)" }}>
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
               <path d="M1 1l11 11M12 1L1 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
@@ -348,7 +348,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
 
         {/* eyebrow */}
         <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)", marginBottom: 8, paddingLeft: 20 }}>
-          <span style={{ color: "rgba(161,44,56,0.70)" }}>//</span>
+          <span style={{ color: "rgba(184,50,64,0.70)" }}>//</span>
           <span>[ Navigazione ]</span>
         </div>
 
@@ -378,24 +378,24 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
       <motion.div
         initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
         transition={{ type: "spring", stiffness: 320, damping: 36 }}
-        style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: 480, zIndex: 420, display: "flex", flexDirection: "column", padding: "0 44px", borderLeft: "1px solid rgba(255,255,255,0.08)", boxShadow: "-32px 0 80px rgba(0,0,0,0.55)", ...GLASS }}>
+        style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: 480, zIndex: 420, display: "flex", flexDirection: "column", padding: "0 44px", borderLeft: "1px solid rgba(255,255,255,0.14)", boxShadow: "-32px 0 80px rgba(0,0,0,0.55)", ...GLASS }}>
 
         {/* top accent line */}
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(161,44,56,0.90) 40%, rgba(161,44,56,0.90) 70%, transparent)", flexShrink: 0, boxShadow: "0 0 18px rgba(161,44,56,0.30)" }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(184,50,64,0.90) 40%, rgba(184,50,64,0.90) 70%, transparent)", flexShrink: 0, boxShadow: "0 0 18px rgba(184,50,64,0.30)" }} />
 
         {/* header row */}
         <div style={{ height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)" }}>
-            <span style={{ color: "rgba(161,44,56,0.70)" }}>//</span>
+            <span style={{ color: "rgba(184,50,64,0.70)" }}>//</span>
             <span>[ Navigazione ]</span>
           </div>
           <motion.button onClick={onClose}
             whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             aria-label="Chiudi menu"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 9, width: 34, height: 34, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.50)", flexShrink: 0, transition: "background 0.18s, border-color 0.18s, color 0.18s" }}
-            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(161,44,56,0.14)"; el.style.borderColor = "rgba(161,44,56,0.45)"; el.style.color = "#fff" }}
-            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(161,44,56,0)"; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.color = "rgba(255,255,255,0.50)" }}>
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 9, width: 34, height: 34, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.58)", flexShrink: 0, transition: "background 0.18s, border-color 0.18s, color 0.18s" }}
+            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(184,50,64,0.14)"; el.style.borderColor = "rgba(184,50,64,0.45)"; el.style.color = "#fff" }}
+            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(184,50,64,0)"; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.color = "rgba(255,255,255,0.58)" }}>
             <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
               <path d="M1 1l11 11M12 1L1 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
@@ -408,9 +408,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* ambient glow bottom-left */}
-        <div aria-hidden style={{ position: "absolute", bottom: "20%", left: -60, width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(161,44,56,0.12) 0%, transparent 70%)", filter: "blur(70px)", pointerEvents: "none" }} />
+        <div aria-hidden style={{ position: "absolute", bottom: "20%", left: -60, width: 280, height: 280, borderRadius: "50%", background: "radial-gradient(circle, rgba(184,50,64,0.12) 0%, transparent 70%)", filter: "blur(70px)", pointerEvents: "none" }} />
         {/* ambient glow top-right */}
-        <div aria-hidden style={{ position: "absolute", top: "8%", right: 0, width: 180, height: 180, borderRadius: "50%", background: "radial-gradient(circle, rgba(161,44,56,0.06) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
+        <div aria-hidden style={{ position: "absolute", top: "8%", right: 0, width: 180, height: 180, borderRadius: "50%", background: "radial-gradient(circle, rgba(184,50,64,0.06) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
 
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 4 }}>
           {NAV.map((item, i) => (
@@ -476,7 +476,7 @@ export default function Header() {
             <NMmark size={30} id="nm-header-logo" hover={logoHover} />
             <motion.span aria-hidden
               animate={{ opacity: logoHover ? 1 : 0 }} transition={{ duration: 0.30 }}
-              style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(161,44,56,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }} />
+              style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(184,50,64,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }} />
           </span>
           <span aria-hidden className="nm-hdr-divider" style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
           <motion.span className="nm-hdr-wordmark"
@@ -496,13 +496,13 @@ export default function Header() {
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             style={{
               padding: "6px 13px", borderRadius: 8, textDecoration: "none", cursor: "pointer",
-              background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.16)",
+              background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.24)",
               fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase" as const,
               color: "rgba(255,255,255,0.82)", whiteSpace: "nowrap" as const,
               display: "flex", alignItems: "center", gap: 8,
               transition: "background 0.18s, border-color 0.18s, color 0.18s",
             }}
-            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.10)"; el.style.borderColor = "rgba(255,255,255,0.30)"; el.style.color = "#fff" }}
+            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.10)"; el.style.borderColor = "rgba(255,255,255,0.37)"; el.style.color = "#fff" }}
             onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.05)"; el.style.borderColor = "rgba(255,255,255,0.16)"; el.style.color = "rgba(255,255,255,0.82)" }}
           >
             <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.accentLt, flexShrink: 0 }} />
@@ -522,7 +522,7 @@ export default function Header() {
                   transition={{ type: "spring", stiffness: 400, damping: 20 }}
                   style={{
                     padding: "6px 13px",
-                    background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.20)",
+                    background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.28)",
                     borderRadius: 8, textDecoration: "none", cursor: "pointer",
                     fontFamily: DISPLAY, fontSize: 12, fontWeight: 600,
                     color: "rgba(255,255,255,0.85)", whiteSpace: "nowrap" as const,
@@ -546,14 +546,14 @@ export default function Header() {
                   title="Esci"
                   style={{
                     width: 30, height: 30,
-                    background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)",
+                    background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.20)",
                     borderRadius: 7, cursor: "pointer",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    color: "rgba(255,255,255,0.38)",
+                    color: "rgba(255,255,255,0.46)",
                     transition: "color 0.18s, border-color 0.18s, background 0.18s",
                   }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.70)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.22)" }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.38)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)" }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.46)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)" }}
                 >
                   <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
                     <path d="M5 2H2.5A1 1 0 001.5 3v8a1 1 0 001 1H5M9.5 10l3-3-3-3M12.5 7H5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
@@ -568,17 +568,17 @@ export default function Header() {
                 whileHover={{ y: -1, scale: 1.02 }} whileTap={{ scale: 0.96 }}
                 style={{
                   padding: "6px 14px",
-                  background: "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)",
-                  border: "1px solid rgba(161,44,56,0.80)",
+                  background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)",
+                  border: "1px solid rgba(184,50,64,0.80)",
                   backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-                  boxShadow: "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",
+                  boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",
                   borderRadius: 8, cursor: "pointer",
                   fontFamily: DISPLAY, fontSize: 12, fontWeight: 600,
                   color: "#fff", whiteSpace: "nowrap" as const,
                   transition: "box-shadow 0.18s",
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 24px rgba(161,44,56,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 24px rgba(184,50,64,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)" }}
               >
                 Area Clienti
               </motion.button>
