@@ -105,7 +105,7 @@ const GLOBAL_CSS = `
   ::placeholder { color: rgba(255,255,255,0.22) !important; }
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: #0F1624; }
-  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
   html { scroll-behavior: smooth; }
 
   @media (max-width: 600px) {
@@ -116,28 +116,28 @@ const GLOBAL_CSS = `
   :root { --x:-9999; --y:-9999; --xp:0; --yp:0; }
 
   /* neon accent text — solid color + multi-layer glow */
-  [style*="color: #A83040"],
-  [style*='color: "#A83040"'],
-  [style*="color: #A83040"],
-  [style*='color: "#A83040"'] {
-    color: #A83040 !important;
+  [style*="color: #BE3648"],
+  [style*='color: "#BE3648"'],
+  [style*="color: #BE3648"],
+  [style*='color: "#BE3648"'] {
+    color: #BE3648 !important;
     text-shadow:
-      0 0 6px #A83040,
-      0 0 14px #A83040,
-      0 0 30px #A12C38,
-      0 0 60px rgba(161,44,56,0.60),
-      0 0 100px rgba(161,44,56,0.25);
+      0 0 6px #BE3648,
+      0 0 14px #BE3648,
+      0 0 30px #B83240,
+      0 0 60px rgba(184,50,64,0.60),
+      0 0 100px rgba(184,50,64,0.25);
   }
-  [style*="color: #A12C38"],
-  [style*='color: "#A12C38"'],
-  [style*="color: #A12C38"],
-  [style*='color: "#A12C38"'] {
-    color: #A12C38 !important;
+  [style*="color: #B83240"],
+  [style*='color: "#B83240"'],
+  [style*="color: #B83240"],
+  [style*='color: "#B83240"'] {
+    color: #B83240 !important;
     text-shadow:
-      0 0 6px #A12C38,
-      0 0 14px rgba(161,44,56,0.90),
-      0 0 30px rgba(161,44,56,0.55),
-      0 0 60px rgba(161,44,56,0.22);
+      0 0 6px #B83240,
+      0 0 14px rgba(184,50,64,0.90),
+      0 0 30px rgba(184,50,64,0.55),
+      0 0 60px rgba(184,50,64,0.22);
   }
 
   [data-glow] {
@@ -207,8 +207,8 @@ const GLOBAL_CSS = `
     left: -1px; top: -1px;
     border-radius: inherit;
     background: linear-gradient(45deg,
-      rgba(161,44,56,0.45), rgba(161,44,56,0.20), rgba(168,48,64,0.35), rgba(161,44,56,0.15),
-      rgba(161,44,56,0.45), rgba(161,44,56,0.20), rgba(168,48,64,0.35), rgba(161,44,56,0.15));
+      rgba(184,50,64,0.45), rgba(184,50,64,0.20), rgba(190,54,72,0.35), rgba(184,50,64,0.15),
+      rgba(184,50,64,0.45), rgba(184,50,64,0.20), rgba(190,54,72,0.35), rgba(184,50,64,0.15));
     background-size: 400%;
     width: calc(100% + 2px);
     height: calc(100% + 2px);
@@ -308,8 +308,8 @@ const GLOBAL_CSS = `
     .hp-diagnosi-col-headers { display: none !important; }
     .hp-diagnosi-row { grid-template-columns: 1fr !important; }
     .hp-diagnosi-row > div:nth-child(2) { display: none !important; }
-    .hp-diagnosi-row > div:first-child { border-radius: 16px 16px 0 0 !important; border-right: 1px solid rgba(255,255,255,0.10) !important; border-bottom: none !important; }
-    .hp-diagnosi-row > div:last-child { border-radius: 0 0 16px 16px !important; border-left: 1px solid rgba(255,255,255,0.10) !important; border-top: none !important; }
+    .hp-diagnosi-row > div:first-child { border-radius: 16px 16px 0 0 !important; border-right: 1px solid rgba(255,255,255,0.13) !important; border-bottom: none !important; }
+    .hp-diagnosi-row > div:last-child { border-radius: 0 0 16px 16px !important; border-left: 1px solid rgba(255,255,255,0.13) !important; border-top: none !important; }
     .hp-allinone-desktop { display: none !important; }
     .hp-allinone-mobile { display: block !important; }
     .hp-tech-card { padding: 10px 12px !important; border-radius: 10px !important; }
@@ -392,18 +392,18 @@ const T = {
   raised:    "#0F1624",
   border:    "rgba(70,90,108,0.22)",
   borderHi:  "rgba(16,185,129,0.42)",
-  text:      "#FFFFFF",
+  text:      "#F0F3F9",
   muted:     "rgba(226,232,240,0.80)",
   faint:     "rgba(226,232,240,0.56)",
-  accent:    "#A12C38",
-  accentDim: "rgba(255,255,255,0.06)",
-  accentGlo: "rgba(161,44,56,0.55)",
-  accentLt:  "#A83040",
+  accent:    "#B83240",
+  accentDim: "rgba(255,255,255,0.09)",
+  accentGlo: "rgba(184,50,64,0.55)",
+  accentLt:  "#BE3648",
   green:     "#10B981",
   greenGlo:  "rgba(16,185,129,0.28)",
   // neutral card system (contrast + variety)
   steel:     "rgba(255,255,255,0.055)",
-  steelHi:   "rgba(255,255,255,0.14)",
+  steelHi:   "rgba(255,255,255,0.16)",
   silver:    "rgba(16,185,129,0.92)",
 } as const
 
@@ -418,14 +418,14 @@ const G = {
   bd:        "rgba(70,90,108,0.28)",
   bdHov:     "rgba(70,90,108,0.52)",
   blur:      "blur(12px) brightness(1.05) saturate(1.0)",
-  shadow:    "inset 0 1px 0 rgba(255,255,255,0.55), 0 24px 64px rgba(8,12,28,0.55), 0 4px 14px rgba(8,12,28,0.35)",
+  shadow:    "inset 0 1px 0 rgba(255,255,255,0.63), 0 24px 64px rgba(8,12,28,0.55), 0 4px 14px rgba(8,12,28,0.35)",
   shadowHov: "inset 0 1px 0 rgba(255,255,255,0.72), 0 32px 80px rgba(8,12,28,0.70), 0 6px 18px rgba(8,12,28,0.42)",
 } as const
 const MONO_STYLE: React.CSSProperties = { fontFamily: MONO, letterSpacing: "0.14em", textTransform: "uppercase", fontSize: 12, fontWeight: 500 }
 
 /* white -> amber gradient text fill (matches Solar-Glass headline) */
 const gradText = (deg = 100): React.CSSProperties => ({
-  backgroundImage: `linear-gradient(${deg}deg, #FFFFFF 0%, #FF6B7D 48%, #D6283C 100%)`,
+  backgroundImage: `linear-gradient(${deg}deg, #F0F3F9 0%, #FF6B7D 48%, #DF3448 100%)`,
   WebkitBackgroundClip: "text",
   backgroundClip: "text",
   WebkitTextFillColor: "transparent",
@@ -481,7 +481,7 @@ function Tag({ text, size }: { text: string; size?: "sm" }) {
       onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}
       animate={h
         ? { background: T.accent, color: "#fff", borderColor: T.accent, boxShadow: `0 0 14px ${T.accentGlo}` }
-        : { background: "rgba(255,255,255,0.012)", color: T.muted, borderColor: "rgba(255,255,255,0.10)", boxShadow: "none" }
+        : { background: "rgba(255,255,255,0.012)", color: T.muted, borderColor: "rgba(255,255,255,0.13)", boxShadow: "none" }
       }
       transition={{ duration: 0.18 }}
       style={{ display: "inline-block", padding: sm ? "3px 9px" : "5px 11px", borderRadius: 9999, fontSize: sm ? 10 : 11, fontWeight: 600, cursor: "default", border: "1px solid transparent", letterSpacing: "0.03em" }}
@@ -500,7 +500,7 @@ function Label({ text }: { text: string }) {
         backdropFilter: G.blur,
         WebkitBackdropFilter: G.blur,
         border: `1px solid ${G.bd}`,
-        boxShadow: "0 2px 16px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.10)",
+        boxShadow: "0 2px 16px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.13)",
       }}>
         <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.accentLt, flexShrink: 0, boxShadow: `0 0 8px ${T.accentLt}` }} />
         <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: T.text }}>{text}</span>
@@ -520,7 +520,7 @@ function Btn({ children, primary: _primary, small, type = "button", onClick }: {
         position: "relative", padding: small ? "8px 20px" : "13px 30px",
         borderRadius: 9999, fontSize: 12, fontWeight: 500,
         cursor: "pointer", letterSpacing: "0.14em", textTransform: "uppercase" as const,
-        fontFamily: MONO, border: "1px solid rgba(255,255,255,0.12)",
+        fontFamily: MONO, border: "1px solid rgba(255,255,255,0.15)",
         background: "rgba(255,255,255,0.012)", backdropFilter: "blur(28px) saturate(1.5)",
         WebkitBackdropFilter: "blur(28px) saturate(1.5)",
         boxShadow: "inset 0 1px 0 rgba(255,255,255,0.012), 0 2px 12px rgba(0,0,0,0.20)",
@@ -555,7 +555,7 @@ function GlassCard({ children, padding = "36px 30px", radius = 16, height = "100
         backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
         borderTop:    `1px solid ${h ? "rgba(255,255,255,0.88)" : "rgba(255,255,255,0.72)"}`,
         borderRight:  `1px solid ${h ? "rgba(255,255,255,0.34)" : "rgba(255,255,255,0.22)"}`,
-        borderBottom: `1px solid ${h ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
+        borderBottom: `1px solid ${h ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.11)"}`,
         borderLeft:   `1px solid ${h ? "rgba(255,255,255,0.34)" : "rgba(255,255,255,0.22)"}`,
         borderRadius: radius, padding, height, cursor: onClick ? "pointer" : "default",
         boxShadow: h ? G.shadowHov : G.shadow,
@@ -583,8 +583,8 @@ function StatCorners() {
   const s: React.CSSProperties = { position: "absolute", width: 10, height: 10, pointerEvents: "none" }
   return (
     <>
-      <span style={{ ...s, top: 9, left: 9, borderTop: "1.5px solid rgba(161,44,56,.55)", borderLeft: "1.5px solid rgba(161,44,56,.55)" }} />
-      <span style={{ ...s, bottom: 9, right: 9, borderBottom: "1.5px solid rgba(161,44,56,.55)", borderRight: "1.5px solid rgba(161,44,56,.55)" }} />
+      <span style={{ ...s, top: 9, left: 9, borderTop: "1.5px solid rgba(184,50,64,.55)", borderLeft: "1.5px solid rgba(184,50,64,.55)" }} />
+      <span style={{ ...s, bottom: 9, right: 9, borderBottom: "1.5px solid rgba(184,50,64,.55)", borderRight: "1.5px solid rgba(184,50,64,.55)" }} />
     </>
   )
 }
@@ -639,7 +639,7 @@ function HeroStat({ value, label, index }: { value: string; label: string; index
         cursor: "default",
         borderRadius: 16,
         background: hover ? "rgba(255,255,255,0.012)" : "rgba(255,255,255,0.02)",
-        border: "1px solid rgba(255,255,255,0.10)",
+        border: "1px solid rgba(255,255,255,0.13)",
         backdropFilter: "blur(2px)",
         WebkitBackdropFilter: "blur(2px)",
         boxShadow: hover ? "0 16px 44px rgba(8,12,28,0.50), 0 4px 12px rgba(8,12,28,0.30)" : "0 6px 24px rgba(8,12,28,0.35)",
@@ -649,13 +649,13 @@ function HeroStat({ value, label, index }: { value: string; label: string; index
     >
       {/* index + label row */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-        <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: ".16em", color: "rgba(255,255,255,0.45)" }}>
+        <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: ".16em", color: "rgba(255,255,255,0.53)" }}>
           [0{index + 1}]
         </span>
         <span className="hp-hero-stat-label" style={{
           fontFamily: MONO, fontSize: 9, letterSpacing: ".20em",
           textTransform: "uppercase" as const,
-          color: "rgba(255,255,255,0.45)",
+          color: "rgba(255,255,255,0.53)",
         } as React.CSSProperties}>
           {label}
         </span>
@@ -664,7 +664,7 @@ function HeroStat({ value, label, index }: { value: string; label: string; index
       {/* divider */}
       <div style={{
         height: 1,
-        background: "linear-gradient(90deg, rgba(255,255,255,0.35), transparent)",
+        background: "linear-gradient(90deg, rgba(255,255,255,0.42), transparent)",
         marginBottom: 14,
         transition: "background .30s",
       }} />
@@ -676,7 +676,7 @@ function HeroStat({ value, label, index }: { value: string; label: string; index
         fontWeight: 900,
         lineHeight: 1,
         letterSpacing: "-.04em",
-        color: "#FFFFFF",
+        color: "#F0F3F9",
       } as React.CSSProperties}>
         {nm.n !== null ? <>{nm.prefix}<StatCountUp target={nm.n} suffix={nm.suffix} /></> : value}
       </span>
@@ -714,7 +714,7 @@ function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
     position: "relative", width: "100%", textAlign: "left", cursor: "pointer",
     background: "rgba(15, 23, 42, 0.6)",
     backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-    border: "1px solid rgba(255,255,255,0.14)",
+    border: "1px solid rgba(255,255,255,0.16)",
     borderTop: "1px solid rgba(255,255,255,0.22)",
     boxShadow: "inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 6px 20px rgba(0,0,0,0.22)",
     color: T.text, overflow: "hidden",
@@ -732,7 +732,7 @@ function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
       >
           {/* top bar */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "11px 14px", borderBottom: "1px solid rgba(255,255,255,0.012)" }}>
-            <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.35)" }}>SYS_STATUS</span>
+            <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.42)" }}>SYS_STATUS</span>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
               <PingDot color={T.green} size={5} />
               <span style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: T.green }}>ACTIVE</span>
@@ -742,7 +742,7 @@ function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
           {/* main metric */}
           <div style={{ padding: "14px 14px 10px", display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 8 }}>
             <div>
-              <div style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.35)", marginBottom: 6 }}>DISPONIBILE</div>
+              <div style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.42)", marginBottom: 6 }}>DISPONIBILE</div>
               <div style={{ fontFamily: DISPLAY, fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", color: "#fff", lineHeight: 1 }}>
                 {"< 24"}
                 <span style={{ fontSize: 13, fontFamily: MONO, fontWeight: 400, color: "#fff", marginLeft: 4, letterSpacing: "0.08em" }}>h</span>
@@ -777,12 +777,12 @@ function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
         transition={{ type: "spring", stiffness: 400, damping: 22 }}
         style={{ ...card, borderRadius: 14, padding: 0, display: "flex", alignItems: "stretch",
           border: "1px solid rgba(255,255,255,0.22)",
-          background: "rgba(255,255,255,0.06)",
+          background: "rgba(255,255,255,0.09)",
           backdropFilter: "blur(20px) brightness(1.08)", WebkitBackdropFilter: "blur(20px) brightness(1.08)",
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15)",
         }}
       >
-        <span style={{ padding: "14px 12px 14px 16px", borderRight: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.22em", color: "rgba(255,255,255,0.55)", flexShrink: 0 }}>[02]</span>
+        <span style={{ padding: "14px 12px 14px 16px", borderRight: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.22em", color: "rgba(255,255,255,0.63)", flexShrink: 0 }}>[02]</span>
         <div style={{ flex: 1, padding: "14px 14px", display: "flex", flexDirection: "column", gap: 3 }}>
           <span style={{ fontFamily: DISPLAY, fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,0.90)", letterSpacing: "-0.01em", lineHeight: 1.2 }}>Avvia un progetto</span>
           <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.10em", color: "rgba(255,255,255,0.42)" }}>risposta garantita · 50+ clienti</span>
@@ -821,7 +821,7 @@ function Hero() {
         .hp-hero-meta { display:flex; flex-direction:column; gap:22px; }
         .hp-hero-head-row { display:flex; align-items:flex-start; gap:14px; }
         .hp-hero-social-vert { display:none; }
-        .hp-hero-botnav { margin-top:46px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.11); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:18px; }
+        .hp-hero-botnav { margin-top:46px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.13); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:18px; }
         .hp-hero-handle { font-family:${MONO}; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.48); text-decoration:none; transition:color 0.2s; }
         .hp-hero-handle:hover { color:#fff; }
         /* ── Ticker/wordmark/deco hide ──────────────────────── */
@@ -879,7 +879,7 @@ function Hero() {
 
       {/* deco squares (POSSESSD signature) */}
       <div className="hp-hero-squares" aria-hidden>
-        {[0, 1, 2].map(i => <span key={i} style={{ width: 32, height: 32, border: "1.5px solid rgba(255,255,255,0.10)", borderRadius: 5 }} />)}
+        {[0, 1, 2].map(i => <span key={i} style={{ width: 32, height: 32, border: "1.5px solid rgba(255,255,255,0.13)", borderRadius: 5 }} />)}
       </div>
 
       {/* small NM monogram + credit */}
@@ -901,7 +901,7 @@ function Hero() {
       <div style={{ ...WRAP, width: "100%", minWidth: 0, boxSizing: "border-box", position: "relative", zIndex: 1 }} className="hp-wrap">
         {/* eyebrow */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }} style={{ marginBottom: 24 }}>
-          <div className="hp-hero-eyebrow" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
+          <div className="hp-hero-eyebrow" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#F0F3F9" }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Development · AI Automation · Performance Marketing ]</span>
           </div>
@@ -920,7 +920,7 @@ function Hero() {
                 <motion.h1
                   className="hp-hero-h1"
                   initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease }}
-                  style={{ fontFamily: DISPLAY, fontSize: "clamp(34px, 5.4vw, 74px)", fontWeight: 800, lineHeight: 0.98, letterSpacing: "-0.04em", margin: 0, color: "#FFFFFF", textTransform: "uppercase" as const, filter: "drop-shadow(0 12px 34px rgba(0,0,0,0.6))", textShadow: "0 4px 12px rgba(0, 0, 0, 0.8)" }}
+                  style={{ fontFamily: DISPLAY, fontSize: "clamp(34px, 5.4vw, 74px)", fontWeight: 800, lineHeight: 0.98, letterSpacing: "-0.04em", margin: 0, color: "#F0F3F9", textTransform: "uppercase" as const, filter: "drop-shadow(0 12px 34px rgba(0,0,0,0.6))", textShadow: "0 4px 12px rgba(0, 0, 0, 0.8)" }}
                 >
                   <span>E-commerce</span><br />
                   <span>Architect</span><br />
@@ -937,7 +937,7 @@ function Hero() {
                     whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
                     transition={{ type: "spring", stiffness: 400, damping: 16 }}
                     style={{ '--base': '205', '--spread': '36', '--radius': '11', '--border': '1', '--size': '150', width: 40, height: 40, borderRadius: 11, display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, border: `1px solid ${G.bd}`, backgroundColor: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, textDecoration: "none", flexShrink: 0 } as React.CSSProperties}
-                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.accentLt; el.style.borderColor = "rgba(161,44,56,0.55)"; el.style.backgroundColor = "rgba(161,44,56,0.16)" }}
+                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.accentLt; el.style.borderColor = "rgba(184,50,64,0.55)"; el.style.backgroundColor = "rgba(184,50,64,0.16)" }}
                     onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.muted; el.style.borderColor = G.bd; el.style.backgroundColor = G.bg }}
                   >
                     <Icon />
@@ -963,16 +963,16 @@ function Hero() {
                 onClick={() => document.getElementById("s9")?.scrollIntoView({ behavior: "smooth" })}
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
-                style={{ flex: "1.5 1 0", minHeight: 54, padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(161,44,56,0.80)", background: "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
+                style={{ flex: "1.5 1 0", minHeight: 54, padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(184,50,64,0.80)", background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.15)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
               >
-                <span className="hp-hero-cta-index" style={{ padding: "0 14px", borderRight: "1px solid rgba(161,44,56,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[01]</span>
-                <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
+                <span className="hp-hero-cta-index" style={{ padding: "0 14px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[01]</span>
+                <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#F0F3F9" }}>
                   <span>Prenota una Consultazione</span>
                   <span style={{ fontSize: 14 }}>→</span>
                 </span>
               </motion.button>
               <motion.a
-                href="/foundry" whileHover={{ y: -2, background: "rgba(255,255,255,0.10)", borderColor: "rgba(224,224,224,0.38)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                href="/foundry" whileHover={{ y: -2, background: "rgba(255,255,255,0.13)", borderColor: "rgba(224,224,224,0.38)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
                 style={{ flex: "1 1 0", minHeight: 54, padding: "0 18px", borderRadius: 9, fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, textAlign: "center" as const, textDecoration: "none", border: "1px solid rgba(255,255,255,0.20)", background: "rgba(255,255,255,0.012)", color: T.text, boxShadow: "0 6px 28px rgba(8,12,28,0.42), inset 0 1px 0 rgba(255,255,255,0.012)" }}
               >
                 Esplora la Foundry <span style={{ fontSize: 14 }}>→</span>
@@ -1016,7 +1016,7 @@ function Hero() {
                       color: T.muted, border: `1px solid ${G.bd}`, backgroundColor: G.bg,
                       backdropFilter: G.blur, WebkitBackdropFilter: G.blur, textDecoration: "none", flexShrink: 0,
                     } as React.CSSProperties}
-                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = "#FFFFFF"; el.style.borderColor = "rgba(235,240,250,0.60)"; el.style.backgroundColor = "rgba(226,232,244,0.18)"; el.style.boxShadow = "0 0 18px rgba(214,222,238,0.28)" }}
+                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = "#F0F3F9"; el.style.borderColor = "rgba(235,240,250,0.60)"; el.style.backgroundColor = "rgba(226,232,244,0.18)"; el.style.boxShadow = "0 0 18px rgba(214,222,238,0.28)" }}
                     onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.muted; el.style.borderColor = G.bd; el.style.backgroundColor = G.bg; el.style.boxShadow = "none" }}
                   >
                     <Icon />
@@ -1072,9 +1072,9 @@ const ADVANTAGES = [
 ]
 
 const ADV_VARIANTS = {
-  featured: { bg: "rgba(255,255,255,0.13)", bd: "rgba(255,255,255,0.50)", bdT: "rgba(255,255,255,0.80)", bdB: "rgba(255,255,255,0.10)", num: "#FFFFFF",             sh: "0 28px 72px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.72), inset 0 0 0 1px rgba(255,255,255,0.08)", tag: "rgba(255,255,255,0.55)" },
-  graphite: { bg: "rgba(255,255,255,0.012)", bd: "rgba(255,255,255,0.20)", bdT: "rgba(255,255,255,0.45)", bdB: "rgba(255,255,255,0.012)", num: "rgba(255,255,255,0.35)", sh: "0 18px 52px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.40), inset 0 0 0 1px rgba(255,255,255,0.012)", tag: "rgba(255,255,255,0.55)" },
-  accent:   { bg: "rgba(255,255,255,0.10)", bd: "rgba(255,255,255,0.50)", bdT: "rgba(255,255,255,0.78)", bdB: "rgba(255,255,255,0.10)", num: "#FFFFFF",             sh: "0 24px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.70), inset 0 0 0 1px rgba(255,255,255,0.012)", tag: "rgba(255,255,255,0.72)" },
+  featured: { bg: "rgba(255,255,255,0.13)", bd: "rgba(255,255,255,0.50)", bdT: "rgba(255,255,255,0.80)", bdB: "rgba(255,255,255,0.13)", num: "#F0F3F9",             sh: "0 28px 72px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.72), inset 0 0 0 1px rgba(255,255,255,0.11)", tag: "rgba(255,255,255,0.63)" },
+  graphite: { bg: "rgba(255,255,255,0.012)", bd: "rgba(255,255,255,0.20)", bdT: "rgba(255,255,255,0.53)", bdB: "rgba(255,255,255,0.012)", num: "rgba(255,255,255,0.42)", sh: "0 18px 52px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.40), inset 0 0 0 1px rgba(255,255,255,0.012)", tag: "rgba(255,255,255,0.63)" },
+  accent:   { bg: "rgba(255,255,255,0.13)", bd: "rgba(255,255,255,0.50)", bdT: "rgba(255,255,255,0.78)", bdB: "rgba(255,255,255,0.13)", num: "#F0F3F9",             sh: "0 24px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.70), inset 0 0 0 1px rgba(255,255,255,0.012)", tag: "rgba(255,255,255,0.72)" },
 } as const
 
 function AdvCard({ n, title, body, variant = "graphite", tall = false }: { n: string; title: string; body: string; variant?: keyof typeof ADV_VARIANTS; tall?: boolean }) {
@@ -1117,14 +1117,14 @@ function CatalogCard({ index, children, style }: { index?: string; children: Rea
         position: "relative",
         borderRadius: 16,
         borderTop: `1px solid ${hover ? "rgba(224,224,224,0.55)" : "rgba(224,224,224,0.22)"}`,
-        borderRight: `1px solid ${hover ? "rgba(161,44,56,.55)" : "rgba(255,255,255,0.12)"}`,
-        borderBottom: `1px solid ${hover ? "rgba(161,44,56,.55)" : "rgba(255,255,255,0.08)"}`,
-        borderLeft: `1px solid ${hover ? "rgba(161,44,56,.55)" : "rgba(255,255,255,0.12)"}`,
+        borderRight: `1px solid ${hover ? "rgba(184,50,64,.55)" : "rgba(255,255,255,0.15)"}`,
+        borderBottom: `1px solid ${hover ? "rgba(184,50,64,.55)" : "rgba(255,255,255,0.11)"}`,
+        borderLeft: `1px solid ${hover ? "rgba(184,50,64,.55)" : "rgba(255,255,255,0.15)"}`,
         background: hover ? "rgba(255,255,255,.58)" : "rgba(255,255,255,.5)",
         backdropFilter: "blur(36px) saturate(1.1)",
         WebkitBackdropFilter: "blur(36px) saturate(1.1)",
         boxShadow: hover
-          ? "inset 0 1.5px 0 rgba(255,255,255,0.95), inset 1px 0 0 rgba(255,255,255,0.35), 0 20px 50px rgba(0,0,0,0.22)"
+          ? "inset 0 1.5px 0 rgba(255,255,255,0.95), inset 1px 0 0 rgba(255,255,255,0.42), 0 20px 50px rgba(0,0,0,0.22)"
           : "inset 0 1.5px 0 rgba(255,255,255,0.80), inset 1px 0 0 rgba(255,255,255,0.22), 0 12px 36px rgba(0,0,0,0.16)",
         padding: "26px 24px 24px",
         color: "#111826",
@@ -1139,12 +1139,12 @@ function CatalogCard({ index, children, style }: { index?: string; children: Rea
       {/* rim-light shimmer — top-left ray of light */}
       <span style={{
         position: "absolute", inset: 0, borderRadius: 16,
-        background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 30%, transparent 55%)",
+        background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.09) 30%, transparent 55%)",
         pointerEvents: "none",
       }} />
       {/* corner brackets */}
-      <span style={{ position: "absolute", top: 9, left: 9, width: 10, height: 10, borderTop: "1.5px solid rgba(161,44,56,.55)", borderLeft: "1.5px solid rgba(161,44,56,.55)" }} />
-      <span style={{ position: "absolute", bottom: 9, right: 9, width: 10, height: 10, borderBottom: "1.5px solid rgba(161,44,56,.55)", borderRight: "1.5px solid rgba(161,44,56,.55)" }} />
+      <span style={{ position: "absolute", top: 9, left: 9, width: 10, height: 10, borderTop: "1.5px solid rgba(184,50,64,.55)", borderLeft: "1.5px solid rgba(184,50,64,.55)" }} />
+      <span style={{ position: "absolute", bottom: 9, right: 9, width: 10, height: 10, borderBottom: "1.5px solid rgba(184,50,64,.55)", borderRight: "1.5px solid rgba(184,50,64,.55)" }} />
       {/* index */}
       {index && (
         <div style={{ position: "relative", fontFamily: MONO, fontSize: 11, letterSpacing: ".14em", color: T.accentLt, marginBottom: 14 }}>
@@ -1166,30 +1166,30 @@ function MetodoCard({ n, title, body, icon, i }: { n: string; title: string; bod
       transition={{ duration: 0.55, delay: i * 0.09, ease }}
       onHoverStart={() => setHov(true)}
       onHoverEnd={() => setHov(false)}
-      style={{ position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 4px 24px rgba(0,0,0,0.22)", height: "100%" }}
+      style={{ position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 4px 24px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)", height: "100%" }}
     >
       {/* Glass background — bottom fade mask */}
       <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, background: "rgba(255,255,255,0.008)", backdropFilter: "blur(6px) brightness(1.03)", WebkitBackdropFilter: "blur(6px) brightness(1.03)", WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", maskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", pointerEvents: "none" }} />
 
       {/* Gradient border — top + sides fade to mid */}
-      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, padding: 1, background: `linear-gradient(to bottom, ${hov ? "rgba(255,255,255,0.60)" : "rgba(255,255,255,0.45)"} 0%, transparent 52%)`, WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude", pointerEvents: "none", zIndex: 2, transition: "background 0.28s" }} />
+      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, padding: 1, background: `linear-gradient(to bottom, ${hov ? "rgba(255,255,255,0.60)" : "rgba(255,255,255,0.53)"} 0%, transparent 52%)`, WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude", pointerEvents: "none", zIndex: 2, transition: "background 0.28s" }} />
 
       {/* Big watermark number — behind content */}
-      <div aria-hidden style={{ position: "absolute", bottom: -10, right: 16, fontFamily: DISPLAY, fontSize: 130, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.06em", color: "rgba(161,44,56,0.10)", userSelect: "none" as const, pointerEvents: "none", zIndex: 1 }}>{n}</div>
+      <div aria-hidden style={{ position: "absolute", bottom: -10, right: 16, fontFamily: DISPLAY, fontSize: 130, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.06em", color: "rgba(184,50,64,0.10)", userSelect: "none" as const, pointerEvents: "none", zIndex: 1 }}>{n}</div>
 
       {/* Content */}
       <div style={{ position: "relative", zIndex: 3, padding: "28px 26px 36px", height: "100%", boxSizing: "border-box" as const, display: "flex", flexDirection: "column" }}>
 
         {/* Top row: icon + tag */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 11, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.80)" }}>
+          <div style={{ width: 40, height: 40, borderRadius: 11, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.80)" }}>
             {icon}
           </div>
           <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.22em", color: "rgba(255,255,255,0.28)" }}>[ {n} ]</span>
         </div>
 
         {/* Title */}
-        <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 20, lineHeight: 1.22, letterSpacing: "-0.02em", color: "#FFFFFF", margin: "0 0 14px" }}>{title}</h3>
+        <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 20, lineHeight: 1.22, letterSpacing: "-0.02em", color: "#F0F3F9", margin: "0 0 14px" }}>{title}</h3>
 
         {/* Red accent divider */}
         <div style={{ width: 28, height: 1.5, background: `linear-gradient(90deg, ${T.accent}, transparent)`, marginBottom: 14, borderRadius: 2, opacity: hov ? 1 : 0.55, transition: "opacity 0.28s" }} />
@@ -1206,7 +1206,7 @@ function AllInOne() {
     <section style={{ ...SEC, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s3" className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Il Metodo — Manifesto ]</span>
           </div>
@@ -1245,7 +1245,7 @@ const RISULTATI = [
 
 function RisultatiBlock() {
   const SEP = (
-    <span aria-hidden style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(168,48,64,0.38)", flexShrink: 0 }} />
+    <span aria-hidden style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(190,54,72,0.38)", flexShrink: 0 }} />
   )
   return (
     <section style={{ padding: "36px 0" }}>
@@ -1299,8 +1299,8 @@ const TECH_POINTS = [
     title: "Core Web Vitals Perfetti",
     body: "Google premia i siti tecnicamente perfetti. Vantaggio competitivo immediato sul posizionamento organico.",
     color: T.accentLt,
-    colorDim: "rgba(168,48,64,0.14)",
-    colorBd: "rgba(168,48,64,0.32)",
+    colorDim: "rgba(190,54,72,0.14)",
+    colorBd: "rgba(190,54,72,0.32)",
   },
   {
     metric: "99.9%",
@@ -1342,7 +1342,7 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
         position: "relative", display: "flex", alignItems: "stretch",
         borderRadius: 14, overflow: "hidden",
         background: hov ? "rgba(255,255,255,0.042)" : "rgba(255,255,255,0.018)",
-        border: `1px solid ${hov ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.07)"}`,
+        border: `1px solid ${hov ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.07)"}`,
         transition: "background 0.28s, border-color 0.28s",
         cursor: "default",
       } as React.CSSProperties}
@@ -1352,9 +1352,9 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
 
       {/* Metric block */}
       <div style={{ padding: "26px 28px", borderRight: "1px solid rgba(255,255,255,0.07)", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", minWidth: 148, flexShrink: 0, gap: 6 }}>
-        <span style={{ fontFamily: MONO, fontSize: 34, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.03em", color: hov ? color : "#FFFFFF", transition: "color 0.28s", whiteSpace: "nowrap" as const }}>{metric}</span>
+        <span style={{ fontFamily: MONO, fontSize: 34, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.03em", color: hov ? color : "#F0F3F9", transition: "color 0.28s", whiteSpace: "nowrap" as const }}>{metric}</span>
         <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.32)" }}>{scoreLabel}</span>
-        <div style={{ width: "100%", height: 2, background: "rgba(255,255,255,0.08)", borderRadius: 1, overflow: "hidden", marginTop: 2 }}>
+        <div style={{ width: "100%", height: 2, background: "rgba(255,255,255,0.11)", borderRadius: 1, overflow: "hidden", marginTop: 2 }}>
           <motion.div
             initial={{ width: "0%" }}
             animate={{ width: inView ? `${score}%` : "0%" }}
@@ -1370,7 +1370,7 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
           <div style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", background: colorDim, border: `1px solid ${colorBd}`, color, flexShrink: 0, transition: "background 0.25s" }}>
             {icon}
           </div>
-          <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", color: "#FFFFFF", margin: 0, lineHeight: 1.2 }}>{title}</h3>
+          <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", color: "#F0F3F9", margin: 0, lineHeight: 1.2 }}>{title}</h3>
         </div>
         <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.68, color: T.muted, margin: 0 }}>{body}</p>
       </div>
@@ -1379,7 +1379,7 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
       <div style={{ padding: "26px 28px", borderLeft: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
         <div style={{ position: "relative", width: 64, height: 64 }}>
           <svg viewBox="0 0 64 64" width="64" height="64" style={{ transform: "rotate(-90deg)" }}>
-            <circle cx="32" cy="32" r={R} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="2.5" />
+            <circle cx="32" cy="32" r={R} fill="none" stroke="rgba(255,255,255,0.11)" strokeWidth="2.5" />
             <motion.circle cx="32" cy="32" r={R} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round"
               strokeDasharray={C}
               initial={{ strokeDashoffset: C }}
@@ -1388,7 +1388,7 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
             />
           </svg>
           <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: hov ? color : "#FFFFFF", lineHeight: 1, transition: "color 0.28s" }}>{score}</span>
+            <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: hov ? color : "#F0F3F9", lineHeight: 1, transition: "color 0.28s" }}>{score}</span>
             <span style={{ fontFamily: MONO, fontSize: 7.5, color: "rgba(255,255,255,0.32)", letterSpacing: "0.08em" }}>/100</span>
           </div>
         </div>
@@ -1408,7 +1408,7 @@ function TechGauge({ score }: { score: number }) {
   }, [])
   return (
     <div ref={ref} style={{ height: 5, borderRadius: 99, background: "rgba(255,255,255,.08)", overflow: "hidden" }}>
-      <div style={{ height: "100%", width: shown ? `${score}%` : "0%", background: `linear-gradient(90deg, ${T.accentDim ? T.accent : "#8F1522"}, ${T.accentLt})`, borderRadius: 99, transition: "width 1.3s cubic-bezier(.2,.7,.2,1) .1s" }} />
+      <div style={{ height: "100%", width: shown ? `${score}%` : "0%", background: `linear-gradient(90deg, ${T.accentDim ? T.accent : "#A91928"}, ${T.accentLt})`, borderRadius: 99, transition: "width 1.3s cubic-bezier(.2,.7,.2,1) .1s" }} />
     </div>
   )
 }
@@ -1418,7 +1418,7 @@ function TechBlock() {
     <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Tecnologia all&apos;Avanguardia ]</span>
           </div>
@@ -1495,13 +1495,13 @@ function SkillCard({ icon, title, tags }: { icon: React.ReactNode; title: string
         padding: "22px",
         borderRadius: 18,
         overflow: "hidden",
-        backgroundColor: h ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.012)",
+        backgroundColor: h ? "rgba(255,255,255,0.13)" : "rgba(255,255,255,0.012)",
         backdropFilter: "blur(34px) brightness(1.14) saturate(0.70)",
         WebkitBackdropFilter: "blur(34px) brightness(1.14) saturate(0.70)",
         border: `1px solid ${h ? "rgba(255,255,255,0.36)" : "rgba(255,255,255,0.16)"}`,
         /* 4. Depth shadow */
         boxShadow: h
-          ? "0 16px 48px 0 rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.12)"
+          ? "0 16px 48px 0 rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.15)"
           : "0 8px 32px 0 rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.012)",
         transition: "background-color 0.28s, border-color 0.28s, box-shadow 0.32s",
       } as React.CSSProperties}
@@ -1515,14 +1515,14 @@ function SkillCard({ icon, title, tags }: { icon: React.ReactNode; title: string
 
       {/* 5. Content — title + icon row */}
       <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 14 }}>
-        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#ffffff", letterSpacing: "-0.015em", lineHeight: 1.35 }}>{title}</h3>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#F0F3F9", letterSpacing: "-0.015em", lineHeight: 1.35 }}>{title}</h3>
         <div className="hp-skillcard-icon" style={{
           width: 34, height: 34, borderRadius: 9, flexShrink: 0,
-          background: "rgba(255,255,255,0.06)",
-          border: "1px solid rgba(255,255,255,0.10)",
+          background: "rgba(255,255,255,0.09)",
+          border: "1px solid rgba(255,255,255,0.13)",
           display: "flex", alignItems: "center", justifyContent: "center",
           color: T.accentLt,
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15)",
           transition: "background 0.22s",
         }}>
           {icon}
@@ -1549,8 +1549,8 @@ const SOLUZIONI = [
         <path d="M16 10a4 4 0 0 1-8 0"/>
       </svg>
     ),
-    gradient: "linear-gradient(135deg, #D6283C 0%, #FF334B 100%)",
-    glow: "rgba(161,44,56,0.28)",
+    gradient: "linear-gradient(135deg, #DF3448 0%, #FF334B 100%)",
+    glow: "rgba(184,50,64,0.28)",
     title: "E-commerce ad Alta Conversione",
     desc: "Negozi online veloci, stabili e scalabili. Automazione totale di magazzini, cataloghi massivi e logistica.",
     cta: "Ottimizza il tuo E-commerce",
@@ -1579,7 +1579,7 @@ const SOLUZIONI = [
       </svg>
     ),
     gradient: "linear-gradient(135deg, #FF334B 0%, #FF8A96 100%)",
-    glow: "rgba(161,44,56,0.28)",
+    glow: "rgba(184,50,64,0.28)",
     title: "Integrazione AI & Sistemi Intelligenti",
     desc: "Soluzioni pratiche basate su Intelligenza Artificiale (Agenti AI, LLM). Abbattiamo i costi di gestione e ottimizziamo la routine.",
     cta: "Innova con l'AI",
@@ -1592,8 +1592,8 @@ const SOLUZIONI = [
         <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
       </svg>
     ),
-    gradient: "linear-gradient(135deg, #D6283C 0%, #FF8A96 100%)",
-    glow: "rgba(161,44,56,0.28)",
+    gradient: "linear-gradient(135deg, #DF3448 0%, #FF8A96 100%)",
+    glow: "rgba(184,50,64,0.28)",
     title: "SEO Strutturale & Performance",
     desc: "Posizionamento organico integrato nel codice fin dal primo giorno. Scaliamo Google per intercettare traffico pronto a comprare.",
     cta: "Scala le Classifiche",
@@ -1619,9 +1619,9 @@ function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: t
   const [hovered, setHovered] = useState(false)
   const variant = index === 0 ? "light" : index === SOLUZIONI.length - 1 ? "accent" : "graphite"
   const SV = ({
-    light:    { bg: "rgba(255,255,255,0.10)",  bgHov: "rgba(255,255,255,0.17)", bd: "rgba(255,255,255,0.65)", bdHov: "rgba(255,255,255,0.82)" },
-    graphite: { bg: "rgba(255,255,255,0.012)",  bgHov: "rgba(255,255,255,0.09)", bd: "rgba(255,255,255,0.18)", bdHov: "rgba(255,255,255,0.36)" },
-    accent:   { bg: "rgba(255,255,255,0.10)",  bgHov: "rgba(255,255,255,0.17)", bd: "rgba(255,255,255,0.65)", bdHov: "rgba(255,255,255,0.82)" },
+    light:    { bg: "rgba(255,255,255,0.13)",  bgHov: "rgba(255,255,255,0.17)", bd: "rgba(255,255,255,0.65)", bdHov: "rgba(255,255,255,0.82)" },
+    graphite: { bg: "rgba(255,255,255,0.012)",  bgHov: "rgba(255,255,255,0.12)", bd: "rgba(255,255,255,0.18)", bdHov: "rgba(255,255,255,0.36)" },
+    accent:   { bg: "rgba(255,255,255,0.13)",  bgHov: "rgba(255,255,255,0.17)", bd: "rgba(255,255,255,0.65)", bdHov: "rgba(255,255,255,0.82)" },
   } as const)[variant]
   return (
     <motion.div
@@ -1664,8 +1664,8 @@ function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: t
         <div className="hp-sol-card-icon" style={{
           width: 46, height: 46, borderRadius: 14, flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
-          background: hovered ? gradient : "rgba(255,255,255,0.06)",
-          border: `1px solid ${hovered ? "transparent" : "rgba(255,255,255,0.14)"}`,
+          background: hovered ? gradient : "rgba(255,255,255,0.09)",
+          border: `1px solid ${hovered ? "transparent" : "rgba(255,255,255,0.16)"}`,
           boxShadow: hovered ? `0 0 22px ${glow}` : "none",
           color: hovered ? (variant === "graphite" ? "#070A11" : "#fff") : T.silver,
           transition: "background 0.3s, border-color 0.3s, box-shadow 0.3s, color 0.3s",
@@ -1711,27 +1711,27 @@ function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
   const featured = i === 0
 
   const RouteChip = (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontFamily: MONO, fontSize: 9.5, letterSpacing: ".04em", color: hover ? "rgba(255,255,255,0.72)" : "rgba(255,255,255,0.42)", border: `1px solid ${hover ? "rgba(255,255,255,0.26)" : "rgba(255,255,255,0.14)"}`, borderRadius: 6, padding: "3px 8px", transition: "color .3s, border-color .3s", whiteSpace: "nowrap" as const }}>
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontFamily: MONO, fontSize: 9.5, letterSpacing: ".04em", color: hover ? "rgba(255,255,255,0.72)" : "rgba(255,255,255,0.42)", border: `1px solid ${hover ? "rgba(255,255,255,0.26)" : "rgba(255,255,255,0.16)"}`, borderRadius: 6, padding: "3px 8px", transition: "color .3s, border-color .3s", whiteSpace: "nowrap" as const }}>
       <span style={{ fontSize: 11 }}>↗</span>{s.href}
     </span>
   )
 
   const IconBox = (
-    <div style={{ width: 38, height: 38, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.80)" }}>
+    <div style={{ width: 38, height: 38, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.80)" }}>
       {s.icon}
     </div>
   )
 
   const Footer = (
-    <div style={{ marginTop: "auto", paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.09)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-      <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 600, letterSpacing: ".04em", textTransform: "uppercase" as const, color: hover ? "#FFFFFF" : "rgba(255,255,255,0.6)", transition: "color .3s" }}>{s.cta}</span>
-      <motion.span animate={{ x: hover ? 4 : 0, borderColor: hover ? "rgba(161,44,56,0.7)" : "rgba(161,44,56,0.32)", background: hover ? "rgba(161,44,56,0.18)" : "rgba(161,44,56,0.08)" }} transition={{ duration: 0.25 }}
+    <div style={{ marginTop: "auto", paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+      <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 600, letterSpacing: ".04em", textTransform: "uppercase" as const, color: hover ? "#F0F3F9" : "rgba(255,255,255,0.6)", transition: "color .3s" }}>{s.cta}</span>
+      <motion.span animate={{ x: hover ? 4 : 0, borderColor: hover ? "rgba(184,50,64,0.7)" : "rgba(184,50,64,0.32)", background: hover ? "rgba(184,50,64,0.18)" : "rgba(184,50,64,0.08)" }} transition={{ duration: 0.25 }}
         style={{ width: 30, height: 30, borderRadius: "50%", border: "1px solid", display: "flex", alignItems: "center", justifyContent: "center", color: T.accentLt, fontSize: 14, flexShrink: 0 }}>→</motion.span>
     </div>
   )
 
   const BigNum = (size: number) => (
-    <span style={{ fontFamily: MONO, fontWeight: 900, fontSize: size, letterSpacing: "-0.06em", lineHeight: 1, color: "rgba(168,48,64,0.34)" }}>{s.num}</span>
+    <span style={{ fontFamily: MONO, fontWeight: 900, fontSize: size, letterSpacing: "-0.06em", lineHeight: 1, color: "rgba(190,54,72,0.34)" }}>{s.num}</span>
   )
 
   return (
@@ -1741,7 +1741,7 @@ function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
       onMouseLeave={() => setHover(false)}
       style={{
         position: "relative", width: "100%", height: "100%", borderRadius: 16, overflow: "hidden", boxSizing: "border-box" as const,
-        boxShadow: "0 4px 24px rgba(0,0,0,0.22)",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)",
         textDecoration: "none", cursor: "pointer",
         transition: "transform .35s ease, box-shadow .35s ease",
         transform: hover ? "translateY(-3px)" : "none",
@@ -1751,7 +1751,7 @@ function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
       <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, background: "rgba(255,255,255,0.008)", backdropFilter: "blur(6px) brightness(1.03)", WebkitBackdropFilter: "blur(6px) brightness(1.03)", WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", maskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", pointerEvents: "none" }} />
 
       {/* Gradient border — top + sides fade to mid */}
-      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, padding: 1, background: "linear-gradient(to bottom, rgba(255,255,255,0.45) 0%, transparent 52%)", WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude", pointerEvents: "none", zIndex: 2 }} />
+      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, padding: 1, background: "linear-gradient(to bottom, rgba(255,255,255,0.53) 0%, transparent 52%)", WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude", pointerEvents: "none", zIndex: 2 }} />
 
       {/* Content */}
       <div style={{
@@ -1797,7 +1797,7 @@ function SoluzioniMatrix() {
     <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Core Skills &amp; Tech Stack ]</span>
           </div>
@@ -1805,7 +1805,7 @@ function SoluzioniMatrix() {
             Soluzioni ad Alta Ingegneria
           </h2>
           <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 680, margin: "0 0 40px" }}>
-            Ogni soluzione è un servizio completo con la <span style={{ color: "#FFFFFF" }}>sua pagina dedicata</span> — architettura, stack tecnologico e casi d'uso spiegati in dettaglio. Clicca su una card per esplorarla.
+            Ogni soluzione è un servizio completo con la <span style={{ color: "#F0F3F9" }}>sua pagina dedicata</span> — architettura, stack tecnologico e casi d'uso spiegati in dettaglio. Clicca su una card per esplorarla.
           </p>
         </Reveal>
 
@@ -1943,13 +1943,13 @@ function DiagnosiCard({ d, i }: { d: typeof DIAGNOSI_PS[0]; i: number }) {
       transition={{ duration: 0.55, delay: (i % 2) * 0.08, ease }}
       onHoverStart={() => setHov(true)}
       onHoverEnd={() => setHov(false)}
-      style={{ position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 4px 24px rgba(0,0,0,0.22)" }}
+      style={{ position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 4px 24px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)" }}
     >
       {/* Glass background — fades out, text above is unaffected */}
       <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, background: "rgba(255,255,255,0.008)", backdropFilter: "blur(6px) brightness(1.03)", WebkitBackdropFilter: "blur(6px) brightness(1.03)", WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", maskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", pointerEvents: "none" }} />
 
       {/* Border — top + sides fade to mid */}
-      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, padding: 1, background: "linear-gradient(to bottom, rgba(255,255,255,0.45) 0%, transparent 52%)", WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude", pointerEvents: "none", zIndex: 2 }} />
+      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, padding: 1, background: "linear-gradient(to bottom, rgba(255,255,255,0.53) 0%, transparent 52%)", WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude", pointerEvents: "none", zIndex: 2 }} />
 
 
 
@@ -1960,23 +1960,23 @@ function DiagnosiCard({ d, i }: { d: typeof DIAGNOSI_PS[0]; i: number }) {
             <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(239,68,68,0.55)" }}>[ Problema ]</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.80)" }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.80)" }}>
               {d.problem.icon}
             </div>
-            <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", margin: 0, color: "#FFFFFF", lineHeight: 1.25 }}>{d.problem.title}</h4>
+            <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", margin: 0, color: "#F0F3F9", lineHeight: 1.25 }}>{d.problem.title}</h4>
           </div>
           <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.68, color: T.muted, margin: 0 }}>{d.problem.body}</p>
         </div>
-        <div style={{ margin: "0 26px", height: 1, background: `linear-gradient(90deg, transparent, ${hov ? "rgba(161,44,56,0.35)" : "rgba(255,255,255,0.07)"}, transparent)`, transition: "background 0.30s" }} />
+        <div style={{ margin: "0 26px", height: 1, background: `linear-gradient(90deg, transparent, ${hov ? "rgba(184,50,64,0.35)" : "rgba(255,255,255,0.07)"}, transparent)`, transition: "background 0.30s" }} />
         <div style={{ padding: "20px 26px 26px" }}>
           <div style={{ marginBottom: 14 }}>
-            <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: hov ? T.accentLt : "rgba(161,44,56,0.55)", transition: "color 0.28s" }}>[ Soluzione ]</span>
+            <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: hov ? T.accentLt : "rgba(184,50,64,0.55)", transition: "color 0.28s" }}>[ Soluzione ]</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.80)" }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.80)" }}>
               {d.solution.icon}
             </div>
-            <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", margin: 0, color: "#FFFFFF", lineHeight: 1.25 }}>{d.solution.title}</h4>
+            <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", margin: 0, color: "#F0F3F9", lineHeight: 1.25 }}>{d.solution.title}</h4>
           </div>
           <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.68, color: T.muted, margin: 0 }}>{d.solution.body}</p>
         </div>
@@ -1990,7 +1990,7 @@ function DiagnosiBlock() {
     <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Il Problema — La Diagnosi ]</span>
           </div>
@@ -2067,10 +2067,10 @@ function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: type
       style={{
         '--base': '205', '--spread': '36', '--radius': '20', '--border': '1', '--size': '220',
         position: "relative", borderRadius: 20, padding: "36px 30px 30px",
-        backgroundColor: hov ? "rgba(255,255,255,0.11)" : "rgba(255,255,255,0.012)",
+        backgroundColor: hov ? "rgba(255,255,255,0.13)" : "rgba(255,255,255,0.012)",
         backdropFilter: "blur(34px) brightness(1.14) saturate(0.70)",
         WebkitBackdropFilter: "blur(34px) brightness(1.14) saturate(0.70)",
-        border: `1px solid ${hov ? "rgba(255,255,255,0.44)" : "rgba(255,255,255,0.14)"}`,
+        border: `1px solid ${hov ? "rgba(255,255,255,0.44)" : "rgba(255,255,255,0.16)"}`,
         boxShadow: hov
           ? "0 16px 48px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.60)"
           : "0 4px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.30)",
@@ -2104,7 +2104,7 @@ function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: type
       <div style={{ marginBottom: 16 }}>
         <span style={{
           fontSize: 36, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em",
-          color: "#FFFFFF",
+          color: "#F0F3F9",
         }}>{metric}</span>
         <span style={{ fontSize: 11, fontWeight: 600, color: T.silver, letterSpacing: "0.10em", textTransform: "uppercase" as const, marginLeft: 10, verticalAlign: "middle", opacity: 0.80 }}>{metricLabel}</span>
       </div>
@@ -2134,7 +2134,7 @@ function PurcheBlock() {
     <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Il Mio Metodo ]</span>
           </div>
@@ -2206,7 +2206,7 @@ function SkillsCardsGrid() {
 ══════════════════════════════════════════════════════════════════════════ */
 const SkillIconLayers = () => (
   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7">
-    <defs><linearGradient id="sk-g1" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stopColor="#FF334B"/><stop offset="1" stopColor="#FFFFFF"/></linearGradient></defs>
+    <defs><linearGradient id="sk-g1" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stopColor="#FF334B"/><stop offset="1" stopColor="#F0F3F9"/></linearGradient></defs>
     <polygon points="12 2 2 7 12 12 22 7 12 2" stroke="url(#sk-g1)"/>
     <polyline points="2 17 12 22 22 17" stroke="url(#sk-g1)"/>
     <polyline points="2 12 12 17 22 12" stroke="url(#sk-g1)"/>
@@ -2214,7 +2214,7 @@ const SkillIconLayers = () => (
 )
 const SkillIconCpu = () => (
   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7">
-    <defs><linearGradient id="sk-g2" x1="1" y1="1" x2="23" y2="23" gradientUnits="userSpaceOnUse"><stop stopColor="#FF334B"/><stop offset="1" stopColor="#FFFFFF"/></linearGradient></defs>
+    <defs><linearGradient id="sk-g2" x1="1" y1="1" x2="23" y2="23" gradientUnits="userSpaceOnUse"><stop stopColor="#FF334B"/><stop offset="1" stopColor="#F0F3F9"/></linearGradient></defs>
     <rect x="4" y="4" width="16" height="16" rx="2" stroke="url(#sk-g2)"/>
     <rect x="9" y="9" width="6" height="6" stroke="url(#sk-g2)"/>
     <line x1="9" y1="1" x2="9" y2="4" stroke="url(#sk-g2)"/>
@@ -2229,7 +2229,7 @@ const SkillIconCpu = () => (
 )
 const SkillIconRocket = () => (
   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7">
-    <defs><linearGradient id="sk-g3" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stopColor="#FF334B"/><stop offset="1" stopColor="#FFFFFF"/></linearGradient></defs>
+    <defs><linearGradient id="sk-g3" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stopColor="#FF334B"/><stop offset="1" stopColor="#F0F3F9"/></linearGradient></defs>
     <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" stroke="url(#sk-g3)"/>
     <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" stroke="url(#sk-g3)"/>
     <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" stroke="url(#sk-g3)"/>
@@ -2261,8 +2261,8 @@ function SkillAccordion({ icon, title, items, defaultOpen }: { icon: React.React
     <Reveal>
       <div data-glow="" style={{ '--base': '205', '--spread': '40', '--radius': '16', '--border': '1.5', '--size': '270', borderRadius: 16, position: "relative", backgroundColor: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${open ? "rgba(255,255,255,0.42)" : G.bd}`, boxShadow: open ? G.shadowHov : G.shadow, transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}>
 
-        <button onClick={() => setOpen(o => !o)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 18, padding: "26px 32px", background: open ? "rgba(255,255,255,0.06)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
-          <div style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: open ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.08)", border: `1px solid ${open ? "rgba(255,255,255,0.42)" : "rgba(255,255,255,0.22)"}`, boxShadow: open ? "0 0 14px rgba(214,222,238,0.24), inset 0 1px 0 rgba(255,255,255,0.08)" : "inset 0 1px 0 rgba(255,255,255,0.012)", transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s" }}>
+        <button onClick={() => setOpen(o => !o)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 18, padding: "26px 32px", background: open ? "rgba(255,255,255,0.09)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
+          <div style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: open ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.11)", border: `1px solid ${open ? "rgba(255,255,255,0.42)" : "rgba(255,255,255,0.22)"}`, boxShadow: open ? "0 0 14px rgba(214,222,238,0.24), inset 0 1px 0 rgba(255,255,255,0.11)" : "inset 0 1px 0 rgba(255,255,255,0.012)", transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s" }}>
             {icon}
           </div>
           <span style={{ fontSize: 17, fontWeight: 600, letterSpacing: "-0.015em", flex: 1 }}>{title}</span>
@@ -2320,7 +2320,7 @@ function VisualAnalisi() {
     <svg viewBox="0 0 300 250" width="100%" height="100%">
       {sats.map((s, i) => (
         <motion.path key={i} d={`M${cx},${cy}L${s.x},${s.y}`}
-          stroke="rgba(161,44,56,0.10)" strokeWidth="1" fill="none" strokeDasharray="4 3"
+          stroke="rgba(184,50,64,0.10)" strokeWidth="1" fill="none" strokeDasharray="4 3"
           initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
           transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
         />
@@ -2329,7 +2329,7 @@ function VisualAnalisi() {
         animate={{ r: [36, 45, 36] }} transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.circle cx={cx} cy={cy} r={28}
-        fill="rgba(120,20,30,0.06)" stroke="rgba(161,44,56,0.18)" strokeWidth="1.5"
+        fill="rgba(120,20,30,0.06)" stroke="rgba(184,50,64,0.18)" strokeWidth="1.5"
         initial={{ scale: 0 }} animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 250, delay: 0.1 }}
         style={{ transformOrigin: `${cx}px ${cy}px` }}
@@ -2349,7 +2349,7 @@ function VisualAnalisi() {
         </motion.g>
       ))}
       {sats.map((s, i) => (
-        <motion.circle key={`p${i}`} cx={cx} cy={cy} r={2.5} fill="rgba(161,44,56,0.40)"
+        <motion.circle key={`p${i}`} cx={cx} cy={cy} r={2.5} fill="rgba(184,50,64,0.40)"
           animate={{ x: [0, s.x - cx, 0], y: [0, s.y - cy, 0], opacity: [0, 0.9, 0] }}
           transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.38, ease: "easeInOut" }}
         />
@@ -2362,11 +2362,11 @@ function VisualDesign() {
   return (
     <svg viewBox="0 0 300 220" width="100%" height="100%">
       <motion.rect x={15} y={10} width={270} height={200} rx={10}
-        fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.11)" strokeWidth="1"
+        fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.13)" strokeWidth="1"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0 }}
       />
       <motion.rect x={15} y={10} width={270} height={30} rx={10}
-        fill="rgba(255,255,255,0.06)"
+        fill="rgba(255,255,255,0.09)"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.08 }}
       />
       {[22,32,42].map((x, i) => (
@@ -2387,18 +2387,18 @@ function VisualDesign() {
         style={{ transformOrigin: "150px 58px" }}
       />
       <motion.rect x={25} y={76} width={250} height={50} rx={7}
-        fill="rgba(120,20,30,0.04)" stroke="rgba(161,44,56,0.07)" strokeWidth="1"
+        fill="rgba(120,20,30,0.04)" stroke="rgba(184,50,64,0.07)" strokeWidth="1"
         initial={{ opacity: 0, scaleX: 0.7 }} animate={{ opacity: 1, scaleX: 1 }}
         transition={{ delay: 0.34, duration: 0.4, ease: [0.16,1,0.3,1] }}
         style={{ transformOrigin: "150px 101px" }}
       />
-      <motion.rect x={55} y={90} width={0} height={8} rx={4} fill="rgba(161,44,56,0.14)"
+      <motion.rect x={55} y={90} width={0} height={8} rx={4} fill="rgba(184,50,64,0.14)"
         animate={{ width: 110 }} transition={{ delay: 0.54, duration: 0.5 }}
       />
-      <motion.rect x={80} y={105} width={0} height={5} rx={3} fill="rgba(255,255,255,0.14)"
+      <motion.rect x={80} y={105} width={0} height={5} rx={3} fill="rgba(255,255,255,0.16)"
         animate={{ width: 60 }} transition={{ delay: 0.68, duration: 0.35 }}
       />
-      <motion.rect x={167} y={89} width={2} height={11} rx={1} fill="rgba(161,44,56,0.35)"
+      <motion.rect x={167} y={89} width={2} height={11} rx={1} fill="rgba(184,50,64,0.35)"
         animate={{ opacity: [1, 0, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.9 }}
       />
       {[25,112,199].map((x, i) => (
@@ -2406,10 +2406,10 @@ function VisualDesign() {
           transition={{ delay: 0.54 + i * 0.09, duration: 0.35, ease: [0.16,1,0.3,1] }}
         >
           <rect x={x} y={138} width={76} height={54} rx={7}
-            fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
+            fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.11)" strokeWidth="1"/>
           <circle cx={x+38} cy={157} r={9} fill="rgba(120,20,30,0.09)"/>
-          <rect x={x+16} y={172} width={44} height={4} rx={2} fill="rgba(255,255,255,0.10)"/>
-          <rect x={x+22} y={180} width={32} height={3} rx={2} fill="rgba(255,255,255,0.06)"/>
+          <rect x={x+16} y={172} width={44} height={4} rx={2} fill="rgba(255,255,255,0.13)"/>
+          <rect x={x+22} y={180} width={32} height={3} rx={2} fill="rgba(255,255,255,0.09)"/>
         </motion.g>
       ))}
     </svg>
@@ -2418,9 +2418,9 @@ function VisualDesign() {
 
 function VisualAPI() {
   const boxes = [
-    { label: "Fornitore", sub: "ERP/CRM",     x: 14,  y: 72, w: 76, h: 86,  ac: "rgba(120,20,30,0.05)", bd: "rgba(161,44,56,0.12)" },
-    { label: "API Layer", sub: "Middleware",   x: 112, y: 50, w: 76, h: 130, ac: "rgba(161,44,56,0.05)", bd: "rgba(161,44,56,0.13)" },
-    { label: "Shopify",   sub: "+ Analytics",  x: 210, y: 72, w: 76, h: 86,  ac: "rgba(120,20,30,0.05)", bd: "rgba(161,44,56,0.12)" },
+    { label: "Fornitore", sub: "ERP/CRM",     x: 14,  y: 72, w: 76, h: 86,  ac: "rgba(120,20,30,0.05)", bd: "rgba(184,50,64,0.12)" },
+    { label: "API Layer", sub: "Middleware",   x: 112, y: 50, w: 76, h: 130, ac: "rgba(184,50,64,0.05)", bd: "rgba(184,50,64,0.13)" },
+    { label: "Shopify",   sub: "+ Analytics",  x: 210, y: 72, w: 76, h: 86,  ac: "rgba(120,20,30,0.05)", bd: "rgba(184,50,64,0.12)" },
   ]
   return (
     <svg viewBox="0 0 300 230" width="100%" height="100%">
@@ -2428,19 +2428,19 @@ function VisualAPI() {
         fill="rgba(255,255,255,0.82)" fontFamily="Inter,sans-serif"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
       >30.247 SKU</motion.text>
-      <motion.text x={150} y={36} textAnchor="middle" fontSize={7} fill="rgba(161,44,56,0.14)"
+      <motion.text x={150} y={36} textAnchor="middle" fontSize={7} fill="rgba(184,50,64,0.14)"
         fontFamily="Inter,sans-serif"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
       >sincronizzati in tempo reale</motion.text>
       {[[90,115,112,115],[188,115,210,115]].map(([x1,y1,x2,y2], i) => (
         <motion.path key={i} d={`M${x1},${y1}L${x2},${y2}`}
-          stroke="rgba(161,44,56,0.09)" strokeWidth="1.5" fill="none" strokeDasharray="5 3"
+          stroke="rgba(184,50,64,0.09)" strokeWidth="1.5" fill="none" strokeDasharray="5 3"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 + i * 0.15 }}
         />
       ))}
       {[112,210].map((x, i) => (
         <motion.polygon key={i} points={`${x},111 ${x},119 ${x+7},115`}
-          fill="rgba(161,44,56,0.14)"
+          fill="rgba(184,50,64,0.14)"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 + i * 0.15 }}
         />
       ))}
@@ -2462,7 +2462,7 @@ function VisualAPI() {
       ))}
       {[0,1].map(edge => [0,1,2].map(j => (
         <motion.rect key={`p${edge}-${j}`}
-          x={edge===0 ? 86 : 184} y={112} width={8} height={6} rx={2} fill="rgba(161,44,56,0.18)"
+          x={edge===0 ? 86 : 184} y={112} width={8} height={6} rx={2} fill="rgba(184,50,64,0.18)"
           animate={{ x: [0,22,22], opacity: [0,1,0] }}
           transition={{ duration: 1.1, repeat: Infinity, delay: j*0.4 + edge*0.22, ease: "easeInOut" }}
         />
@@ -2479,7 +2479,7 @@ function VisualLancio() {
     <svg viewBox="0 0 260 205" width="100%" height="100%">
       <defs>
         <linearGradient id="mgl" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="rgba(120,20,30,0.85)"/><stop offset="100%" stopColor="rgba(168,48,64,0.55)"/>
+          <stop offset="0%" stopColor="rgba(120,20,30,0.85)"/><stop offset="100%" stopColor="rgba(190,54,72,0.55)"/>
         </linearGradient>
         <linearGradient id="mga" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="rgba(120,20,30,0.07)"/><stop offset="100%" stopColor="rgba(124,16,240,0)"/>
@@ -2512,11 +2512,11 @@ function VisualLancio() {
           transition={{ delay: 1.1 + i * 0.18, duration: 0.4 }}
         >
           <rect x={m.x} y={m.y-14} width={58} height={28} rx={8}
-            fill="rgba(120,20,30,0.05)" stroke="rgba(161,44,56,0.12)" strokeWidth="1"/>
+            fill="rgba(120,20,30,0.05)" stroke="rgba(184,50,64,0.12)" strokeWidth="1"/>
           <text x={m.x+29} y={m.y-1} textAnchor="middle" fontSize={13} fontWeight="800"
             fill="rgba(255,255,255,0.82)" fontFamily="Inter,sans-serif">{m.v}</text>
           <text x={m.x+29} y={m.y+9} textAnchor="middle" fontSize={7}
-            fill="rgba(161,44,56,0.28)" fontFamily="Inter,sans-serif">{m.l}</text>
+            fill="rgba(184,50,64,0.28)" fontFamily="Inter,sans-serif">{m.l}</text>
         </motion.g>
       ))}
     </svg>
@@ -2554,7 +2554,7 @@ function MethodCarousel() {
         const Visual = METHOD_VISUALS[i]
 
         return (
-          <div key={i} style={{ borderBottom: `1px solid ${isActive ? "rgba(161,44,56,0.18)" : "rgba(255,255,255,0.012)"}`, transition: "border-color 0.4s" }}>
+          <div key={i} style={{ borderBottom: `1px solid ${isActive ? "rgba(184,50,64,0.18)" : "rgba(255,255,255,0.012)"}`, transition: "border-color 0.4s" }}>
 
             {/* ── Row header ── */}
             <button
@@ -2564,7 +2564,7 @@ function MethodCarousel() {
               {/* Large step number */}
               <motion.span
                 className="hp-method-row-num"
-                animate={{ color: isActive ? "rgba(161,44,56,0.75)" : isDone ? "rgba(161,44,56,0.22)" : "rgba(255,255,255,0.12)" }}
+                animate={{ color: isActive ? "rgba(184,50,64,0.75)" : isDone ? "rgba(184,50,64,0.22)" : "rgba(255,255,255,0.15)" }}
                 transition={{ duration: 0.35 }}
                 style={{ fontFamily: MONO, fontSize: 50, fontWeight: 200, lineHeight: 1, letterSpacing: "-0.04em", textAlign: "right" as const, flexShrink: 0, width: 72 }}
               >{s.n}</motion.span>
@@ -2572,7 +2572,7 @@ function MethodCarousel() {
               {/* Accent dash */}
               <motion.div
                 className="hp-method-row-accent"
-                animate={{ background: isActive ? "rgba(161,44,56,0.65)" : "rgba(255,255,255,0.10)" }}
+                animate={{ background: isActive ? "rgba(184,50,64,0.65)" : "rgba(255,255,255,0.13)" }}
                 transition={{ duration: 0.35 }}
                 style={{ height: 1, width: 32, flexShrink: 0 }}
               />
@@ -2581,26 +2581,26 @@ function MethodCarousel() {
               <div style={{ flex: 1, display: "flex", flexDirection: "column" as const, gap: 4, textAlign: "left" as const }}>
                 <motion.span
                   className="hp-method-row-title"
-                  animate={{ color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.42)" }}
+                  animate={{ color: isActive ? "#F0F3F9" : "rgba(255,255,255,0.42)" }}
                   transition={{ duration: 0.35 }}
                   style={{ fontFamily: DISPLAY, fontSize: "clamp(13px,1.5vw,17px)", fontWeight: isActive ? 700 : 400, letterSpacing: "-0.015em", lineHeight: 1.2 }}
                 >{s.title}</motion.span>
                 <motion.span
                   animate={{ opacity: isActive ? 0.7 : 0.22 }}
                   transition={{ duration: 0.35 }}
-                  style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: ".20em", textTransform: "uppercase" as const, color: "rgba(161,44,56,0.55)" }}
+                  style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: ".20em", textTransform: "uppercase" as const, color: "rgba(184,50,64,0.55)" }}
                 >{s.label}</motion.span>
               </div>
 
               {/* Done check */}
               {isDone
-                ? <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ fontSize: 13, color: "rgba(161,44,56,0.60)", flexShrink: 0 }}>✓</motion.span>
+                ? <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ fontSize: 13, color: "rgba(184,50,64,0.60)", flexShrink: 0 }}>✓</motion.span>
                 : <div style={{ width: 13 }} />
               }
 
               {/* Expand circle */}
               <motion.div
-                animate={{ rotate: isActive ? 45 : 0, borderColor: isActive ? "rgba(161,44,56,0.65)" : "rgba(255,255,255,0.18)", color: isActive ? "rgba(161,44,56,0.75)" : "rgba(255,255,255,0.28)" }}
+                animate={{ rotate: isActive ? 45 : 0, borderColor: isActive ? "rgba(184,50,64,0.65)" : "rgba(255,255,255,0.18)", color: isActive ? "rgba(184,50,64,0.75)" : "rgba(255,255,255,0.28)" }}
                 transition={{ duration: 0.3 }}
                 style={{ width: 24, height: 24, border: "1.5px solid", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, lineHeight: 1, flexShrink: 0 }}
               >+</motion.div>
@@ -2634,7 +2634,7 @@ function MethodCarousel() {
                           initial={{ width: 0 }}
                           animate={{ width: "100%" }}
                           transition={{ duration: STEP_MS / 1000, ease: "linear" }}
-                          style={{ height: "100%", background: `linear-gradient(90deg, rgba(100,18,28,0.90), rgba(161,44,56,0.70))`, borderRadius: 2 }}
+                          style={{ height: "100%", background: `linear-gradient(90deg, rgba(100,18,28,0.90), rgba(184,50,64,0.70))`, borderRadius: 2 }}
                         />
                       </div>
                     </motion.div>
@@ -2645,7 +2645,7 @@ function MethodCarousel() {
                       initial={{ opacity: 0, scale: 0.97 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.08, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                      style={{ borderRadius: 6, background: "rgba(0,0,0,0.14)", border: "1px solid rgba(255,255,255,0.06)", minHeight: 130, maxHeight: 160, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}
+                      style={{ borderRadius: 6, background: "rgba(0,0,0,0.14)", border: "1px solid rgba(255,255,255,0.09)", minHeight: 130, maxHeight: 160, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}
                     >
                       <Visual />
                     </motion.div>
@@ -2671,26 +2671,26 @@ function Method() {
             {/* left — eyebrow + headline */}
             <div>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
-                <span style={{ width: 24, height: 1, background: "linear-gradient(90deg, rgba(161,44,56,0.50), transparent)" }} />
-                <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: ".22em", textTransform: "uppercase" as const, color: "rgba(161,44,56,0.55)" }}>Il Metodo di Lavoro</span>
-                <span style={{ width: 24, height: 1, background: "linear-gradient(270deg, rgba(161,44,56,0.50), transparent)" }} />
+                <span style={{ width: 24, height: 1, background: "linear-gradient(90deg, rgba(184,50,64,0.50), transparent)" }} />
+                <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: ".22em", textTransform: "uppercase" as const, color: "rgba(184,50,64,0.55)" }}>Il Metodo di Lavoro</span>
+                <span style={{ width: 24, height: 1, background: "linear-gradient(270deg, rgba(184,50,64,0.50), transparent)" }} />
               </div>
 
               <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.04em", margin: 0, fontSize: "clamp(30px,3.8vw,52px)" }}>
-                <span style={{ color: "#FFFFFF" }}>Una roadmap</span>{" "}
-                <span style={{ color: "rgba(255,255,255,0.35)", fontWeight: 300 }}>trasparente,</span>
+                <span style={{ color: "#F0F3F9" }}>Una roadmap</span>{" "}
+                <span style={{ color: "rgba(255,255,255,0.42)", fontWeight: 300 }}>trasparente,</span>
                 <br />
-                <span style={{ color: "rgba(255,255,255,0.35)", fontWeight: 300 }}>gestita dal tuo</span>{" "}
-                <span style={{ color: "#FFFFFF" }}>Cabinet</span>
+                <span style={{ color: "rgba(255,255,255,0.42)", fontWeight: 300 }}>gestita dal tuo</span>{" "}
+                <span style={{ color: "#F0F3F9" }}>Cabinet</span>
               </h2>
               <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 460, margin: "22px 0 0" }}>
-                Contratti, invoice e stato di ogni attività sono visibili in tempo reale nel tuo <span style={{ color: "#FFFFFF" }}>Area Clienti</span> privato. Zero sorprese, zero perdita di controllo: segui l'avanzamento del progetto fase per fase.
+                Contratti, invoice e stato di ogni attività sono visibili in tempo reale nel tuo <span style={{ color: "#F0F3F9" }}>Area Clienti</span> privato. Zero sorprese, zero perdita di controllo: segui l'avanzamento del progetto fase per fase.
               </p>
             </div>
 
             {/* right — editorial counter */}
             <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "flex-end", gap: 4, paddingBottom: 8, flexShrink: 0 }}>
-              <span style={{ fontFamily: MONO, fontSize: 44, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.07em", color: "rgba(255,255,255,0.06)" }}>04</span>
+              <span style={{ fontFamily: MONO, fontSize: 44, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.07em", color: "rgba(255,255,255,0.09)" }}>04</span>
               <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)", textAlign: "right" as const, lineHeight: 1.6 }}>fasi · processo<br />completo</span>
             </div>
 
@@ -2721,7 +2721,7 @@ function ProjectCard({ title, desc, tags }: { title: string; desc: string; tags:
       <div style={{ height: 172, background: "linear-gradient(135deg, rgba(8,12,22,0.9) 0%, rgba(10,15,27,0.8) 100%)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", borderRadius: "16px 16px 0 0" }}>
         <motion.div animate={{ opacity: h ? 0.6 : 0.2, scale: h ? 1.1 : 1 }} transition={{ duration: 0.35 }} style={{ fontSize: 44, color: T.accentLt }} onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}>◈</motion.div>
         <AnimatePresence>
-          {h && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${T.accentDim}, rgba(161,44,56,0.07))` }} />}
+          {h && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${T.accentDim}, rgba(184,50,64,0.07))` }} />}
         </AnimatePresence>
       </div>
       <div style={{ padding: 24, display: "flex", flexDirection: "column", flex: 1 }}>
@@ -2738,7 +2738,7 @@ function Portfolio() {
     <section id="s6" style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Social Proof / Portfolio ]</span>
           </div>
@@ -2777,7 +2777,7 @@ function Portfolio() {
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
                   {p.tags.map(t => (
-                    <span key={t} style={{ fontFamily: MONO, fontSize: 10.5, color: T.accentLt, border: "1px solid rgba(161,44,56,.3)", borderRadius: 6, padding: "4px 9px" }}>
+                    <span key={t} style={{ fontFamily: MONO, fontSize: 10.5, color: T.accentLt, border: "1px solid rgba(184,50,64,.3)", borderRadius: 6, padding: "4px 9px" }}>
                       {t}
                     </span>
                   ))}
@@ -2818,38 +2818,38 @@ function CaseMiniCard({ c, i }: { c: typeof CASE_LIST[number]; i: number }) {
       style={{
         position: "relative", overflow: "hidden", borderRadius: 16, textDecoration: "none", display: "flex",
         background: h ? "rgba(255,255,255,0.038)" : "rgba(255,255,255,0.018)",
-        border: `1px solid ${h ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.08)"}`,
+        border: `1px solid ${h ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.11)"}`,
         boxShadow: h ? "0 20px 56px rgba(0,0,0,0.32)" : "0 8px 28px rgba(0,0,0,0.20)",
         transition: "background .28s, border-color .28s, box-shadow .28s",
       } as React.CSSProperties}
     >
       {/* Left accent stripe */}
-      <div aria-hidden style={{ width: 3, flexShrink: 0, background: `linear-gradient(to bottom, rgba(161,44,56,0.90), rgba(161,44,56,0.20))`, borderRadius: "16px 0 0 16px", opacity: h ? 1 : 0.55, transition: "opacity .28s" }} />
+      <div aria-hidden style={{ width: 3, flexShrink: 0, background: `linear-gradient(to bottom, rgba(184,50,64,0.90), rgba(184,50,64,0.20))`, borderRadius: "16px 0 0 16px", opacity: h ? 1 : 0.55, transition: "opacity .28s" }} />
 
       {/* Number column */}
-      <div style={{ padding: "28px 24px 28px 28px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", flexShrink: 0, borderRight: "1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ padding: "28px 24px 28px 28px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", flexShrink: 0, borderRight: "1px solid rgba(255,255,255,0.09)" }}>
         <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", color: "rgba(255,255,255,0.28)", marginBottom: 6, textTransform: "uppercase" as const }}>CASE</span>
-        <span style={{ fontFamily: DISPLAY, fontSize: "clamp(52px,6vw,80px)", fontWeight: 900, letterSpacing: "-0.06em", lineHeight: 1, color: h ? "rgba(161,44,56,0.70)" : "rgba(161,44,56,0.45)", transition: "color .28s" }}>{c.n}</span>
+        <span style={{ fontFamily: DISPLAY, fontSize: "clamp(52px,6vw,80px)", fontWeight: 900, letterSpacing: "-0.06em", lineHeight: 1, color: h ? "rgba(184,50,64,0.70)" : "rgba(184,50,64,0.45)", transition: "color .28s" }}>{c.n}</span>
       </div>
 
       {/* Body */}
       <div className="cs-card-inner" style={{ position: "relative", flex: 1, display: "flex", alignItems: "center", gap: 24, padding: "28px 24px 28px 28px", minWidth: 0 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.35)", marginBottom: 10 }}>{c.cat}</div>
-          <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(18px,2.2vw,24px)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "#FFFFFF", margin: "0 0 14px" }}>{c.title}</h3>
+          <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.42)", marginBottom: 10 }}>{c.cat}</div>
+          <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(18px,2.2vw,24px)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "#F0F3F9", margin: "0 0 14px" }}>{c.title}</h3>
           <p style={{ fontFamily: SANS, fontSize: "clamp(14px, 1.3vw, 16px)", lineHeight: 1.72, color: T.muted, margin: 0, maxWidth: 500 }}>{c.desc}</p>
         </div>
 
         {/* Result callout */}
         <div className="cs-card-arrow" style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 16 }}>
-          <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", textAlign: "right" as const }}>
+          <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", textAlign: "right" as const }}>
             <div style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.18em", color: "rgba(255,255,255,0.30)", marginBottom: 5, textTransform: "uppercase" as const }}>RISULTATO</div>
             <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.82)", letterSpacing: "0.02em", whiteSpace: "nowrap" as const }}>{c.metric}</div>
           </div>
           <motion.div
-            animate={{ x: h ? 4 : 0, background: h ? "rgba(161,44,56,0.18)" : "rgba(255,255,255,0.012)", borderColor: h ? "rgba(161,44,56,0.55)" : "rgba(255,255,255,0.14)" }}
+            animate={{ x: h ? 4 : 0, background: h ? "rgba(184,50,64,0.18)" : "rgba(255,255,255,0.012)", borderColor: h ? "rgba(184,50,64,0.55)" : "rgba(255,255,255,0.16)" }}
             transition={{ duration: 0.25 }}
-            style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid", display: "flex", alignItems: "center", justifyContent: "center", color: h ? T.accentLt : "rgba(255,255,255,0.55)", fontSize: 16, transition: "color .25s" }}
+            style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid", display: "flex", alignItems: "center", justifyContent: "center", color: h ? T.accentLt : "rgba(255,255,255,0.63)", fontSize: 16, transition: "color .25s" }}
           >→</motion.div>
         </div>
       </div>
@@ -2875,15 +2875,15 @@ function ProjectsFeature() {
           <div className="cs-head">
             {/* title + subtitle */}
             <div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 18 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 18 }}>
                 <span style={{ color: T.accentLt }}>//</span>
                 <span>[ Case Studies ]</span>
               </div>
 
               <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(34px,5vw,66px)", lineHeight: 0.98, letterSpacing: "-0.04em", margin: 0 }}>
-                <span style={{ color: "#FFFFFF" }}>Progetti </span>
+                <span style={{ color: "#F0F3F9" }}>Progetti </span>
                 <span style={{ color: "rgba(255,255,255,0.32)", fontWeight: 300 }}>&amp; </span>
-                <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.55)" }}>Soluzioni</span>
+                <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.63)" }}>Soluzioni</span>
               </h2>
 
               <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 560, margin: "20px 0 0" }}>
@@ -2894,10 +2894,10 @@ function ProjectsFeature() {
             {/* CTA — top-right at title level */}
             <motion.a
               href="/projects" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
-              style={{ flexShrink: 0, minHeight: 52, borderRadius: 12, cursor: "pointer", textDecoration: "none", border: "1px solid rgba(161,44,56,0.80)", background: "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", display: "inline-flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
+              style={{ flexShrink: 0, minHeight: 52, borderRadius: 12, cursor: "pointer", textDecoration: "none", border: "1px solid rgba(184,50,64,0.80)", background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.15)", display: "inline-flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
             >
-              <span style={{ padding: "0 14px", borderRight: "1px solid rgba(161,44,56,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.55)" }}>[→]</span>
-              <span style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 20px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
+              <span style={{ padding: "0 14px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.63)" }}>[→]</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 20px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#F0F3F9" }}>
                 Scopri tutti i progetti <span style={{ fontSize: 14 }}>→</span>
               </span>
             </motion.a>
@@ -2932,7 +2932,7 @@ function FAQItem({ q, a, open, onToggle }: { q: string; a: string; open: boolean
       style={{ '--base': '205', '--spread': '40', '--radius': '14', '--border': '1.5', '--size': '260', borderRadius: 14, position: "relative", backgroundColor: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${open ? "rgba(255,255,255,0.42)" : G.bd}`, boxShadow: open ? G.shadowHov : G.shadow, transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}
     >
 
-      <button onClick={onToggle} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "22px 28px", background: open ? "rgba(255,255,255,0.06)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
+      <button onClick={onToggle} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "22px 28px", background: open ? "rgba(255,255,255,0.09)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
         <span style={{ fontSize: 15, fontWeight: 600, lineHeight: 1.5 }}>{q}</span>
         <motion.span animate={{ rotate: open ? 45 : 0 }} transition={{ duration: 0.25 }} style={{ fontSize: 24, color: T.silver, flexShrink: 0, lineHeight: 1 }}>+</motion.span>
       </button>
@@ -2983,7 +2983,7 @@ function GlassInput({ label, placeholder, type = "text", value, onChange }: {
       <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
       <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
         onFocus={() => setF(true)} onBlur={() => setF(false)} required
-        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(161,44,56,0.07)" : "rgba(255,255,255,0.012)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(168,48,64,0.55)" : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", boxShadow: f ? "0 0 0 3px rgba(161,44,56,0.11), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.012)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
+        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(184,50,64,0.07)" : "rgba(255,255,255,0.012)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(190,54,72,0.55)" : "rgba(255,255,255,0.13)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", boxShadow: f ? "0 0 0 3px rgba(184,50,64,0.11), inset 0 1px 0 rgba(255,255,255,0.09)" : "inset 0 1px 0 rgba(255,255,255,0.012)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
     </div>
   )
 }
@@ -2997,7 +2997,7 @@ function GlassTextarea({ label, placeholder, value, onChange }: {
       <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
       <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={4}
         onFocus={() => setF(true)} onBlur={() => setF(false)} required
-        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(161,44,56,0.07)" : "rgba(255,255,255,0.012)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(168,48,64,0.55)" : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", resize: "none" as const, fontFamily: "inherit", boxSizing: "border-box" as const, boxShadow: f ? "0 0 0 3px rgba(161,44,56,0.11), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.012)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
+        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(184,50,64,0.07)" : "rgba(255,255,255,0.012)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(190,54,72,0.55)" : "rgba(255,255,255,0.13)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", resize: "none" as const, fontFamily: "inherit", boxSizing: "border-box" as const, boxShadow: f ? "0 0 0 3px rgba(184,50,64,0.11), inset 0 1px 0 rgba(255,255,255,0.09)" : "inset 0 1px 0 rgba(255,255,255,0.012)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
     </div>
   )
 }
@@ -3009,7 +3009,7 @@ function GlassSelect({ label, value, onChange }: { label: string; value: string;
     <div>
       <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
       <select value={value} onChange={e => onChange(e.target.value)} onFocus={() => setF(true)} onBlur={() => setF(false)} required
-        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(161,44,56,0.07)" : "rgba(255,255,255,0.012)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(168,48,64,0.55)" : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: value ? T.text : T.faint, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", appearance: "none" as const, cursor: "pointer", boxShadow: f ? "0 0 0 3px rgba(161,44,56,0.11), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.012)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }}>
+        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(184,50,64,0.07)" : "rgba(255,255,255,0.012)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(190,54,72,0.55)" : "rgba(255,255,255,0.13)"}`, borderRadius: 12, color: value ? T.text : T.faint, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", appearance: "none" as const, cursor: "pointer", boxShadow: f ? "0 0 0 3px rgba(184,50,64,0.11), inset 0 1px 0 rgba(255,255,255,0.09)" : "inset 0 1px 0 rgba(255,255,255,0.012)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }}>
         <option value="" disabled style={{ background: "#060C18", color: T.muted }}>Seleziona un'area...</option>
         {options.map(o => <option key={o} value={o} style={{ background: "#060C18", color: T.text }}>{o}</option>)}
       </select>
@@ -3034,9 +3034,9 @@ function ContactModal({ onClose }: { onClose: () => void }) {
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: "11px 14px", borderRadius: 10,
     background: "rgba(255,255,255,0.012)",
-    border: "1px solid rgba(255,255,255,0.10)",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)",
-    color: "#FFFFFF", fontFamily: MONO, fontSize: 12,
+    border: "1px solid rgba(255,255,255,0.13)",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.09)",
+    color: "#F0F3F9", fontFamily: MONO, fontSize: 12,
     letterSpacing: "0.04em", outline: "none",
     transition: "border-color .2s, background .2s",
     boxSizing: "border-box" as const,
@@ -3072,8 +3072,8 @@ function ContactModal({ onClose }: { onClose: () => void }) {
           background: "rgba(13,18,30,0.94)",
           backdropFilter: "blur(72px) brightness(0.92) saturate(1.10)",
           WebkitBackdropFilter: "blur(72px) brightness(0.92) saturate(1.10)",
-          border: "1px solid rgba(255,255,255,0.12)",
-          boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.22), inset 1px 0 0 rgba(255,255,255,0.08), 0 40px 100px rgba(0,0,0,0.65)",
+          border: "1px solid rgba(255,255,255,0.15)",
+          boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.22), inset 1px 0 0 rgba(255,255,255,0.11), 0 40px 100px rgba(0,0,0,0.65)",
           overflow: "hidden",
         } as React.CSSProperties}
       >
@@ -3081,7 +3081,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
         <div style={{ height: 2, background: `linear-gradient(90deg, transparent, ${T.accent} 28%, ${T.accentLt} 72%, transparent)` }} />
 
         {/* rim shimmer */}
-        <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 20, background: "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 40%)", pointerEvents: "none" }} />
+        <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 20, background: "linear-gradient(135deg, rgba(255,255,255,0.09) 0%, transparent 40%)", pointerEvents: "none" }} />
 
         <div style={{ padding: "28px 32px 32px", position: "relative" }}>
 
@@ -3092,14 +3092,14 @@ function ContactModal({ onClose }: { onClose: () => void }) {
                 <span style={{ color: T.accentLt }}>//</span>
                 <span>[ Richiesta Consulenza ]</span>
               </div>
-              <h3 style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 700, letterSpacing: "-0.022em", color: "#FFFFFF", margin: 0, lineHeight: 1.2 }}>
+              <h3 style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 700, letterSpacing: "-0.022em", color: "#F0F3F9", margin: 0, lineHeight: 1.2 }}>
                 Descrivi il tuo blocco principale
               </h3>
             </div>
             <button onClick={onClose}
-              style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, border: "1px solid rgba(255,255,255,0.10)", background: "rgba(255,255,255,0.012)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.45)", transition: "all 0.18s" }}
-              onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.09)"; el.style.color="#fff" }}
-              onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.012)"; el.style.color="rgba(255,255,255,0.45)" }}
+              style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, border: "1px solid rgba(255,255,255,0.13)", background: "rgba(255,255,255,0.012)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.53)", transition: "all 0.18s" }}
+              onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.12)"; el.style.color="#fff" }}
+              onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.012)"; el.style.color="rgba(255,255,255,0.53)" }}
             >
               <XIcon size={13} />
             </button>
@@ -3112,27 +3112,27 @@ function ContactModal({ onClose }: { onClose: () => void }) {
                 <div>
                   <label style={labelStyle}>Nome</label>
                   <input style={inputStyle} placeholder="Il tuo nome" value={fields.name} onChange={e => set("name")(e.target.value)}
-                    onFocus={e => { e.currentTarget.style.borderColor="rgba(161,44,56,.5)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }}
-                    onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.10)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }} />
+                    onFocus={e => { e.currentTarget.style.borderColor="rgba(184,50,64,.5)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }}
+                    onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.13)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }} />
                 </div>
                 <div>
                   <label style={labelStyle}>Email</label>
                   <input style={inputStyle} type="email" placeholder="email@azienda.it" value={fields.email} onChange={e => set("email")(e.target.value)}
-                    onFocus={e => { e.currentTarget.style.borderColor="rgba(161,44,56,.5)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }}
-                    onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.10)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }} />
+                    onFocus={e => { e.currentTarget.style.borderColor="rgba(184,50,64,.5)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }}
+                    onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.13)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }} />
                 </div>
               </div>
               <div>
                 <label style={labelStyle}>Sito Web</label>
                 <input style={inputStyle} placeholder="https://tuosito.it (opzionale)" value={fields.site} onChange={e => set("site")(e.target.value)}
-                  onFocus={e => { e.currentTarget.style.borderColor="rgba(161,44,56,.5)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }}
-                  onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.10)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }} />
+                  onFocus={e => { e.currentTarget.style.borderColor="rgba(184,50,64,.5)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }}
+                  onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.13)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }} />
               </div>
               <div>
                 <label style={labelStyle}>Cosa dobbiamo risolvere?</label>
                 <select style={{ ...inputStyle, appearance: "none" as const, WebkitAppearance: "none" as const }} value={fields.area} onChange={e => set("area")(e.target.value)}
-                  onFocus={e => { e.currentTarget.style.borderColor="rgba(161,44,56,.5)" }}
-                  onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.10)" }}>
+                  onFocus={e => { e.currentTarget.style.borderColor="rgba(184,50,64,.5)" }}
+                  onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.13)" }}>
                   <option value="" style={{ background: "#060C18" }}>Seleziona un'area...</option>
                   {["E-commerce ad Alta Conversione","Siti Corporate & Lead Generation","Applicazioni Web & Automazione Custom","SEO Strategico & Performance Marketing","Integrazione AI & Sistemi Intelligenti"].map(o => (
                     <option key={o} value={o} style={{ background: "#060C18" }}>{o}</option>
@@ -3142,17 +3142,17 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               <div>
                 <label style={labelStyle}>Messaggio</label>
                 <textarea style={{ ...inputStyle, resize: "vertical" as const, minHeight: 90 }} placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={e => set("msg")(e.target.value)}
-                  onFocus={e => { e.currentTarget.style.borderColor="rgba(161,44,56,.5)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }}
-                  onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.10)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }} />
+                  onFocus={e => { e.currentTarget.style.borderColor="rgba(184,50,64,.5)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }}
+                  onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.13)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }} />
               </div>
 
               {/* divider */}
-              <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "4px 0" }} />
+              <div style={{ height: 1, background: "rgba(255,255,255,0.11)", margin: "4px 0" }} />
 
               <button type="submit"
-                style={{ width: "100%", padding: "13px 32px", borderRadius: 10, cursor: "pointer", border: "1px solid rgba(168,48,64,0.28)", background: "rgba(168,48,64,0.08)", backdropFilter: "blur(20px) brightness(1.08) saturate(1.2)", WebkitBackdropFilter: "blur(20px) brightness(1.08) saturate(1.2)", boxShadow: "0 0 12px rgba(168,48,64,0.10), inset 0 1px 0 rgba(168,48,64,0.10)", color: "rgba(168,48,64,0.92)", fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, transition: "all .22s" }}
-                onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(168,48,64,0.14)"; el.style.boxShadow="0 0 20px rgba(168,48,64,0.18), inset 0 1px 0 rgba(168,48,64,0.15)"; el.style.transform="translateY(-1px)"; el.style.borderColor="rgba(168,48,64,0.50)" }}
-                onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(168,48,64,0.08)"; el.style.boxShadow="0 0 12px rgba(168,48,64,0.10), inset 0 1px 0 rgba(168,48,64,0.10)"; el.style.transform=""; el.style.borderColor="rgba(168,48,64,0.28)" }}
+                style={{ width: "100%", padding: "13px 32px", borderRadius: 10, cursor: "pointer", border: "1px solid rgba(190,54,72,0.28)", background: "rgba(190,54,72,0.08)", backdropFilter: "blur(20px) brightness(1.08) saturate(1.2)", WebkitBackdropFilter: "blur(20px) brightness(1.08) saturate(1.2)", boxShadow: "0 0 12px rgba(190,54,72,0.10), inset 0 1px 0 rgba(190,54,72,0.10)", color: "rgba(190,54,72,0.92)", fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, transition: "all .22s" }}
+                onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(190,54,72,0.14)"; el.style.boxShadow="0 0 20px rgba(190,54,72,0.18), inset 0 1px 0 rgba(190,54,72,0.15)"; el.style.transform="translateY(-1px)"; el.style.borderColor="rgba(190,54,72,0.50)" }}
+                onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(190,54,72,0.08)"; el.style.boxShadow="0 0 12px rgba(190,54,72,0.10), inset 0 1px 0 rgba(190,54,72,0.10)"; el.style.transform=""; el.style.borderColor="rgba(190,54,72,0.28)" }}
               >
                 Invia Richiesta →
               </button>
@@ -3198,7 +3198,7 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
       <motion.div aria-hidden
         animate={{ opacity: [0.55, 0.90, 0.55], scale: [0.88, 1.04, 0.88] }}
         transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-        style={{ position: "absolute", bottom: -16, left: "10%", right: "10%", height: 24, borderRadius: "50%", background: "radial-gradient(ellipse, rgba(161,44,56,0.55) 0%, transparent 70%)", filter: "blur(10px)", pointerEvents: "none" }}
+        style={{ position: "absolute", bottom: -16, left: "10%", right: "10%", height: 24, borderRadius: "50%", background: "radial-gradient(ellipse, rgba(184,50,64,0.55) 0%, transparent 70%)", filter: "blur(10px)", pointerEvents: "none" }}
       />
 
       <motion.button
@@ -3213,20 +3213,20 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
         style={{
           position: "relative", overflow: "hidden", cursor: "pointer",
           padding: "0 0 0 0", borderRadius: 12,
-          border: `1px solid rgba(161,44,56,${hov ? "0.80" : "0.50"})`,
-          background: hov ? "linear-gradient(90deg, rgba(161,44,56,0.34) 0%, rgba(161,44,56,0.20) 100%)" : "rgba(161,44,56,0.14)",
+          border: `1px solid rgba(184,50,64,${hov ? "0.80" : "0.50"})`,
+          background: hov ? "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)" : "rgba(184,50,64,0.14)",
           backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
           boxShadow: hov
-            ? "0 0 24px rgba(161,44,56,0.35), inset 0 1px 0 rgba(255,255,255,0.18)"
-            : "0 0 12px rgba(161,44,56,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",
-          color: "#FFFFFF", fontFamily: MONO,
+            ? "0 0 24px rgba(184,50,64,0.35), inset 0 1px 0 rgba(255,255,255,0.18)"
+            : "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.15)",
+          color: "#F0F3F9", fontFamily: MONO,
           display: "flex", alignItems: "stretch",
           transition: "border-color 0.25s, box-shadow 0.30s, background 0.25s",
         } as React.CSSProperties}
       >
         {/* index tag */}
-        <div style={{ padding: "17px 16px 17px 20px", borderRight: "1px solid rgba(161,44,56,0.45)", display: "flex", alignItems: "center", position: "relative" }}>
-          <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.55)" }}>[01]</span>
+        <div style={{ padding: "17px 16px 17px 20px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", position: "relative" }}>
+          <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.63)" }}>[01]</span>
         </div>
         {/* label */}
         <div style={{ padding: "17px 28px", display: "flex", alignItems: "center", gap: 14, position: "relative", fontSize: 12, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase" as const }}>
@@ -3234,7 +3234,7 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
           <motion.span
             animate={{ x: hov ? [0, 5, 0] : 0 }}
             transition={{ duration: 0.55, repeat: hov ? Infinity : 0, ease: "easeInOut" }}
-            style={{ fontSize: 15, color: "#FFFFFF", lineHeight: 1 }}
+            style={{ fontSize: 15, color: "#F0F3F9", lineHeight: 1 }}
           >→</motion.span>
         </div>
       </motion.button>
@@ -3248,12 +3248,12 @@ function Contact() {
     <section style={{ ...SEC, borderTop: `1px solid ${T.border}` }} id="s9" className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#F0F3F9", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Call to Action ]</span>
           </div>
-          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.2vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 16px", color: "#FFFFFF" }}>
-            Pronto a scalare il tuo <span style={{ color: "#FFFFFF" }}>ecosistema digitale?</span>
+          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.2vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 16px", color: "#F0F3F9" }}>
+            Pronto a scalare il tuo <span style={{ color: "#F0F3F9" }}>ecosistema digitale?</span>
           </h2>
         </Reveal>
         <motion.p
@@ -3330,9 +3330,9 @@ function FooterSocialBtn({ href, label, children }: { href: string; label: strin
       data-glow=""
       whileHover={{ scale: 1.08, y: -2 }} whileTap={{ scale: 0.92 }}
       transition={{ type: "spring", stiffness: 400, damping: 16 }}
-      style={{ '--base': '205', '--spread': '36', '--radius': '10', '--border': '1', '--size': '140', width: 36, height: 36, borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, backgroundColor: "transparent", transition: "color 0.22s, border-color 0.22s, background-color 0.22s", flexShrink: 0, textDecoration: "none" } as React.CSSProperties}
+      style={{ '--base': '205', '--spread': '36', '--radius': '10', '--border': '1', '--size': '140', width: 36, height: 36, borderRadius: 10, border: "1px solid rgba(255,255,255,0.11)", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, backgroundColor: "transparent", transition: "color 0.22s, border-color 0.22s, background-color 0.22s", flexShrink: 0, textDecoration: "none" } as React.CSSProperties}
       onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.text; el.style.borderColor = "rgba(235,240,250,0.45)"; el.style.backgroundColor = "rgba(226,232,244,0.12)" }}
-      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.muted; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.backgroundColor = "transparent" }}
+      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.muted; el.style.borderColor = "rgba(255,255,255,0.11)"; el.style.backgroundColor = "transparent" }}
     >{children}</motion.a>
   )
 }
@@ -3357,10 +3357,10 @@ function FooterSection({ title, children }: { title: string; children: React.Rea
   }
 
   return (
-    <div style={{ borderBottom: `1px solid ${open ? "rgba(161,44,56,0.28)" : T.border}`, transition: "border-color 0.25s" }}>
+    <div style={{ borderBottom: `1px solid ${open ? "rgba(184,50,64,0.28)" : T.border}`, transition: "border-color 0.25s" }}>
       <button
         onClick={() => setOpen(o => !o)}
-        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: open ? "rgba(161,44,56,0.05)" : "transparent", border: "none", cursor: "pointer", padding: "16px 0", fontFamily: "inherit", transition: "background 0.25s" }}
+        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: open ? "rgba(184,50,64,0.05)" : "transparent", border: "none", cursor: "pointer", padding: "16px 0", fontFamily: "inherit", transition: "background 0.25s" }}
       >
         <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: open ? T.accentLt : T.faint, transition: "color 0.25s" }}>{title}</span>
         <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.28 }} style={{ color: open ? T.accentLt : T.faint, fontSize: 9, lineHeight: 1 }}>▼</motion.span>
@@ -3425,7 +3425,7 @@ function DateTimeWidget() {
         padding: "5px 14px 5px 8px", borderRadius: 100,
         background: "rgba(255,255,255,0.012)",
         backdropFilter: "blur(22px) saturate(1.6)", WebkitBackdropFilter: "blur(22px) saturate(1.6)",
-        border: "1px solid rgba(255,255,255,0.09)",
+        border: "1px solid rgba(255,255,255,0.12)",
         boxShadow: "inset 0 1px 0 rgba(255,255,255,0.012), 0 2px 14px rgba(0,0,0,0.22)",
         whiteSpace: "nowrap", userSelect: "none", pointerEvents: "none", zIndex: 10,
       } as React.CSSProperties}
@@ -3455,7 +3455,7 @@ function DateTimeWidget() {
       </span>
 
       {/* divider */}
-      <span style={{ width: 1, height: 13, background: "rgba(255,255,255,0.10)", flexShrink: 0 }} />
+      <span style={{ width: 1, height: 13, background: "rgba(255,255,255,0.13)", flexShrink: 0 }} />
 
       {/* date */}
       <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 500, letterSpacing: "0.14em", color: "rgba(255,255,255,0.36)" }}>
@@ -3480,10 +3480,10 @@ function NMmark({ size = 32, id = "nm-g", hover = false }: { size?: number; id?:
     <svg viewBox="0 2 28 22" width={size} height={Math.round(size * 22 / 28)} fill="none" strokeLinecap="square" strokeLinejoin="miter">
       <defs>
         <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
-          <stop offset="44%"  stopColor={hover ? "#ffffff" : "rgba(255,255,255,0.90)"} />
+          <stop offset="0%"   stopColor={hover ? "#F0F3F9" : "rgba(255,255,255,0.90)"} />
+          <stop offset="44%"  stopColor={hover ? "#F0F3F9" : "rgba(255,255,255,0.90)"} />
           <stop offset="56%"  stopColor="#FF334B" />
-          <stop offset="100%" stopColor={hover ? "#C41E33" : "#D6283C"} />
+          <stop offset="100%" stopColor={hover ? "#D71D33" : "#DF3448"} />
         </linearGradient>
       </defs>
       <motion.path
@@ -3513,7 +3513,7 @@ function Logo3D({ onClick }: { onClick: () => void }) {
           <NMmark size={30} id="nm-nav" hover={h} />
           <motion.span aria-hidden
             animate={{ opacity: h ? 1 : 0 }} transition={{ duration: 0.30 }}
-            style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(161,44,56,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }}
+            style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(184,50,64,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }}
           />
         </span>
         <span aria-hidden style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
@@ -3534,8 +3534,8 @@ function NavLinkAdv({ label, active, onClick }: { label: string; active: boolean
   return (
     <button ref={btnRef} onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} onMouseMove={onMove}
       style={{ position: "relative", background: "none", border: "none", cursor: "pointer", color: active ? T.text : h ? T.text : T.muted, fontSize: 11, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase" as const, padding: "8px 16px", borderRadius: 8, overflow: "hidden", fontFamily: MONO, transition: "color 0.18s" }}>
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: h ? `radial-gradient(55px circle at ${lx}px ${ly}px, rgba(161,44,56,0.22) 0%, transparent 100%)` : "none", transition: "background 0.08s" }} />
-      <motion.div animate={{ opacity: h || active ? 1 : 0, background: active ? "rgba(161,44,56,0.14)" : "rgba(255,255,255,0.012)" }} transition={{ duration: 0.18 }} style={{ position: "absolute", inset: 0, borderRadius: 8, border: active ? "1px solid rgba(161,44,56,0.28)" : "1px solid transparent" }} />
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: h ? `radial-gradient(55px circle at ${lx}px ${ly}px, rgba(184,50,64,0.22) 0%, transparent 100%)` : "none", transition: "background 0.08s" }} />
+      <motion.div animate={{ opacity: h || active ? 1 : 0, background: active ? "rgba(184,50,64,0.14)" : "rgba(255,255,255,0.012)" }} transition={{ duration: 0.18 }} style={{ position: "absolute", inset: 0, borderRadius: 8, border: active ? "1px solid rgba(184,50,64,0.28)" : "1px solid transparent" }} />
       {active && <motion.div layoutId="nav-active-dot" style={{ position: "absolute", bottom: 3, left: "50%", transform: "translateX(-50%)", width: 3, height: 3, borderRadius: "50%", background: T.accent, boxShadow: `0 0 6px ${T.accent}` }} />}
       <span style={{ position: "relative" }}>{label}</span>
     </button>
@@ -3559,7 +3559,7 @@ function MenuNavItem({ num, label, onClick, index, active = false }: { num: stri
         style={{
           background: "none", border: "none", cursor: "pointer", width: "100%",
           display: "flex", alignItems: "baseline", gap: 18, padding: "14px 0",
-          borderBottom: `1px solid ${lit ? "rgba(161,44,56,0.40)" : "rgba(255,255,255,0.08)"}`,
+          borderBottom: `1px solid ${lit ? "rgba(184,50,64,0.40)" : "rgba(255,255,255,0.11)"}`,
           transition: "border-color 0.22s", textAlign: "left" as const, position: "relative",
         }}
       >
@@ -3643,7 +3643,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
     <motion.div
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.42, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      style={{ paddingBottom: 36, paddingTop: 22, borderTop: "1px solid rgba(255,255,255,0.10)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}
+      style={{ paddingBottom: 36, paddingTop: 22, borderTop: "1px solid rgba(255,255,255,0.13)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
         <a href="mailto:nadiamaar.dev@gmail.com"
@@ -3659,9 +3659,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
       <div style={{ display: "flex", gap: 10 }}>
         {MENU_SOCIALS.map(({ label, href }) => (
           <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-            style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: "rgba(255,255,255,0.55)", background: "rgba(255,255,255,0.012)", border: "1px solid rgba(255,255,255,0.12)", textDecoration: "none", transition: "all 0.18s" }}
-            onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color="#fff"; el.style.borderColor="rgba(161,44,56,0.55)"; el.style.background="rgba(161,44,56,0.14)" }}
-            onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.color="rgba(255,255,255,0.55)"; el.style.borderColor="rgba(255,255,255,0.12)"; el.style.background="rgba(255,255,255,0.012)" }}
+            style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: "rgba(255,255,255,0.63)", background: "rgba(255,255,255,0.012)", border: "1px solid rgba(255,255,255,0.15)", textDecoration: "none", transition: "all 0.18s" }}
+            onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color="#fff"; el.style.borderColor="rgba(184,50,64,0.55)"; el.style.background="rgba(184,50,64,0.14)" }}
+            onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.color="rgba(255,255,255,0.63)"; el.style.borderColor="rgba(255,255,255,0.15)"; el.style.background="rgba(255,255,255,0.012)" }}
           >{label}</a>
         ))}
       </div>
@@ -3677,7 +3677,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         style={{ position: "fixed", inset: 0, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 28px", overflow: "hidden", ...GLASS }}
       >
         {/* top accent gradient line */}
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(161,44,56,0.70), rgba(168,48,64,0.45), transparent)", flexShrink: 0 }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(184,50,64,0.70), rgba(190,54,72,0.45), transparent)", flexShrink: 0 }} />
 
         {/* spacer — same height as navbar */}
         <div style={{ height: 64, flexShrink: 0 }} />
@@ -3713,12 +3713,12 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         style={{
           position: "fixed", top: 0, right: 0, bottom: 0, width: 460, zIndex: 300,
           display: "flex", flexDirection: "column", padding: "0 40px",
-          borderLeft: "1px solid rgba(255,255,255,0.14)",
+          borderLeft: "1px solid rgba(255,255,255,0.16)",
           ...GLASS,
         }}
       >
         {/* top accent line */}
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(161,44,56,0.70) 40%, rgba(168,48,64,0.45) 70%, transparent)", flexShrink: 0 }} />
+        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(184,50,64,0.70) 40%, rgba(190,54,72,0.45) 70%, transparent)", flexShrink: 0 }} />
 
         {/* header */}
         <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
@@ -3731,7 +3731,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* vermillion ambient glow */}
-        <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(161,44,56,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
+        <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(184,50,64,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
 
         {/* nav links */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 4 }}>
@@ -3813,8 +3813,8 @@ function ScrollProgress() {
       style={{
         position: "fixed", top: 0, left: 0, right: 0, height: 2, zIndex: 500,
         transformOrigin: "0% 50%", scaleX,
-        background: "linear-gradient(90deg, rgba(150,34,48,1), #D6283C, #FF334B)",
-        boxShadow: "0 0 12px rgba(161,44,56,0.7)",
+        background: "linear-gradient(90deg, rgba(150,34,48,1), #DF3448, #FF334B)",
+        boxShadow: "0 0 12px rgba(184,50,64,0.7)",
       }}
     />
   )
@@ -3827,7 +3827,7 @@ const SP_TECH = ["Shopify Plus", "Supabase", "Stripe", "Vercel", "Next.js", "Nod
 
 function SocialProof() {
   return (
-    <div className="sp-root" style={{ marginTop: 30, padding: "18px 26px", borderRadius: 14, background: "rgba(10,15,27,0.38)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.012)", position: "relative", overflow: "hidden" }}>
+    <div className="sp-root" style={{ marginTop: 30, padding: "18px 26px", borderRadius: 14, background: "rgba(10,15,27,0.38)", border: "1px solid rgba(255,255,255,0.11)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.012)", position: "relative", overflow: "hidden" }}>
       <style>{`
         @keyframes sp-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .sp-row { display:flex; align-items:center; gap:32px; }
@@ -3848,7 +3848,7 @@ function SocialProof() {
         {/* label */}
         <div className="sp-label" style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 10 }}>
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.accentLt, flexShrink: 0 }} />
-          <span className="sp-label-text" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: ".1em", color: "rgba(255,255,255,0.55)" }}>
+          <span className="sp-label-text" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: ".1em", color: "rgba(255,255,255,0.63)" }}>
             Tecnologie enterprise e brand che scalano con me:
           </span>
         </div>
@@ -3879,25 +3879,25 @@ function SocialProof() {
 function MockPortal() {
   return (
     <svg viewBox="0 0 260 150" width="100%" height="100%">
-      <rect x="8" y="10" width="244" height="130" rx="10" fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.10)" />
+      <rect x="8" y="10" width="244" height="130" rx="10" fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.13)" />
       <rect x="8" y="10" width="244" height="22" rx="10" fill="rgba(255,255,255,0.012)" />
       {[20, 30, 40].map((cx, i) => <circle key={i} cx={cx} cy="21" r="2.6" fill={["#ff5f56", "#ffbd2e", "#27c93f"][i]} opacity="0.75" />)}
       {/* sidebar */}
       <rect x="8" y="32" width="60" height="108" fill="rgba(255,255,255,0.012)" />
       {[44, 58, 72, 86].map((y, i) => (
         <g key={y}>
-          <rect x="16" y={y} width="10" height="6" rx="1.5" fill={i === 0 ? "rgba(16,185,129,0.6)" : "rgba(255,255,255,0.12)"} />
-          <rect x="30" y={y + 1} width="28" height="4" rx="2" fill={i === 0 ? "rgba(16,185,129,0.45)" : "rgba(255,255,255,0.10)"} />
+          <rect x="16" y={y} width="10" height="6" rx="1.5" fill={i === 0 ? "rgba(16,185,129,0.6)" : "rgba(255,255,255,0.15)"} />
+          <rect x="30" y={y + 1} width="28" height="4" rx="2" fill={i === 0 ? "rgba(16,185,129,0.45)" : "rgba(255,255,255,0.13)"} />
         </g>
       ))}
       {/* rows */}
-      <rect x="78" y="42" width="80" height="8" rx="3" fill="rgba(255,255,255,0.14)" />
+      <rect x="78" y="42" width="80" height="8" rx="3" fill="rgba(255,255,255,0.16)" />
       {[60, 78, 96, 114].map((y, i) => (
         <g key={y}>
-          <rect x="78" y={y} width="164" height="16" rx="4" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.06)" />
+          <rect x="78" y={y} width="164" height="16" rx="4" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.09)" />
           <circle cx="88" cy={y + 8} r="3" fill="rgba(16,185,129,0.5)" />
-          <rect x="98" y={y + 5} width="70" height="4" rx="2" fill="rgba(255,255,255,0.14)" />
-          <rect x="210" y={y + 5} width="24" height="6" rx="3" fill={i % 2 ? "rgba(16,185,129,0.4)" : "rgba(255,255,255,0.10)"} />
+          <rect x="98" y={y + 5} width="70" height="4" rx="2" fill="rgba(255,255,255,0.16)" />
+          <rect x="210" y={y + 5} width="24" height="6" rx="3" fill={i % 2 ? "rgba(16,185,129,0.4)" : "rgba(255,255,255,0.13)"} />
         </g>
       ))}
     </svg>
@@ -3908,7 +3908,7 @@ function MockCRM() {
   const bars = [26, 40, 32, 54, 46, 64, 58]
   return (
     <svg viewBox="0 0 260 150" width="100%" height="100%">
-      <rect x="8" y="10" width="244" height="130" rx="10" fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.10)" />
+      <rect x="8" y="10" width="244" height="130" rx="10" fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.13)" />
       <rect x="8" y="10" width="244" height="22" rx="10" fill="rgba(255,255,255,0.012)" />
       {[20, 30, 40].map((cx, i) => <circle key={i} cx={cx} cy="21" r="2.6" fill={["#ff5f56", "#ffbd2e", "#27c93f"][i]} opacity="0.75" />)}
       {/* KPI cards */}
@@ -3916,11 +3916,11 @@ function MockCRM() {
         <g key={i}>
           <rect x={18 + i * 78} y="42" width="68" height="30" rx="6" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.012)" />
           <rect x={26 + i * 78} y="49" width="30" height="8" rx="2" fill={i === 1 ? "rgba(16,185,129,0.6)" : "rgba(255,255,255,0.18)"} />
-          <rect x={26 + i * 78} y="61" width="46" height="4" rx="2" fill="rgba(255,255,255,0.10)" />
+          <rect x={26 + i * 78} y="61" width="46" height="4" rx="2" fill="rgba(255,255,255,0.13)" />
         </g>
       ))}
       {/* chart */}
-      <rect x="18" y="82" width="224" height="50" rx="6" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.06)" />
+      <rect x="18" y="82" width="224" height="50" rx="6" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.09)" />
       {bars.map((h, i) => (
         <motion.rect key={i} x={30 + i * 30} width="16" rx="2" fill={i === 5 ? "rgba(16,185,129,0.7)" : "rgba(255,255,255,0.16)"}
           initial={{ height: 0, y: 126 }} whileInView={{ height: h, y: 126 - h }} viewport={{ once: true }} transition={{ delay: 0.1 + i * 0.06, duration: 0.5, ease }} />
@@ -3934,7 +3934,7 @@ function MockHub() {
   const cx = 130, cy = 82
   return (
     <svg viewBox="0 0 260 150" width="100%" height="100%">
-      <rect x="8" y="10" width="244" height="130" rx="10" fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.10)" />
+      <rect x="8" y="10" width="244" height="130" rx="10" fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.13)" />
       <rect x="8" y="10" width="244" height="22" rx="10" fill="rgba(255,255,255,0.012)" />
       {[20, 30, 40].map((c, i) => <circle key={i} cx={c} cy="21" r="2.6" fill={["#ff5f56", "#ffbd2e", "#27c93f"][i]} opacity="0.75" />)}
       {nodes.map(([x, y], i) => (
@@ -3975,14 +3975,14 @@ function FoundryDemoCard({ d, i }: { d: typeof FOUNDRY_DEMOS[number]; i: number 
         display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: 14, textDecoration: "none",
         background: h ? "rgba(8,12,22,0.34)" : "rgba(8,12,22,0.20)",
         backdropFilter: "none", WebkitBackdropFilter: "none",
-        border: `1px solid ${h ? "rgba(255,255,255,0.22)" : "rgba(255,255,255,0.10)"}`,
-        borderTop: `1px solid ${h ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.14)"}`,
-        boxShadow: h ? "0 8px 32px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.08)" : "inset 0 1px 0 rgba(255,255,255,0.012)",
+        border: `1px solid ${h ? "rgba(255,255,255,0.22)" : "rgba(255,255,255,0.13)"}`,
+        borderTop: `1px solid ${h ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.16)"}`,
+        boxShadow: h ? "0 8px 32px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.11)" : "inset 0 1px 0 rgba(255,255,255,0.012)",
         transition: "background .24s, border-color .24s, box-shadow .24s",
       } as React.CSSProperties}
     >
       {/* preview */}
-      <div style={{ padding: 14, background: "rgba(0,0,0,0.16)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ padding: 14, background: "rgba(0,0,0,0.16)", borderBottom: "1px solid rgba(255,255,255,0.09)" }}>
         <div style={{ borderRadius: 10, overflow: "hidden", aspectRatio: "260 / 150" }}>
           <Visual />
         </div>
@@ -3990,7 +3990,7 @@ function FoundryDemoCard({ d, i }: { d: typeof FOUNDRY_DEMOS[number]; i: number 
       {/* body */}
       <div style={{ padding: "20px 22px 22px", flex: 1, display: "flex", flexDirection: "column" }}>
         <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", color: T.green, marginBottom: 9 }}>{d.tag}</div>
-        <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", color: "#FFFFFF", margin: "0 0 8px" }}>{d.title}</h3>
+        <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", color: "#F0F3F9", margin: "0 0 8px" }}>{d.title}</h3>
         <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", lineHeight: 1.7, color: T.muted, margin: 0, flex: 1 }}>{d.desc}</p>
         <motion.span animate={{ opacity: h ? 1 : 0.4, x: h ? 0 : -4 }} transition={{ duration: 0.25 }}
           style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10, letterSpacing: ".16em", textTransform: "uppercase" as const, color: T.green }}>
@@ -4016,13 +4016,13 @@ function FoundryShowcase() {
           <div className="foundry-head">
             {/* left — eyebrow + title + subtitle */}
             <div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
                 <span style={{ color: T.green }}>//</span>
                 <span>[ Digital Foundry ]</span>
               </div>
               <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(28px,3.6vw,46px)", fontWeight: 800, lineHeight: 1.08, letterSpacing: "-0.035em", margin: "0 0 18px", maxWidth: 760, color: T.text }}>
                 Digital Foundry:<br />
-                <span style={{ color: "#FFFFFF" }}>Costruisci la tua architettura</span>
+                <span style={{ color: "#F0F3F9" }}>Costruisci la tua architettura</span>
               </h2>
               <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 620, margin: 0 }}>
                 Non comprare a scatola chiusa. Esplora la nostra libreria di soluzioni reali (CRM, Portali B2B, E-commerce), testa le demo e costruisci il tuo Blueprint per un preventivo istantaneo.
