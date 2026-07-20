@@ -123,13 +123,59 @@ function GeoDecoration() {
 export default function Background({ portal = false }: { portal?: boolean }) {
   return (
     <>
+      {/* Mobile fixes injected once */}
+      <style>{`
+        /* Fix 1 — OLED black crush: lift base on mobile so #060C18 doesn't merge into black */
+        @media (max-width: 768px) {
+          .bg-base   { background: #0d1829 !important; }
+          .bg-wash-1 { opacity: 0.22 !important; }
+          .bg-wash-2 { opacity: 0.24 !important; }
+        }
+        /* Fix 2 — High-DPI grid visibility: thicker lines + smaller cell on mobile */
+        @media (max-width: 768px) {
+          .bg-grid {
+            background-image:
+              linear-gradient(rgba(255,255,255,0.14) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.14) 1px, transparent 1px) !important;
+            background-size: 36px 36px !important;
+          }
+          .bg-dots {
+            background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1.4px) !important;
+            background-size: 20px 20px !important;
+          }
+        }
+        /* Fix 3 — Vignette: softer on mobile so edges don't crush */
+        @media (max-width: 768px) {
+          .bg-bezel { box-shadow: inset 0 0 80px rgba(0,0,0,0.70) !important; }
+          .bg-bezel-portal { box-shadow: inset 0 0 120px rgba(0,0,0,0.85) !important; }
+        }
+        /* Fix 4 — Wash layers re-crush the lifted base: suppress heavily on mobile */
+        @media (max-width: 768px) {
+          .bg-wash-1 { opacity: 0.08 !important; }
+          .bg-wash-2 { opacity: 0.10 !important; }
+        }
+        /* Fix 5 — Grid mask: expand visible area on mobile so lines aren't swallowed */
+        @media (max-width: 768px) {
+          .bg-grid {
+            -webkit-mask-image: radial-gradient(ellipse 100% 90% at 50% 40%, black 30%, rgba(0,0,0,0.6) 65%, transparent 92%) !important;
+            mask-image: radial-gradient(ellipse 100% 90% at 50% 40%, black 30%, rgba(0,0,0,0.6) 65%, transparent 92%) !important;
+          }
+        }
+        /* Fix 6 — Disable perspective 3D animation on mobile: heavy on GPU, small screens get weird rotateX aliasing */
+        @media (max-width: 768px) {
+          .bg-perspective-wrap { perspective: none !important; }
+          .bg-grid { transform: none !important; animation: none !important; }
+        }
+      `}</style>
+
       {/* 1 · Base dark surface + perspective grid + dot layer + edge vignette */}
       <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
-        <div style={{ position: "absolute", inset: 0, background: "#060C18" }} />
+        <div className="bg-base" style={{ position: "absolute", inset: 0, background: "#060C18" }} />
 
         {/* Perspective-warped line grid */}
-        <div style={{ position: "absolute", inset: 0, perspective: "820px" }}>
+        <div className="bg-perspective-wrap" style={{ position: "absolute", inset: 0, perspective: "820px" }}>
           <motion.div
+            className="bg-grid"
             animate={{
               rotateX: [7, 13, 7],
               rotateY: [-0.8, -3, -0.8],
@@ -148,7 +194,7 @@ export default function Background({ portal = false }: { portal?: boolean }) {
         </div>
 
         {/* Fine dot layer */}
-        <div style={{
+        <div className="bg-dots" style={{
           position: "absolute", inset: 0,
           backgroundImage: "radial-gradient(rgba(255,255,255,0.018) 1px, transparent 1.4px)",
           backgroundSize: "26px 26px",
@@ -158,22 +204,31 @@ export default function Background({ portal = false }: { portal?: boolean }) {
 
         {/* Edge vignette */}
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 108% 86% at 50% 42%, transparent 30%, rgba(10,14,23,0.80) 100%)" }} />
+
+        {/* Mobile radial glow — adds depth so grid doesn't float in void on OLED */}
+        <div aria-hidden style={{
+          position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)",
+          width: "min(600px, 100vw)", height: "min(600px, 100vw)",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(20,40,80,0.35) 0%, transparent 70%)",
+          filter: "blur(60px)", pointerEvents: "none",
+        }} />
       </div>
 
-      {/* 2 · Depth washes */}
-      <div aria-hidden style={{ position: "fixed", inset: 0, background: "#060C18", opacity: 0.45, pointerEvents: "none", zIndex: 0 }} />
-      <div aria-hidden style={{ position: "fixed", inset: 0, background: "#1A1A1E", opacity: 0.48, pointerEvents: "none", zIndex: 0 }} />
+      {/* 2 · Depth washes — lighter on mobile to avoid OLED black crush */}
+      <div className="bg-wash-1" aria-hidden style={{ position: "fixed", inset: 0, background: "#060C18", opacity: 0.45, pointerEvents: "none", zIndex: 0 }} />
+      <div className="bg-wash-2" aria-hidden style={{ position: "fixed", inset: 0, background: "#1A1A1E", opacity: 0.48, pointerEvents: "none", zIndex: 0 }} />
 
       {/* 3 · Geometric ornaments — hidden in portal/cabinet mode */}
       {!portal && <GeoDecoration />}
 
-      {/* 4 · Screen bezel — darkens edges; stronger in portal mode */}
-      <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 200, pointerEvents: "none", boxShadow: portal ? "inset 0 0 220px rgba(0,0,0,0.98)" : "inset 0 0 150px rgba(0,0,0,0.95)" }} />
+      {/* 4 · Screen bezel — softer on mobile */}
+      <div className={portal ? "bg-bezel-portal" : "bg-bezel"} aria-hidden style={{ position: "fixed", inset: 0, zIndex: 200, pointerEvents: "none", boxShadow: portal ? "inset 0 0 220px rgba(0,0,0,0.98)" : "inset 0 0 150px rgba(0,0,0,0.95)" }} />
 
       {/* 5 · Film grain */}
       <GrainOverlay />
 
-      {/* 7 · MAAR watermark — centred, appears after hero */}
+      {/* 7 · MAAR watermark */}
       {!portal && <MaarWatermark />}
     </>
   )
