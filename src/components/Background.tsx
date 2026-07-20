@@ -149,23 +149,6 @@ export default function Background({ portal = false }: { portal?: boolean }) {
           .bg-bezel { box-shadow: inset 0 0 80px rgba(0,0,0,0.70) !important; }
           .bg-bezel-portal { box-shadow: inset 0 0 120px rgba(0,0,0,0.85) !important; }
         }
-        /* Fix 4 — Wash layers re-crush the lifted base: suppress heavily on mobile */
-        @media (max-width: 768px) {
-          .bg-wash-1 { opacity: 0.08 !important; }
-          .bg-wash-2 { opacity: 0.10 !important; }
-        }
-        /* Fix 5 — Grid mask: expand visible area on mobile so lines aren't swallowed */
-        @media (max-width: 768px) {
-          .bg-grid {
-            -webkit-mask-image: radial-gradient(ellipse 100% 90% at 50% 40%, black 30%, rgba(0,0,0,0.6) 65%, transparent 92%) !important;
-            mask-image: radial-gradient(ellipse 100% 90% at 50% 40%, black 30%, rgba(0,0,0,0.6) 65%, transparent 92%) !important;
-          }
-        }
-        /* Fix 6 — Disable perspective 3D animation on mobile: heavy on GPU, small screens get weird rotateX aliasing */
-        @media (max-width: 768px) {
-          .bg-perspective-wrap { perspective: none !important; }
-          .bg-grid { transform: none !important; animation: none !important; }
-        }
       `}</style>
 
       {/* 1 · Base dark surface + perspective grid + dot layer + edge vignette */}
@@ -173,7 +156,7 @@ export default function Background({ portal = false }: { portal?: boolean }) {
         <div className="bg-base" style={{ position: "absolute", inset: 0, background: "#060C18" }} />
 
         {/* Perspective-warped line grid */}
-        <div className="bg-perspective-wrap" style={{ position: "absolute", inset: 0, perspective: "820px" }}>
+        <div style={{ position: "absolute", inset: 0, perspective: "820px" }}>
           <motion.div
             className="bg-grid"
             animate={{
