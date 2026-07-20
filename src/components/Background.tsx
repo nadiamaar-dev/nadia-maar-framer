@@ -123,6 +123,31 @@ function GeoDecoration() {
 export default function Background({ portal = false }: { portal?: boolean }) {
   return (
     <>
+      {/* Perceptual parity on phones — NOT a redesign. Identical CSS renders
+          darker on mobile for two hardware reasons; these two rules compensate
+          so the eye sees the SAME deep-navy + grid as on a desktop LCD.
+          (The bezel crush is fixed intrinsically below via vmin, no query needed.) */}
+      <style>{`
+        @media (max-width: 768px) {
+          /* OLED black-crush: composited base ~#10131b sits on the panel's
+             near-black clamp threshold and collapses to pure black. Lift the
+             base so the eye reads the same navy an LCD shows — not lighter. */
+          .bg-base { background: #0d1a2e !important; }
+
+          /* High-DPI hairline survival: 1px @ 0.09α is anti-aliased across a
+             3x subpixel grid into invisibility. Raise alpha only — cell
+             geometry stays identical to desktop. */
+          .bg-grid {
+            background-image:
+              linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px) !important;
+          }
+          .bg-dots {
+            background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1.4px) !important;
+          }
+        }
+      `}</style>
+
       {/* 1 · Base dark surface + perspective grid + dot layer + edge vignette */}
       <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
         <div className="bg-base" style={{ position: "absolute", inset: 0, background: "#060C18" }} />
@@ -169,8 +194,11 @@ export default function Background({ portal = false }: { portal?: boolean }) {
       {/* 3 · Geometric ornaments — hidden in portal/cabinet mode */}
       {!portal && <GeoDecoration />}
 
-      {/* 4 · Screen bezel */}
-      <div className={portal ? "bg-bezel-portal" : "bg-bezel"} aria-hidden style={{ position: "fixed", inset: 0, zIndex: 200, pointerEvents: "none", boxShadow: portal ? "inset 0 0 220px rgba(0,0,0,0.98)" : "inset 0 0 150px rgba(0,0,0,0.95)" }} />
+      {/* 4 · Screen bezel — vmin so the inset scales with the viewport.
+             Fixed px (150px) crushed small screens: 150px+150px overlapped in
+             the center of a 390px phone → black monolith. 17.6vmin ≈ 150px on
+             desktop, ~69px on a phone → same proportion everywhere. */}
+      <div className={portal ? "bg-bezel-portal" : "bg-bezel"} aria-hidden style={{ position: "fixed", inset: 0, zIndex: 200, pointerEvents: "none", boxShadow: portal ? "inset 0 0 25.9vmin rgba(0,0,0,0.98)" : "inset 0 0 17.6vmin rgba(0,0,0,0.95)" }} />
 
       {/* 5 · Film grain */}
       <GrainOverlay />
