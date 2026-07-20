@@ -25,7 +25,7 @@ function GrainOverlay() {
     return () => cancelAnimationFrame(id)
   }, [])
   return (
-    <canvas ref={ref} aria-hidden style={{
+    <canvas ref={ref} aria-hidden className="bg-grain" style={{
       position: "fixed", inset: 0, width: "100vw", height: "100vh",
       pointerEvents: "none", opacity: 0.032, imageRendering: "pixelated" as const,
       mixBlendMode: "overlay", zIndex: 1,
@@ -128,6 +128,11 @@ export default function Background({ portal = false }: { portal?: boolean }) {
           so the eye sees the SAME deep-navy + grid as on a desktop LCD.
           (The bezel crush is fixed intrinsically below via vmin, no query needed.) */}
       <style>{`
+        /* iOS Safari: ensure -webkit- prefix for mix-blend-mode on grain canvas */
+        .bg-grain {
+          -webkit-mix-blend-mode: overlay;
+          mix-blend-mode: overlay;
+        }
         @media (max-width: 768px) {
           /* OLED black-crush: composited base ~#10131b sits on the panel's
              near-black clamp threshold and collapses to pure black. Lift the
@@ -150,7 +155,8 @@ export default function Background({ portal = false }: { portal?: boolean }) {
       `}</style>
 
       {/* 1 · Base dark surface + perspective grid + dot layer + edge vignette */}
-      <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
+      {/* translateZ(0) forces GPU compositing on iOS — prevents software-render colour shift */}
+      <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none", WebkitTransform: "translateZ(0)", transform: "translateZ(0)" }}>
         <div className="bg-base" style={{ position: "absolute", inset: 0, background: "#060C18" }} />
 
         {/* Perspective-warped line grid */}
@@ -170,6 +176,7 @@ export default function Background({ portal = false }: { portal?: boolean }) {
               WebkitMaskImage: "radial-gradient(ellipse 92% 80% at 50% 40%, black 22%, rgba(0,0,0,0.55) 60%, transparent 90%)",
               maskImage: "radial-gradient(ellipse 92% 80% at 50% 40%, black 22%, rgba(0,0,0,0.55) 60%, transparent 90%)",
               transformOrigin: "50% 62%",
+              willChange: "transform",
             }}
           />
         </div>
