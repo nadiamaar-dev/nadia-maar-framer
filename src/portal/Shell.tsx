@@ -14,7 +14,7 @@ export interface ShellNavItem {
    Header bar   → rgba(18,20,24,0.88) + blur(32px) saturate(0.15)
    Border       → rgba(255,255,255,0.08)
    Accent line  → 2px crimson gradient + 0 0 18px rgba(184,50,64,0.30) glow
-   Eyebrow      → // in rgba(184,50,64,0.70) + label in rgba(255,255,255,0.28)
+   Eyebrow      → // in rgba(184,50,64,0.70) + label in rgba(255,255,255,0.58)
    MAAR ghost   → vertical-rl, rgba(255,255,255,0.025), blur(0.8px)
    Glow BL      → rgba(184,50,64,0.12) radial, blur(70px)
    Glow TR      → rgba(184,50,64,0.06) radial, blur(50px)
@@ -102,13 +102,15 @@ export default function Shell({
             Nadia Maar
           </span>
         </a>
-        {/* // [ Area Clienti ] eyebrow — identical to Header // [ Navigazione ] */}
+        {/* // [ Area Clienti ] eyebrow */}
         <div style={{
           display: "inline-flex", alignItems: "center", gap: 8, marginTop: 12,
           fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em",
-          textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)",
+          textTransform: "uppercase" as const, color: "rgba(255,255,255,0.72)",
+          border: "1px solid rgba(255,255,255,0.28)", borderRadius: 6,
+          padding: "4px 9px", background: "rgba(255,255,255,0.04)",
         }}>
-          <span style={{ color: "rgba(184,50,64,0.50)" }}>//</span>
+          <span style={{ color: "rgba(184,50,64,0.80)" }}>//</span>
           <span>[ Area Clienti ]</span>
         </div>
       </div>
@@ -148,13 +150,13 @@ export default function Shell({
               {roleLabel}
             </p>
             <p style={{
-              fontFamily: MONO, fontSize: 9.5, color: "rgba(255,255,255,0.46)",
+              fontFamily: MONO, fontSize: 9.5, color: "rgba(255,255,255,0.72)",
               margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>
               {email ?? "—"}
             </p>
           </div>
-          {onEditProfile && <Icon name="edit" size={12} style={{ color: "rgba(255,255,255,0.28)", flexShrink: 0 }} />}
+          {onEditProfile && <Icon name="edit" size={12} style={{ color: "rgba(255,255,255,0.58)", flexShrink: 0 }} />}
         </button>
       </div>
 
@@ -182,7 +184,7 @@ export default function Shell({
               {/* [01] index — matches Header menu [01] style */}
               <span style={{
                 fontFamily: MONO, fontSize: 9, letterSpacing: "0.08em", flexShrink: 0, width: 22,
-                color: isActive ? "rgba(184,50,64,0.55)" : "rgba(255,255,255,0.20)",
+                color: isActive ? "rgba(184,50,64,0.55)" : "rgba(255,255,255,0.42)",
               }}>
                 [{num}]
               </span>
@@ -220,20 +222,20 @@ export default function Shell({
             style={{
               flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
               padding: "9px 10px", borderRadius: 9, textDecoration: "none",
-              border: "1px solid rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.42)", background: "rgba(255,255,255,0.05)",
               fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.10em",
-              textTransform: "uppercase" as const, color: "rgba(255,255,255,0.46)",
+              textTransform: "uppercase" as const, color: "#F0F3F9",
               transition: "all 0.18s",
             }}
             onMouseEnter={e => {
               const el = e.currentTarget as HTMLElement
-              el.style.color = "#fff"; el.style.borderColor = "rgba(255,255,255,0.18)"
-              el.style.background = "rgba(255,255,255,0.08)"
+              el.style.color = "#fff"; el.style.borderColor = "rgba(255,255,255,0.70)"
+              el.style.background = "rgba(255,255,255,0.10)"
             }}
             onMouseLeave={e => {
               const el = e.currentTarget as HTMLElement
-              el.style.color = "rgba(255,255,255,0.46)"; el.style.borderColor = "rgba(255,255,255,0.08)"
-              el.style.background = "rgba(255,255,255,0.04)"
+              el.style.color = "#F0F3F9"; el.style.borderColor = "rgba(255,255,255,0.42)"
+              el.style.background = "rgba(255,255,255,0.05)"
             }}
           >
             <Icon name={icon} size={13} />
@@ -245,20 +247,20 @@ export default function Shell({
           style={{
             flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
             padding: "9px 10px", borderRadius: 9,
-            border: "1px solid rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.42)", background: "rgba(255,255,255,0.05)",
             fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.10em",
-            textTransform: "uppercase" as const, color: "rgba(255,255,255,0.46)",
+            textTransform: "uppercase" as const, color: "#F0F3F9",
             cursor: "pointer", transition: "all 0.18s",
           }}
           onMouseEnter={e => {
             const el = e.currentTarget as HTMLElement
-            el.style.color = "#fff"; el.style.borderColor = "rgba(184,50,64,0.45)"
-            el.style.background = "rgba(184,50,64,0.10)"
+            el.style.color = "#fff"; el.style.borderColor = "rgba(184,50,64,0.65)"
+            el.style.background = "rgba(184,50,64,0.12)"
           }}
           onMouseLeave={e => {
             const el = e.currentTarget as HTMLElement
-            el.style.color = "rgba(255,255,255,0.46)"; el.style.borderColor = "rgba(255,255,255,0.08)"
-            el.style.background = "rgba(255,255,255,0.04)"
+            el.style.color = "#F0F3F9"; el.style.borderColor = "rgba(255,255,255,0.42)"
+            el.style.background = "rgba(255,255,255,0.05)"
           }}
         >
           <Icon name="logout" size={13} />
@@ -309,28 +311,34 @@ export default function Shell({
 
       {/* ── Mobile drawer ── */}
       {drawer && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 40 }} className="lg:hidden">
-          <div
-            onClick={() => setDrawer(false)}
-            style={{
-              position: "absolute", inset: 0,
-              background: "rgba(0,0,0,0.55)",
-              backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
-            }}
-          />
+        <div style={{ position: "fixed", inset: 0, zIndex: 40, pointerEvents: "none" }} className="lg:hidden">
+          {/* invisible tap-to-close zone */}
+          <div onClick={() => setDrawer(false)} style={{ position: "absolute", inset: 0, pointerEvents: "auto" }} />
           <aside style={{
             position: "absolute", top: 0, bottom: 0, left: 0, width: 284,
             display: "flex", flexDirection: "column", overflow: "hidden",
-            background: "#060C18",
-            borderRight: `1px solid ${SIDE_BORDER}`,
-            boxShadow: "24px 0 60px rgba(0,0,0,0.55)",
+            background: "rgba(18,23,33,0.92)",
+            backdropFilter: GLASS_FILTER,
+            WebkitBackdropFilter: GLASS_FILTER,
+            border: "1px solid rgba(255,255,255,0.14)",
+            borderLeft: "none",
+            boxShadow: "8px 0 40px rgba(0,0,0,0.30), inset -1px 0 0 rgba(255,255,255,0.06)",
+            pointerEvents: "auto",
           }}>
             <AccentLine />
-            <MaarGhost direction="horizontal" />
+            {/* MAAR — vertical, right side, identical to desktop sidebar */}
+            <MaarGhost direction="vertical" />
+            {/* Ambient glow bottom-left */}
             <div aria-hidden style={{
-              position: "absolute", bottom: "18%", left: -55, width: 200, height: 200, borderRadius: "50%",
+              position: "absolute", bottom: "20%", left: -55, width: 220, height: 220, borderRadius: "50%",
               background: "radial-gradient(circle, rgba(184,50,64,0.06) 0%, transparent 70%)",
-              filter: "blur(60px)", pointerEvents: "none",
+              filter: "blur(65px)", pointerEvents: "none",
+            }} />
+            {/* Ambient glow top-right */}
+            <div aria-hidden style={{
+              position: "absolute", top: "8%", right: -10, width: 150, height: 150, borderRadius: "50%",
+              background: "radial-gradient(circle, rgba(184,50,64,0.03) 0%, transparent 70%)",
+              filter: "blur(45px)", pointerEvents: "none",
             }} />
             <div style={{ position: "relative", zIndex: 1, flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minHeight: 0 }}>
               {sidebarContent}
@@ -379,13 +387,15 @@ export default function Shell({
             </button>
 
             <div style={{ minWidth: 0 }}>
-              {/* // [ Section ] eyebrow — matches Header.tsx desktop eyebrow */}
+              {/* // [ Section ] eyebrow */}
               <div style={{
-                display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 3,
+                display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 6,
                 fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em",
-                textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)",
+                textTransform: "uppercase" as const, color: "rgba(255,255,255,0.72)",
+                border: "1px solid rgba(255,255,255,0.28)", borderRadius: 6,
+                padding: "4px 9px", background: "rgba(255,255,255,0.04)",
               }}>
-                <span style={{ color: "rgba(184,50,64,0.50)" }}>//</span>
+                <span style={{ color: "rgba(184,50,64,0.80)" }}>//</span>
                 <span>[ {current?.label ?? ""} ]</span>
               </div>
               <h1 style={{

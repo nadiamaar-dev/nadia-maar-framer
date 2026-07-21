@@ -45,12 +45,21 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
       background: "rgba(255,255,255,0.008)",
       border: "1px solid rgba(255,255,255,0.16)",
       overflow: "hidden",
+      position: "relative",
     }}>
+
+      {/* top highlight spray */}
+      <div aria-hidden style={{
+        position: "absolute", top: 0, left: 0, right: 0, height: 80,
+        background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 100%)",
+        pointerEvents: "none", zIndex: 0,
+      }} />
 
       {/* ── Header ──────────────────────────────── */}
       <div style={{
         padding: "16px 22px 14px",
         borderBottom: "1px solid rgba(255,255,255,0.07)",
+        position: "relative", zIndex: 1,
         display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
         <div style={{

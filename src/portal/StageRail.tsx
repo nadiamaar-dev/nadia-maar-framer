@@ -110,7 +110,7 @@ export default function StageRail({ stages, renderAction }: {
 
               {/* Dates */}
               {(s.startedAt || s.completedAt) && (
-                <p style={{ fontFamily: MONO, fontSize: 9, color: "rgba(255,255,255,0.28)", margin: "4px 0 0", letterSpacing: "0.04em" }}>
+                <p style={{ fontFamily: MONO, fontSize: 9, color: "rgba(255,255,255,0.58)", margin: "4px 0 0", letterSpacing: "0.04em" }}>
                   {s.startedAt ? `Avviata ${fmtDate(s.startedAt)}` : ""}
                   {s.startedAt && s.completedAt ? "  ·  " : ""}
                   {s.completedAt ? `Chiusa ${fmtDate(s.completedAt)}` : ""}

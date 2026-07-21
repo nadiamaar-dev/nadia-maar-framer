@@ -21,24 +21,24 @@ export const T = {
   bgRaised: "#1E3442",
   border: "rgba(255,255,255,0.08)",
   borderHi: "rgba(255,255,255,0.15)",
-  text: "#EEF2F7",
-  muted: "rgba(255,255,255,0.72)",
-  faint: "rgba(255,255,255,0.48)",
-  ghost: "rgba(255,255,255,0.28)",
+  text: "#F4F7FC",
+  muted: "rgba(255,255,255,0.88)",
+  faint: "rgba(255,255,255,0.68)",
+  ghost: "rgba(255,255,255,0.50)",
   copper: "#B83240",
   copperLt: "#BE3648",
   green: "#10B981",
   amber: "#F59E0B",
   red: "#F87171",
-  silver: "rgba(255,255,255,0.60)",
+  silver: "rgba(255,255,255,0.75)",
 } as const
 
 /* ── Chrome (dark petrol sidebar / header) ── */
 export const TL = {
-  text: "#F1F5F9",
-  muted: "rgba(255,255,255,0.72)",
-  faint: "rgba(255,255,255,0.58)",
-  ghost: "rgba(255,255,255,0.34)",
+  text: "#F4F7FC",
+  muted: "rgba(255,255,255,0.88)",
+  faint: "rgba(255,255,255,0.72)",
+  ghost: "rgba(255,255,255,0.55)",
   border: "rgba(255,255,255,0.08)",
   borderHi: "rgba(255,255,255,0.15)",
 } as const
@@ -50,7 +50,7 @@ export const TONE: Record<Tone, { fg: string; bg: string; bd: string }> = {
   green:  { fg: "#10B981", bg: "rgba(16,185,129,0.15)", bd: "rgba(16,185,129,0.34)" },
   amber:  { fg: "#F59E0B", bg: "rgba(245,158,11,0.14)", bd: "rgba(245,158,11,0.32)" },
   red:    { fg: "#F87171", bg: "rgba(248,113,113,0.14)", bd: "rgba(248,113,113,0.32)" },
-  silver: { fg: "rgba(255,255,255,0.68)", bg: "rgba(255,255,255,0.09)", bd: "rgba(255,255,255,0.20)" },
+  silver: { fg: "rgba(255,255,255,0.68)", bg: "rgba(255,255,255,0.09)", bd: "rgba(255,255,255,0.42)" },
   steel:  { fg: "rgba(255,255,255,0.44)", bg: "rgba(255,255,255,0.05)", bd: "rgba(255,255,255,0.11)" },
 }
 
@@ -470,8 +470,8 @@ export function Tabs<Id extends string>({ items, value, onChange }: {
               display: "inline-flex", alignItems: "center", gap: 7,
               padding: "9px 18px", borderRadius: 9, border: "1px solid transparent",
               background: active ? "rgba(255,255,255,0.14)" : "transparent",
-              borderColor: active ? "rgba(255,255,255,0.20)" : "transparent",
-              boxShadow: active ? "inset 0 1px 0 rgba(255,255,255,0.28), 0 1px 3px rgba(0,0,0,0.18)" : "none",
+              borderColor: active ? "rgba(255,255,255,0.42)" : "transparent",
+              boxShadow: active ? "inset 0 1px 0 rgba(255,255,255,0.58), 0 1px 3px rgba(0,0,0,0.18)" : "none",
               color: active ? TL.text : TL.faint,
               fontFamily: DISPLAY, fontSize: 14, fontWeight: active ? 700 : 500, whiteSpace: "nowrap",
             }}
@@ -544,7 +544,7 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
             {/* DiagnosiCard gradient top border */}
             <div aria-hidden style={{
               position: "absolute", inset: 0, borderRadius: "inherit", padding: 1,
-              background: "linear-gradient(to bottom, rgba(255,255,255,0.46) 0%, transparent 40%)",
+              background: "linear-gradient(to bottom, rgba(255,255,255,0.72) 0%, transparent 40%)",
               WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               WebkitMaskComposite: "xor", maskComposite: "exclude",
               pointerEvents: "none", zIndex: 10,
@@ -559,7 +559,7 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
             }}>
               <div>
                 {kicker && (
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)" }}>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.58)" }}>
                     <span style={{ color: "rgba(184,50,64,0.50)" }}>//</span>
                     <span>[ {kicker} ]</span>
                   </div>

@@ -231,8 +231,8 @@ export default function CabinetApp() {
           style={{
             display: "inline-flex", alignItems: "center", gap: 7,
             padding: "7px 12px", borderRadius: 99, cursor: "pointer",
-            background: "rgba(184,50,64,0.06)", border: "1px solid rgba(184,50,64,0.16)",
-            fontFamily: MONO, fontSize: 10, fontWeight: 700, color: T.copperLt,
+            background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.40)",
+            fontFamily: MONO, fontSize: 10, fontWeight: 700, color: "#F0F3F9",
           }}
         >
           <Icon name="bolt" size={11} />

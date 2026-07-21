@@ -52,8 +52,8 @@ function ProjectSwitcher({ projects, currentId, onSwitch, onNew }: {
                   display: "inline-flex", alignItems: "center", gap: 8,
                   padding: "9px 15px", borderRadius: 10, border: "1px solid transparent",
                   background: active ? "rgba(255,255,255,0.14)" : "transparent",
-                  borderColor: active ? "rgba(255,255,255,0.20)" : "transparent",
-                  boxShadow: active ? "inset 0 1px 0 rgba(255,255,255,0.28), 0 1px 3px rgba(0,0,0,0.18)" : "none",
+                  borderColor: active ? "rgba(255,255,255,0.42)" : "transparent",
+                  boxShadow: active ? "inset 0 1px 0 rgba(255,255,255,0.58), 0 1px 3px rgba(0,0,0,0.18)" : "none",
                   color: active ? TL.text : TL.muted,
                   fontFamily: DISPLAY, fontSize: 14, fontWeight: active ? 700 : 500, whiteSpace: "nowrap", maxWidth: 240,
                 }}
