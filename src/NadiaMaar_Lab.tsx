@@ -816,20 +816,32 @@ function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
 }
 
 function HeroLight() {
-  const { scrollY } = useScroll()
-  const opacity = useTransform(scrollY, [0, 420], [1, 0])
+  const w = (dur: number, delay = 0) => ({
+    duration: dur, repeat: Infinity, ease: "easeInOut" as const, delay,
+  })
   return (
-    <motion.div aria-hidden style={{
-      position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none",
-      background: [
-        "radial-gradient(ellipse 72% 55% at 40% 0%, rgba(180,210,255,0.10) 0%, transparent 68%)",
-        "radial-gradient(ellipse 44% 34% at 12% 96%, rgba(255,60,92,0.07) 0%, transparent 65%)",
-      ].join(", "),
-      opacity,
-    }}
-      animate={{ opacity: [undefined, 0.84, 1] as any }}
-      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", repeatType: "mirror" }}
-    />
+    <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none", overflow: "hidden" }}>
+
+      {/* Blue aurora — top-left */}
+      <motion.div style={{
+        position: "absolute", width: "80%", height: "65%", left: "-5%", top: "-15%",
+        background: "radial-gradient(ellipse at 52% 30%, rgba(180,210,255,0.09) 0%, rgba(6,12,24,0) 68%)",
+      }}
+        animate={{ x: [-22, 18, -10, 24, -22], y: [-8, 16, -12, 6, -8] }}
+        transition={w(22)}
+      />
+
+      {/* Red accent aurora — bottom-left */}
+      <motion.div style={{
+        position: "absolute", width: "55%", height: "50%", left: "-8%", bottom: "-10%",
+        background: "radial-gradient(ellipse at 40% 70%, rgba(255,60,92,0.06) 0%, rgba(6,12,24,0) 65%)",
+      }}
+        animate={{ x: [0, 20, -14, 16, 0], y: [0, -18, 12, -10, 0] }}
+        transition={w(18, 3)}
+      />
+
+
+    </div>
   )
 }
 
@@ -844,6 +856,14 @@ function Hero() {
         .hp-hero-nm .nm-l { font-family:${DISPLAY}; font-weight:800; font-size:16px; letter-spacing:0.04em; color:#fff; }
         .hp-hero-nm .nm-c { font-family:${MONO}; font-size:8px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(255,255,255,0.42); line-height:1.6; }
         .hp-hero-social-below { display:none; }
+
+        /* ── Process flow timeline ── */
+        .hp-hero-flow { position:relative; display:flex; align-items:flex-start; width:100%; margin-top:30px; }
+        .hp-hero-flow::after { content:''; position:absolute; left:16px; right:16px; top:20px; height:1px; background:linear-gradient(90deg,rgba(255,255,255,0.30) 0%,rgba(255,255,255,0.08) 100%); pointer-events:none; }
+        .hp-flow-step { position:relative; display:flex; flex-direction:column; align-items:center; flex:1; z-index:1; gap:0; }
+        .hp-flow-num   { font-family:${MONO}; font-size:8px; letter-spacing:0.16em; margin-bottom:4px; }
+        .hp-flow-dot   { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+        .hp-flow-label { font-family:${MONO}; font-size:8.5px; letter-spacing:0.14em; text-transform:uppercase; margin-top:8px; white-space:nowrap; }
         .hp-hero-squares { position:absolute; left:20px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:24px; z-index:0; }
         .hp-hero-ticker { position:absolute; right:22px; top:96px; display:flex; flex-direction:column; gap:20px; align-items:flex-end; z-index:1; }
         .hp-hero-ticker .tk { display:flex; align-items:center; gap:9px; }
@@ -893,14 +913,19 @@ function Hero() {
           /* head row — full width, no social beside title */
           .hp-hero-head-row{ gap:0; justify-content:flex-start; align-items:flex-start; }
           .hp-hero-social-vert{ display:none !important; }
-          /* CTA — stack vertically, full width */
-          .hp-hero-cta-row{ flex-direction:column !important; max-width:100% !important; gap:12px !important; margin-top:36px !important; }
+          /* CTA — side by side on mobile */
+          .hp-hero-cta-row{ flex-direction:row !important; flex-wrap:nowrap !important; max-width:100% !important; gap:8px !important; margin-top:28px !important; }
           .hp-hero-cta-row > button,
-          .hp-hero-cta-row > a{ width:100% !important; flex:none !important; min-height:54px !important; }
+          .hp-hero-cta-row > a{ flex:1 1 0 !important; min-height:46px !important; }
           .hp-hero-cta-index{ display:none !important; }
-          .hp-hero-cta-inner{ justify-content:center !important; gap:8px !important; }
+          .hp-hero-cta-inner{ justify-content:center !important; gap:4px !important; font-size:8.5px !important; letter-spacing:0.09em !important; padding:0 10px !important; }
+          .hp-hero-cta-row > a{ font-size:8.5px !important; letter-spacing:0.09em !important; padding:0 10px !important; gap:5px !important; }
+          /* process flow mobile */
+          .hp-hero-flow{ margin-top:24px !important; }
+          .hp-flow-label{ font-size:7.5px !important; letter-spacing:0.10em !important; }
           /* social below CTAs */
-          .hp-hero-social-below{ display:flex !important; gap:12px; margin-top:32px; flex-wrap:wrap; }
+          .hp-hero-social-below{ display:flex !important; justify-content:center !important; align-items:center; gap:14px; margin-top:26px; }
+          .hp-hero-social-below a{ width:34px !important; height:34px !important; border-radius:9px !important; }
           /* stats */
           .hp-hero-botnav{ margin-top:44px; padding-top:22px; gap:8px; }
           .hp-hero-scroll{ display:none !important; }
@@ -970,7 +995,7 @@ function Hero() {
                   <span style={{ whiteSpace: "nowrap" }}>E&#8209;commerce</span><br />
                   <span>Architect</span><br />
                   <span>{"& "}</span>
-                  <span>Digital Strategist</span>
+                  <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(240,243,249,0.88)", textShadow: "none" }}>Digital Strategist</span>
                 </motion.h1>
               </div>
 
@@ -995,8 +1020,23 @@ function Hero() {
               initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, delay: 0.22, ease }}
               style={{ fontSize: "clamp(16px, 1.4vw, 17px)", color: "rgba(255,255,255,0.82)", fontWeight: 400, fontFamily: "'Geist', system-ui, sans-serif", maxWidth: 500, lineHeight: 1.85, margin: "28px 0 0", letterSpacing: "0.01em", WebkitFontSmoothing: "antialiased" } as React.CSSProperties}
             >
-              E-commerce, Web Apps, AI e Performance Marketing. Un'unica mente strategica e codice ad alte prestazioni per il pieno controllo su advertising, promozione e scalabilità del tuo business.
+              Un'unica mente tra codice e business. Architetture digitali che scalano — senza intermediari, senza compromessi.
             </motion.p>
+
+            {/* Process flow — visual timeline */}
+            <motion.div
+              className="hp-hero-flow"
+              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75, delay: 0.28, ease }}
+            >
+              {(["Idea", "Strategia", "Esecuzione", "Risultato"]).map((label, i) => (
+                <div key={label} className="hp-flow-step">
+                  <span className="hp-flow-num"  style={{ color: "rgba(255,255,255,0.32)" }}>{`0${i + 1}`}</span>
+                  <div  className="hp-flow-dot"   style={{ background: "rgba(255,255,255,0.28)" }} />
+                  <span className="hp-flow-label" style={{ color: "rgba(255,255,255,0.45)" }}>{label}</span>
+                </div>
+              ))}
+            </motion.div>
 
             {/* CTAs — under the description */}
             <motion.div
