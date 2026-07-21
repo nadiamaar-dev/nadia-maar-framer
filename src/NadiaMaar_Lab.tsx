@@ -815,6 +815,24 @@ function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
   )
 }
 
+function HeroLight() {
+  const { scrollY } = useScroll()
+  const opacity = useTransform(scrollY, [0, 420], [1, 0])
+  return (
+    <motion.div aria-hidden style={{
+      position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none",
+      background: [
+        "radial-gradient(ellipse 72% 55% at 40% 0%, rgba(180,210,255,0.10) 0%, transparent 68%)",
+        "radial-gradient(ellipse 44% 34% at 12% 96%, rgba(255,60,92,0.07) 0%, transparent 65%)",
+      ].join(", "),
+      opacity,
+    }}
+      animate={{ opacity: [undefined, 0.84, 1] as any }}
+      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", repeatType: "mirror" }}
+    />
+  )
+}
+
 function Hero() {
   const [formOpen, setFormOpen] = useState(false)
   return (
@@ -859,16 +877,16 @@ function Hero() {
         /* ── Mobile hero (<768px) ──────────────────────────────── */
         @media (max-width:768px){
           /* hero section — more breathing room */
-          .hp-hero{ padding:52px 0 44px !important; }
+          .hp-hero{ padding:68px 0 56px !important; }
           /* eyebrow */
           .hp-hero-eyebrow{ font-size:9px !important; letter-spacing:.10em !important; flex-wrap:wrap; line-height:1.6; }
           /* headline block */
-          .hp-hl{ padding:18px 14px 16px !important; width:100%; box-sizing:border-box; }
+          .hp-hl{ padding:22px 16px 20px !important; width:100%; box-sizing:border-box; }
           .hp-hl-tag{ font-size:7.5px !important; letter-spacing:.12em !important; left:14px !important; }
           .hp-hl-dim{ display:none !important; }
           .hp-hero-h1{ font-size:44px !important; line-height:0.93 !important; letter-spacing:-0.04em !important; }
           /* description */
-          .hp-hero-desc{ margin-top:22px !important; font-size:15px !important; line-height:1.75 !important; max-width:100% !important; }
+          .hp-hero-desc{ margin-top:32px !important; font-size:15px !important; line-height:1.8 !important; max-width:100% !important; }
           /* grid */
           .hp-hero-ed-grid{ grid-template-columns:1fr !important; gap:0 !important; }
           .hp-hero-meta{ display:none !important; }
@@ -876,14 +894,15 @@ function Hero() {
           .hp-hero-head-row{ gap:0; justify-content:flex-start; align-items:flex-start; }
           .hp-hero-social-vert{ display:none !important; }
           /* CTA — stack vertically, full width */
-          .hp-hero-cta-row{ flex-direction:column !important; max-width:100% !important; gap:10px !important; margin-top:26px !important; }
+          .hp-hero-cta-row{ flex-direction:column !important; max-width:100% !important; gap:12px !important; margin-top:36px !important; }
           .hp-hero-cta-row > button,
-          .hp-hero-cta-row > a{ width:100% !important; flex:none !important; min-height:52px !important; }
+          .hp-hero-cta-row > a{ width:100% !important; flex:none !important; min-height:54px !important; }
           .hp-hero-cta-index{ display:none !important; }
+          .hp-hero-cta-inner{ justify-content:center !important; gap:8px !important; }
           /* social below CTAs */
-          .hp-hero-social-below{ display:flex !important; gap:10px; margin-top:24px; flex-wrap:wrap; }
+          .hp-hero-social-below{ display:flex !important; gap:12px; margin-top:32px; flex-wrap:wrap; }
           /* stats */
-          .hp-hero-botnav{ margin-top:32px; padding-top:18px; gap:8px; }
+          .hp-hero-botnav{ margin-top:44px; padding-top:22px; gap:8px; }
           .hp-hero-scroll{ display:none !important; }
           .hp-hero-stats-row{ display:grid !important; grid-template-columns:repeat(2,1fr) !important; gap:8px !important; width:100%; }
           /* stat card */
@@ -992,7 +1011,7 @@ function Hero() {
                 style={{ flex: "1.5 1 0", minHeight: 54, padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(255,60,92,0.80)", background: "linear-gradient(90deg, rgba(255,60,92,0.34) 0%, rgba(255,60,92,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(255,60,92,0.20), inset 0 1px 0 rgba(255,255,255,0.15)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
               >
                 <span className="hp-hero-cta-index" style={{ padding: "0 14px", borderRight: "1px solid rgba(255,60,92,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[01]</span>
-                <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#F0F3F9" }}>
+                <span className="hp-hero-cta-inner" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#F0F3F9" }}>
                   <span>Prenota una Consultazione</span>
                   <span style={{ fontSize: 14 }}>→</span>
                 </span>
@@ -4113,6 +4132,7 @@ export default function NadiaMaarLab() {
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_CSS }} />
       <ScrollProgress />
       <Background />
+      <HeroLight />
       <FloatingContact />
       <Header />
       <div style={{ position: "relative", zIndex: 1, paddingTop: 64 }}>
