@@ -208,7 +208,25 @@ export default function Background({ portal = false }: { portal?: boolean }) {
              desktop, ~69px on a phone → same proportion everywhere. */}
       <div className={portal ? "bg-bezel-portal" : "bg-bezel"} aria-hidden style={{ position: "fixed", inset: 0, zIndex: 200, pointerEvents: "none", boxShadow: portal ? "inset 0 0 25.9vmin rgba(0,0,0,0.98)" : "inset 0 0 17.6vmin rgba(0,0,0,0.95)" }} />
 
-      {/* 5 · Film grain */}
+      {/* 5 · Wandering auroras — global, all pages */}
+      <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none", overflow: "hidden" }}>
+        <motion.div style={{
+          position: "absolute", width: "80%", height: "65%", left: "-5%", top: "-15%",
+          background: "radial-gradient(ellipse at 52% 30%, rgba(180,210,255,0.09) 0%, rgba(6,12,24,0) 68%)",
+        }}
+          animate={{ x: [-22, 18, -10, 24, -22], y: [-8, 16, -12, 6, -8] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div style={{
+          position: "absolute", width: "55%", height: "50%", left: "-8%", bottom: "-10%",
+          background: "radial-gradient(ellipse at 40% 70%, rgba(255,60,92,0.06) 0%, rgba(6,12,24,0) 65%)",
+        }}
+          animate={{ x: [0, 20, -14, 16, 0], y: [0, -18, 12, -10, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+        />
+      </div>
+
+      {/* 6 · Film grain */}
       <GrainOverlay />
 
       {/* 7 · MAAR watermark */}

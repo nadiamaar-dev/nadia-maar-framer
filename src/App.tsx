@@ -17,7 +17,7 @@ const DashboardGate     = lazy(() => import("./DashboardGate"))
 
 /** Neutral, on-brand placeholder while a route chunk loads (no white flash). */
 function RouteFallback() {
-  return <div style={{ minHeight: "100vh", background: "#060C18" }} aria-hidden />
+  return <div style={{ minHeight: "100vh", background: "#121418" }} aria-hidden />
 }
 
 export default function App() {

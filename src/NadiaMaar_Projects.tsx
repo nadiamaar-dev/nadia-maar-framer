@@ -97,6 +97,12 @@ const PROJECTS_CSS = `
     .pr-case-watermark { font-size: 120px !important; top: -6px !important; }
     .pr-hero-index { grid-template-columns: 1fr !important; }
   }
+  @media (max-width: 768px) {
+    .pr-hero-h1 { font-size: clamp(38px, 11vw, 62px) !important; line-height: 0.92 !important; }
+  }
+  @media (max-width: 400px) {
+    .pr-hero-h1 { font-size: clamp(34px, 13vw, 56px) !important; }
+  }
   @media (max-width: 520px) {
     .pr-metrics { grid-template-columns: 1fr !important; }
   }
@@ -379,6 +385,7 @@ function Hero() {
           <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.26em", color: "rgba(255,255,255,0.58)", marginBottom: 10, textTransform: "uppercase" as const }}>Il mio</div>
 
           <motion.h1
+            className="pr-hero-h1"
             initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.08, ease }}
             style={{ margin: 0, fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(48px,9vw,120px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.58)", userSelect: "none" }}>
@@ -386,6 +393,7 @@ function Hero() {
           </motion.h1>
 
           <motion.div
+            className="pr-hero-h1"
             initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.18, ease }}
             style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(48px,9vw,120px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "#F0F3F9", userSelect: "none" }}>

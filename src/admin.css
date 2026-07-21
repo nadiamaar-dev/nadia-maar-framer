@@ -3,7 +3,7 @@
 
 /* Prevent white overscroll bars on iOS Safari */
 html, body {
-  background-color: #060C18;
+  background-color: #121418;
   overscroll-behavior: none;
 }
 

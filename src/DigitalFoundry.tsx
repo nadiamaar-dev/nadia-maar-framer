@@ -41,6 +41,10 @@ const CSS = `
 }
 @media (max-width: 767px) {
   .nm-foundry-hero { padding: 0 16px 40px; }
+  .nm-foundry-h1 { font-size: clamp(30px, 9vw, 48px) !important; line-height: 0.96 !important; }
+}
+@media (max-width: 400px) {
+  .nm-foundry-h1 { font-size: clamp(28px, 10vw, 42px) !important; }
 }
 .nm-foundry-content {
   max-width: 1160px; margin: 0 auto; padding: 0 32px;
@@ -129,14 +133,14 @@ export default function DigitalFoundry() {
             </div>
 
             {/* headline */}
-            <h1 style={{
-              fontFamily: DISPLAY, fontSize: "clamp(36px, 5.2vw, 64px)", fontWeight: 900,
+            <h1 className="nm-foundry-h1" style={{
+              fontFamily: DISPLAY, fontSize: "clamp(32px, 4.2vw, 56px)", fontWeight: 900,
               color: "#fff", margin: "0 0 8px", lineHeight: 0.96, letterSpacing: "-0.04em",
             }}>
               Costruisci il tuo
             </h1>
-            <h1 style={{
-              fontFamily: DISPLAY, fontSize: "clamp(36px, 5.2vw, 64px)", fontWeight: 900,
+            <h1 className="nm-foundry-h1" style={{
+              fontFamily: DISPLAY, fontSize: "clamp(32px, 4.2vw, 56px)", fontWeight: 900,
               color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.40)",
               margin: "0 0 28px", lineHeight: 0.96, letterSpacing: "-0.04em",
             }}>

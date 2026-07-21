@@ -815,36 +815,6 @@ function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
   )
 }
 
-function HeroLight() {
-  const w = (dur: number, delay = 0) => ({
-    duration: dur, repeat: Infinity, ease: "easeInOut" as const, delay,
-  })
-  return (
-    <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none", overflow: "hidden" }}>
-
-      {/* Blue aurora — top-left */}
-      <motion.div style={{
-        position: "absolute", width: "80%", height: "65%", left: "-5%", top: "-15%",
-        background: "radial-gradient(ellipse at 52% 30%, rgba(180,210,255,0.09) 0%, rgba(6,12,24,0) 68%)",
-      }}
-        animate={{ x: [-22, 18, -10, 24, -22], y: [-8, 16, -12, 6, -8] }}
-        transition={w(22)}
-      />
-
-      {/* Red accent aurora — bottom-left */}
-      <motion.div style={{
-        position: "absolute", width: "55%", height: "50%", left: "-8%", bottom: "-10%",
-        background: "radial-gradient(ellipse at 40% 70%, rgba(255,60,92,0.06) 0%, rgba(6,12,24,0) 65%)",
-      }}
-        animate={{ x: [0, 20, -14, 16, 0], y: [0, -18, 12, -10, 0] }}
-        transition={w(18, 3)}
-      />
-
-
-    </div>
-  )
-}
-
 function Hero() {
   const [formOpen, setFormOpen] = useState(false)
   return (
@@ -914,14 +884,14 @@ function Hero() {
           .hp-hero-head-row{ gap:0; justify-content:flex-start; align-items:flex-start; }
           .hp-hero-social-vert{ display:none !important; }
           /* CTA — side by side on mobile */
-          .hp-hero-cta-row{ flex-direction:row !important; flex-wrap:nowrap !important; max-width:100% !important; gap:8px !important; margin-top:28px !important; }
+          .hp-hero-cta-row{ flex-direction:row !important; flex-wrap:nowrap !important; max-width:100% !important; gap:8px !important; margin-top:40px !important; }
           .hp-hero-cta-row > button,
           .hp-hero-cta-row > a{ flex:1 1 0 !important; min-height:46px !important; }
           .hp-hero-cta-index{ display:none !important; }
           .hp-hero-cta-inner{ justify-content:center !important; gap:4px !important; font-size:8.5px !important; letter-spacing:0.09em !important; padding:0 10px !important; }
           .hp-hero-cta-row > a{ font-size:8.5px !important; letter-spacing:0.09em !important; padding:0 10px !important; gap:5px !important; }
           /* process flow mobile */
-          .hp-hero-flow{ margin-top:24px !important; }
+          .hp-hero-flow{ margin-top:32px !important; }
           .hp-flow-label{ font-size:7.5px !important; letter-spacing:0.10em !important; }
           /* social below CTAs */
           .hp-hero-social-below{ display:flex !important; justify-content:center !important; align-items:center; gap:14px; margin-top:26px; }
@@ -1018,7 +988,7 @@ function Hero() {
 
             <motion.p className="hp-hero-desc"
               initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, delay: 0.22, ease }}
-              style={{ fontSize: "clamp(16px, 1.4vw, 17px)", color: "rgba(255,255,255,0.82)", fontWeight: 400, fontFamily: "'Geist', system-ui, sans-serif", maxWidth: 500, lineHeight: 1.85, margin: "28px 0 0", letterSpacing: "0.01em", WebkitFontSmoothing: "antialiased" } as React.CSSProperties}
+              style={{ fontSize: "clamp(16px, 1.4vw, 17px)", color: "rgba(255,255,255,0.82)", fontWeight: 400, fontFamily: "'Geist', system-ui, sans-serif", maxWidth: 340, lineHeight: 1.85, margin: "28px 0 0", letterSpacing: "0.01em", WebkitFontSmoothing: "antialiased" } as React.CSSProperties}
             >
               Un'unica mente tra codice e business. Architetture digitali che scalano — senza intermediari, senza compromessi.
             </motion.p>
@@ -1028,12 +998,13 @@ function Hero() {
               className="hp-hero-flow"
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.75, delay: 0.28, ease }}
+              style={{ marginTop: 36 }}
             >
               {(["Idea", "Strategia", "Esecuzione", "Risultato"]).map((label, i) => (
                 <div key={label} className="hp-flow-step">
-                  <span className="hp-flow-num"  style={{ color: "rgba(255,255,255,0.32)" }}>{`0${i + 1}`}</span>
-                  <div  className="hp-flow-dot"   style={{ background: "rgba(255,255,255,0.28)" }} />
-                  <span className="hp-flow-label" style={{ color: "rgba(255,255,255,0.45)" }}>{label}</span>
+                  <span className="hp-flow-num"  style={{ color: "rgba(255,255,255,0.55)" }}>{`0${i + 1}`}</span>
+                  <div  className="hp-flow-dot"   style={{ background: "rgba(255,255,255,0.50)" }} />
+                  <span className="hp-flow-label" style={{ color: "rgba(255,255,255,0.68)" }}>{label}</span>
                 </div>
               ))}
             </motion.div>
@@ -1042,7 +1013,7 @@ function Hero() {
             <motion.div
               className="hp-hero-cta-row"
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.36, ease }}
-              style={{ display: "flex", gap: 10, marginTop: 34, maxWidth: 440 }}
+              style={{ display: "flex", gap: 10, marginTop: 44, maxWidth: 440 }}
             >
               <motion.button
                 onClick={() => document.getElementById("s9")?.scrollIntoView({ behavior: "smooth" })}
@@ -4172,7 +4143,6 @@ export default function NadiaMaarLab() {
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_CSS }} />
       <ScrollProgress />
       <Background />
-      <HeroLight />
       <FloatingContact />
       <Header />
       <div style={{ position: "relative", zIndex: 1, paddingTop: 64 }}>
