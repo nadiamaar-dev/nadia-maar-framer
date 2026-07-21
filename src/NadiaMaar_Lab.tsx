@@ -820,7 +820,7 @@ function Hero() {
   return (
     <section style={{ ...SEC, minHeight: 800, display: "flex", alignItems: "center", overflow: "clip", position: "relative" }} id="s1" className="hp-sec hp-hero">
       <style>{`
-        .hp-hero-wordmark { position:absolute; right:14px; top:88px; z-index:0; pointer-events:none; writing-mode:vertical-rl; transform:rotate(180deg); font-family:${DISPLAY}; font-weight:900; font-size:clamp(150px,15vw,214px); letter-spacing:-0.04em; line-height:0.84; white-space:nowrap; color:rgba(255,255,255,0.012); filter:blur(1px); user-select:none; }
+        .hp-hero-wordmark { position:absolute; right:14px; top:88px; z-index:0; pointer-events:none; writing-mode:vertical-rl; transform:rotate(180deg); font-family:${DISPLAY}; font-weight:900; font-size:clamp(150px,15vw,214px); letter-spacing:-0.04em; line-height:0.84; white-space:nowrap; color:rgba(255,255,255,0.012); -webkit-text-stroke:1px rgba(255,255,255,0.06); filter:blur(1px); user-select:none; }
         @media(max-width:1024px){.hp-hero-wordmark{display:none}}
         .hp-hero-nm { position:absolute; left:24px; bottom:34px; z-index:1; display:flex; align-items:center; gap:11px; }
         .hp-hero-nm .nm-l { font-family:${DISPLAY}; font-weight:800; font-size:16px; letter-spacing:0.04em; color:#fff; }

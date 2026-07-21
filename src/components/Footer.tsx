@@ -296,7 +296,7 @@ export default function Footer({ onContact }: FooterProps) {
 
       {/* ── giant MAAR watermark ── */}
       <div aria-hidden style={{ position: "absolute", bottom: 0, left: 0, right: 0, textAlign: "center", lineHeight: 0.85, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
-        <span style={{ display: "block", fontFamily: DISPLAY, fontWeight: 900, letterSpacing: "-0.04em", fontSize: "clamp(88px,20vw,300px)", color: "rgba(255,255,255,0.012)", filter: "blur(1px)", userSelect: "none", transform: "translateY(28%)" }}>MAAR</span>
+        <span style={{ display: "block", fontFamily: DISPLAY, fontWeight: 900, letterSpacing: "-0.04em", fontSize: "clamp(88px,20vw,300px)", color: "rgba(255,255,255,0.012)", WebkitTextStroke: "1px rgba(255,255,255,0.06)", filter: "blur(1px)", userSelect: "none", transform: "translateY(28%)" }}>MAAR</span>
       </div>
     </footer>
   )

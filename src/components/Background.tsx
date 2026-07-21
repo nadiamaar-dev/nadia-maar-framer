@@ -49,7 +49,7 @@ function MaarWatermark() {
         fontFamily: DISPLAY, fontWeight: 900,
         fontSize: "clamp(110px, 30vw, 460px)",
         letterSpacing: "-0.05em", lineHeight: 1,
-        color: "rgba(255,255,255,0.012)", filter: "blur(1px)",
+        color: "rgba(255,255,255,0.012)", WebkitTextStroke: "1px rgba(255,255,255,0.06)", filter: "blur(1px)",
         userSelect: "none", whiteSpace: "nowrap",
       }}>MAAR</motion.span>
     </motion.div>
