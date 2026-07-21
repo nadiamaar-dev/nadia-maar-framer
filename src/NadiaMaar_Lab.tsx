@@ -825,6 +825,7 @@ function Hero() {
         .hp-hero-nm { position:absolute; left:24px; bottom:34px; z-index:1; display:flex; align-items:center; gap:11px; }
         .hp-hero-nm .nm-l { font-family:${DISPLAY}; font-weight:800; font-size:16px; letter-spacing:0.04em; color:#fff; }
         .hp-hero-nm .nm-c { font-family:${MONO}; font-size:8px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(255,255,255,0.42); line-height:1.6; }
+        .hp-hero-social-below { display:none; }
         .hp-hero-squares { position:absolute; left:20px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:24px; z-index:0; }
         .hp-hero-ticker { position:absolute; right:22px; top:96px; display:flex; flex-direction:column; gap:20px; align-items:flex-end; z-index:1; }
         .hp-hero-ticker .tk { display:flex; align-items:center; gap:9px; }
@@ -857,32 +858,35 @@ function Hero() {
 
         /* ── Mobile hero (<768px) ──────────────────────────────── */
         @media (max-width:768px){
-          /* eyebrow — wrap instead of overflow */
+          /* hero section — more breathing room */
+          .hp-hero{ padding:52px 0 44px !important; }
+          /* eyebrow */
           .hp-hero-eyebrow{ font-size:9px !important; letter-spacing:.10em !important; flex-wrap:wrap; line-height:1.6; }
           /* headline block */
-          .hp-hl{ padding:14px 12px 12px; width:100%; box-sizing:border-box; }
+          .hp-hl{ padding:18px 14px 16px !important; width:100%; box-sizing:border-box; }
           .hp-hl-tag{ font-size:7.5px !important; letter-spacing:.12em !important; left:14px !important; }
           .hp-hl-dim{ display:none !important; }
           .hp-hero-h1{ font-size:44px !important; line-height:0.93 !important; letter-spacing:-0.04em !important; }
-          /* description — full width, readable size */
-          .hp-hero-desc{ margin-top:14px !important; font-size:15px !important; line-height:1.7 !important; max-width:100% !important; }
-          /* grid: 1 column, hide empty meta panel */
+          /* description */
+          .hp-hero-desc{ margin-top:22px !important; font-size:15px !important; line-height:1.75 !important; max-width:100% !important; }
+          /* grid */
           .hp-hero-ed-grid{ grid-template-columns:1fr !important; gap:0 !important; }
           .hp-hero-meta{ display:none !important; }
-          /* head row */
-          .hp-hero-head-row{ gap:10px; justify-content:space-between; align-items:flex-start; }
-          .hp-hero-social-vert{ display:flex; flex-direction:column; gap:7px; flex-shrink:0; }
-          .hp-hero-social-vert a{ width:36px !important; height:36px !important; }
+          /* head row — full width, no social beside title */
+          .hp-hero-head-row{ gap:0; justify-content:flex-start; align-items:flex-start; }
+          .hp-hero-social-vert{ display:none !important; }
           /* CTA — stack vertically, full width */
-          .hp-hero-cta-row{ flex-direction:column !important; max-width:100% !important; gap:8px !important; margin-top:18px !important; }
+          .hp-hero-cta-row{ flex-direction:column !important; max-width:100% !important; gap:10px !important; margin-top:26px !important; }
           .hp-hero-cta-row > button,
-          .hp-hero-cta-row > a{ width:100% !important; flex:none !important; min-height:48px !important; }
+          .hp-hero-cta-row > a{ width:100% !important; flex:none !important; min-height:52px !important; }
           .hp-hero-cta-index{ display:none !important; }
+          /* social below CTAs */
+          .hp-hero-social-below{ display:flex !important; gap:10px; margin-top:24px; flex-wrap:wrap; }
           /* stats */
-          .hp-hero-botnav{ margin-top:20px; padding-top:14px; gap:8px; }
+          .hp-hero-botnav{ margin-top:32px; padding-top:18px; gap:8px; }
           .hp-hero-scroll{ display:none !important; }
           .hp-hero-stats-row{ display:grid !important; grid-template-columns:repeat(2,1fr) !important; gap:8px !important; width:100%; }
-          /* stat card — compact */
+          /* stat card */
           .hp-hero-stat-item{ padding:12px 12px 14px !important; border-radius:12px !important; }
           .hp-hero-stat-value{ font-size:24px !important; }
           .hp-hero-stat-label{ font-size:8.5px !important; letter-spacing:.12em !important; }
@@ -1000,6 +1004,21 @@ function Hero() {
                 Esplora la Foundry <span style={{ fontSize: 14 }}>→</span>
               </motion.a>
             </motion.div>
+
+            {/* mobile-only: social row below CTAs */}
+            <div className="hp-hero-social-below">
+              {HERO_SOCIALS.map(({ Icon, href, label }) => (
+                <motion.a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+                  whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 16 }}
+                  style={{ width: 40, height: 40, borderRadius: 11, display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, border: `1px solid ${G.bd}`, backgroundColor: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, textDecoration: "none", flexShrink: 0 } as React.CSSProperties}
+                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.accentLt; el.style.borderColor = "rgba(255,60,92,0.55)"; el.style.backgroundColor = "rgba(255,60,92,0.16)" }}
+                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.muted; el.style.borderColor = G.bd; el.style.backgroundColor = G.bg }}
+                >
+                  <Icon />
+                </motion.a>
+              ))}
+            </div>
 
           </div>
 

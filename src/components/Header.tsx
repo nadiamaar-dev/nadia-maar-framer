@@ -71,8 +71,10 @@ const HDR_STYLE = `
   .nm-hdr-divider { display:none; }
   .nm-hdr-wordmark{ display:none; }
 }
-@media(max-width:560px){
-  .nm-hdr-foundry { display:none; }
+@media(max-width:767px){
+  .nm-hdr-foundry    { display:none !important; }
+  .nm-hdr-dash-label { display:none !important; }
+  .nm-hdr-dash-btn   { width:30px !important; height:30px !important; padding:0 !important; justify-content:center !important; }
 }`
 
 /* ── DateTimeWidget — minimal, no border ── */
@@ -518,6 +520,7 @@ export default function Header() {
                 style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <motion.a
                   href="/dashboard"
+                  className="nm-hdr-dash-btn"
                   whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }}
                   transition={{ type: "spring", stiffness: 400, damping: 20 }}
                   style={{
@@ -537,7 +540,7 @@ export default function Header() {
                     <rect x="1" y="8" width="5" height="5" rx="1.2" stroke="currentColor" strokeWidth="1.3"/>
                     <rect x="8" y="8" width="5" height="5" rx="1.2" stroke="currentColor" strokeWidth="1.3"/>
                   </svg>
-                  Dashboard
+                  <span className="nm-hdr-dash-label">Dashboard</span>
                 </motion.a>
                 <motion.button
                   onClick={handleSignOut}
