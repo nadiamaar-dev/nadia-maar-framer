@@ -21,10 +21,10 @@ export const T = {
   bgRaised: "#1E3442",
   border: "rgba(255,255,255,0.08)",
   borderHi: "rgba(255,255,255,0.15)",
-  text: "#F4F7FC",
-  muted: "rgba(255,255,255,0.88)",
-  faint: "rgba(255,255,255,0.68)",
-  ghost: "rgba(255,255,255,0.50)",
+  text: "#FFFFFF",
+  muted: "#FFFFFF",
+  faint: "#FFFFFF",
+  ghost: "#FFFFFF",
   copper: "#B83240",
   copperLt: "#BE3648",
   green: "#10B981",
@@ -35,10 +35,10 @@ export const T = {
 
 /* ── Chrome (dark petrol sidebar / header) ── */
 export const TL = {
-  text: "#F4F7FC",
-  muted: "rgba(255,255,255,0.88)",
-  faint: "rgba(255,255,255,0.72)",
-  ghost: "rgba(255,255,255,0.55)",
+  text: "#FFFFFF",
+  muted: "#FFFFFF",
+  faint: "#FFFFFF",
+  ghost: "#FFFFFF",
   border: "rgba(255,255,255,0.08)",
   borderHi: "rgba(255,255,255,0.15)",
 } as const
@@ -50,8 +50,8 @@ export const TONE: Record<Tone, { fg: string; bg: string; bd: string }> = {
   green:  { fg: "#10B981", bg: "rgba(16,185,129,0.15)", bd: "rgba(16,185,129,0.34)" },
   amber:  { fg: "#F59E0B", bg: "rgba(245,158,11,0.14)", bd: "rgba(245,158,11,0.32)" },
   red:    { fg: "#F87171", bg: "rgba(248,113,113,0.14)", bd: "rgba(248,113,113,0.32)" },
-  silver: { fg: "rgba(255,255,255,0.68)", bg: "rgba(255,255,255,0.09)", bd: "rgba(255,255,255,0.42)" },
-  steel:  { fg: "rgba(255,255,255,0.44)", bg: "rgba(255,255,255,0.05)", bd: "rgba(255,255,255,0.11)" },
+  silver: { fg: "#FFFFFF", bg: "rgba(255,255,255,0.09)", bd: "rgba(255,255,255,0.42)" },
+  steel:  { fg: "#FFFFFF", bg: "rgba(255,255,255,0.05)", bd: "rgba(255,255,255,0.11)" },
 }
 
 /* ── Modal overlay backdrop ── */
@@ -260,7 +260,7 @@ const BTN_VARIANTS: Record<BtnVariant, React.CSSProperties> = {
   primary: {
     background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)",
     border: "1px solid rgba(184,50,64,0.80)",
-    color: "#F0F3F9",
+    color: "#FFFFFF",
     backdropFilter: "blur(20px)",
     WebkitBackdropFilter: "blur(20px)",
     boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",
@@ -268,12 +268,12 @@ const BTN_VARIANTS: Record<BtnVariant, React.CSSProperties> = {
   ghost: {
     background: "rgba(255,255,255,0.08)",
     border: "1px solid rgba(255,255,255,0.15)",
-    color: "rgba(255,255,255,0.82)",
+    color: "#FFFFFF",
   },
   outline: {
     background: "transparent",
     border: "1px solid rgba(255,255,255,0.18)",
-    color: "rgba(255,255,255,0.80)",
+    color: "#FFFFFF",
   },
   danger: {
     background: "rgba(248,113,113,0.12)",
@@ -413,7 +413,7 @@ export function SectionTitle({ kicker, title, sub, right }: {
         <h2 style={{ fontFamily: DISPLAY, fontSize: 25, fontWeight: 800, letterSpacing: "-0.02em", color: TL.text, margin: 0, lineHeight: 1.15 }}>
           {title}
         </h2>
-        {sub && <p style={{ fontFamily: DISPLAY, fontSize: 15, color: TL.muted, margin: "7px 0 0", lineHeight: 1.5 }}>{sub}</p>}
+        {sub && <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 15, color: TL.muted, margin: "7px 0 0", lineHeight: 1.5 }}>{sub}</p>}
       </div>
       {right && <div style={{ display: "flex", gap: 8, alignItems: "center" }}>{right}</div>}
     </div>
@@ -559,7 +559,7 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
             }}>
               <div>
                 {kicker && (
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.58)" }}>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
                     <span style={{ color: "rgba(184,50,64,0.50)" }}>//</span>
                     <span>[ {kicker} ]</span>
                   </div>
@@ -678,7 +678,7 @@ export function Stat({ label, value, hint, icon, tone = "silver" }: {
       <div style={{ fontFamily: DISPLAY, fontSize: 34, fontWeight: 800, letterSpacing: "-0.03em", color: T.text, lineHeight: 1 }}>
         {value}
       </div>
-      {hint && <div style={{ fontFamily: DISPLAY, fontSize: 12.5, color: t.fg, opacity: 0.75 }}>{hint}</div>}
+      {hint && <div style={{ fontFamily: DISPLAY, fontSize: 12.5, color: t.fg }}>{hint}</div>}
     </Glass>
   )
 }
@@ -703,7 +703,7 @@ export function Empty({ icon = "sparkle", title, hint, action }: {
         <Icon name={icon} size={20} strokeWidth={1.5} />
       </div>
       <p style={{ fontFamily: DISPLAY, fontSize: 17, fontWeight: 700, color: T.muted, margin: 0 }}>{title}</p>
-      {hint && <p style={{ fontFamily: DISPLAY, fontSize: 14, color: T.faint, margin: "4px 0 0", maxWidth: 380, lineHeight: 1.6 }}>{hint}</p>}
+      {hint && <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 14, color: T.faint, margin: "4px 0 0", maxWidth: 380, lineHeight: 1.6 }}>{hint}</p>}
       {action && <div style={{ marginTop: 16 }}>{action}</div>}
     </div>
   )
@@ -754,7 +754,7 @@ export function Note({ tone = "silver", children }: { tone?: Tone; children: Rea
       padding: "12px 15px", borderRadius: 11,
       background: t.bg, border: `1px solid ${t.bd}`,
       fontFamily: DISPLAY, fontSize: 14, lineHeight: 1.55, color: t.fg,
-    }}>
+    }} className="pt-body">
       <Icon name={tone === "red" || tone === "amber" ? "warn" : "sparkle"} size={15} style={{ marginTop: 1 }} />
       <span>{children}</span>
     </div>
@@ -904,7 +904,7 @@ export function Timeline({ events, showProject = false, showClient = false, limi
                   {relativeDate(ev.createdAt)}{context ? `  ·  ${context}` : ""}
                 </p>
                 {ev.detail && (
-                  <p style={{ fontFamily: DISPLAY, fontSize: 13.5, color: T.muted, margin: "4px 0 0", lineHeight: 1.5 }}>
+                  <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13.5, color: T.muted, margin: "4px 0 0", lineHeight: 1.5 }}>
                     {ev.detail}
                   </p>
                 )}
@@ -957,13 +957,13 @@ export function BriefCard({ brief, description }: { brief?: ProjectBrief; descri
       {description && (
         <div>
           <p style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.14em", textTransform: "uppercase", color: T.faint, margin: "0 0 5px" }}>Obiettivi</p>
-          <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>{description}</p>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>{description}</p>
         </div>
       )}
       {hasRefs && (
         <div>
           <p style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.14em", textTransform: "uppercase", color: T.faint, margin: "0 0 5px" }}>Riferimenti</p>
-          <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>{brief!.references}</p>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>{brief!.references}</p>
         </div>
       )}
     </div>

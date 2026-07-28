@@ -57,7 +57,7 @@ const CSS = `
   border: 1px solid rgba(255,255,255,0.20);
   border-radius: 4px;
   font-family: ${MONO}; font-size: 9.5px;
-  color: rgba(255,255,255,0.63); letter-spacing: 0.06em;
+  color: #FFFFFF; letter-spacing: 0.06em;
 }
 
 /* Blueprint CTA button — [01] style */
@@ -72,12 +72,12 @@ const CSS = `
   border-radius: 8px; cursor: pointer;
   font-family: ${MONO}; font-size: 9.5px; font-weight: 500;
   letter-spacing: 0.12em; text-transform: uppercase;
-  color: rgba(255,255,255,0.63); text-decoration: none;
+  color: #FFFFFF; text-decoration: none;
   transition: all 0.18s ease; flex-shrink: 0;
 }
 .nm-card-btn-outline:hover {
   border-color: rgba(255,255,255,0.37);
-  color: rgba(255,255,255,0.88);
+  color: #FFFFFF;
   background: rgba(255,255,255,0.05);
 }
 
@@ -102,7 +102,7 @@ const CSS = `
   border-right: 1px solid rgba(184,50,64,0.38);
   display: flex; align-items: center;
   font-family: ${MONO}; font-size: 8.5px; letter-spacing: 0.20em;
-  color: rgba(255,255,255,0.70); flex-shrink: 0;
+  color: #FFFFFF; flex-shrink: 0;
 }
 .nm-card-btn-bp-label {
   flex: 1; display: flex; align-items: center; justify-content: center;
@@ -120,6 +120,11 @@ const CSS = `
 .nm-card-accent-line {
   position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
   transition: opacity 0.3s ease; pointer-events: none; z-index: 4;
+}
+
+/* body copy stays at 16px on phones — !important beats the inline size */
+@media (max-width: 768px) {
+  .hp-body { font-size: 16px !important; }
 }
 `
 
@@ -169,13 +174,13 @@ export default function ProjectCard({ item }: { item: SandboxItem }) {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
           <span style={{
             fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em",
-            textTransform: "uppercase", color: "rgba(255,255,255,0.53)",
+            textTransform: "uppercase", color: "#FFFFFF",
           }}>
             {item.category}
           </span>
           <span style={{
             fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.12em",
-            textTransform: "uppercase", color: "rgba(255,255,255,0.40)",
+            textTransform: "uppercase", color: "#FFFFFF",
             padding: "2px 7px",
             border: "1px solid rgba(255,255,255,0.20)",
             borderRadius: 4,
@@ -194,10 +199,10 @@ export default function ProjectCard({ item }: { item: SandboxItem }) {
         </h3>
 
         {/* Description */}
-        <p style={{
+        <p className="hp-body" style={{
           fontFamily: BODY, fontSize: 14, fontWeight: 400,
           lineHeight: 1.70, letterSpacing: "0.005em",
-          color: "rgba(255,255,255,0.65)",
+          color: "#FFFFFF",
           margin: 0, flexGrow: 1,
         }}>
           {item.description}

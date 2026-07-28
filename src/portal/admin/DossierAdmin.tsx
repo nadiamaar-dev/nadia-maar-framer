@@ -195,7 +195,7 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
               {project.clientName} · {project.clientEmail} · avviato {fmtDate(project.createdAt)}
             </p>
             {project.description && (
-              <p style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6, color: T.faint, margin: "10px 0 0", maxWidth: 640, whiteSpace: "pre-wrap" }}>
+              <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6, color: T.faint, margin: "10px 0 0", maxWidth: 640, whiteSpace: "pre-wrap" }}>
                 {project.description}
               </p>
             )}
@@ -277,7 +277,7 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
                         {s.approvalState === "changes_requested" && s.revisionNote && (
                           <span style={{ flexBasis: "100%", display: "flex", gap: 8, alignItems: "flex-start", padding: "9px 12px", borderRadius: 10, background: "rgba(248,113,113,0.10)", border: "1px solid rgba(248,113,113,0.28)" }}>
                             <Icon name="edit" size={13} style={{ color: T.red, marginTop: 2, flexShrink: 0 }} />
-                            <span style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.5, color: T.muted }}>
+                            <span className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.5, color: T.muted }}>
                               <strong style={{ color: T.text }}>Modifiche richieste:</strong> {s.revisionNote}
                             </span>
                           </span>
@@ -470,7 +470,7 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
           </>
         }
       >
-        <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0 }}>
+        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0 }}>
           La fase viene segnata come completata e quella successiva si attiva.
           {advancing?.approvalState === "requested" && " C'è una richiesta di approvazione ancora aperta: chiudendo la fase la superi manualmente."}
           {" "}Se era l'ultima, il progetto risulterà completato.
@@ -539,7 +539,7 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
           </>
         }
       >
-        <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0 }}>
+        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0 }}>
           La fase è ancora in coda e non è mai partita: eliminarla non tocca il lavoro fatto.
         </p>
       </Modal>

@@ -79,7 +79,7 @@ export default function AdminApp() {
         <Background />
         <Glass variant="panel" style={{ padding: 28, maxWidth: 400, textAlign: "center", position: "relative", zIndex: 1 }}>
           <p style={{ fontFamily: DISPLAY, fontSize: 14, fontWeight: 800, color: T.text, margin: 0 }}>Caricamento non riuscito</p>
-          <p style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.faint, margin: "8px 0 18px" }}>Controlla la connessione e riprova.</p>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.faint, margin: "8px 0 18px" }}>Controlla la connessione e riprova.</p>
           <Btn variant="primary" onClick={reload}>Riprova</Btn>
         </Glass>
       </div>

@@ -27,7 +27,7 @@ function ProgressBar({ value, tone }: { value: number; tone: "copper" | "green" 
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
-        <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.42)" }}>
+        <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "#FFFFFF" }}>
           Avanzamento
         </span>
         <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 700, color: label }}>
@@ -62,7 +62,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
     ? { bg: "rgba(184,50,64,0.10)", border: "rgba(184,50,64,0.40)", color: "#B8384A", glow: "none", icon: PATH_UNLOCK }
     : isDone
     ? { bg: "transparent", border: "rgba(16,185,129,0.22)", color: "#10B981", glow: "none", icon: PATH_CHECK }
-    : { bg: "transparent", border: "rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.37)", glow: "none", icon: PATH_LOCK }
+    : { bg: "transparent", border: "rgba(255,255,255,0.10)", color: "#FFFFFF", glow: "none", icon: PATH_LOCK }
 
   /* ── Connector line ── */
   const lineColor = "rgba(255,255,255,0.07)"
@@ -70,7 +70,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
   /* ── Content card (only active + done) ── */
   const cardBg     = "rgba(255,255,255,0.008)"
   const cardBorder = isActive ? "rgba(184,50,64,0.18)" : "rgba(255,255,255,0.08)"
-  const descColor  = "rgba(255,255,255,0.64)"
+  const descColor  = "#FFFFFF"
 
   const numLabel = String(index + 1).padStart(2, "0")
 
@@ -134,7 +134,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
             fontSize: isActive ? 17 : isLocked ? 14 : 15,
             fontWeight: isActive ? 800 : isLocked ? 500 : 700,
             letterSpacing: "-0.01em", lineHeight: 1.25,
-            color: isLocked ? "rgba(255,255,255,0.32)" : "rgba(255,255,255,0.90)",
+            color: "#FFFFFF",
             margin: 0, flex: 1, minWidth: 0,
           }}>
             {stage.title}
@@ -172,7 +172,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
                 padding: "2px 9px", borderRadius: 99,
                 background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.14)",
                 fontFamily: MONO, fontSize: 9, letterSpacing: "0.06em",
-                color: "rgba(255,255,255,0.28)",
+                color: "#FFFFFF",
               }}>
                 In attesa
               </span>
@@ -205,7 +205,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
           }}>
             {/* Description */}
             {stage.deliverableNote && (
-              <p style={{
+              <p className="pt-body" style={{
                 fontFamily: DISPLAY, fontSize: 13.5, lineHeight: 1.65,
                 color: descColor, margin: 0, whiteSpace: "pre-wrap",
                 display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden",
@@ -240,7 +240,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
             {/* Dates */}
             {(stage.startedAt || stage.completedAt) && (
               <p style={{
-                fontFamily: MONO, fontSize: 9.5, color: "rgba(255,255,255,0.28)",
+                fontFamily: MONO, fontSize: 9.5, color: "#FFFFFF",
                 margin: 0, letterSpacing: "0.04em",
               }}>
                 {stage.startedAt ? `Avviata ${fmtDate(stage.startedAt)}` : ""}

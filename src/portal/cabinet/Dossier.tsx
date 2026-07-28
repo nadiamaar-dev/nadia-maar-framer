@@ -213,7 +213,7 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
               <Badge tone={st.tone} dot>{st.label}</Badge>
             </div>
             {project.description && (
-              <p style={{ fontFamily: DISPLAY, fontSize: 14.5, lineHeight: 1.65, color: T.faint, margin: "10px 0 0", maxWidth: 640, whiteSpace: "pre-wrap" }}>
+              <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 14.5, lineHeight: 1.65, color: T.faint, margin: "10px 0 0", maxWidth: 640, whiteSpace: "pre-wrap" }}>
                 {project.description}
               </p>
             )}
@@ -402,7 +402,7 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
           </>
         }
       >
-        <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0 }}>
+        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0 }}>
           Confermando dai il via libera su questa fase: verrà chiusa e il lavoro passa alla successiva.
           Se hai dubbi, usa prima la discussione della fase.
         </p>

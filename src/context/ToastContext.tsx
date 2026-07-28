@@ -92,14 +92,14 @@ function ToastCard({ item, onDismiss }: { item: ToastItem; onDismiss: (id: strin
         )}
         <div style={{
           fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif",
-          fontSize: 12, color: "rgba(255,255,255,0.60)", lineHeight: 1.5,
+          fontSize: 12, color: "#FFFFFF", lineHeight: 1.5,
         }}>
           {item.message}
         </div>
       </div>
       <button
         onClick={e => { e.stopPropagation(); onDismiss(item.id) }}
-        style={{ color: "rgba(255,255,255,0.25)", flexShrink: 0, background: "none", border: "none", cursor: "pointer", padding: 0 }}
+        style={{ color: "#FFFFFF", flexShrink: 0, background: "none", border: "none", cursor: "pointer", padding: 0 }}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M18 6L6 18M6 6l12 12"/>

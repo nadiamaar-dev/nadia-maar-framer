@@ -108,7 +108,7 @@ export default function DossierHandoverAdmin({ projectId, clientId }: { projectI
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: creds.length > 0 ? 14 : 0 }}>
           <div>
             <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>Consegna</p>
-            <p style={{ fontFamily: DISPLAY, fontSize: 13, color: T.faint, margin: "5px 0 0" }}>Accessi (hosting, pannello) e risorse. Visibili al cliente solo dopo il rilascio.</p>
+            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, color: T.faint, margin: "5px 0 0" }}>Accessi (hosting, pannello) e risorse. Visibili al cliente solo dopo il rilascio.</p>
           </div>
           <Btn variant="primary" icon="plus" onClick={openNew}>Nuovo</Btn>
         </div>

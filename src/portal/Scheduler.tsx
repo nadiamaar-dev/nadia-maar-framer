@@ -135,7 +135,7 @@ export default function Scheduler({ value, onChange, refreshKey = 0 }: {
             Orari · {new Date(`${openDay}T12:00`).toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" })}
           </p>
           {dayTimes.length === 0 ? (
-            <p style={{ fontFamily: DISPLAY, fontSize: 12, color: T.faint, margin: 0 }}>Nessun orario disponibile.</p>
+            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12, color: T.faint, margin: 0 }}>Nessun orario disponibile.</p>
           ) : (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {dayTimes.map(t => {
@@ -152,7 +152,7 @@ export default function Scheduler({ value, onChange, refreshKey = 0 }: {
                       background: sel ? "linear-gradient(140deg, rgba(184,50,64,0.38), rgba(184,50,64,0.20))" : "rgba(255,255,255,0.035)",
                       border: `1px solid ${sel ? "rgba(184,50,64,0.60)" : T.border}`,
                       boxShadow: sel ? "inset 0 1px 0 rgba(255,255,255,0.18)" : "none",
-                      color: sel ? "#FFE9E3" : T.muted,
+                      color: "#FFFFFF",
                       fontFamily: MONO, fontSize: 11, fontWeight: sel ? 700 : 500,
                       cursor: "pointer",
                     }}

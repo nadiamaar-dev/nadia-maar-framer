@@ -35,7 +35,7 @@ function Greeting({ name }: { name?: string }) {
           <>, <span style={{ color: T.copperLt }}>{firstName}</span></>
         ) : ""}
       </h1>
-      <p style={{
+      <p className="pt-body" style={{
         fontFamily: DISPLAY, fontSize: 14, color: TL.muted,
         margin: "6px 0 0", lineHeight: 1.5,
       }}>

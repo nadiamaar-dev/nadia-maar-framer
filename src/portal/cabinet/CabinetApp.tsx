@@ -129,7 +129,7 @@ export default function CabinetApp() {
       <FullScreen>
         <Glass variant="panel" style={{ padding: 28, maxWidth: 420, textAlign: "center" }}>
           <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>Configurazione</p>
-          <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: "10px 0 0" }}>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: "10px 0 0" }}>
             Supabase non è configurato: aggiungi VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.
           </p>
         </Glass>
@@ -151,7 +151,7 @@ export default function CabinetApp() {
           <h1 style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 800, color: T.text, margin: 0, letterSpacing: "-0.025em", lineHeight: 1.2 }}>
             Area Clienti
           </h1>
-          <p style={{ fontFamily: DISPLAY, fontSize: 14, lineHeight: 1.65, color: T.muted, margin: "11px 0 0" }}>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 14, lineHeight: 1.65, color: T.muted, margin: "11px 0 0" }}>
             Segui i tuoi progetti in tempo reale — fasi, riunioni, fatture e chat con lo studio, tutto in un unico posto.
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 28 }}>
@@ -197,7 +197,7 @@ export default function CabinetApp() {
       <FullScreen>
         <Glass variant="panel" style={{ padding: 28, maxWidth: 400, textAlign: "center" }}>
           <p style={{ fontFamily: DISPLAY, fontSize: 14, fontWeight: 800, color: T.text, margin: 0 }}>Caricamento non riuscito</p>
-          <p style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.faint, margin: "8px 0 18px" }}>Controlla la connessione e riprova.</p>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.faint, margin: "8px 0 18px" }}>Controlla la connessione e riprova.</p>
           <Btn variant="primary" onClick={reload}>Riprova</Btn>
         </Glass>
       </FullScreen>
@@ -232,7 +232,7 @@ export default function CabinetApp() {
             display: "inline-flex", alignItems: "center", gap: 7,
             padding: "7px 12px", borderRadius: 99, cursor: "pointer",
             background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.40)",
-            fontFamily: MONO, fontSize: 10, fontWeight: 700, color: "#F0F3F9",
+            fontFamily: MONO, fontSize: 10, fontWeight: 700, color: "#FFFFFF",
           }}
         >
           <Icon name="bolt" size={11} />

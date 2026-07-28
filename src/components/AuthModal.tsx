@@ -35,7 +35,7 @@ const CSS = `
   border: 1px solid rgba(255,255,255,0.18);
   border-radius: 10px;
   font-family: ${DISPLAY}; font-size: 14px;
-  color: #fff;
+  color: #FFFFFF;
   outline: none;
   transition: border-color 0.18s, background 0.18s;
   box-sizing: border-box;
@@ -50,7 +50,7 @@ const CSS = `
   background: transparent; border: none;
   border-radius: 8px; cursor: pointer;
   font-family: ${DISPLAY}; font-size: 13px; font-weight: 600;
-  color: rgba(255,255,255,0.53);
+  color: #FFFFFF;
   transition: all 0.18s ease;
 }
 .nm-auth-tab.active {
@@ -60,7 +60,7 @@ const CSS = `
   -webkit-backdrop-filter: blur(20px);
   color: #fff;
 }
-.nm-auth-tab:not(.active):hover { color: rgba(255,255,255,0.80); }
+.nm-auth-tab:not(.active):hover { color: #FFFFFF; }
 .nm-auth-submit {
   width: 100%; padding: 15px;
   background: linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%);
@@ -86,12 +86,17 @@ const CSS = `
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.20);
   cursor: pointer; display: flex; align-items: center; justify-content: center;
-  color: rgba(255,255,255,0.63);
+  color: #FFFFFF;
   transition: all 0.16s;
 }
 .nm-auth-close:hover {
   background: rgba(255,255,255,0.12);
   color: #fff;
+}
+
+/* body copy stays at 16px on phones — !important beats the inline size */
+@media (max-width: 768px) {
+  .hp-body { font-size: 16px !important; }
 }
 `
 
@@ -208,9 +213,9 @@ export default function AuthModal() {
           }}>
             {mode === "login" ? "Bentornato." : "Crea la tua Architettura."}
           </h2>
-          <p style={{
+          <p className="hp-body" style={{
             fontFamily: DISPLAY, fontSize: 13.5, lineHeight: 1.6,
-            color: "rgba(255,255,255,0.63)", margin: 0,
+            color: "#FFFFFF", margin: 0,
           }}>
             {mode === "login"
               ? "Accedi per salvare il tuo Blueprint e gestire i progetti."
@@ -251,7 +256,7 @@ export default function AuthModal() {
             <div style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>
               {mode === "register" || magicSent ? "Controlla la tua email!" : "Accesso riuscito!"}
             </div>
-            <div style={{ fontFamily: DISPLAY, fontSize: 13, color: "rgba(255,255,255,0.58)" }}>
+            <div className="hp-body" style={{ fontFamily: DISPLAY, fontSize: 13, color: "#FFFFFF" }}>
               {magicSent
                 ? "Ti abbiamo inviato un link per accedere senza password."
                 : mode === "register"
@@ -316,7 +321,7 @@ export default function AuthModal() {
               <>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "2px 0" }}>
                   <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.10)" }} />
-                  <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.14em", color: "rgba(255,255,255,0.32)" }}>OPPURE</span>
+                  <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.14em", color: "#FFFFFF" }}>OPPURE</span>
                   <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.10)" }} />
                 </div>
                 <button
@@ -328,7 +333,7 @@ export default function AuthModal() {
                     background: "rgba(255,255,255,0.05)",
                     border: "1px solid rgba(255,255,255,0.24)",
                     borderRadius: 10, cursor: busy === "loading" ? "not-allowed" : "pointer",
-                    fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 600, color: "rgba(255,255,255,0.82)",
+                    fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 600, color: "#FFFFFF",
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                     transition: "all 0.18s ease",
                   }}
@@ -343,7 +348,7 @@ export default function AuthModal() {
 
             <div style={{
               fontFamily: MONO, fontSize: 10, letterSpacing: "0.08em",
-              textAlign: "center", color: "rgba(255,255,255,0.28)",
+              textAlign: "center", color: "#FFFFFF",
             }}>
               {mode === "register"
                 ? "Registrandoti accetti i nostri termini di servizio."

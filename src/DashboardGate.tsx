@@ -59,7 +59,7 @@ export default function DashboardGate() {
             borderTopColor: "#B83240",
             animation: "spin 0.8s linear infinite",
           }} />
-          <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", color: "rgba(255,255,255,0.37)", textTransform: "uppercase" }}>
+          <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", color: "#FFFFFF", textTransform: "uppercase" }}>
             Verifica accesso...
           </span>
           <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>

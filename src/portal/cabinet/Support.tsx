@@ -111,7 +111,7 @@ export default function Support({ home, userId, reload }: {
                       <Badge tone={ts.tone} dot>{ts.label}</Badge>
                       {t.projectId && <Badge tone="silver">{projectName(t.projectId) ?? "Progetto"}</Badge>}
                     </div>
-                    <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: "9px 0 0", whiteSpace: "pre-wrap" }}>
+                    <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: "9px 0 0", whiteSpace: "pre-wrap" }}>
                       {t.message}
                     </p>
                     <p style={{ fontFamily: MONO, fontSize: 9, color: T.faint, margin: "9px 0 0", letterSpacing: "0.05em" }}>
@@ -142,7 +142,7 @@ export default function Support({ home, userId, reload }: {
                         <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: T.copper, margin: 0 }}>
                           <Icon name="sparkle" size={10} /> Risposta dello studio
                         </p>
-                        <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.text, margin: "7px 0 0", whiteSpace: "pre-wrap" }}>
+                        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.text, margin: "7px 0 0", whiteSpace: "pre-wrap" }}>
                           {t.adminNote}
                         </p>
                         {t.respondedAt && (

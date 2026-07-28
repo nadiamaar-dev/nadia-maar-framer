@@ -104,7 +104,7 @@ export default function SupportAdmin({ home, reload }: {
                   <p style={{ fontFamily: MONO, fontSize: 9.5, color: T.ghost, margin: "6px 0 0" }}>
                     {t.clientName} · {relativeDate(t.createdAt)}
                   </p>
-                  <p style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.55, color: T.faint, margin: "8px 0 0", whiteSpace: "pre-wrap" }}>
+                  <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.55, color: T.faint, margin: "8px 0 0", whiteSpace: "pre-wrap" }}>
                     {t.message}
                   </p>
                   {t.adminNote && (
@@ -115,7 +115,7 @@ export default function SupportAdmin({ home, reload }: {
                       <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.16em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>
                         <Icon name="sparkle" size={10} /> La tua risposta
                       </p>
-                      <p style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.55, color: T.muted, margin: "6px 0 0", whiteSpace: "pre-wrap" }}>
+                      <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.55, color: T.muted, margin: "6px 0 0", whiteSpace: "pre-wrap" }}>
                         {t.adminNote}
                       </p>
                       {t.respondedAt && (
@@ -147,7 +147,7 @@ export default function SupportAdmin({ home, reload }: {
           {replying && (
             <div style={{ padding: "10px 13px", borderRadius: 10, background: "rgba(255,255,255,0.035)", border: `1px solid ${T.border}` }}>
               <p style={{ fontFamily: MONO, fontSize: 9, color: T.ghost, margin: 0 }}>{replying.clientName}</p>
-              <p style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.5, color: T.faint, margin: "5px 0 0", whiteSpace: "pre-wrap" }}>
+              <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.5, color: T.faint, margin: "5px 0 0", whiteSpace: "pre-wrap" }}>
                 {replying.message}
               </p>
             </div>

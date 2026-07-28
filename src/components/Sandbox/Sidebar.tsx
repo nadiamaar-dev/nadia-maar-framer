@@ -37,11 +37,11 @@ const CSS = `
   background: transparent; border: 1px solid transparent;
   border-radius: 8px; cursor: pointer;
   font-family: ${DISPLAY}; font-size: 13px; font-weight: 500;
-  color: rgba(255,255,255,0.63);
+  color: #FFFFFF;
   text-align: left; transition: all 0.18s ease; position: relative;
 }
 .nm-sb-cat:hover {
-  background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.10); color: rgba(255,255,255,0.88);
+  background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.10); color: #FFFFFF;
 }
 .nm-sb-cat.active {
   background: linear-gradient(90deg, rgba(184,50,64,0.22), rgba(184,50,64,0.10));
@@ -59,10 +59,10 @@ const CSS = `
   border-radius: 6px; cursor: pointer;
   font-family: ${MONO}; font-size: 10px; font-weight: 500;
   letter-spacing: 0.10em; text-transform: uppercase;
-  color: rgba(255,255,255,0.53); transition: all 0.18s ease;
+  color: #FFFFFF; transition: all 0.18s ease;
 }
 .nm-sb-type:hover {
-  color: rgba(255,255,255,0.80); border-color: rgba(255,255,255,0.12);
+  color: #FFFFFF; border-color: rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.04);
 }
 .nm-sb-type.active {
@@ -89,7 +89,7 @@ const CSS = `
   border-right: 1px solid rgba(184,50,64,0.38);
   display: flex; align-items: center;
   font-family: ${MONO}; font-size: 9px; letter-spacing: 0.20em;
-  color: rgba(255,255,255,0.70); flex-shrink: 0;
+  color: #FFFFFF; flex-shrink: 0;
 }
 .nm-blueprint-body {
   flex: 1; padding: 10px 14px;
@@ -134,11 +134,11 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
       </span>
       <span className="nm-blueprint-body">
         <span style={{ fontFamily: DISPLAY, fontSize: 12, fontWeight: 700, color: "#fff", letterSpacing: "-0.01em" }}>Blueprint</span>
-        <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.12em", color: "rgba(255,255,255,0.63)" }}>
+        <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.12em", color: "#FFFFFF" }}>
           {items.length === 0 ? "vuoto · aggiungi" : `${items.length} element${items.length > 1 ? "i" : "o"}`}
         </span>
       </span>
-      <span style={{ padding: "0 14px", display: "flex", alignItems: "center", color: "rgba(255,255,255,0.58)", flexShrink: 0 }}>
+      <span style={{ padding: "0 14px", display: "flex", alignItems: "center", color: "#FFFFFF", flexShrink: 0 }}>
         <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
           <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
@@ -180,7 +180,7 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
                   background: active ? "rgba(184,50,64,0.60)" : "transparent",
                   fontFamily: DISPLAY, fontSize: 11,
                   fontWeight: active ? 700 : 500,
-                  color: active ? "#fff" : "rgba(255,255,255,0.52)",
+                  color: "#FFFFFF",
                   textAlign: "center" as const,
                   cursor: "pointer", transition: "all 0.18s ease",
                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const,
@@ -215,7 +215,7 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
                 borderRadius: 10, cursor: "pointer",
                 fontFamily: MONO, fontSize: 10, fontWeight: 600,
                 letterSpacing: "0.08em", textTransform: "uppercase" as const,
-                color: activeType === t.value ? "#fff" : "rgba(255,255,255,0.40)",
+                color: "#FFFFFF",
                 transition: "color 0.18s ease",
                 position: "relative", zIndex: 1,
               }}>
@@ -242,7 +242,7 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
         {/* Category label */}
         <div style={{
           fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em",
-          textTransform: "uppercase", color: "rgba(255,255,255,0.28)",
+          textTransform: "uppercase", color: "#FFFFFF",
           padding: "0 14px", marginBottom: 4,
         }}>
           Categoria
@@ -259,7 +259,7 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
         {/* Type label */}
         <div style={{
           fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em",
-          textTransform: "uppercase", color: "rgba(255,255,255,0.28)",
+          textTransform: "uppercase", color: "#FFFFFF",
           padding: "0 14px", marginTop: 16, marginBottom: 4,
         }}>
           Tipo

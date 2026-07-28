@@ -56,8 +56,8 @@ html, body {
   box-shadow: 0 0 0 2px rgba(35,61,77,1), 0 0 0 4px rgba(184,50,64,0.75);
 }
 .portal-btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 24px rgba(184,50,64,0.35), inset 0 1px 0 rgba(255,255,255,0.18); }
-.portal-btn-ghost:hover:not(:disabled) { background: rgba(255,255,255,0.15) !important; color: rgba(255,255,255,0.98) !important; border-color: rgba(255,255,255,0.26) !important; }
-.portal-btn-outline:hover:not(:disabled) { background: rgba(255,255,255,0.10) !important; border-color: rgba(255,255,255,0.32) !important; color: rgba(255,255,255,0.96) !important; }
+.portal-btn-ghost:hover:not(:disabled) { background: rgba(255,255,255,0.15) !important; color: #FFFFFF !important; border-color: rgba(255,255,255,0.26) !important; }
+.portal-btn-outline:hover:not(:disabled) { background: rgba(255,255,255,0.10) !important; border-color: rgba(255,255,255,0.32) !important; color: #FFFFFF !important; }
 .portal-btn-danger:hover:not(:disabled) { background: rgba(248,113,113,0.22) !important; border-color: rgba(248,113,113,0.50) !important; }
 .portal-btn-copper:hover:not(:disabled) { background: rgba(184,50,64,0.80) !important; border-color: rgba(190,54,72,0.80) !important; }
 
@@ -67,7 +67,7 @@ html, body {
   background: rgba(255,255,255,0.07);
   border: 1px solid rgba(255,255,255,0.22);
   border-radius: 10px;
-  color: #EEF2F7;
+  color: #FFFFFF;
   font-family: var(--font-display);
   font-size: 15px;
   padding: 11px 13px;
@@ -86,24 +86,24 @@ html, body {
   background: rgba(255,255,255,0.10);
   box-shadow: 0 0 0 3px rgba(184,50,64,0.18);
 }
-select.portal-input option { background: #1B2E3E; color: #EEF2F7; }
+select.portal-input option { background: #1B2E3E; color: #FFFFFF; }
 .portal-input:disabled { opacity: 0.4; }
 input.portal-input[type="datetime-local"]::-webkit-calendar-picker-indicator,
 input.portal-input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
 
 /* Nav items */
 .portal-nav-item { transition: all 0.16s ease; cursor: pointer; }
-.portal-nav-item:hover { background: rgba(255,255,255,0.055); color: rgba(255,255,255,0.78); }
+.portal-nav-item:hover { background: rgba(255,255,255,0.055); color: #FFFFFF; }
 
 /* Table rows / list rows */
-.portal-row { transition: opacity 0.15s ease; }
-.portal-row:hover { opacity: 0.80; }
+.portal-row { transition: background 0.15s ease; }
+.portal-row:hover { background: rgba(255,255,255,0.05); }
 
 .portal-link { transition: color 0.15s ease; cursor: pointer; }
 .portal-link:hover { color: #BE3648 !important; }
 
 /* Project switcher / segmented pills — hover feedback on inactive segments */
-.portal-pill:not(.is-active):hover { background: rgba(255,255,255,0.09) !important; color: rgba(255,255,255,0.90) !important; }
+.portal-pill:not(.is-active):hover { background: rgba(255,255,255,0.09) !important; color: #FFFFFF !important; }
 
 /* Touch ergonomics — on touch devices enforce 44px tap targets and 16px inputs
    (the latter also stops iOS Safari from zooming the viewport on focus). */

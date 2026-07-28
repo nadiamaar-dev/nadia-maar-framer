@@ -43,7 +43,7 @@ export default function AuditTrail({ projectId }: { projectId: string }) {
       {logs === null ? (
         <p style={{ fontFamily: MONO, fontSize: 10, color: T.ghost, margin: 0 }}>Carico…</p>
       ) : logs.length === 0 ? (
-        <p style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.faint, margin: 0 }}>
+        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.faint, margin: 0 }}>
           Nessuna azione registrata ancora. Approvazioni, firme e pagamenti verranno tracciati qui con data, IP e dispositivo.
         </p>
       ) : (

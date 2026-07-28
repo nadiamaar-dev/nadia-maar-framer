@@ -15,9 +15,9 @@ import { useBlueprint } from "../context/BlueprintContext"
 
 /* ── tokens ── */
 const T = {
-  text:     "#F0F3F9",
-  muted:    "rgba(255,255,255,0.78)",
-  faint:    "rgba(255,255,255,0.58)",
+  text:     "#FFFFFF",
+  muted:    "#FFFFFF",
+  faint:    "#FFFFFF",
   border:   "rgba(255,255,255,0.11)",
   accent:   "#B83240",
   accentLt: "#BE3648",
@@ -91,10 +91,10 @@ function DateTimeWidget() {
   const pad = (n: number) => String(n).padStart(2, "0")
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 1, userSelect: "none", pointerEvents: "none" }}>
-      <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.37)" }}>
+      <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
         {now.toLocaleDateString("it-IT", { day: "2-digit", month: "short", year: "numeric" })}
       </span>
-      <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.18em", color: "rgba(255,255,255,0.63)" }}>
+      <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.18em", color: "#FFFFFF" }}>
         {pad(now.getHours())}<span style={{ animation: "hdr-colon-blink 1s ease-in-out infinite", display: "inline-block" }}>:</span>{pad(now.getMinutes())}<span style={{ animation: "hdr-colon-blink 1s ease-in-out infinite", display: "inline-block" }}>:</span>{pad(now.getSeconds())}
       </span>
     </div>
@@ -117,8 +117,8 @@ function MenuNavItem({ num, label, onClick, index, active = false }: {
         <motion.span aria-hidden
           animate={{ scaleY: lit ? 1 : 0, opacity: lit ? 1 : 0 }} transition={{ duration: 0.2 }}
           style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-50%)", width: 2, height: "60%", background: T.accent, borderRadius: 2, transformOrigin: "center" }} />
-        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", color: lit ? T.accent : "rgba(255,255,255,0.37)", transition: "color 0.22s", minWidth: 26, flexShrink: 0 }}>[{num}]</span>
-        <span style={{ fontFamily: DISPLAY, fontSize: "clamp(28px,8vw,46px)", fontWeight: 800, letterSpacing: "-0.032em", lineHeight: 1.1, color: active ? T.accentLt : h ? "#fff" : "rgba(255,255,255,0.75)", transition: "color 0.22s" }}>{label}</span>
+        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", color: lit ? T.accent : "#FFFFFF", transition: "color 0.22s", minWidth: 26, flexShrink: 0 }}>[{num}]</span>
+        <span style={{ fontFamily: DISPLAY, fontSize: "clamp(28px,8vw,46px)", fontWeight: 800, letterSpacing: "-0.032em", lineHeight: 1.1, color: active ? T.accentLt : "#FFFFFF", transition: "color 0.22s" }}>{label}</span>
         <motion.span animate={{ x: lit ? 10 : 0, opacity: lit ? 1 : 0 }} transition={{ duration: 0.18 }}
           style={{ marginLeft: "auto", color: T.accent, fontSize: 20, lineHeight: 1, flexShrink: 0 }}>→</motion.span>
       </button>
@@ -149,7 +149,7 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
               background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.28)",
               borderRadius: 10, textDecoration: "none", cursor: "pointer",
               fontFamily: DISPLAY, fontSize: 13, fontWeight: 700,
-              color: "rgba(255,255,255,0.88)",
+              color: "#FFFFFF",
               display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
               transition: "background 0.18s, border-color 0.18s",
             }}
@@ -172,12 +172,12 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
               background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.20)",
               borderRadius: 10, cursor: "pointer",
               fontFamily: MONO, fontSize: 11, fontWeight: 600,
-              color: "rgba(255,255,255,0.40)",
+              color: "#FFFFFF",
               display: "flex", alignItems: "center", gap: 6,
               transition: "all 0.18s",
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.75)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.22)" }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.40)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)" }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "#FFFFFF"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.22)" }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "#FFFFFF"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)" }}
           >
             <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
               <path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M11 11l3-3-3-3M14 8H6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
@@ -295,9 +295,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
       style={{ paddingBottom: 32, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.07)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" as const }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
         <a href="mailto:nadiamaar.dev@gmail.com"
-          style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em", color: "rgba(255,255,255,0.46)", textDecoration: "none", transition: "color 0.18s" }}
+          style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em", color: "#FFFFFF", textDecoration: "none", transition: "color 0.18s" }}
           onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-          onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.46)")}>
+          onMouseLeave={e => (e.currentTarget.style.color = "#FFFFFF")}>
           nadiamaar.dev@gmail.com
         </a>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
@@ -308,9 +308,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
       <div style={{ display: "flex", gap: 8 }}>
         {MENU_SOCIALS.map(({ label, href }) => (
           <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-            style={{ width: 36, height: 36, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "rgba(255,255,255,0.42)", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.17)", textDecoration: "none", transition: "all 0.18s" }}
+            style={{ width: 36, height: 36, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "#FFFFFF", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.17)", textDecoration: "none", transition: "all 0.18s" }}
             onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = "#fff"; el.style.borderColor = "rgba(184,50,64,0.55)"; el.style.background = "rgba(184,50,64,0.14)"; el.style.boxShadow = "0 0 10px rgba(184,50,64,0.18)" }}
-            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = "rgba(255,255,255,0.42)"; el.style.borderColor = "rgba(255,255,255,0.10)"; el.style.background = "rgba(255,255,255,0.05)"; el.style.boxShadow = "none" }}>
+            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = "#FFFFFF"; el.style.borderColor = "rgba(255,255,255,0.10)"; el.style.background = "rgba(255,255,255,0.05)"; el.style.boxShadow = "none" }}>
             {label}
           </a>
         ))}
@@ -333,15 +333,15 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         <div style={{ height: 64, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
             <NMmark size={26} id="nm-mob-menu-logo" />
-            <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.63)" }}>Nadia Maar</span>
+            <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>Nadia Maar</span>
           </a>
           <motion.button onClick={onClose}
             whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             aria-label="Chiudi menu"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.17)", borderRadius: 9, width: 36, height: 36, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.60)", flexShrink: 0, transition: "background 0.18s, border-color 0.18s, color 0.18s" }}
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.17)", borderRadius: 9, width: 36, height: 36, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#FFFFFF", flexShrink: 0, transition: "background 0.18s, border-color 0.18s, color 0.18s" }}
             onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(184,50,64,0.14)"; el.style.borderColor = "rgba(184,50,64,0.45)"; el.style.color = "#fff" }}
-            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.10)"; el.style.color = "rgba(255,255,255,0.60)" }}>
+            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.10)"; el.style.color = "#FFFFFF" }}>
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
               <path d="M1 1l11 11M12 1L1 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
@@ -349,7 +349,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* eyebrow */}
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)", marginBottom: 8, paddingLeft: 20 }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 8, paddingLeft: 20 }}>
           <span style={{ color: "rgba(184,50,64,0.70)" }}>//</span>
           <span>[ Navigazione ]</span>
         </div>
@@ -387,7 +387,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
 
         {/* header row */}
         <div style={{ height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
             <span style={{ color: "rgba(184,50,64,0.70)" }}>//</span>
             <span>[ Navigazione ]</span>
           </div>
@@ -395,9 +395,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
             whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             aria-label="Chiudi menu"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 9, width: 34, height: 34, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.58)", flexShrink: 0, transition: "background 0.18s, border-color 0.18s, color 0.18s" }}
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 9, width: 34, height: 34, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#FFFFFF", flexShrink: 0, transition: "background 0.18s, border-color 0.18s, color 0.18s" }}
             onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(184,50,64,0.14)"; el.style.borderColor = "rgba(184,50,64,0.45)"; el.style.color = "#fff" }}
-            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(184,50,64,0)"; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.color = "rgba(255,255,255,0.58)" }}>
+            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(184,50,64,0)"; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.color = "#FFFFFF" }}>
             <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
               <path d="M1 1l11 11M12 1L1 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
@@ -482,8 +482,8 @@ export default function Header() {
           </span>
           <span aria-hidden className="nm-hdr-divider" style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
           <motion.span className="nm-hdr-wordmark"
-            animate={{ opacity: logoHover ? 1 : 0.70 }} transition={{ duration: 0.25 }}
-            style={{ fontFamily: MONO, fontWeight: 600, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#fff", whiteSpace: "nowrap" as const }}>
+            animate={{ opacity: 1 }} transition={{ duration: 0.25 }}
+            style={{ fontFamily: MONO, fontWeight: 600, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#FFFFFF", whiteSpace: "nowrap" as const }}>
             Nadia Maar
           </motion.span>
         </motion.a>
@@ -500,12 +500,12 @@ export default function Header() {
               padding: "6px 13px", borderRadius: 8, textDecoration: "none", cursor: "pointer",
               background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.24)",
               fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase" as const,
-              color: "rgba(255,255,255,0.82)", whiteSpace: "nowrap" as const,
+              color: "#FFFFFF", whiteSpace: "nowrap" as const,
               display: "flex", alignItems: "center", gap: 8,
               transition: "background 0.18s, border-color 0.18s, color 0.18s",
             }}
             onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.10)"; el.style.borderColor = "rgba(255,255,255,0.37)"; el.style.color = "#fff" }}
-            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.05)"; el.style.borderColor = "rgba(255,255,255,0.16)"; el.style.color = "rgba(255,255,255,0.82)" }}
+            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.05)"; el.style.borderColor = "rgba(255,255,255,0.16)"; el.style.color = "#FFFFFF" }}
           >
             <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.accentLt, flexShrink: 0 }} />
             Foundry
@@ -528,7 +528,7 @@ export default function Header() {
                     background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.28)",
                     borderRadius: 8, textDecoration: "none", cursor: "pointer",
                     fontFamily: DISPLAY, fontSize: 12, fontWeight: 600,
-                    color: "rgba(255,255,255,0.85)", whiteSpace: "nowrap" as const,
+                    color: "#FFFFFF", whiteSpace: "nowrap" as const,
                     display: "flex", alignItems: "center", gap: 6,
                   }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.11)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.32)" }}
@@ -552,11 +552,11 @@ export default function Header() {
                     background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.20)",
                     borderRadius: 7, cursor: "pointer",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    color: "rgba(255,255,255,0.46)",
+                    color: "#FFFFFF",
                     transition: "color 0.18s, border-color 0.18s, background 0.18s",
                   }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.70)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.22)" }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.46)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "#FFFFFF"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.22)" }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "#FFFFFF"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)" }}
                 >
                   <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
                     <path d="M5 2H2.5A1 1 0 001.5 3v8a1 1 0 001 1H5M9.5 10l3-3-3-3M12.5 7H5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>

@@ -66,7 +66,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
           display: "inline-flex", alignItems: "center", gap: 7,
           fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.20em",
           textTransform: "uppercase" as const,
-          color: "rgba(255,255,255,0.40)",
+          color: "#FFFFFF",
         }}>
           <span style={{ color: "rgba(184,50,64,0.60)" }}>//</span>
           <span>Come procede il tuo progetto</span>
@@ -108,7 +108,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
               : active
               ? "rgba(184,50,64,0.70)"
               : "rgba(255,255,255,0.12)"
-            const nodeCol = done ? "#fff" : active ? "#BE3648" : "rgba(255,255,255,0.32)"
+            const nodeCol = done ? "#fff" : active ? "#BE3648" : "#FFFFFF"
 
             /* line colour */
             const lineCol = done
@@ -116,7 +116,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
               : "rgba(255,255,255,0.08)"
 
             /* label */
-            const labelCol = active ? "#fff" : done ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.32)"
+            const labelCol = "#FFFFFF"
 
             return (
               <div key={s.key} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -170,13 +170,13 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
             const active = i === cur
             if (!done && !active && i > cur + 1) return null  // show max next+1
             return (
-              <div key={s.key} style={{ display: "flex", alignItems: "center", gap: 14, opacity: i > cur ? 0.4 : 1 }}>
+              <div key={s.key} style={{ display: "flex", alignItems: "center", gap: 14 }}>
                 <div style={{
                   width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   background: done ? "#10B981" : active ? "rgba(184,50,64,0.18)" : "rgba(255,255,255,0.04)",
                   border: `2px solid ${done ? "#10B981" : active ? "rgba(184,50,64,0.70)" : "rgba(255,255,255,0.10)"}`,
-                  color: done ? "#fff" : active ? "#BE3648" : "rgba(255,255,255,0.32)",
+                  color: done ? "#fff" : active ? "#BE3648" : "#FFFFFF",
                 }}>
                   {done
                     ? <Check />
@@ -185,7 +185,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
                 </div>
                 <span style={{
                   fontFamily: DISPLAY, fontSize: 14, fontWeight: active ? 700 : 500,
-                  color: active ? "#fff" : done ? "rgba(255,255,255,0.60)" : T.faint,
+                  color: "#FFFFFF",
                 }}>
                   {s.label}
                 </span>
@@ -221,9 +221,9 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
           }}>
             Passo {cur + 1} · {STEPS[cur].label}
           </p>
-          <p style={{
+          <p className="pt-body" style={{
             fontFamily: DISPLAY, fontSize: 14.5, lineHeight: 1.65,
-            color: "rgba(255,255,255,0.72)", margin: 0,
+            color: "#FFFFFF", margin: 0,
           }}>
             {STEPS[cur].hint}
           </p>

@@ -65,7 +65,7 @@ export default function ProfileModal({ open, onClose, profile, userId, reload }:
         </Field>
         {profile?.email && (
           <Field label="Email">
-            <Input value={profile.email} disabled readOnly style={{ opacity: 0.6, cursor: "not-allowed" }} />
+            <Input value={profile.email} disabled readOnly style={{ opacity: 1, cursor: "not-allowed" }} />
           </Field>
         )}
         <Note tone="silver">L'email di accesso non è modificabile da qui: scrivici in Supporto per cambiarla.</Note>

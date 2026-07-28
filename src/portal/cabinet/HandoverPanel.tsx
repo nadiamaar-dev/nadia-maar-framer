@@ -74,7 +74,7 @@ function CredCard({ c }: { c: ProjectCredential }) {
       )}
 
       {c.note && (
-        <p style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.55, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>
+        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.55, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>
           {c.note}
         </p>
       )}

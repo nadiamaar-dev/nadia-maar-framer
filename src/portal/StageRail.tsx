@@ -61,7 +61,7 @@ export default function StageRail({ stages, renderAction }: {
           ? { d: SVG_CHECK,  bg: "rgba(75,211,155,0.18)",   bd: "rgba(75,211,155,0.46)",   fg: "#4BD39B", glow: "0 0 14px rgba(75,211,155,0.28)" }
           : isActive
           ? { d: SVG_UNLOCK, bg: "rgba(184,50,64,0.22)",  bd: "rgba(184,50,64,0.52)",  fg: "#B8384A", glow: "0 0 18px rgba(184,50,64,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" }
-          : { d: SVG_LOCK,   bg: "rgba(255,255,255,0.05)",  bd: "rgba(255,255,255,0.10)",  fg: "rgba(255,255,255,0.42)", glow: "none" }
+          : { d: SVG_LOCK,   bg: "rgba(255,255,255,0.05)",  bd: "rgba(255,255,255,0.10)",  fg: "#FFFFFF", glow: "none" }
 
         /* Line below this node */
         const lineGrad = isDone
@@ -92,13 +92,13 @@ export default function StageRail({ stages, renderAction }: {
             <div style={{ flex: 1, minWidth: 0, paddingBottom: last ? 0 : 20 }}>
               {/* Title row */}
               <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap", minHeight: 32 }}>
-                <span style={{ fontFamily: MONO, fontSize: 9, color: node.fg, letterSpacing: "0.14em", opacity: 0.8 }}>
+                <span style={{ fontFamily: MONO, fontSize: 9, color: node.fg, letterSpacing: "0.14em" }}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h4 style={{
                   fontFamily: DISPLAY, fontSize: 13.5, fontWeight: isLocked ? 500 : 700,
                   letterSpacing: "-0.01em", margin: 0,
-                  color: isLocked ? "rgba(255,255,255,0.40)" : isActive ? "#F5EDE8" : "#D4EEE0",
+                  color: "#FFFFFF",
                 }}>
                   {s.title}
                 </h4>
@@ -110,7 +110,7 @@ export default function StageRail({ stages, renderAction }: {
 
               {/* Dates */}
               {(s.startedAt || s.completedAt) && (
-                <p style={{ fontFamily: MONO, fontSize: 9, color: "rgba(255,255,255,0.58)", margin: "4px 0 0", letterSpacing: "0.04em" }}>
+                <p style={{ fontFamily: MONO, fontSize: 9, color: "#FFFFFF", margin: "4px 0 0", letterSpacing: "0.04em" }}>
                   {s.startedAt ? `Avviata ${fmtDate(s.startedAt)}` : ""}
                   {s.startedAt && s.completedAt ? "  ·  " : ""}
                   {s.completedAt ? `Chiusa ${fmtDate(s.completedAt)}` : ""}
@@ -133,7 +133,7 @@ export default function StageRail({ stages, renderAction }: {
                   borderLeft: isActive ? "2px solid rgba(184,50,64,0.55)" : undefined,
                 }}>
                   {s.deliverableNote && (
-                    <p style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>
+                    <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>
                       {s.deliverableNote}
                     </p>
                   )}

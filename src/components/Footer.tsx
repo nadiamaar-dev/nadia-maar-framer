@@ -15,9 +15,9 @@ import { motion } from "framer-motion"
 
 /* ── design tokens (self-contained so the component has no peer deps) ── */
 const T = {
-  text:     "#F0F3F9",
-  muted:    "rgba(255,255,255,0.78)",
-  faint:    "rgba(255,255,255,0.58)",
+  text:     "#FFFFFF",
+  muted:    "#FFFFFF",
+  faint:    "#FFFFFF",
   border:   "rgba(255,255,255,0.11)",
   accent:   "#7C222B",
   accentLt: "#BE3648",
@@ -185,7 +185,7 @@ export default function Footer({ onContact }: FooterProps) {
               <div style={{ display: "inline-flex", alignItems: "center", gap: 11, marginBottom: 14 }}>
                 <NMmark size={30} id="nm-footer-logo" />
                 <span aria-hidden style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
-                <span style={{ fontFamily: MONO, fontWeight: 600, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.78)" }}>
+                <span style={{ fontFamily: MONO, fontWeight: 600, fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", color: "#FFFFFF" }}>
                   Nadia Maar
                 </span>
               </div>
@@ -202,7 +202,7 @@ export default function Footer({ onContact }: FooterProps) {
 
           {/* col 2 — nav */}
           <div className="nm-footer-hide-mobile" style={{ flexDirection: "column", gap: 4 }}>
-            <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.24em", textTransform: "uppercase", color: "rgba(255,255,255,0.37)", marginBottom: 16 }}>
+            <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.24em", textTransform: "uppercase", color: "#FFFFFF", marginBottom: 16 }}>
               Navigazione
             </div>
             {NAV_LINKS.map(({ label, href }) => (
@@ -220,7 +220,7 @@ export default function Footer({ onContact }: FooterProps) {
 
           {/* col 3 — contact */}
           <div className="nm-footer-hide-mobile" style={{ flexDirection: "column", gap: 14 }}>
-            <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.24em", textTransform: "uppercase", color: "rgba(255,255,255,0.37)", marginBottom: 4 }}>
+            <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.24em", textTransform: "uppercase", color: "#FFFFFF", marginBottom: 4 }}>
               Contatti
             </div>
 
@@ -232,7 +232,7 @@ export default function Footer({ onContact }: FooterProps) {
 
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ width: 5, height: 5, borderRadius: "50%", background: "rgba(184,50,64,0.60)", flexShrink: 0 }} />
-              <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.10em", color: "rgba(255,255,255,0.42)" }}>Remote · Europa</span>
+              <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.10em", color: "#FFFFFF" }}>Remote · Europa</span>
             </div>
 
             <div style={{ height: 1, background: "rgba(255,255,255,0.07)", margin: "2px 0" }} />
@@ -245,8 +245,8 @@ export default function Footer({ onContact }: FooterProps) {
               onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "linear-gradient(90deg, rgba(184,50,64,0.50) 0%, rgba(184,50,64,0.34) 100%)"; el.style.borderColor = "rgba(184,50,64,0.80)"; el.style.boxShadow = "0 0 24px rgba(184,50,64,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)"; el.style.borderColor = "rgba(184,50,64,0.50)"; el.style.boxShadow = "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)" }}
             >
-              <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)", flexShrink: 0 }}>[01]</span>
-              <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#F0F3F9" }}>Prenota una Call</span>
+              <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "#FFFFFF", flexShrink: 0 }}>[01]</span>
+              <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>Prenota una Call</span>
             </motion.a>
 
             {onContact && (
@@ -256,7 +256,7 @@ export default function Footer({ onContact }: FooterProps) {
                 onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.08)"; el.style.borderColor = "rgba(255,255,255,0.22)" }}
                 onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.12)" }}
               >
-                <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(255,255,255,0.14)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "rgba(255,255,255,0.40)", flexShrink: 0 }}>[✉]</span>
+                <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(255,255,255,0.14)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "#FFFFFF", flexShrink: 0 }}>[✉]</span>
                 <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.faint }}>Scrivimi</span>
               </motion.button>
             )}
@@ -265,7 +265,7 @@ export default function Footer({ onContact }: FooterProps) {
 
         {/* ── bottom row — copyright + socials ── */}
         <div className="nm-footer-bottom">
-          <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.24)" }}>
+          <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: "#FFFFFF" }}>
             © NADIA MAAR 2026 — Digital Architecture Studio
           </span>
           <div className="nm-footer-socials" style={{ display: "flex", gap: 8 }}>

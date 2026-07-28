@@ -281,7 +281,9 @@ const GLOBAL_CSS = `
     .hp-method-row-num { font-size: 26px !important; width: 40px !important; }
     .hp-method-row-accent { width: 16px !important; }
     .hp-method-row-title { font-size: 14px !important; }
-    .hp-method-body { font-size: 13px !important; line-height: 1.6 !important; }
+    /* body copy stays at 16px on phones — !important beats the inline size */
+    .hp-body { font-size: 16px !important; }
+    .hp-method-body { font-size: 16px !important; line-height: 1.6 !important; }
     .hp-method-expanded-inner { padding-left: 0 !important; grid-template-columns: 1fr !important; gap: 14px !important; padding-bottom: 16px !important; }
     .hp-method-visual { min-height: unset !important; max-height: unset !important; aspect-ratio: 16/9 !important; }
     .hp-skillcards { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
@@ -292,7 +294,7 @@ const GLOBAL_CSS = `
     .hp-sol-card-num { display: none !important; }
     .hp-sol-card-body { flex: 1 !important; }
     .hp-sol-card-title { font-size: 15px !important; margin-bottom: 8px !important; }
-    .hp-sol-card-desc { font-size: 13px !important; margin-bottom: 12px !important; }
+    .hp-sol-card-desc { font-size: 16px !important; margin-bottom: 12px !important; }
     .hp-diagnosi-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
     .hp-diagnosi-col-headers { display: none !important; }
     .hp-diagnosi-row { grid-template-columns: 1fr !important; }
@@ -307,7 +309,7 @@ const GLOBAL_CSS = `
     .hp-tc-icon { width: 24px !important; height: 24px !important; border-radius: 6px !important; }
     .hp-tc-icon svg { width: 12px !important; height: 12px !important; }
     .hp-tc-title { font-size: 11px !important; margin-bottom: 2px !important; }
-    .hp-tc-body { font-size: 12px !important; margin-bottom: 8px !important; line-height: 1.5 !important; }
+    .hp-tc-body { font-size: 16px !important; margin-bottom: 8px !important; line-height: 1.5 !important; }
     .hp-tc-score > div:first-child { margin-bottom: 3px !important; }
     .hp-grid-3 { gap: 7px !important; }
     .hp-purche-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
@@ -413,9 +415,9 @@ const T = {
   raised:    "#0F1624",
   border:    "rgba(70,90,108,0.22)",
   borderHi:  "rgba(16,185,129,0.42)",
-  text:      "#F0F3F9",
-  muted:     "rgba(226,232,240,0.80)",
-  faint:     "rgba(226,232,240,0.56)",
+  text:      "#FFFFFF",
+  muted:     "#FFFFFF",
+  faint:     "#FFFFFF",
   accent:    "#EE3A52",
   accentDim: "rgba(255,255,255,0.09)",
   accentGlo: "rgba(255,60,92,0.55)",
@@ -446,7 +448,7 @@ const MONO_STYLE: React.CSSProperties = { fontFamily: MONO, letterSpacing: "0.14
 
 /* white -> amber gradient text fill (matches Solar-Glass headline) */
 const gradText = (deg = 100): React.CSSProperties => ({
-  backgroundImage: `linear-gradient(${deg}deg, #F0F3F9 0%, #FF6B7D 48%, #FF3552 100%)`,
+  backgroundImage: `linear-gradient(${deg}deg, #FFFFFF 0%, #FF6B7D 48%, #FF3552 100%)`,
   WebkitBackgroundClip: "text",
   backgroundClip: "text",
   WebkitTextFillColor: "transparent",
@@ -670,13 +672,13 @@ function HeroStat({ value, label, index }: { value: string; label: string; index
     >
       {/* index + label row */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-        <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: ".16em", color: "rgba(255,255,255,0.53)" }}>
+        <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: ".16em", color: "#FFFFFF" }}>
           [0{index + 1}]
         </span>
         <span className="hp-hero-stat-label" style={{
           fontFamily: MONO, fontSize: 9, letterSpacing: ".20em",
           textTransform: "uppercase" as const,
-          color: "rgba(255,255,255,0.53)",
+          color: "#FFFFFF",
         } as React.CSSProperties}>
           {label}
         </span>
@@ -697,7 +699,7 @@ function HeroStat({ value, label, index }: { value: string; label: string; index
         fontWeight: 900,
         lineHeight: 1,
         letterSpacing: "-.04em",
-        color: "#F0F3F9",
+        color: "#FFFFFF",
       } as React.CSSProperties}>
         {nm.n !== null ? <>{nm.prefix}<StatCountUp target={nm.n} suffix={nm.suffix} /></> : value}
       </span>
@@ -722,95 +724,69 @@ const HERO_STATS = [
   { value: "+40%", label: "Conversion" },
 ]
 
-/* Ultra-modern hero side panel */
+/* Hero availability block.
+   The right column used to state availability three times (SYS_STATUS,
+   the metric label, and a STATUS row) and E-commerce twice, behind seven
+   uppercase mono labels. That repetition was the clutter. One status line,
+   one metric, done. */
 function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
-  const SERVICES = ["E-commerce", "AI Automation", "Web Apps", "Marketing", "API Integration"]
-  const [tick, setTick] = useState(0)
-  useEffect(() => {
-    const id = setInterval(() => setTick(t => t + 1), 2800)
-    return () => clearInterval(id)
-  }, [])
-
-  const card: React.CSSProperties = {
-    position: "relative", width: "100%", textAlign: "left", cursor: "pointer",
-    background: "rgba(15, 23, 42, 0.6)",
-    backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-    border: "1px solid rgba(255,255,255,0.26)",
-    borderTop: "1px solid rgba(255,255,255,0.32)",
-    boxShadow: "inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 6px 20px rgba(0,0,0,0.22)",
-    color: T.text, overflow: "hidden",
-  }
-
   return (
-    <div className="hp-hero-live-cards" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+    <div className="hp-hero-live-cards hp-av">
+      <style>{`
+        .hp-av { position:relative; }
+        /* the global button rule forces uppercase + mono; opt this one out so
+           each child can state its own casing */
+        .hp-av-in { display:block; width:100%; text-align:left; cursor:pointer;
+          background:none; border:0; padding:0; font-family:inherit; color:${T.text};
+          text-transform:none; letter-spacing:normal; font-size:inherit; }
 
-      {/* Card A — status monitor */}
-      <motion.button onClick={onOpen} aria-label="Status — apri form"
-        whileHover={{ y: -2, borderColor: "rgba(255,255,255,0.38)" }}
-        whileTap={{ scale: 0.985 }}
-        transition={{ type: "spring", stiffness: 400, damping: 22 }}
-        style={{ ...card, borderRadius: 14, padding: 0, display: "block" }}
-      >
-          {/* top bar */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "11px 14px", borderBottom: "1px solid rgba(255,255,255,0.012)" }}>
-            <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.42)" }}>SYS_STATUS</span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
-              <PingDot color={T.green} size={5} />
-              <span style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: T.green }}>ACTIVE</span>
-            </span>
-          </div>
+        .hp-av-status { display:inline-flex; align-items:center; gap:8px;
+          font-family:${MONO}; font-size:10px; letter-spacing:0.20em;
+          text-transform:uppercase; color:${T.green}; }
 
-          {/* main metric */}
-          <div style={{ padding: "14px 14px 10px", display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 8 }}>
-            <div>
-              <div style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.42)", marginBottom: 6 }}>DISPONIBILE</div>
-              <div style={{ fontFamily: DISPLAY, fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", color: "#fff", lineHeight: 1 }}>
-                {"< 24"}
-                <span style={{ fontSize: 13, fontFamily: MONO, fontWeight: 400, color: "#fff", marginLeft: 4, letterSpacing: "0.08em" }}>h</span>
-              </div>
-            </div>
-            {/* mini bar chart */}
-            <div style={{ display: "flex", alignItems: "flex-end", gap: 3, paddingBottom: 2 }}>
-              {[40, 65, 45, 80, 55, 90, 70].map((h, i) => (
-                <div key={i} style={{ width: 4, height: h * 0.36, borderRadius: 2, background: i === 6 ? "#fff" : "rgba(255,255,255,0.18)", transition: "height 0.4s" }} />
-              ))}
-            </div>
-          </div>
+        .hp-av-val { margin-top:16px; font-family:${DISPLAY}; font-size:78px;
+          font-weight:800; letter-spacing:-0.045em; line-height:0.80; color:#FFFFFF;
+          display:flex; align-items:baseline;
+          font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1;
+          transition:transform .34s cubic-bezier(0.16,1,0.3,1); }
+        .hp-av-in:hover .hp-av-val { transform:translateX(4px); }
 
-          {/* scrolling service ticker */}
-          <div style={{ padding: "8px 14px 12px", display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.16em", color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>NOW→</span>
-            <AnimatePresence mode="wait">
-              <motion.span key={tick}
-                initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.3 }}
-                style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#fff" }}
-              >
-                {SERVICES[tick % SERVICES.length]}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-        </motion.button>
+        /* outlined digits: the same treatment the hero gives "Digital Strategist" */
+        .hp-av-n { color:transparent;
+          -webkit-text-stroke:1.5px rgba(240,243,249,0.88);
+          transition:color .32s cubic-bezier(0.16,1,0.3,1); }
+        .hp-av-in:hover .hp-av-n { color:rgba(240,243,249,0.16); }
+        /* operator optically centred on the digits' cap band, measured against
+           the baseline rather than left sitting on it */
+        .hp-av-lt { font-size:30px; font-weight:500; letter-spacing:0;
+          color:${T.accentLt}; margin-right:10px; transform:translateY(-0.49em); }
+        .hp-av-u  { font-family:${DISPLAY}; font-size:26px; font-weight:500;
+          letter-spacing:-0.02em; margin-left:5px; color:rgba(255,255,255,0.50); }
 
-      {/* Card B — project CTA */}
-      <motion.button onClick={onOpen} aria-label="Avvia progetto — apri form"
-        whileHover={{ y: -2 }} whileTap={{ scale: 0.985 }}
-        transition={{ type: "spring", stiffness: 400, damping: 22 }}
-        style={{ ...card, borderRadius: 14, padding: 0, display: "flex", alignItems: "stretch",
-          border: "1px solid rgba(255,255,255,0.32)",
-          background: "rgba(255,255,255,0.09)",
-          backdropFilter: "blur(20px) brightness(1.08)", WebkitBackdropFilter: "blur(20px) brightness(1.08)",
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15)",
-        }}
-      >
-        <span style={{ padding: "14px 12px 14px 16px", borderRight: "1px solid rgba(255,255,255,0.24)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.22em", color: "rgba(255,255,255,0.63)", flexShrink: 0 }}>[02]</span>
-        <div style={{ flex: 1, padding: "14px 14px", display: "flex", flexDirection: "column", gap: 3 }}>
-          <span style={{ fontFamily: DISPLAY, fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,0.90)", letterSpacing: "-0.01em", lineHeight: 1.2 }}>Avvia un progetto</span>
-          <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.10em", color: "rgba(255,255,255,0.42)" }}>risposta garantita · 50+ clienti</span>
+        .hp-av-cap { margin-top:9px; font-family:${MONO}; font-size:10px;
+          letter-spacing:0.14em; text-transform:uppercase;
+          color:rgba(255,255,255,0.60); }
+        .hp-av-in:hover .hp-av-cap { color:${T.accentLt}; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .hp-av-val { transition:none !important; }
+        }
+      `}</style>
+
+      <button className="hp-av-in" onClick={onOpen}
+        aria-label="Disponibile: apri il form di contatto">
+        <span className="hp-av-status">
+          <PingDot color={T.green} size={6} />
+          Disponibile
+        </span>
+
+        <div className="hp-av-val">
+          <span className="hp-av-lt">&lt;</span>
+          <span className="hp-av-n">24</span>
+          <span className="hp-av-u">h</span>
         </div>
-        <motion.span animate={{ x: [0, 4, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          style={{ padding: "14px 16px", display: "flex", alignItems: "center", color: "rgba(255,255,255,0.70)", fontSize: 16, flexShrink: 0 }}>→</motion.span>
-      </motion.button>
+        <div className="hp-av-cap">Tempo di risposta</div>
+      </button>
     </div>
   )
 }
@@ -824,7 +800,7 @@ function Hero() {
         @media(max-width:1024px){.hp-hero-wordmark{display:none}}
         .hp-hero-nm { position:absolute; left:24px; bottom:34px; z-index:1; display:flex; align-items:center; gap:11px; }
         .hp-hero-nm .nm-l { font-family:${DISPLAY}; font-weight:800; font-size:16px; letter-spacing:0.04em; color:#fff; }
-        .hp-hero-nm .nm-c { font-family:${MONO}; font-size:8px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(255,255,255,0.42); line-height:1.6; }
+        .hp-hero-nm .nm-c { font-family:${MONO}; font-size:8px; letter-spacing:0.16em; text-transform:uppercase; color:#FFFFFF; line-height:1.6; }
         .hp-hero-social-below { display:none; }
 
         /* ── Process flow timeline ── */
@@ -839,20 +815,20 @@ function Hero() {
         .hp-hero-ticker .tk { display:flex; align-items:center; gap:9px; }
         .hp-hero-ticker .tk-l { width:16px; height:1px; background:rgba(255,255,255,0.24); }
         .hp-hero-ticker .tk-l.on { width:24px; background:${T.accent}; }
-        .hp-hero-ticker .tk-n { font-family:${MONO}; font-size:8.5px; letter-spacing:0.16em; color:rgba(255,255,255,0.52); min-width:16px; text-align:right; }
+        .hp-hero-ticker .tk-n { font-family:${MONO}; font-size:8.5px; letter-spacing:0.16em; color:#FFFFFF; min-width:16px; text-align:right; }
         .hp-hero-ticker .tk-n.on { color:${T.accentLt}; }
         .hp-hero-ed-grid { display:grid; grid-template-columns:1fr 300px; gap:48px; align-items:end; }
         .hp-hl { position:relative; display:inline-block; padding:24px 0 16px 0; }
         .hp-hl-corner { position:absolute; width:15px; height:15px; }
         .hp-hl-corner.tl { top:0; left:0; border-top:1px solid rgba(255,255,255,0.32); border-left:1px solid rgba(255,255,255,0.32); }
         .hp-hl-corner.br { bottom:0; right:0; border-bottom:1px solid rgba(255,255,255,0.32); border-right:1px solid rgba(255,255,255,0.32); }
-        .hp-hl-tag { position:absolute; top:3px; left:26px; font-family:${MONO}; font-size:9px; letter-spacing:0.22em; text-transform:uppercase; color:rgba(255,255,255,0.52); }
-        .hp-hl-dim { position:absolute; right:3px; bottom:2px; font-family:${MONO}; font-size:8.5px; letter-spacing:0.16em; color:rgba(255,255,255,0.24); }
+        .hp-hl-tag { position:absolute; top:3px; left:26px; font-family:${MONO}; font-size:9px; letter-spacing:0.22em; text-transform:uppercase; color:#FFFFFF; }
+        .hp-hl-dim { position:absolute; right:3px; bottom:2px; font-family:${MONO}; font-size:8.5px; letter-spacing:0.16em; color:#FFFFFF; }
         .hp-hero-meta { display:flex; flex-direction:column; gap:22px; }
         .hp-hero-head-row { display:flex; align-items:flex-start; gap:14px; }
         .hp-hero-social-vert { display:none; }
         .hp-hero-botnav { margin-top:46px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.20); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:18px; }
-        .hp-hero-handle { font-family:${MONO}; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.48); text-decoration:none; transition:color 0.2s; }
+        .hp-hero-handle { font-family:${MONO}; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#FFFFFF; text-decoration:none; transition:color 0.2s; }
         .hp-hero-handle:hover { color:#fff; }
         /* ── Ticker/wordmark/deco hide ──────────────────────── */
         @media (max-width:1280px){ .hp-hero-ticker{ display:none; } }
@@ -869,14 +845,14 @@ function Hero() {
           /* hero section — more breathing room */
           .hp-hero{ padding:68px 0 56px !important; }
           /* eyebrow */
-          .hp-hero-eyebrow{ font-size:9px !important; letter-spacing:.10em !important; flex-wrap:wrap; line-height:1.6; }
+          .hp-hero-eyebrow{ font-size:11px !important; letter-spacing:.10em !important; flex-wrap:wrap; line-height:1.6; }
           /* headline block */
           .hp-hl{ padding:22px 16px 20px !important; width:100%; box-sizing:border-box; }
           .hp-hl-tag{ font-size:7.5px !important; letter-spacing:.12em !important; left:14px !important; }
           .hp-hl-dim{ display:none !important; }
           .hp-hero-h1{ font-size:44px !important; line-height:0.93 !important; letter-spacing:-0.04em !important; }
           /* description */
-          .hp-hero-desc{ margin-top:32px !important; font-size:15px !important; line-height:1.8 !important; max-width:100% !important; }
+          .hp-hero-desc{ margin-top:32px !important; font-size:16px !important; line-height:1.8 !important; max-width:100% !important; }
           /* grid */
           .hp-hero-ed-grid{ grid-template-columns:1fr !important; gap:0 !important; }
           .hp-hero-meta{ display:none !important; }
@@ -886,10 +862,10 @@ function Hero() {
           /* CTA — side by side on mobile */
           .hp-hero-cta-row{ flex-direction:row !important; flex-wrap:nowrap !important; max-width:100% !important; gap:8px !important; margin-top:40px !important; }
           .hp-hero-cta-row > button,
-          .hp-hero-cta-row > a{ flex:1 1 0 !important; min-height:46px !important; }
+          .hp-hero-cta-row > a{ flex:1 1 0 !important; min-height:54px !important; }
           .hp-hero-cta-index{ display:none !important; }
-          .hp-hero-cta-inner{ justify-content:center !important; gap:4px !important; font-size:8.5px !important; letter-spacing:0.09em !important; padding:0 10px !important; }
-          .hp-hero-cta-row > a{ font-size:8.5px !important; letter-spacing:0.09em !important; padding:0 10px !important; gap:5px !important; }
+          .hp-hero-cta-inner{ justify-content:center !important; gap:4px !important; font-size:12px !important; letter-spacing:0.09em !important; padding:0 10px !important; }
+          .hp-hero-cta-row > a{ font-size:12px !important; letter-spacing:0.09em !important; padding:0 10px !important; gap:5px !important; }
           /* process flow mobile */
           .hp-hero-flow{ margin-top:32px !important; }
           .hp-flow-label{ font-size:7.5px !important; letter-spacing:0.10em !important; }
@@ -941,9 +917,9 @@ function Hero() {
       <div style={{ ...WRAP, width: "100%", minWidth: 0, boxSizing: "border-box", position: "relative", zIndex: 1 }} className="hp-wrap">
         {/* eyebrow */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }} style={{ marginBottom: 24 }}>
-          <div className="hp-hero-eyebrow" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#F0F3F9" }}>
+          <div className="hp-hero-eyebrow" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 13, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
             <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Development · AI Automation · Performance Marketing ]</span>
+            <span>[ Development · Performance Marketing ]</span>
           </div>
         </motion.div>
 
@@ -960,7 +936,7 @@ function Hero() {
                 <motion.h1
                   className="hp-hero-h1"
                   initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease }}
-                  style={{ fontFamily: DISPLAY, fontSize: "clamp(42px, 5.4vw, 82px)", fontWeight: 900, lineHeight: 0.95, letterSpacing: "-0.045em", margin: 0, color: "#F0F3F9", textTransform: "uppercase" as const, filter: "drop-shadow(0 12px 34px rgba(0,0,0,0.6))", textShadow: "0 4px 12px rgba(0, 0, 0, 0.8)" }}
+                  style={{ fontFamily: DISPLAY, fontSize: "clamp(42px, 5.4vw, 82px)", fontWeight: 900, lineHeight: 0.95, letterSpacing: "-0.045em", margin: 0, color: "#FFFFFF", textTransform: "uppercase" as const, filter: "drop-shadow(0 12px 34px rgba(0,0,0,0.6))", textShadow: "0 4px 12px rgba(0, 0, 0, 0.8)" }}
                 >
                   <span style={{ whiteSpace: "nowrap" }}>E&#8209;commerce</span><br />
                   <span>Architect</span><br />
@@ -988,7 +964,7 @@ function Hero() {
 
             <motion.p className="hp-hero-desc"
               initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, delay: 0.22, ease }}
-              style={{ fontSize: "clamp(16px, 1.4vw, 17px)", color: "rgba(255,255,255,0.82)", fontWeight: 400, fontFamily: "'Geist', system-ui, sans-serif", maxWidth: 340, lineHeight: 1.85, margin: "28px 0 0", letterSpacing: "0.01em", WebkitFontSmoothing: "antialiased" } as React.CSSProperties}
+              style={{ fontSize: "clamp(16px, 1.4vw, 17px)", color: "#FFFFFF", fontWeight: 400, fontFamily: "'Geist', system-ui, sans-serif", maxWidth: 340, lineHeight: 1.85, margin: "28px 0 0", letterSpacing: "0.01em", WebkitFontSmoothing: "antialiased" } as React.CSSProperties}
             >
               Un'unica mente tra codice e business. Architetture digitali che scalano — senza intermediari, senza compromessi.
             </motion.p>
@@ -1002,9 +978,9 @@ function Hero() {
             >
               {(["Idea", "Strategia", "Esecuzione", "Risultato"]).map((label, i) => (
                 <div key={label} className="hp-flow-step">
-                  <span className="hp-flow-num"  style={{ color: "rgba(255,255,255,0.55)" }}>{`0${i + 1}`}</span>
+                  <span className="hp-flow-num"  style={{ color: "#FFFFFF" }}>{`0${i + 1}`}</span>
                   <div  className="hp-flow-dot"   style={{ background: "rgba(255,255,255,0.50)" }} />
-                  <span className="hp-flow-label" style={{ color: "rgba(255,255,255,0.68)" }}>{label}</span>
+                  <span className="hp-flow-label" style={{ color: "#FFFFFF" }}>{label}</span>
                 </div>
               ))}
             </motion.div>
@@ -1021,17 +997,17 @@ function Hero() {
                 whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
                 style={{ flex: "1.5 1 0", minHeight: 54, padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(255,60,92,0.80)", background: "linear-gradient(90deg, rgba(255,60,92,0.34) 0%, rgba(255,60,92,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(255,60,92,0.20), inset 0 1px 0 rgba(255,255,255,0.15)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
               >
-                <span className="hp-hero-cta-index" style={{ padding: "0 14px", borderRight: "1px solid rgba(255,60,92,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[01]</span>
-                <span className="hp-hero-cta-inner" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#F0F3F9" }}>
+                <span className="hp-hero-cta-index" style={{ padding: "0 14px", borderRight: "1px solid rgba(255,60,92,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[01]</span>
+                <span className="hp-hero-cta-inner" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", fontSize: 13, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
                   <span>Prenota una Consultazione</span>
-                  <span style={{ fontSize: 14 }}>→</span>
+                  <span style={{ fontSize: 15 }}>→</span>
                 </span>
               </motion.button>
               <motion.a
                 href="/foundry" whileHover={{ y: -2, background: "rgba(255,255,255,0.13)", borderColor: "rgba(224,224,224,0.38)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
-                style={{ flex: "1 1 0", minHeight: 54, padding: "0 18px", borderRadius: 9, fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, textAlign: "center" as const, textDecoration: "none", border: "1px solid rgba(255,255,255,0.30)", background: "rgba(255,255,255,0.012)", color: T.text, boxShadow: "0 6px 28px rgba(8,12,28,0.42), inset 0 1px 0 rgba(255,255,255,0.012)" }}
+                style={{ flex: "1 1 0", minHeight: 54, padding: "0 18px", borderRadius: 9, fontFamily: MONO, fontSize: 13, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, textAlign: "center" as const, textDecoration: "none", border: "1px solid rgba(255,255,255,0.30)", background: "rgba(255,255,255,0.012)", color: T.text, boxShadow: "0 6px 28px rgba(8,12,28,0.42), inset 0 1px 0 rgba(255,255,255,0.012)" }}
               >
-                Esplora la Foundry <span style={{ fontSize: 14 }}>→</span>
+                Esplora la Foundry <span style={{ fontSize: 15 }}>→</span>
               </motion.a>
             </motion.div>
 
@@ -1054,32 +1030,36 @@ function Hero() {
 
           {/* RIGHT — POSSESSD-style meta panel */}
           <motion.div className="hp-hero-meta" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, delay: 0.32, ease }}>
-            {/* double glass card — live metric + contact (opens form) */}
+            {/* availability — the single status statement, opens the form */}
             <HeroLiveCards onOpen={() => setFormOpen(true)} />
 
-            <div className="hp-hero-spec-block" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {[["Focus", "E-commerce · Growth"], ["ID", "NM — 2026"]].map(([l, v]) => (
-                <div key={l}>
-                  <div style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.56)", marginBottom: 5 }}>{l}</div>
-                  <div style={{ fontFamily: MONO, fontSize: 13, color: T.text, letterSpacing: "0.02em" }}>{v}</div>
+            {/* spec rows: key left, value right, one hairline per row.
+                The old STATUS row repeated the availability above it. */}
+            <div className="hp-hero-spec-block">
+              <style>{`
+                .hp-hero-spec-block { display:flex; flex-direction:column; }
+                .hp-spec-row { display:flex; align-items:baseline; justify-content:space-between;
+                  gap:14px; padding:11px 0; border-top:1px solid rgba(255,255,255,0.12); }
+                .hp-spec-k { font-family:${MONO}; font-size:9.5px; letter-spacing:0.20em;
+                  text-transform:uppercase; color:rgba(255,255,255,0.58); flex-shrink:0; }
+                .hp-spec-v { font-family:${MONO}; font-size:12.5px; letter-spacing:0.02em;
+                  color:#FFFFFF; text-align:right; }
+              `}</style>
+              {[["Focus", "E-commerce · Growth"], ["Studio", "NM 2026"]].map(([k, v]) => (
+                <div className="hp-spec-row" key={k}>
+                  <span className="hp-spec-k">{k}</span>
+                  <span className="hp-spec-v">{v}</span>
                 </div>
               ))}
-              <div>
-                <div style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.56)", marginBottom: 7 }}>Status</div>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 13, color: "rgba(190,245,220,0.92)" }}>
-                  <PingDot color={T.green} size={7} /> Disponibile
-                </div>
-              </div>
             </div>
 
-            {/* social — glass icon cards (desktop; hidden on mobile) */}
+            {/* social — icons carry their own meaning, no label needed */}
             <div className="hp-hero-meta-social">
-              <div style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.56)", marginBottom: 11 }}>Social</div>
               <div style={{ display: "flex", gap: 9, flexWrap: "wrap" }}>
                 {HERO_SOCIALS.map(({ Icon, href, label }) => (
                   <motion.a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
                     data-glow=""
-                    whileHover={{ scale: 1.08, y: -2 }} whileTap={{ scale: 0.92 }}
+                    whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
                     transition={{ type: "spring", stiffness: 400, damping: 16 }}
                     style={{
                       '--base': '205', '--spread': '36', '--radius': '11', '--border': '1', '--size': '150',
@@ -1087,8 +1067,8 @@ function Hero() {
                       color: T.muted, border: `1px solid ${G.bd}`, backgroundColor: G.bg,
                       backdropFilter: G.blur, WebkitBackdropFilter: G.blur, textDecoration: "none", flexShrink: 0,
                     } as React.CSSProperties}
-                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = "#F0F3F9"; el.style.borderColor = "rgba(235,240,250,0.60)"; el.style.backgroundColor = "rgba(226,232,244,0.18)"; el.style.boxShadow = "0 0 18px rgba(214,222,238,0.28)" }}
-                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.muted; el.style.borderColor = G.bd; el.style.backgroundColor = G.bg; el.style.boxShadow = "none" }}
+                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.accentLt; el.style.borderColor = "rgba(255,60,92,0.55)"; el.style.backgroundColor = "rgba(255,60,92,0.16)" }}
+                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.muted; el.style.borderColor = G.bd; el.style.backgroundColor = G.bg }}
                   >
                     <Icon />
                   </motion.a>
@@ -1108,7 +1088,7 @@ function Hero() {
               <HeroStat key={s.label} value={s.value} label={s.label} index={i} />
             ))}
           </div>
-          <span className="hp-hero-scroll" style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.52)" }}>Scorri ↓</span>
+          <span className="hp-hero-scroll" style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>Scorri ↓</span>
         </motion.div>
 
         {/* ── Social proof marquee — right under the stat cards ── */}
@@ -1143,9 +1123,9 @@ const ADVANTAGES = [
 ]
 
 const ADV_VARIANTS = {
-  featured: { bg: "rgba(255,255,255,0.13)", bd: "rgba(255,255,255,0.50)", bdT: "rgba(255,255,255,0.80)", bdB: "rgba(255,255,255,0.13)", num: "#F0F3F9",             sh: "0 28px 72px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.72), inset 0 0 0 1px rgba(255,255,255,0.11)", tag: "rgba(255,255,255,0.63)" },
-  graphite: { bg: "rgba(255,255,255,0.012)", bd: "rgba(255,255,255,0.20)", bdT: "rgba(255,255,255,0.53)", bdB: "rgba(255,255,255,0.012)", num: "rgba(255,255,255,0.42)", sh: "0 18px 52px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.40), inset 0 0 0 1px rgba(255,255,255,0.012)", tag: "rgba(255,255,255,0.63)" },
-  accent:   { bg: "rgba(255,255,255,0.13)", bd: "rgba(255,255,255,0.50)", bdT: "rgba(255,255,255,0.78)", bdB: "rgba(255,255,255,0.13)", num: "#F0F3F9",             sh: "0 24px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.70), inset 0 0 0 1px rgba(255,255,255,0.012)", tag: "rgba(255,255,255,0.72)" },
+  featured: { bg: "rgba(255,255,255,0.13)", bd: "rgba(255,255,255,0.50)", bdT: "rgba(255,255,255,0.80)", bdB: "rgba(255,255,255,0.13)", num: "#FFFFFF",             sh: "0 28px 72px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.72), inset 0 0 0 1px rgba(255,255,255,0.11)", tag: "rgba(255,255,255,0.63)" },
+  graphite: { bg: "rgba(255,255,255,0.012)", bd: "rgba(255,255,255,0.20)", bdT: "rgba(255,255,255,0.53)", bdB: "rgba(255,255,255,0.012)", num: "#FFFFFF", sh: "0 18px 52px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.40), inset 0 0 0 1px rgba(255,255,255,0.012)", tag: "rgba(255,255,255,0.63)" },
+  accent:   { bg: "rgba(255,255,255,0.13)", bd: "rgba(255,255,255,0.50)", bdT: "rgba(255,255,255,0.78)", bdB: "rgba(255,255,255,0.13)", num: "#FFFFFF",             sh: "0 24px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.70), inset 0 0 0 1px rgba(255,255,255,0.012)", tag: "rgba(255,255,255,0.72)" },
 } as const
 
 function AdvCard({ n, title, body, variant = "graphite", tall = false }: { n: string; title: string; body: string; variant?: keyof typeof ADV_VARIANTS; tall?: boolean }) {
@@ -1171,7 +1151,7 @@ function AdvCard({ n, title, body, variant = "graphite", tall = false }: { n: st
       <div style={{ fontFamily: DISPLAY, fontSize: tall ? 68 : 30, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", color: V.num, marginBottom: tall ? 0 : 12 }}>{n}</div>
       <div>
         <h3 style={{ fontSize: tall ? 17 : 14, fontWeight: 600, letterSpacing: "-0.012em", marginBottom: 8, color: T.text, lineHeight: 1.3 }}>{title}</h3>
-        <p style={{ fontSize: 13, color: T.muted, lineHeight: 1.72, margin: 0 }}>{body}</p>
+        <p className="hp-body" style={{ fontSize: 13, color: T.muted, lineHeight: 1.72, margin: 0 }}>{body}</p>
       </div>
     </motion.div>
   )
@@ -1253,14 +1233,14 @@ function MetodoCard({ n, title, body, icon, i }: { n: string; title: string; bod
 
         {/* Top row: icon + tag */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 11, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.24)", color: "rgba(255,255,255,0.80)" }}>
+          <div style={{ width: 40, height: 40, borderRadius: 11, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.24)", color: "#FFFFFF" }}>
             {icon}
           </div>
-          <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.22em", color: "rgba(255,255,255,0.28)" }}>[ {n} ]</span>
+          <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.22em", color: "#FFFFFF" }}>[ {n} ]</span>
         </div>
 
         {/* Title */}
-        <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 20, lineHeight: 1.22, letterSpacing: "-0.02em", color: "#F0F3F9", margin: "0 0 14px" }}>{title}</h3>
+        <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 20, lineHeight: 1.22, letterSpacing: "-0.02em", color: "#FFFFFF", margin: "0 0 14px" }}>{title}</h3>
 
         {/* Red accent divider */}
         <div style={{ width: 28, height: 1.5, background: `linear-gradient(90deg, ${T.accent}, transparent)`, marginBottom: 14, borderRadius: 2, opacity: hov ? 1 : 0.55, transition: "opacity 0.28s" }} />
@@ -1277,7 +1257,7 @@ function AllInOne() {
     <section style={{ ...SEC, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s3" className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Il Metodo — Manifesto ]</span>
           </div>
@@ -1424,8 +1404,8 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
 
       {/* Metric block */}
       <div className="hp-tech-metric" style={{ padding: "26px 28px", borderRight: "1px solid rgba(255,255,255,0.07)", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", minWidth: 148, flexShrink: 0, gap: 6 }}>
-        <span style={{ fontFamily: MONO, fontSize: 34, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.03em", color: hov ? color : "#F0F3F9", transition: "color 0.28s", whiteSpace: "nowrap" as const }}>{metric}</span>
-        <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.32)" }}>{scoreLabel}</span>
+        <span style={{ fontFamily: MONO, fontSize: 34, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.03em", color: hov ? color : "#FFFFFF", transition: "color 0.28s", whiteSpace: "nowrap" as const }}>{metric}</span>
+        <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>{scoreLabel}</span>
         <div className="hp-tech-metric-progress" style={{ width: "100%", height: 2, background: "rgba(255,255,255,0.11)", borderRadius: 1, overflow: "hidden", marginTop: 2 }}>
           <motion.div
             initial={{ width: "0%" }}
@@ -1442,7 +1422,7 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
           <div style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", background: colorDim, border: `1px solid ${colorBd}`, color, flexShrink: 0, transition: "background 0.25s" }}>
             {icon}
           </div>
-          <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", color: "#F0F3F9", margin: 0, lineHeight: 1.2 }}>{title}</h3>
+          <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", color: "#FFFFFF", margin: 0, lineHeight: 1.2 }}>{title}</h3>
         </div>
         <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.68, color: T.muted, margin: 0 }}>{body}</p>
       </div>
@@ -1460,8 +1440,8 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
             />
           </svg>
           <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: hov ? color : "#F0F3F9", lineHeight: 1, transition: "color 0.28s" }}>{score}</span>
-            <span style={{ fontFamily: MONO, fontSize: 7.5, color: "rgba(255,255,255,0.32)", letterSpacing: "0.08em" }}>/100</span>
+            <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: hov ? color : "#FFFFFF", lineHeight: 1, transition: "color 0.28s" }}>{score}</span>
+            <span style={{ fontFamily: MONO, fontSize: 7.5, color: "#FFFFFF", letterSpacing: "0.08em" }}>/100</span>
           </div>
         </div>
       </div>
@@ -1490,7 +1470,7 @@ function TechBlock() {
     <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Tecnologia all&apos;Avanguardia ]</span>
           </div>
@@ -1587,7 +1567,7 @@ function SkillCard({ icon, title, tags }: { icon: React.ReactNode; title: string
 
       {/* 5. Content — title + icon row */}
       <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 14 }}>
-        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#F0F3F9", letterSpacing: "-0.015em", lineHeight: 1.35 }}>{title}</h3>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#FFFFFF", letterSpacing: "-0.015em", lineHeight: 1.35 }}>{title}</h3>
         <div className="hp-skillcard-icon" style={{
           width: 34, height: 34, borderRadius: 9, flexShrink: 0,
           background: "rgba(255,255,255,0.09)",
@@ -1732,7 +1712,7 @@ function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: t
 
       {/* left: icon column (стаёт левым блоком на мобайле) */}
       <div className="hp-sol-card-head" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 24 }}>
-        <span className="hp-sol-card-num" style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.18em", color: "rgba(242,242,250,0.18)", lineHeight: 1 }}>{num}</span>
+        <span className="hp-sol-card-num" style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.18em", color: "#FFFFFF", lineHeight: 1 }}>{num}</span>
         <div className="hp-sol-card-icon" style={{
           width: 46, height: 46, borderRadius: 14, flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
@@ -1783,20 +1763,20 @@ function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
   const featured = i === 0
 
   const RouteChip = (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontFamily: MONO, fontSize: 9.5, letterSpacing: ".04em", color: hover ? "rgba(255,255,255,0.72)" : "rgba(255,255,255,0.42)", border: `1px solid ${hover ? "rgba(255,255,255,0.26)" : "rgba(255,255,255,0.16)"}`, borderRadius: 6, padding: "3px 8px", transition: "color .3s, border-color .3s", whiteSpace: "nowrap" as const }}>
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontFamily: MONO, fontSize: 9.5, letterSpacing: ".04em", color: hover ? "rgba(255,255,255,0.72)" : "#FFFFFF", border: `1px solid ${hover ? "rgba(255,255,255,0.26)" : "rgba(255,255,255,0.16)"}`, borderRadius: 6, padding: "3px 8px", transition: "color .3s, border-color .3s", whiteSpace: "nowrap" as const }}>
       <span style={{ fontSize: 11 }}>↗</span>{s.href}
     </span>
   )
 
   const IconBox = (
-    <div style={{ width: 38, height: 38, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.24)", color: "rgba(255,255,255,0.80)" }}>
+    <div style={{ width: 38, height: 38, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.24)", color: "#FFFFFF" }}>
       {s.icon}
     </div>
   )
 
   const Footer = (
     <div style={{ marginTop: "auto", paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.20)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-      <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 600, letterSpacing: ".04em", textTransform: "uppercase" as const, color: hover ? "#F0F3F9" : "rgba(255,255,255,0.6)", transition: "color .3s" }}>{s.cta}</span>
+      <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 600, letterSpacing: ".04em", textTransform: "uppercase" as const, color: hover ? "#FFFFFF" : "#FFFFFF", transition: "color .3s" }}>{s.cta}</span>
       <motion.span animate={{ x: hover ? 4 : 0, borderColor: hover ? "rgba(255,60,92,0.7)" : "rgba(255,60,92,0.32)", background: hover ? "rgba(255,60,92,0.18)" : "rgba(255,60,92,0.08)" }} transition={{ duration: 0.25 }}
         style={{ width: 30, height: 30, borderRadius: "50%", border: "1px solid", display: "flex", alignItems: "center", justifyContent: "center", color: T.accentLt, fontSize: 14, flexShrink: 0 }}>→</motion.span>
     </div>
@@ -1869,7 +1849,7 @@ function SoluzioniMatrix() {
     <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Core Skills &amp; Tech Stack ]</span>
           </div>
@@ -1877,7 +1857,7 @@ function SoluzioniMatrix() {
             Soluzioni ad Alta Ingegneria
           </h2>
           <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 680, margin: "0 0 40px" }}>
-            Ogni soluzione è un servizio completo con la <span style={{ color: "#F0F3F9" }}>sua pagina dedicata</span> — architettura, stack tecnologico e casi d'uso spiegati in dettaglio. Clicca su una card per esplorarla.
+            Ogni soluzione è un servizio completo con la <span style={{ color: "#FFFFFF" }}>sua pagina dedicata</span> — architettura, stack tecnologico e casi d'uso spiegati in dettaglio. Clicca su una card per esplorarla.
           </p>
         </Reveal>
 
@@ -2032,10 +2012,10 @@ function DiagnosiCard({ d, i }: { d: typeof DIAGNOSI_PS[0]; i: number }) {
             <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(239,68,68,0.55)" }}>[ Problema ]</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.24)", color: "rgba(255,255,255,0.80)" }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.24)", color: "#FFFFFF" }}>
               {d.problem.icon}
             </div>
-            <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", margin: 0, color: "#F0F3F9", lineHeight: 1.25 }}>{d.problem.title}</h4>
+            <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", margin: 0, color: "#FFFFFF", lineHeight: 1.25 }}>{d.problem.title}</h4>
           </div>
           <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.68, color: T.muted, margin: 0 }}>{d.problem.body}</p>
         </div>
@@ -2045,10 +2025,10 @@ function DiagnosiCard({ d, i }: { d: typeof DIAGNOSI_PS[0]; i: number }) {
             <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: hov ? T.accentLt : "rgba(255,60,92,0.55)", transition: "color 0.28s" }}>[ Soluzione ]</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.24)", color: "rgba(255,255,255,0.80)" }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.24)", color: "#FFFFFF" }}>
               {d.solution.icon}
             </div>
-            <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", margin: 0, color: "#F0F3F9", lineHeight: 1.25 }}>{d.solution.title}</h4>
+            <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", margin: 0, color: "#FFFFFF", lineHeight: 1.25 }}>{d.solution.title}</h4>
           </div>
           <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.68, color: T.muted, margin: 0 }}>{d.solution.body}</p>
         </div>
@@ -2062,7 +2042,7 @@ function DiagnosiBlock() {
     <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Il Problema — La Diagnosi ]</span>
           </div>
@@ -2158,7 +2138,7 @@ function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: type
 
       {/* top row: num + icon */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 28 }}>
-        <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.18em", color: "rgba(242,242,250,0.18)", lineHeight: 1 }}>{num}</span>
+        <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.18em", color: "#FFFFFF", lineHeight: 1 }}>{num}</span>
         <div style={{
           width: 46, height: 46, borderRadius: 14, flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
@@ -2176,7 +2156,7 @@ function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: type
       <div style={{ marginBottom: 16 }}>
         <span style={{
           fontSize: 36, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em",
-          color: "#F0F3F9",
+          color: "#FFFFFF",
         }}>{metric}</span>
         <span style={{ fontSize: 11, fontWeight: 600, color: T.silver, letterSpacing: "0.10em", textTransform: "uppercase" as const, marginLeft: 10, verticalAlign: "middle", opacity: 0.80 }}>{metricLabel}</span>
       </div>
@@ -2187,7 +2167,7 @@ function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: type
       </h3>
 
       {/* body */}
-      <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.80, margin: 0, flex: 1 }}>
+      <p className="hp-body" style={{ fontSize: 14, color: T.muted, lineHeight: 1.80, margin: 0, flex: 1 }}>
         {body}
       </p>
 
@@ -2206,7 +2186,7 @@ function PurcheBlock() {
     <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Il Mio Metodo ]</span>
           </div>
@@ -2347,7 +2327,7 @@ function SkillAccordion({ icon, title, items, defaultOpen }: { icon: React.React
                 {items.map((item, i) => (
                   <div key={i} style={{ background: T.bg, padding: "28px 32px" }}>
                     <h4 style={{ fontSize: 15, fontWeight: 600, color: T.text, marginBottom: 10, letterSpacing: "-0.01em" }}>{item.name}</h4>
-                    <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.8 }}>{item.desc}</p>
+                    <p className="hp-body" style={{ fontSize: 14, color: T.muted, lineHeight: 1.8 }}>{item.desc}</p>
                   </div>
                 ))}
               </div>
@@ -2636,7 +2616,7 @@ function MethodCarousel() {
               {/* Large step number */}
               <motion.span
                 className="hp-method-row-num"
-                animate={{ color: isActive ? "rgba(255,60,92,0.75)" : isDone ? "rgba(255,60,92,0.22)" : "rgba(255,255,255,0.15)" }}
+                animate={{ color: isActive ? "rgba(255,60,92,0.75)" : isDone ? "rgba(255,60,92,0.22)" : "#FFFFFF" }}
                 transition={{ duration: 0.35 }}
                 style={{ fontFamily: MONO, fontSize: 50, fontWeight: 200, lineHeight: 1, letterSpacing: "-0.04em", textAlign: "right" as const, flexShrink: 0, width: 72 }}
               >{s.n}</motion.span>
@@ -2653,7 +2633,7 @@ function MethodCarousel() {
               <div style={{ flex: 1, display: "flex", flexDirection: "column" as const, gap: 4, textAlign: "left" as const }}>
                 <motion.span
                   className="hp-method-row-title"
-                  animate={{ color: isActive ? "#F0F3F9" : "rgba(255,255,255,0.42)" }}
+                  animate={{ color: isActive ? "#FFFFFF" : "#FFFFFF" }}
                   transition={{ duration: 0.35 }}
                   style={{ fontFamily: DISPLAY, fontSize: "clamp(14px,1.5vw,17px)", fontWeight: isActive ? 700 : 400, letterSpacing: "-0.015em", lineHeight: 1.2 }}
                 >{s.title}</motion.span>
@@ -2672,7 +2652,7 @@ function MethodCarousel() {
 
               {/* Expand circle */}
               <motion.div
-                animate={{ rotate: isActive ? 45 : 0, borderColor: isActive ? "rgba(255,60,92,0.65)" : "rgba(255,255,255,0.18)", color: isActive ? "rgba(255,60,92,0.75)" : "rgba(255,255,255,0.28)" }}
+                animate={{ rotate: isActive ? 45 : 0, borderColor: isActive ? "rgba(255,60,92,0.65)" : "rgba(255,255,255,0.18)", color: isActive ? "rgba(255,60,92,0.75)" : "#FFFFFF" }}
                 transition={{ duration: 0.3 }}
                 style={{ width: 24, height: 24, border: "1.5px solid", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, lineHeight: 1, flexShrink: 0 }}
               >+</motion.div>
@@ -2749,21 +2729,21 @@ function Method() {
               </div>
 
               <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.04em", margin: 0, fontSize: "clamp(30px,3.8vw,52px)" }}>
-                <span style={{ color: "#F0F3F9" }}>Una roadmap</span>{" "}
-                <span style={{ color: "rgba(255,255,255,0.42)", fontWeight: 300 }}>trasparente,</span>
+                <span style={{ color: "#FFFFFF" }}>Una roadmap</span>{" "}
+                <span style={{ color: "#FFFFFF", fontWeight: 300 }}>trasparente,</span>
                 <br />
-                <span style={{ color: "rgba(255,255,255,0.42)", fontWeight: 300 }}>gestita dal tuo</span>{" "}
-                <span style={{ color: "#F0F3F9" }}>Cabinet</span>
+                <span style={{ color: "#FFFFFF", fontWeight: 300 }}>gestita dal tuo</span>{" "}
+                <span style={{ color: "#FFFFFF" }}>Cabinet</span>
               </h2>
               <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 460, margin: "22px 0 0" }}>
-                Contratti, invoice e stato di ogni attività sono visibili in tempo reale nel tuo <span style={{ color: "#F0F3F9" }}>Area Clienti</span> privato. Zero sorprese, zero perdita di controllo: segui l'avanzamento del progetto fase per fase.
+                Contratti, invoice e stato di ogni attività sono visibili in tempo reale nel tuo <span style={{ color: "#FFFFFF" }}>Area Clienti</span> privato. Zero sorprese, zero perdita di controllo: segui l'avanzamento del progetto fase per fase.
               </p>
             </div>
 
             {/* right — editorial counter */}
             <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "flex-end", gap: 4, paddingBottom: 8, flexShrink: 0 }}>
-              <span style={{ fontFamily: MONO, fontSize: 44, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.07em", color: "rgba(255,255,255,0.09)" }}>04</span>
-              <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.28)", textAlign: "right" as const, lineHeight: 1.6 }}>fasi · processo<br />completo</span>
+              <span style={{ fontFamily: MONO, fontSize: 44, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.07em", color: "#FFFFFF" }}>04</span>
+              <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "#FFFFFF", textAlign: "right" as const, lineHeight: 1.6 }}>fasi · processo<br />completo</span>
             </div>
 
           </div>
@@ -2798,7 +2778,7 @@ function ProjectCard({ title, desc, tags }: { title: string; desc: string; tags:
       </div>
       <div style={{ padding: 24, display: "flex", flexDirection: "column", flex: 1 }}>
         <h3 style={{ fontSize: 16, fontWeight: 600, letterSpacing: "-0.015em", marginBottom: 8, color: T.text }}>{title}</h3>
-        <p style={{ fontSize: 13, color: T.muted, lineHeight: 1.75, marginBottom: 16, flex: 1 }}>{desc}</p>
+        <p className="hp-body" style={{ fontSize: 13, color: T.muted, lineHeight: 1.75, marginBottom: 16, flex: 1 }}>{desc}</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>{tags.map((tag, i) => <Tag key={i} text={tag} />)}</div>
       </div>
     </GlassCard>
@@ -2810,7 +2790,7 @@ function Portfolio() {
     <section id="s6" style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Social Proof / Portfolio ]</span>
           </div>
@@ -2838,7 +2818,7 @@ function Portfolio() {
               style={{ display: "flex" }}
             >
               <CatalogCard index={`0${i + 1}`} style={{ width: "100%", display: "flex", flexDirection: "column" }}>
-                <div style={{ fontFamily: MONO, fontSize: 10.5, color: "rgba(255,255,255,.3)", marginBottom: 12 }}>
+                <div style={{ fontFamily: MONO, fontSize: 10.5, color: "#FFFFFF", marginBottom: 12 }}>
                   ls ~/projects/0{i + 1}
                 </div>
                 <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, margin: "0 0 10px", color: "#060C18", lineHeight: 1.25 }}>
@@ -2900,28 +2880,28 @@ function CaseMiniCard({ c, i }: { c: typeof CASE_LIST[number]; i: number }) {
 
       {/* Number column */}
       <div style={{ padding: "28px 24px 28px 28px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", flexShrink: 0, borderRight: "1px solid rgba(255,255,255,0.16)" }}>
-        <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", color: "rgba(255,255,255,0.28)", marginBottom: 6, textTransform: "uppercase" as const }}>CASE</span>
+        <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", color: "#FFFFFF", marginBottom: 6, textTransform: "uppercase" as const }}>CASE</span>
         <span style={{ fontFamily: DISPLAY, fontSize: "clamp(52px,6vw,80px)", fontWeight: 900, letterSpacing: "-0.06em", lineHeight: 1, color: h ? "rgba(255,60,92,0.70)" : "rgba(255,60,92,0.45)", transition: "color .28s" }}>{c.n}</span>
       </div>
 
       {/* Body */}
       <div className="cs-card-inner" style={{ position: "relative", flex: 1, display: "flex", alignItems: "center", gap: 24, padding: "28px 24px 28px 28px", minWidth: 0 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.42)", marginBottom: 10 }}>{c.cat}</div>
-          <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(18px,2.2vw,24px)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "#F0F3F9", margin: "0 0 14px" }}>{c.title}</h3>
-          <p style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.3vw, 16px)", lineHeight: 1.72, color: T.muted, margin: 0, maxWidth: 500 }}>{c.desc}</p>
+          <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 10 }}>{c.cat}</div>
+          <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(18px,2.2vw,24px)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "#FFFFFF", margin: "0 0 14px" }}>{c.title}</h3>
+          <p style={{ fontFamily: SANS, fontSize: "16px", lineHeight: 1.72, color: T.muted, margin: 0, maxWidth: 500 }}>{c.desc}</p>
         </div>
 
         {/* Result callout */}
         <div className="cs-card-arrow" style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 16 }}>
           <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.20)", textAlign: "right" as const }}>
-            <div style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.18em", color: "rgba(255,255,255,0.30)", marginBottom: 5, textTransform: "uppercase" as const }}>RISULTATO</div>
-            <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.82)", letterSpacing: "0.02em", whiteSpace: "nowrap" as const }}>{c.metric}</div>
+            <div style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.18em", color: "#FFFFFF", marginBottom: 5, textTransform: "uppercase" as const }}>RISULTATO</div>
+            <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, color: "#FFFFFF", letterSpacing: "0.02em", whiteSpace: "nowrap" as const }}>{c.metric}</div>
           </div>
           <motion.div
             animate={{ x: h ? 4 : 0, background: h ? "rgba(255,60,92,0.18)" : "rgba(255,255,255,0.012)", borderColor: h ? "rgba(255,60,92,0.55)" : "rgba(255,255,255,0.16)" }}
             transition={{ duration: 0.25 }}
-            style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid", display: "flex", alignItems: "center", justifyContent: "center", color: h ? T.accentLt : "rgba(255,255,255,0.63)", fontSize: 16, transition: "color .25s" }}
+            style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid", display: "flex", alignItems: "center", justifyContent: "center", color: h ? T.accentLt : "#FFFFFF", fontSize: 16, transition: "color .25s" }}
           >→</motion.div>
         </div>
       </div>
@@ -2947,14 +2927,14 @@ function ProjectsFeature() {
           <div className="cs-head">
             {/* title + subtitle */}
             <div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 18 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 18 }}>
                 <span style={{ color: T.accentLt }}>//</span>
                 <span>[ Case Studies ]</span>
               </div>
 
               <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(34px,5vw,66px)", lineHeight: 0.98, letterSpacing: "-0.04em", margin: 0 }}>
-                <span style={{ color: "#F0F3F9" }}>Progetti </span>
-                <span style={{ color: "rgba(255,255,255,0.32)", fontWeight: 300 }}>&amp; </span>
+                <span style={{ color: "#FFFFFF" }}>Progetti </span>
+                <span style={{ color: "#FFFFFF", fontWeight: 300 }}>&amp; </span>
                 <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.63)" }}>Soluzioni</span>
               </h2>
 
@@ -2968,8 +2948,8 @@ function ProjectsFeature() {
               href="/projects" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
               style={{ flexShrink: 0, minHeight: 52, borderRadius: 12, cursor: "pointer", textDecoration: "none", border: "1px solid rgba(255,60,92,0.80)", background: "linear-gradient(90deg, rgba(255,60,92,0.34) 0%, rgba(255,60,92,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(255,60,92,0.20), inset 0 1px 0 rgba(255,255,255,0.15)", display: "inline-flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
             >
-              <span style={{ padding: "0 14px", borderRight: "1px solid rgba(255,60,92,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.63)" }}>[→]</span>
-              <span style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 20px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#F0F3F9" }}>
+              <span style={{ padding: "0 14px", borderRight: "1px solid rgba(255,60,92,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[→]</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 20px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
                 Scopri tutti i progetti <span style={{ fontSize: 14 }}>→</span>
               </span>
             </motion.a>
@@ -3012,7 +2992,7 @@ function FAQItem({ q, a, open, onToggle }: { q: string; a: string; open: boolean
         {open && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.35, ease }} style={{ overflow: "hidden" }}>
             <div style={{ padding: "0 28px 26px", background: "rgba(255,255,255,0.012)" }}>
-              <p style={{ fontSize: 15, color: T.muted, lineHeight: 1.82 }}>{a}</p>
+              <p className="hp-body" style={{ fontSize: 15, color: T.muted, lineHeight: 1.82 }}>{a}</p>
             </div>
           </motion.div>
         )}
@@ -3108,7 +3088,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
     background: "rgba(255,255,255,0.012)",
     border: "1px solid rgba(255,255,255,0.20)",
     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.09)",
-    color: "#F0F3F9", fontFamily: MONO, fontSize: 12,
+    color: "#FFFFFF", fontFamily: MONO, fontSize: 12,
     letterSpacing: "0.04em", outline: "none",
     transition: "border-color .2s, background .2s",
     boxSizing: "border-box" as const,
@@ -3116,7 +3096,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
   const labelStyle: React.CSSProperties = {
     fontFamily: MONO, fontSize: 10, letterSpacing: ".16em",
     textTransform: "uppercase" as const,
-    color: "rgba(255,255,255,0.38)", marginBottom: 6, display: "block",
+    color: "#FFFFFF", marginBottom: 6, display: "block",
   }
 
   return createPortal(
@@ -3160,18 +3140,18 @@ function ContactModal({ onClose }: { onClose: () => void }) {
           {/* header */}
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 28 }}>
             <div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.40)", marginBottom: 10 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 10 }}>
                 <span style={{ color: T.accentLt }}>//</span>
                 <span>[ Richiesta Consulenza ]</span>
               </div>
-              <h3 style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 700, letterSpacing: "-0.022em", color: "#F0F3F9", margin: 0, lineHeight: 1.2 }}>
+              <h3 style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 700, letterSpacing: "-0.022em", color: "#FFFFFF", margin: 0, lineHeight: 1.2 }}>
                 Descrivi il tuo blocco principale
               </h3>
             </div>
             <button onClick={onClose}
-              style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, border: "1px solid rgba(255,255,255,0.20)", background: "rgba(255,255,255,0.012)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.53)", transition: "all 0.18s" }}
+              style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 9, border: "1px solid rgba(255,255,255,0.20)", background: "rgba(255,255,255,0.012)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#FFFFFF", transition: "all 0.18s" }}
               onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.12)"; el.style.color="#fff" }}
-              onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.012)"; el.style.color="rgba(255,255,255,0.53)" }}
+              onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(255,255,255,0.012)"; el.style.color="#FFFFFF" }}
             >
               <XIcon size={13} />
             </button>
@@ -3291,14 +3271,14 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
           boxShadow: hov
             ? "0 0 24px rgba(255,60,92,0.35), inset 0 1px 0 rgba(255,255,255,0.18)"
             : "0 0 12px rgba(255,60,92,0.20), inset 0 1px 0 rgba(255,255,255,0.15)",
-          color: "#F0F3F9", fontFamily: MONO,
+          color: "#FFFFFF", fontFamily: MONO,
           display: "flex", alignItems: "stretch",
           transition: "border-color 0.25s, box-shadow 0.30s, background 0.25s",
         } as React.CSSProperties}
       >
         {/* index tag */}
         <div style={{ padding: "17px 16px 17px 20px", borderRight: "1px solid rgba(255,60,92,0.45)", display: "flex", alignItems: "center", position: "relative" }}>
-          <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.63)" }}>[01]</span>
+          <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[01]</span>
         </div>
         {/* label */}
         <div style={{ padding: "17px 28px", display: "flex", alignItems: "center", gap: 14, position: "relative", fontSize: 12, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase" as const }}>
@@ -3306,7 +3286,7 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
           <motion.span
             animate={{ x: hov ? [0, 5, 0] : 0 }}
             transition={{ duration: 0.55, repeat: hov ? Infinity : 0, ease: "easeInOut" }}
-            style={{ fontSize: 15, color: "#F0F3F9", lineHeight: 1 }}
+            style={{ fontSize: 15, color: "#FFFFFF", lineHeight: 1 }}
           >→</motion.span>
         </div>
       </motion.button>
@@ -3320,15 +3300,15 @@ function Contact() {
     <section style={{ ...SEC, borderTop: `1px solid ${T.border}` }} id="s9" className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#F0F3F9", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
             <span>[ Call to Action ]</span>
           </div>
-          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.2vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 16px", color: "#F0F3F9" }}>
-            Pronto a scalare il tuo <span style={{ color: "#F0F3F9" }}>ecosistema digitale?</span>
+          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.2vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 16px", color: "#FFFFFF" }}>
+            Pronto a scalare il tuo <span style={{ color: "#FFFFFF" }}>ecosistema digitale?</span>
           </h2>
         </Reveal>
-        <motion.p
+        <motion.p className="hp-body"
           initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.16, ease }}
           style={{ fontSize: 15, color: T.muted, lineHeight: 1.82, marginBottom: 52, maxWidth: 580 }}
@@ -3515,22 +3495,22 @@ function DateTimeWidget() {
       </svg>
 
       {/* HH:MM + ss */}
-      <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.06em", color: "rgba(255,255,255,0.92)", display: "inline-flex", alignItems: "baseline", gap: 1 }}>
+      <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.06em", color: "#FFFFFF", display: "inline-flex", alignItems: "baseline", gap: 1 }}>
         {hh}
         <motion.span
           animate={{ opacity: [1, 0.2, 1] }}
           transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
-          style={{ margin: "0 1px", color: "rgba(255,255,255,0.30)" }}
+          style={{ margin: "0 1px", color: "#FFFFFF" }}
         >:</motion.span>
         {mm}
-        <span style={{ fontSize: 9, opacity: 0.36, marginLeft: 4, letterSpacing: "0.04em" }}>{ssStr}</span>
+        <span style={{ fontSize: 9, marginLeft: 4, letterSpacing: "0.04em" }}>{ssStr}</span>
       </span>
 
       {/* divider */}
       <span style={{ width: 1, height: 13, background: "rgba(255,255,255,0.13)", flexShrink: 0 }} />
 
       {/* date */}
-      <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 500, letterSpacing: "0.14em", color: "rgba(255,255,255,0.36)" }}>
+      <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 500, letterSpacing: "0.14em", color: "#FFFFFF" }}>
         {day} {date} {mon}
       </span>
     </div>
@@ -3589,7 +3569,7 @@ function Logo3D({ onClick }: { onClick: () => void }) {
           />
         </span>
         <span aria-hidden style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
-        <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.22em", textTransform: "uppercase" as const, whiteSpace: "nowrap" as const, color: h ? "#fff" : "rgba(255,255,255,0.68)", transition: "color 0.28s" }}>
+        <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.22em", textTransform: "uppercase" as const, whiteSpace: "nowrap" as const, color: h ? "#fff" : "#FFFFFF", transition: "color 0.28s" }}>
           Nadia Maar
         </span>
       </span>
@@ -3641,11 +3621,11 @@ function MenuNavItem({ num, label, onClick, index, active = false }: { num: stri
           transition={{ duration: 0.2 }}
           style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-50%)", width: 2, height: "60%", background: T.accent, borderRadius: 2, transformOrigin: "center" }}
         />
-        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", color: lit ? T.accent : "rgba(255,255,255,0.30)", transition: "color 0.22s", minWidth: 26, flexShrink: 0 }}>[{num}]</span>
+        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", color: lit ? T.accent : "#FFFFFF", transition: "color 0.22s", minWidth: 26, flexShrink: 0 }}>[{num}]</span>
         <span style={{
           fontFamily: DISPLAY, fontSize: "clamp(28px, 8vw, 46px)", fontWeight: 800,
           letterSpacing: "-0.032em", lineHeight: 1.1,
-          color: active ? T.accentLt : h ? "#fff" : "rgba(255,255,255,0.75)",
+          color: active ? T.accentLt : h ? "#fff" : "#FFFFFF",
           transition: "color 0.22s",
         }}>{label}</span>
         <motion.span
@@ -3719,8 +3699,8 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
         <a href="mailto:nadiamaar.dev@gmail.com"
-          style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em", color: "rgba(255,255,255,0.50)", textDecoration: "none", transition: "color 0.18s" }}
-          onMouseEnter={e => (e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.50)")}>
+          style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em", color: "#FFFFFF", textDecoration: "none", transition: "color 0.18s" }}
+          onMouseEnter={e => (e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.color = "#FFFFFF")}>
           nadiamaar.dev@gmail.com
         </a>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
@@ -3731,9 +3711,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
       <div style={{ display: "flex", gap: 10 }}>
         {MENU_SOCIALS.map(({ label, href }) => (
           <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-            style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: "rgba(255,255,255,0.63)", background: "rgba(255,255,255,0.012)", border: "1px solid rgba(255,255,255,0.24)", textDecoration: "none", transition: "all 0.18s" }}
+            style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: "#FFFFFF", background: "rgba(255,255,255,0.012)", border: "1px solid rgba(255,255,255,0.24)", textDecoration: "none", transition: "all 0.18s" }}
             onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color="#fff"; el.style.borderColor="rgba(255,60,92,0.55)"; el.style.background="rgba(255,60,92,0.14)" }}
-            onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.color="rgba(255,255,255,0.63)"; el.style.borderColor="rgba(255,255,255,0.15)"; el.style.background="rgba(255,255,255,0.012)" }}
+            onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.color="#FFFFFF"; el.style.borderColor="rgba(255,255,255,0.15)"; el.style.background="rgba(255,255,255,0.012)" }}
           >{label}</a>
         ))}
       </div>
@@ -3794,7 +3774,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
 
         {/* header */}
         <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
-          <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.26em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.36)" }}>Navigation</span>
+          <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.26em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>Navigation</span>
         </div>
 
         {/* ghost MAAR — vertical right edge */}
@@ -3920,7 +3900,7 @@ function SocialProof() {
         {/* label */}
         <div className="sp-label" style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 10 }}>
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.accentLt, flexShrink: 0 }} />
-          <span className="sp-label-text" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: ".1em", color: "rgba(255,255,255,0.63)" }}>
+          <span className="sp-label-text" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: ".1em", color: "#FFFFFF" }}>
             Tecnologie enterprise e brand che scalano con me:
           </span>
         </div>
@@ -3932,7 +3912,7 @@ function SocialProof() {
               <div className="sp-item" key={dup} aria-hidden={dup === 1 ? true : undefined}>
                 {SP_TECH.map((t, i) => (
                   <React.Fragment key={t}>
-                    <span className="sp-tech-name" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 16, letterSpacing: "-0.01em", color: "rgba(255,255,255,0.72)", whiteSpace: "nowrap" as const }}>{t}</span>
+                    <span className="sp-tech-name" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 16, letterSpacing: "-0.01em", color: "#FFFFFF", whiteSpace: "nowrap" as const }}>{t}</span>
                     {i < SP_TECH.length - 1 && <span aria-hidden style={{ color: T.accentLt, fontSize: 10, opacity: 0.7 }}>◇</span>}
                   </React.Fragment>
                 ))}
@@ -4062,7 +4042,7 @@ function FoundryDemoCard({ d, i }: { d: typeof FOUNDRY_DEMOS[number]; i: number 
       {/* body */}
       <div style={{ padding: "20px 22px 22px", flex: 1, display: "flex", flexDirection: "column" }}>
         <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", color: T.green, marginBottom: 9 }}>{d.tag}</div>
-        <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", color: "#F0F3F9", margin: "0 0 8px" }}>{d.title}</h3>
+        <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", color: "#FFFFFF", margin: "0 0 8px" }}>{d.title}</h3>
         <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.7, color: T.muted, margin: 0, flex: 1 }}>{d.desc}</p>
         <motion.span animate={{ opacity: h ? 1 : 0.4, x: h ? 0 : -4 }} transition={{ duration: 0.25 }}
           style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10, letterSpacing: ".16em", textTransform: "uppercase" as const, color: T.green }}>
@@ -4088,13 +4068,13 @@ function FoundryShowcase() {
           <div className="foundry-head">
             {/* left — eyebrow + title + subtitle */}
             <div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,.63)", marginBottom: 20 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
                 <span style={{ color: T.green }}>//</span>
                 <span>[ Digital Foundry ]</span>
               </div>
               <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(28px,3.6vw,46px)", fontWeight: 800, lineHeight: 1.08, letterSpacing: "-0.035em", margin: "0 0 18px", maxWidth: 760, color: T.text }}>
                 Digital Foundry:<br />
-                <span style={{ color: "#F0F3F9" }}>Costruisci la tua architettura</span>
+                <span style={{ color: "#FFFFFF" }}>Costruisci la tua architettura</span>
               </h2>
               <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 620, margin: 0 }}>
                 Non comprare a scatola chiusa. Esplora la nostra libreria di soluzioni reali (CRM, Portali B2B, E-commerce), testa le demo e costruisci il tuo Blueprint per un preventivo istantaneo.

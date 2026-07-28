@@ -5,8 +5,8 @@ const MONO = "'JetBrains Mono','SF Mono',ui-monospace,monospace"
 
 const T = {
   accentLt: "#B83240",
-  muted: "rgba(245,245,247,0.52)",
-  text: "#F5F5F7",
+  muted: "#FFFFFF",
+  text: "#FFFFFF",
 } as const
 
 /* ── icons ── */
@@ -53,7 +53,7 @@ function FloatingActionBtn({ href, icon, label, external }: {
         background: hov ? "rgba(120,20,30,0.18)" : "rgba(255,255,255,0.07)",
         border: `1px solid ${hov ? "rgba(120,20,30,0.58)" : "rgba(255,255,255,0.14)"}`,
         boxShadow: hov ? "0 0 18px rgba(120,20,30,0.28), inset 0 1px 0 rgba(255,255,255,0.14)" : "none",
-        color: hov ? "#fff" : "rgba(255,255,255,0.85)",
+        color: "#FFFFFF",
         fontSize: 10, fontWeight: 600, letterSpacing: "0.03em",
         textDecoration: "none", cursor: "pointer",
         transition: "background 0.18s, border-color 0.18s, box-shadow 0.20s, color 0.18s",
@@ -158,7 +158,7 @@ export default function FloatingContact() {
             <div style={{ padding: "14px 14px 12px", display: "flex", alignItems: "center", gap: 11 }}>
               <div style={{ position: "relative", flexShrink: 0 }}>
                 <div style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid rgba(120,20,30,0.50)", boxShadow: "0 0 12px rgba(120,20,30,0.22), inset 0 1px 0 rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontSize: 15, fontWeight: 700, color: "rgba(255,255,255,0.90)" }}>{initials}</span>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: "#FFFFFF" }}>{initials}</span>
                 </div>
                 <span style={{ position: "absolute", bottom: 0, right: 0, width: 10, height: 10, borderRadius: "50%", background: T.accentLt, border: "2px solid rgba(10,5,20,0.90)", display: "block" }}>
                   <motion.span
@@ -183,7 +183,7 @@ export default function FloatingContact() {
             {/* contact info */}
             <div style={{ padding: "9px 14px", display: "flex", flexDirection: "column", gap: 7, borderTop: "1px solid rgba(120,20,30,0.18)" }}>
               <a href={`mailto:${email}`} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: T.muted, textDecoration: "none", transition: "color 0.16s" }}
-                onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.90)")}
+                onMouseEnter={e => (e.currentTarget.style.color = "#FFFFFF")}
                 onMouseLeave={e => (e.currentTarget.style.color = T.muted)}>
                 <MailIcon size={11} /><span style={{ wordBreak: "break-all" }}>{email}</span>
               </a>
@@ -227,7 +227,7 @@ export default function FloatingContact() {
           flexShrink: 0, overflow: "hidden",
         } as React.CSSProperties}
       >
-        <span style={{ padding: "12px 10px 12px 14px", borderRight: "1px solid rgba(120,20,30,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.20em", color: "rgba(255,220,200,0.80)" }}>NM</span>
+        <span style={{ padding: "12px 10px 12px 14px", borderRight: "1px solid rgba(120,20,30,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.20em", color: "#FFFFFF" }}>NM</span>
         <span style={{ padding: "12px 14px", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 13, color: "#fff" }}>→</span>
       </motion.button>
     </>

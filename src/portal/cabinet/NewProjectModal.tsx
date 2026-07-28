@@ -220,7 +220,7 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
               <Badge tone="copper">Blueprint</Badge>
             </label>
           )}
-          <p style={{ fontFamily: DISPLAY, fontSize: 11.5, lineHeight: 1.5, color: T.faint, margin: 0 }}>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 11.5, lineHeight: 1.5, color: T.faint, margin: 0 }}>
             Potrai aggiungerne altri in qualsiasi momento dalla scheda «Riferimenti» del progetto.
           </p>
         </div>
@@ -232,7 +232,7 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
           padding: "10px 14px", borderRadius: 11,
           background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.16)",
         }}>
-          <p style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.faint, margin: 0 }}>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.faint, margin: 0 }}>
             Il progetto entra <span style={{ color: T.text, fontWeight: 600 }}>in valutazione</span>: definiamo insieme le fasi e ricevi una notifica appena è attivo.
           </p>
         </div>

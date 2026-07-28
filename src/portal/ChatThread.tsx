@@ -107,8 +107,8 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
           <Loading label="Apro la conversazione" />
         ) : messages.length === 0 ? (
           <div style={{ margin: "auto", textAlign: "center", padding: 24 }}>
-            <p style={{ fontFamily: DISPLAY, fontSize: 13, color: T.faint, margin: 0 }}>Nessun messaggio.</p>
-            <p style={{ fontFamily: DISPLAY, fontSize: 12, color: T.ghost, margin: "4px 0 0" }}>Scrivi il primo messaggio qui sotto.</p>
+            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, color: T.faint, margin: 0 }}>Nessun messaggio.</p>
+            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12, color: T.ghost, margin: "4px 0 0" }}>Scrivi il primo messaggio qui sotto.</p>
           </div>
         ) : (
           messages.map(m => {
@@ -137,13 +137,13 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                   WebkitBackdropFilter: m.isDeleted ? "none" : "blur(8px)",
                 }}>
                   {m.isDeleted ? (
-                    <p style={{ fontFamily: DISPLAY, fontSize: 12.5, fontStyle: "italic", color: T.ghost, margin: 0 }}>
+                    <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, fontStyle: "italic", color: T.ghost, margin: 0 }}>
                       Messaggio eliminato
                     </p>
                   ) : editingId === m.id ? (
                     <div style={{ display: "flex", flexDirection: "column", gap: 8, minWidth: 220 }}>
                       <textarea
-                        className="portal-input"
+                        className="portal-input pt-body"
                         value={editText}
                         onChange={e => setEditText(e.target.value)}
                         style={{ minHeight: 60, fontSize: 13 }}
@@ -157,9 +157,9 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                   ) : (
                     <>
                       {m.content && (
-                        <p style={{
+                        <p className="pt-body" style={{
                           fontFamily: DISPLAY, fontSize: 13.5, lineHeight: 1.6,
-                          color: own ? "#FFE8DC" : T.text,
+                          color: "#FFFFFF",
                           margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-word",
                         }}>
                           {m.content}
@@ -266,7 +266,7 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
               {!uploading && <Icon name="paperclip" size={14} />}
             </FileBtn>
             <textarea
-              className="portal-input"
+              className="portal-input pt-body"
               placeholder="Scrivi un messaggio…"
               value={text}
               onChange={e => setText(e.target.value)}

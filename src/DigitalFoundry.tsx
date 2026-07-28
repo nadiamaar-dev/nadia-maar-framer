@@ -60,7 +60,7 @@ const CSS = `
 }
 .nm-foundry-count {
   font-family: 'JetBrains Mono',monospace; font-size: 9px;
-  letter-spacing: 0.22em; color: rgba(255,255,255,0.28);
+  letter-spacing: 0.22em; color: #FFFFFF;
   text-transform: uppercase; margin-bottom: 22px;
   display: flex; align-items: center; gap: 10px;
 }
@@ -70,6 +70,8 @@ const CSS = `
 }
 @media (max-width: 767px) {
   .nm-foundry-count { margin-bottom: 14px; }
+  /* body copy stays at 16px on phones — !important beats the inline size */
+  .hp-body { font-size: 16px !important; }
 }
 `
 
@@ -125,7 +127,7 @@ export default function DigitalFoundry() {
             <div style={{
               display: "inline-flex", alignItems: "center", gap: 8,
               fontFamily: MONO, fontSize: 11, letterSpacing: ".20em",
-              textTransform: "uppercase", color: "rgba(255,255,255,0.63)",
+              textTransform: "uppercase", color: "#FFFFFF",
               marginBottom: 22,
             }}>
               <span style={{ color: "#BE3648" }}>//</span>
@@ -148,7 +150,7 @@ export default function DigitalFoundry() {
             </h1>
 
             {/* description */}
-            <p style={{ ...BODY, color: "rgba(255,255,255,0.72)", margin: 0, maxWidth: 500 }}>
+            <p className="hp-body" style={{ ...BODY, color: "#FFFFFF", margin: 0, maxWidth: 500 }}>
               Esplora la libreria di soluzioni e componenti. Seleziona ciò che ti serve,
               salvalo nel Blueprint e ricevi un'offerta su misura.
             </p>
@@ -183,8 +185,8 @@ export default function DigitalFoundry() {
                   border: "1px dashed rgba(255,255,255,0.10)",
                   borderRadius: 16,
                 }}>
-                  <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.28)", marginBottom: 12 }}>[ 0 risultati ]</div>
-                  <div style={{ fontFamily: DISPLAY, fontSize: 15, color: "rgba(255,255,255,0.40)" }}>Nessun risultato per i filtri selezionati.</div>
+                  <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: "#FFFFFF", marginBottom: 12 }}>[ 0 risultati ]</div>
+                  <div className="hp-body" style={{ fontFamily: DISPLAY, fontSize: 15, color: "#FFFFFF" }}>Nessun risultato per i filtri selezionati.</div>
                 </div>
               ) : (
                 <div className="nm-foundry-grid">

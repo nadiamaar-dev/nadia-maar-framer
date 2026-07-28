@@ -16,8 +16,8 @@ import FloatingContact from "./components/FloatingContact"
 
 /* ── tokens ── */
 const T = {
-  bg: "#060C18", text: "#F0F3F9", muted: "rgba(255,255,255,0.78)",
-  faint: "rgba(255,255,255,0.58)", border: "rgba(255,255,255,0.11)",
+  bg: "#060C18", text: "#FFFFFF", muted: "#FFFFFF",
+  faint: "#FFFFFF", border: "rgba(255,255,255,0.11)",
   accent: "#B83240", accentLt: "#BE3648", green: "#10B981",
   surface: "rgba(255,255,255,0.055)", surfaceHi: "rgba(255,255,255,0.10)",
 } as const
@@ -138,7 +138,7 @@ function Chip({ text }: { text: string }) {
   return (
     <span style={{
       fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.04em",
-      color: "rgba(255,255,255,0.72)", padding: "5px 11px", borderRadius: 7,
+      color: "#FFFFFF", padding: "5px 11px", borderRadius: 7,
       border: "1px solid rgba(255,255,255,0.20)", background: "rgba(255,255,255,0.035)",
       whiteSpace: "nowrap" as const,
     }}>{text}</span>
@@ -376,13 +376,13 @@ function Hero() {
           <div style={{ display: "inline-flex", alignItems: "center", gap: 14, marginBottom: 22 }}>
             <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", color: T.accentLt }}>§00</span>
             <span aria-hidden style={{ width: 30, height: 1, background: "linear-gradient(90deg, rgba(190,54,72,0.6), rgba(190,54,72,0.1))" }} />
-            <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.52)" }}>Case Studies</span>
+            <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>Case Studies</span>
           </div>
         </Reveal>
 
         {/* headline — §04 typographic composition (outlined + solid white) */}
         <div style={{ position: "relative" }}>
-          <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.26em", color: "rgba(255,255,255,0.58)", marginBottom: 10, textTransform: "uppercase" as const }}>Il mio</div>
+          <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.26em", color: "#FFFFFF", marginBottom: 10, textTransform: "uppercase" as const }}>Il mio</div>
 
           <motion.h1
             className="pr-hero-h1"
@@ -396,15 +396,15 @@ function Hero() {
             className="pr-hero-h1"
             initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.18, ease }}
-            style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(48px,9vw,120px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "#F0F3F9", userSelect: "none" }}>
+            style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(48px,9vw,120px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "#FFFFFF", userSelect: "none" }}>
             WORKS
           </motion.div>
         </div>
 
         <Reveal delay={0.16}>
-          <p style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "clamp(18px,2.4vw,28px)", lineHeight: 1.28, letterSpacing: "-0.02em", color: "rgba(255,255,255,0.86)", margin: "22px 0 0", maxWidth: 720 }}>
+          <p style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "clamp(18px,2.4vw,28px)", lineHeight: 1.28, letterSpacing: "-0.02em", color: "#FFFFFF", margin: "22px 0 0", maxWidth: 720 }}>
             Ingegneria e scaling di{" "}
-            <span style={{ color: "rgba(255,255,255,0.53)", fontWeight: 300 }}>prodotti digitali complessi.</span>
+            <span style={{ color: "#FFFFFF", fontWeight: 300 }}>prodotti digitali complessi.</span>
           </p>
         </Reveal>
 
@@ -423,9 +423,9 @@ function Hero() {
                 style={{ textDecoration: "none", display: "block", padding: "18px 20px", borderRadius: 14, ...GLASS }}>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 8 }}>
                   <span style={{ fontFamily: MONO, fontSize: 26, fontWeight: 900, letterSpacing: "-0.05em", color: "rgba(190,54,72,0.55)" }}>{c.n}</span>
-                  <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: ".13em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.62)" }}>{c.category}</span>
+                  <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: ".13em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>{c.category}</span>
                 </div>
-                <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 17.5, letterSpacing: "-0.015em", lineHeight: 1.3, color: "#F0F3F9", display: "block" }}>{c.title}</span>
+                <span style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 17.5, letterSpacing: "-0.015em", lineHeight: 1.3, color: "#FFFFFF", display: "block" }}>{c.title}</span>
               </a>
             ))}
           </div>
@@ -475,7 +475,7 @@ function SolutionCard({ s, i }: { s: { t: string; d: string }; i: number }) {
         <div style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: hov ? T.accentLt : "rgba(184,50,64,0.55)", marginBottom: 14, transition: "color 0.28s" }}>[ 0{i + 1} ]</div>
 
         {/* title */}
-        <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", lineHeight: 1.25, margin: "0 0 9px", color: "#F0F3F9" }}>{s.t}</h4>
+        <h4 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", lineHeight: 1.25, margin: "0 0 9px", color: "#FFFFFF" }}>{s.t}</h4>
 
         {/* body */}
         <p style={{ ...BODY, color: T.muted, margin: 0 }}>{s.d}</p>
@@ -506,10 +506,10 @@ function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
               <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
                 <span style={{ fontFamily: MONO, fontSize: 44, fontWeight: 900, letterSpacing: "-0.06em", color: T.accentLt, lineHeight: 1 }}>{c.n}</span>
                 <span style={{ width: 26, height: 1, background: `linear-gradient(90deg, ${T.accentLt}, transparent)` }} />
-                <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.5)" }}>{c.category}</span>
+                <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>{c.category}</span>
               </div>
 
-              <h2 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(26px,3.2vw,42px)", lineHeight: 1.06, letterSpacing: "-0.035em", color: "#F0F3F9", margin: "0 0 16px" }}>{c.title}</h2>
+              <h2 style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(26px,3.2vw,42px)", lineHeight: 1.06, letterSpacing: "-0.035em", color: "#FFFFFF", margin: "0 0 16px" }}>{c.title}</h2>
 
               <p style={{ ...BODY, color: T.faint, margin: "0 0 26px", maxWidth: 420 }}>{c.subtitle}</p>
             </Reveal>
@@ -525,10 +525,10 @@ function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
                   {["#FF5F57", "#FEBC2E", "#28C840"].map(col => (
                     <span key={col} style={{ width: 9, height: 9, borderRadius: "50%", background: col, opacity: 0.72 }} />
                   ))}
-                  <span style={{ marginLeft: 6, fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.42)" }}>{c.category} · preview</span>
+                  <span style={{ marginLeft: 6, fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>{c.category} · preview</span>
                   <span style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6 }}>
                     <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.green, boxShadow: `0 0 8px ${T.green}` }} />
-                    <span style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.18em", color: "rgba(255,255,255,0.34)" }}>LIVE</span>
+                    <span style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.18em", color: "#FFFFFF" }}>LIVE</span>
                   </span>
                 </div>
 
@@ -553,8 +553,8 @@ function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
               <div className="pr-metrics" style={{ marginBottom: 18 }}>
                 {c.metrics.map((m, i) => (
                   <div key={i} style={{ padding: "14px 12px", borderRadius: 12, ...GLASS }}>
-                    <div style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 22, letterSpacing: "-0.03em", color: "#F0F3F9", lineHeight: 1 }}>{m.v}</div>
-                    <div style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: ".08em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.5)", marginTop: 7 }}>{m.l}</div>
+                    <div style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 22, letterSpacing: "-0.03em", color: "#FFFFFF", lineHeight: 1 }}>{m.v}</div>
+                    <div style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: ".08em", textTransform: "uppercase" as const, color: "#FFFFFF", marginTop: 7 }}>{m.l}</div>
                   </div>
                 ))}
               </div>
@@ -563,7 +563,7 @@ function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
             {/* stack */}
             <Reveal delay={0.22}>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-                <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.32)", alignSelf: "center", marginRight: 4 }}>Stack —</span>
+                <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "#FFFFFF", alignSelf: "center", marginRight: 4 }}>Stack —</span>
                 {c.stack.map(s => <Chip key={s} text={s} />)}
               </div>
             </Reveal>
@@ -617,7 +617,7 @@ function FinalCTA() {
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10.5, letterSpacing: ".2em", textTransform: "uppercase" as const, color: T.accentLt, marginBottom: 20 }}>
                 <span>●</span><span>Prossimo Progetto</span>
               </div>
-              <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(28px,4vw,50px)", lineHeight: 1.06, letterSpacing: "-0.04em", color: "#F0F3F9", margin: "0 0 18px" }}>
+              <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(28px,4vw,50px)", lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 18px" }}>
                 Pronto a discutere il tuo prossimo progetto?
               </h2>
               <p style={{ ...BODY, color: T.muted, margin: "0 0 34px", maxWidth: 520 }}>
@@ -627,8 +627,8 @@ function FinalCTA() {
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
                 <motion.a href="/#s9" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
                   style={{ minHeight: 54, padding: 0, borderRadius: 12, cursor: "pointer", textDecoration: "none", border: "1px solid rgba(184,50,64,0.80)", background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", display: "inline-flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
-                  <span style={{ padding: "0 14px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.85)" }}>[→]</span>
-                  <span style={{ display: "flex", alignItems: "center", gap: 14, padding: "0 20px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#F0F3F9" }}>
+                  <span style={{ padding: "0 14px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[→]</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 14, padding: "0 20px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
                     Avvia il tuo Progetto <span style={{ fontSize: 14 }}>→</span>
                   </span>
                 </motion.a>

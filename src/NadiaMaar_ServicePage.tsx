@@ -7,8 +7,8 @@ import Background from "./components/Background"
 
 /* ── tokens ── */
 const T = {
-  bg: "#060C18", text: "#F0F3F9", muted: "rgba(255,255,255,0.78)",
-  faint: "rgba(255,255,255,0.58)", border: "rgba(255,255,255,0.11)",
+  bg: "#060C18", text: "#FFFFFF", muted: "#FFFFFF",
+  faint: "#FFFFFF", border: "rgba(255,255,255,0.11)",
   accent: "#B83240", accentLt: "#BE3648", green: "#10B981",
   surface: "rgba(255,255,255,0.055)", surfaceHi: "rgba(255,255,255,0.10)",
 } as const
@@ -70,6 +70,8 @@ const SVC_CSS = `
   @keyframes colon-blink { 0%,100%{opacity:.55} 50%{opacity:.15} }
   .dt-colon { animation: colon-blink 1s ease-in-out infinite; display:inline-block; }
   @media(max-width:768px){
+    /* body copy stays at 16px on phones — !important beats the inline size */
+    .hp-body { font-size:16px !important; }
     .svc-wrap { padding:0 20px !important; }
     .svc-hero-title { font-size:clamp(32px,8vw,52px) !important; }
     .svc-offer-grid { grid-template-columns:1fr !important; }
@@ -195,10 +197,10 @@ function DateTimeWidget() {
   const pad = (n: number) => String(n).padStart(2, "0")
   return (
     <div style={{display:"flex",flexDirection:"column",gap:1}}>
-      <span style={{fontFamily:MONO,fontSize:9,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.37)"}}>
+      <span style={{fontFamily:MONO,fontSize:9,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#FFFFFF"}}>
         {now.toLocaleDateString("it-IT",{day:"2-digit",month:"short",year:"numeric"})}
       </span>
-      <span style={{fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",color:"rgba(255,255,255,0.63)"}}>
+      <span style={{fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",color:"#FFFFFF"}}>
         {pad(now.getHours())}<span className="dt-colon">:</span>{pad(now.getMinutes())}<span className="dt-colon">:</span>{pad(now.getSeconds())}
       </span>
     </div>
@@ -336,8 +338,8 @@ function ContactModal({onClose}:{onClose:()=>void}) {
               <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                 onClick={()=>setSent(true)}
                 style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(184,50,64,0.80)",background:"linear-gradient(90deg,rgba(184,50,64,0.34) 0%,rgba(184,50,64,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden",marginTop:4}}>
-                <span style={{padding:"12px 14px 12px 16px",borderRight:"1px solid rgba(184,50,64,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[→]</span>
-                <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 20px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.90)",fontWeight:500}}>Invia Messaggio</span>
+                <span style={{padding:"12px 14px 12px 16px",borderRight:"1px solid rgba(184,50,64,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"#FFFFFF",flexShrink:0}}>[→]</span>
+                <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 20px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"#FFFFFF",fontWeight:500}}>Invia Messaggio</span>
               </motion.button>
             </div>
           </>
@@ -651,20 +653,20 @@ function ServicePage({data}:{data:ServiceData}) {
                   onMouseEnter={e=>(e.currentTarget.style.color="#fff")} onMouseLeave={e=>(e.currentTarget.style.color=T.faint)}>
                   <ArrowLeftIcon size={10} /> Home
                 </motion.a>
-                <span style={{color:"rgba(255,255,255,0.20)"}}>·</span>
+                <span style={{color:"#FFFFFF"}}>·</span>
                 <span style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:T.accentLt}}>{data.eyebrow}</span>
               </div>
             </Reveal>
 
             <Reveal delay={0.04}>
-              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.46)",marginBottom:20}}>
+              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#FFFFFF",marginBottom:20}}>
                 <span style={{color:T.accentLt}}>//</span>
                 <span>[ {data.num} · Servizio ]</span>
               </div>
             </Reveal>
 
             <Reveal delay={0.08}>
-              <h1 className="svc-hero-title" style={{fontFamily:DISPLAY,fontSize:"clamp(36px,5.5vw,72px)",fontWeight:800,lineHeight:1.05,letterSpacing:"-0.03em",color:"#F0F3F9",maxWidth:840,marginBottom:24}}>
+              <h1 className="svc-hero-title" style={{fontFamily:DISPLAY,fontSize:"clamp(36px,5.5vw,72px)",fontWeight:800,lineHeight:1.05,letterSpacing:"-0.03em",color:"#FFFFFF",maxWidth:840,marginBottom:24}}>
                 {data.title}
               </h1>
             </Reveal>
@@ -680,8 +682,8 @@ function ServicePage({data}:{data:ServiceData}) {
                 <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                   onClick={()=>setModalOpen(true)}
                   style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(184,50,64,0.80)",background:"linear-gradient(90deg,rgba(184,50,64,0.34) 0%,rgba(184,50,64,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
-                  <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(184,50,64,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
-                  <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 22px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.92)",fontWeight:500}}>
+                  <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(184,50,64,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"#FFFFFF",flexShrink:0}}>[{data.num}]</span>
+                  <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 22px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"#FFFFFF",fontWeight:500}}>
                     {data.cta.btn} <ArrowRightIcon size={11} />
                   </span>
                 </motion.button>
@@ -704,10 +706,10 @@ function ServicePage({data}:{data:ServiceData}) {
               <style>{`.svc-what-grid{@media(max-width:768px){grid-template-columns:1fr!important}}`}</style>
               <div>
                 <Reveal>
-                  <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.46)",marginBottom:20}}>
+                  <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#FFFFFF",marginBottom:20}}>
                     <span style={{color:T.accentLt}}>//</span><span>[ Cosa Facciamo ]</span>
                   </div>
-                  <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#F0F3F9",marginBottom:28}}>
+                  <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:28}}>
                     {data.whatWeDo.heading}
                   </h2>
                   {data.whatWeDo.body.map((p,i)=>(
@@ -724,7 +726,7 @@ function ServicePage({data}:{data:ServiceData}) {
                       style={{"--base":"28","--spread":"36","--radius":"16","--border":"1","--size":"180",display:"flex",alignItems:"center",gap:20,padding:"22px 24px",borderRadius:16,background:"rgba(255,255,255,0.055)",border:"1px solid rgba(255,255,255,0.20)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",position:"relative",overflow:"hidden"} as React.CSSProperties}>
                       <div style={{position:"absolute",left:0,top:0,bottom:0,width:3,background:data.gradient,borderRadius:"16px 0 0 16px"}} />
                       <div style={{paddingLeft:8}}>
-                        <div style={{fontFamily:DISPLAY,fontSize:32,fontWeight:800,color:"#F0F3F9",letterSpacing:"-0.03em",lineHeight:1}}>{s.value}</div>
+                        <div style={{fontFamily:DISPLAY,fontSize:32,fontWeight:800,color:"#FFFFFF",letterSpacing:"-0.03em",lineHeight:1}}>{s.value}</div>
                         <div style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:T.faint,marginTop:6}}>{s.label}</div>
                       </div>
                     </motion.div>
@@ -739,10 +741,10 @@ function ServicePage({data}:{data:ServiceData}) {
         <section style={{padding:"88px 0",borderBottom:`1px solid rgba(255,255,255,0.12)`}}>
           <div style={{...WRAP}} className="svc-wrap">
             <Reveal>
-              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.46)",marginBottom:20}}>
+              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#FFFFFF",marginBottom:20}}>
                 <span style={{color:T.accentLt}}>//</span><span>[ Cosa Offriamo ]</span>
               </div>
-              <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#F0F3F9",marginBottom:48}}>
+              <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:48}}>
                 {data.whatWeOffer.heading}
               </h2>
             </Reveal>
@@ -760,10 +762,10 @@ function ServicePage({data}:{data:ServiceData}) {
         <section style={{padding:"88px 0",borderBottom:`1px solid rgba(255,255,255,0.12)`}}>
           <div style={{...WRAP}} className="svc-wrap">
             <Reveal>
-              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.46)",marginBottom:20}}>
+              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#FFFFFF",marginBottom:20}}>
                 <span style={{color:T.accentLt}}>//</span><span>[ Come lo Realizziamo ]</span>
               </div>
-              <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#F0F3F9",marginBottom:56}}>
+              <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:56}}>
                 {data.howWeDoIt.heading}
               </h2>
             </Reveal>
@@ -796,7 +798,7 @@ function ServicePage({data}:{data:ServiceData}) {
                     <PingDot color={T.accentLt} size={6} />
                     <span style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.20em",textTransform:"uppercase" as const,color:T.accentLt}}>Disponibile · 2026</span>
                   </div>
-                  <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(24px,3.2vw,44px)",fontWeight:800,lineHeight:1.1,letterSpacing:"-0.025em",color:"#F0F3F9",marginBottom:18,maxWidth:640,margin:"0 auto 18px"}}>
+                  <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(24px,3.2vw,44px)",fontWeight:800,lineHeight:1.1,letterSpacing:"-0.025em",color:"#FFFFFF",marginBottom:18,maxWidth:640,margin:"0 auto 18px"}}>
                     {data.cta.heading}
                   </h2>
                   <p style={{...BODY,color:T.muted,maxWidth:500,margin:"0 auto 36px"}}>
@@ -806,8 +808,8 @@ function ServicePage({data}:{data:ServiceData}) {
                     <motion.button whileHover={{scale:1.03}} whileTap={{scale:0.97}}
                       onClick={()=>setModalOpen(true)}
                       style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(184,50,64,0.80)",background:"linear-gradient(90deg,rgba(184,50,64,0.34) 0%,rgba(184,50,64,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
-                      <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(184,50,64,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"rgba(255,255,255,0.85)",flexShrink:0}}>[{data.num}]</span>
-                      <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 24px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"rgba(255,255,255,0.92)",fontWeight:500}}>
+                      <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(184,50,64,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"#FFFFFF",flexShrink:0}}>[{data.num}]</span>
+                      <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 24px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"#FFFFFF",fontWeight:500}}>
                         {data.cta.btn} <ArrowRightIcon size={11} />
                       </span>
                     </motion.button>
@@ -837,11 +839,11 @@ function OfferCard({item,gradient}:{item:OfferItem;gradient:string}) {
     <motion.div data-glow="" onHoverStart={()=>setHov(true)} onHoverEnd={()=>setHov(false)}
       whileHover={{y:-6,scale:1.015}} transition={{duration:0.28,ease}}
       style={{"--base":"28","--spread":"36","--radius":"18","--border":"1","--size":"200",height:"100%",position:"relative",borderRadius:18,padding:"28px 24px",background:hov?"rgba(255,255,255,0.09)":"rgba(255,255,255,0.05)",border:`1px solid ${hov?"rgba(255,255,255,0.42)":"rgba(255,255,255,0.12)"}`,backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",boxShadow:hov?"inset 0 1px 0 rgba(255,255,255,0.63),0 20px 50px rgba(0,0,0,0.42)":"inset 0 1px 0 rgba(255,255,255,0.28),0 12px 36px rgba(0,0,0,0.28)",display:"flex",flexDirection:"column",gap:0,overflow:"hidden",transition:"background 0.25s,border-color 0.25s,box-shadow 0.3s"} as React.CSSProperties}>
-      <div style={{width:44,height:44,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",background:hov?gradient:"rgba(255,255,255,0.06)",border:`1px solid ${hov?"transparent":"rgba(255,255,255,0.12)"}`,color:hov?"#fff":"rgba(255,255,255,0.70)",marginBottom:18,flexShrink:0,transition:"background 0.3s,color 0.3s,border-color 0.3s"}}>
+      <div style={{width:44,height:44,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",background:hov?gradient:"rgba(255,255,255,0.06)",border:`1px solid ${hov?"transparent":"rgba(255,255,255,0.12)"}`,color:hov?"#fff":"#FFFFFF",marginBottom:18,flexShrink:0,transition:"background 0.3s,color 0.3s,border-color 0.3s"}}>
         {item.icon}
       </div>
-      <h3 style={{fontFamily:DISPLAY,fontSize:16,fontWeight:700,color:"#F0F3F9",marginBottom:10,lineHeight:1.25}}>{item.title}</h3>
-      <p style={{fontFamily:"'Inter',sans-serif",fontSize:13.5,color:T.muted,lineHeight:1.75,flex:1}}>{item.desc}</p>
+      <h3 style={{fontFamily:DISPLAY,fontSize:16,fontWeight:700,color:"#FFFFFF",marginBottom:10,lineHeight:1.25}}>{item.title}</h3>
+      <p className="hp-body" style={{fontFamily:"'Inter',sans-serif",fontSize:13.5,color:T.muted,lineHeight:1.75,flex:1}}>{item.desc}</p>
       <motion.div animate={{scaleX:hov?1:0}} transition={{duration:0.3,ease}}
         style={{position:"absolute",bottom:0,left:0,right:0,height:2,background:gradient,transformOrigin:"left",borderRadius:"0 0 18px 18px"}} />
     </motion.div>
@@ -858,15 +860,15 @@ function ProcessStep({step,index,total,gradient,accentColor}:{step:Step;index:nu
       {/* step number circle */}
       <div className="svc-step-num" style={{display:"flex",justifyContent:"center",paddingTop:4}}>
         <motion.div animate={{scale:hov?1.08:1,background:hov?gradient:"rgba(255,255,255,0.06)"}} transition={{duration:0.25}}
-          style={{width:36,height:36,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",border:`1px solid ${hov?accentColor:"rgba(255,255,255,0.16)"}`,flexShrink:0,position:"relative",zIndex:2,fontFamily:MONO,fontSize:10,fontWeight:600,color:hov?"#fff":"rgba(255,255,255,0.53)",letterSpacing:"0.10em",boxShadow:hov?`0 0 20px ${accentColor}`:"none",transition:"box-shadow 0.25s,border-color 0.25s"}}>
+          style={{width:36,height:36,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",border:`1px solid ${hov?accentColor:"rgba(255,255,255,0.16)"}`,flexShrink:0,position:"relative",zIndex:2,fontFamily:MONO,fontSize:10,fontWeight:600,color:hov?"#fff":"#FFFFFF",letterSpacing:"0.10em",boxShadow:hov?`0 0 20px ${accentColor}`:"none",transition:"box-shadow 0.25s,border-color 0.25s"}}>
           {String(index+1).padStart(2,"0")}
         </motion.div>
       </div>
       {/* content */}
       <motion.div animate={{x:hov?4:0}} transition={{duration:0.22}}
         style={{padding:"0 0 0 4px"}}>
-        <h3 style={{fontFamily:DISPLAY,fontSize:18,fontWeight:700,color:"#F0F3F9",lineHeight:1.25,marginBottom:10}}>{step.title}</h3>
-        <p style={{fontFamily:"'Inter',sans-serif",fontSize:14.5,color:T.muted,lineHeight:1.78}}>{step.desc}</p>
+        <h3 style={{fontFamily:DISPLAY,fontSize:18,fontWeight:700,color:"#FFFFFF",lineHeight:1.25,marginBottom:10}}>{step.title}</h3>
+        <p className="hp-body" style={{fontFamily:"'Inter',sans-serif",fontSize:14.5,color:T.muted,lineHeight:1.78}}>{step.desc}</p>
         {!isLast && <div style={{width:"100%",height:1,background:"rgba(255,255,255,0.05)",marginTop:32}} />}
       </motion.div>
     </motion.div>

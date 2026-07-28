@@ -106,7 +106,7 @@ export default function Shell({
         <div style={{
           display: "inline-flex", alignItems: "center", gap: 8, marginTop: 12,
           fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em",
-          textTransform: "uppercase" as const, color: "rgba(255,255,255,0.72)",
+          textTransform: "uppercase" as const, color: "#FFFFFF",
           border: "1px solid rgba(255,255,255,0.28)", borderRadius: 6,
           padding: "4px 9px", background: "rgba(255,255,255,0.04)",
         }}>
@@ -150,13 +150,13 @@ export default function Shell({
               {roleLabel}
             </p>
             <p style={{
-              fontFamily: MONO, fontSize: 9.5, color: "rgba(255,255,255,0.72)",
+              fontFamily: MONO, fontSize: 9.5, color: "#FFFFFF",
               margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>
               {email ?? "—"}
             </p>
           </div>
-          {onEditProfile && <Icon name="edit" size={12} style={{ color: "rgba(255,255,255,0.58)", flexShrink: 0 }} />}
+          {onEditProfile && <Icon name="edit" size={12} style={{ color: "#FFFFFF", flexShrink: 0 }} />}
         </button>
       </div>
 
@@ -177,14 +177,14 @@ export default function Shell({
                 border: `1px solid ${isActive ? "rgba(184,50,64,0.16)" : "transparent"}`,
                 borderLeft: isActive ? "3px solid rgba(184,50,64,0.70)" : "3px solid transparent",
                 boxShadow: "none",
-                color: isActive ? "rgba(255,255,255,0.95)" : TL.muted,
+                color: "#FFFFFF",
                 cursor: "pointer", transition: "all 0.16s ease",
               }}
             >
               {/* [01] index — matches Header menu [01] style */}
               <span style={{
                 fontFamily: MONO, fontSize: 9, letterSpacing: "0.08em", flexShrink: 0, width: 22,
-                color: isActive ? "rgba(184,50,64,0.55)" : "rgba(255,255,255,0.42)",
+                color: isActive ? "rgba(184,50,64,0.55)" : "#FFFFFF",
               }}>
                 [{num}]
               </span>
@@ -224,7 +224,7 @@ export default function Shell({
               padding: "9px 10px", borderRadius: 9, textDecoration: "none",
               border: "1px solid rgba(255,255,255,0.42)", background: "rgba(255,255,255,0.05)",
               fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.10em",
-              textTransform: "uppercase" as const, color: "#F0F3F9",
+              textTransform: "uppercase" as const, color: "#FFFFFF",
               transition: "all 0.18s",
             }}
             onMouseEnter={e => {
@@ -234,7 +234,7 @@ export default function Shell({
             }}
             onMouseLeave={e => {
               const el = e.currentTarget as HTMLElement
-              el.style.color = "#F0F3F9"; el.style.borderColor = "rgba(255,255,255,0.42)"
+              el.style.color = "#FFFFFF"; el.style.borderColor = "rgba(255,255,255,0.42)"
               el.style.background = "rgba(255,255,255,0.05)"
             }}
           >
@@ -249,7 +249,7 @@ export default function Shell({
             padding: "9px 10px", borderRadius: 9,
             border: "1px solid rgba(255,255,255,0.42)", background: "rgba(255,255,255,0.05)",
             fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.10em",
-            textTransform: "uppercase" as const, color: "#F0F3F9",
+            textTransform: "uppercase" as const, color: "#FFFFFF",
             cursor: "pointer", transition: "all 0.18s",
           }}
           onMouseEnter={e => {
@@ -259,7 +259,7 @@ export default function Shell({
           }}
           onMouseLeave={e => {
             const el = e.currentTarget as HTMLElement
-            el.style.color = "#F0F3F9"; el.style.borderColor = "rgba(255,255,255,0.42)"
+            el.style.color = "#FFFFFF"; el.style.borderColor = "rgba(255,255,255,0.42)"
             el.style.background = "rgba(255,255,255,0.05)"
           }}
         >
@@ -276,6 +276,15 @@ export default function Shell({
       className="portal-root"
       style={{ display: "flex", height: "100vh", overflow: "hidden", background: T.bg, fontFamily: DISPLAY }}
     >
+      {/* Mobile body-copy floor — mirrors the site's .hp-body rule.
+          Only prose/description paragraphs carry .pt-body; data cells,
+          labels, badges and numeric columns keep their dense sizes. */}
+      <style>{`
+        @media (max-width: 768px) {
+          .pt-body { font-size: 16px !important; }
+        }
+      `}</style>
+
       <Background portal />
 
       {/* ── Desktop sidebar — transparent = identical to Background ── */}
@@ -391,7 +400,7 @@ export default function Shell({
               <div style={{
                 display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 6,
                 fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em",
-                textTransform: "uppercase" as const, color: "rgba(255,255,255,0.72)",
+                textTransform: "uppercase" as const, color: "#FFFFFF",
                 border: "1px solid rgba(255,255,255,0.28)", borderRadius: 6,
                 padding: "4px 9px", background: "rgba(255,255,255,0.04)",
               }}>

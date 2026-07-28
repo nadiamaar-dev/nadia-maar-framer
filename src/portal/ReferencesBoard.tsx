@@ -149,7 +149,7 @@ export default function ReferencesBoard({ projectId, clientId, role, foundryItem
                     </button>
                   )}
                 </div>
-                {r.note && <p style={{ fontFamily: DISPLAY, fontSize: 12, lineHeight: 1.5, color: T.muted, margin: 0 }}>{r.note}</p>}
+                {r.note && <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12, lineHeight: 1.5, color: T.muted, margin: 0 }}>{r.note}</p>}
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: "auto", flexWrap: "wrap" }}>
                   {r.url && (
                     <a href={r.url} target="_blank" rel="noreferrer" className="portal-link" style={{ fontFamily: MONO, fontSize: 9.5, color: T.copperLt, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "100%" }}>
