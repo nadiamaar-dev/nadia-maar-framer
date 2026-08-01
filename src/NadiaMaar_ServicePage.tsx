@@ -32,12 +32,24 @@ const SVC_CSS = `
   ::-webkit-scrollbar-track { background: #060C18; }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); border-radius: 4px; }
   ::placeholder { color: rgba(255,255,255,0.22) !important; }
-  /* Il testo color mattone aveva un alone diffuso su tre livelli: era
-     l'equivalente testuale dei riflessi tolti dalle schede. Resta il colore. */
-  [style*="color: #BE3648"],
-  [style*='color: "#BE3648"'] { color: rgba(184,50,64,0.88) !important; }
   /* Lo spotlight che inseguiva il cursore è stato rimosso: in home e su
      About le schede sono vetro piatto, senza riflessi mobili. */
+  /* Firma verticale, identica per costruzione a quella dell'hero in home:
+     stessa famiglia, stesso peso, stessa quasi-invisibilità. Cambia solo la
+     tinta del filo, che prende l'accento della pagina. */
+  .svc-wordmark {
+    position:absolute; right:14px; top:40px; z-index:0; pointer-events:none;
+    writing-mode:vertical-rl; transform:rotate(180deg);
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-weight:900;
+    font-size:clamp(150px,15vw,214px); letter-spacing:-0.04em; line-height:0.84;
+    white-space:nowrap; color:rgba(255,255,255,0.018);
+    filter:blur(1px); user-select:none;
+  }
+  @media(max-width:1024px){ .svc-wordmark{ display:none } }
+  /* chi ha chiesto meno movimento non deve vedere nastri e orbite girare */
+  @media (prefers-reduced-motion: reduce) {
+    .svc-motif * { animation:none !important; transition:none !important; }
+  }
   @keyframes colon-blink { 0%,100%{opacity:.55} 50%{opacity:.15} }
   .dt-colon { animation: colon-blink 1s ease-in-out infinite; display:inline-block; }
   @media(max-width:768px){
@@ -46,6 +58,8 @@ const SVC_CSS = `
     .svc-wrap { padding:0 20px !important; }
     .svc-hero-title { font-size:clamp(32px,8vw,52px) !important; }
     .svc-offer-grid { grid-template-columns:1fr !important; }
+    .svc-bento-lead { grid-column:auto !important; }
+    .svc-stagger-cell { margin-top:0 !important; }
     .svc-step-row { grid-template-columns:1fr !important; gap:0 !important; }
     .svc-step-num { display:none !important; }
     .svc-nav-desktop { display:none !important; }
@@ -77,58 +91,6 @@ const MailIcon = ({size=15}:{size?:number}) => (
     <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/>
   </svg>
 )
-const LinkedinIcon = () => (
-  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/>
-    <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
-  </svg>
-)
-const GithubIcon = () => (
-  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
-  </svg>
-)
-const InstagramIcon = () => (
-  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-    <rect x="2" y="2" width="20" height="20" rx="5"/>
-    <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
-    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" strokeWidth="2"/>
-  </svg>
-)
-const DiscordIcon = () => (
-  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
-    <path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.055 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-  </svg>
-)
-
-const SOCIALS = [
-  { label:"LinkedIn",  href:"https://linkedin.com/in/nadia-maar", Icon: LinkedinIcon },
-  { label:"GitHub",    href:"https://github.com/nadiamaar-dev",   Icon: GithubIcon },
-  { label:"Instagram", href:"https://instagram.com/nadia.maar",   Icon: InstagramIcon },
-  { label:"Discord",   href:"#",                                  Icon: DiscordIcon },
-]
-
-/* ── NMmark ── */
-function NMmark({size=32,id="nm-sg",hover=false}:{size?:number;id?:string;hover?:boolean}) {
-  return (
-    <svg viewBox="0 2 28 22" width={size} height={Math.round(size*22/28)} fill="none" strokeLinecap="square" strokeLinejoin="miter">
-      <defs>
-        <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor={hover?"#F0F3F9":"rgba(255,255,255,0.90)"} />
-          <stop offset="44%"  stopColor={hover?"#F0F3F9":"rgba(255,255,255,0.90)"} />
-          <stop offset="56%"  stopColor="#BE3648" />
-          <stop offset="100%" stopColor={hover?"#943830":"#7C222B"} />
-        </linearGradient>
-      </defs>
-      <motion.path d="M 2,22 L 2,2 L 13,22 L 13,2 L 19.5,12 L 26,2 L 26,22"
-        stroke={`url(#${id})`} strokeWidth="1.85"
-        initial={{pathLength:0,opacity:0}} animate={{pathLength:1,opacity:1}}
-        transition={{pathLength:{duration:0.9,ease,delay:0.15},opacity:{duration:0.01}}}
-      />
-    </svg>
-  )
-}
-
 /* ── PingDot ── */
 function PingDot({color=T.green,size=10}:{color?:string;size?:number}) {
   return (
@@ -144,10 +106,13 @@ function PingDot({color=T.green,size=10}:{color?:string;size?:number}) {
 }
 
 /* ── Reveal ── */
-function Reveal({children,delay=0}:{children:React.ReactNode;delay?:number}) {
+/** full: dentro una griglia il wrapper deve occupare tutta la cella, altrimenti
+ *  le schede della stessa riga finiscono con altezze diverse. */
+function Reveal({children,delay=0,full=false}:{children:React.ReactNode;delay?:number;full?:boolean}) {
   return (
     <motion.div initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}}
-      viewport={{once:true,margin:"-10% 0px"}} transition={{duration:0.65,delay,ease}}>
+      viewport={{once:true,margin:"-10% 0px"}} transition={{duration:0.65,delay,ease}}
+      style={full?{height:"100%"}:undefined}>
       {children}
     </motion.div>
   )
@@ -159,110 +124,6 @@ function ScrollProgress() {
   const {scrollYProgress} = useScroll()
   const scaleX = useSpring(scrollYProgress,{stiffness:140,damping:26,mass:0.3})
   return <motion.div aria-hidden style={{position:"fixed",top:0,left:0,right:0,height:2,zIndex:500,transformOrigin:"0% 50%",scaleX,background:"linear-gradient(90deg,rgba(90,40,40,1),#7C222B,#BE3648)",boxShadow:"0 0 12px rgba(184,50,64,0.7)"}} />
-}
-
-/* ── DateTimeWidget ── */
-function DateTimeWidget() {
-  const [now, setNow] = useState(() => new Date())
-  useEffect(() => { const id = setInterval(() => setNow(new Date()), 1000); return () => clearInterval(id) }, [])
-  const pad = (n: number) => String(n).padStart(2, "0")
-  return (
-    <div style={{display:"flex",flexDirection:"column",gap:1}}>
-      <span style={{fontFamily:MONO,fontSize:9,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#FFFFFF"}}>
-        {now.toLocaleDateString("it-IT",{day:"2-digit",month:"short",year:"numeric"})}
-      </span>
-      <span style={{fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",color:"#FFFFFF"}}>
-        {pad(now.getHours())}<span className="dt-colon">:</span>{pad(now.getMinutes())}<span className="dt-colon">:</span>{pad(now.getSeconds())}
-      </span>
-    </div>
-  )
-}
-
-/* ── MenuOverlay (service pages version — hrefs to main page) ── */
-const SVC_MENU_LINKS = [
-  { label:"Home",       href:"/" },
-  { label:"Soluzioni",  href:"/#soluzioni" },
-  { label:"Metodo",     href:"/#metodo" },
-  { label:"Projects",   href:"/projects" },
-  { label:"Portfolio",  href:"/#portfolio" },
-  { label:"Contatti",   href:"/#contatti" },
-  { label:"About",      href:"/about" },
-]
-
-function MenuOverlay({onClose}:{onClose:()=>void}) {
-  return (
-    <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:0.22}}
-      style={{position:"fixed",inset:0,zIndex:800,display:"flex"}}
-      onClick={e=>{ if(e.target===e.currentTarget) onClose() }}>
-      <div style={{position:"absolute",inset:0,background:"rgba(11,13,16,0.72)",backdropFilter:"blur(6px)",WebkitBackdropFilter:"blur(6px)"}} onClick={onClose} />
-      <motion.div initial={{x:"100%"}} animate={{x:0}} exit={{x:"100%"}} transition={{duration:0.38,ease}}
-        style={{position:"absolute",right:0,top:0,bottom:0,width:"min(360px,90vw)",background:"rgba(22,27,34,0.82)",backdropFilter:"blur(40px) saturate(0.80)",WebkitBackdropFilter:"blur(40px) saturate(0.80)",borderLeft:"1px solid rgba(255,255,255,0.16)",display:"flex",flexDirection:"column",padding:"80px 40px 40px"}}>
-        <nav style={{display:"flex",flexDirection:"column",gap:4}}>
-          {SVC_MENU_LINKS.map(({label,href}) => (
-            <motion.a key={label} href={href}
-              whileHover={{x:6}} transition={{duration:0.18}}
-              style={{display:"flex",alignItems:"center",gap:12,padding:"13px 0",textDecoration:"none",borderBottom:"1px solid rgba(255,255,255,0.05)",fontFamily:MONO,fontSize:12,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:T.muted,transition:"color 0.18s"}}
-              onMouseEnter={e=>(e.currentTarget.style.color="#fff")}
-              onMouseLeave={e=>(e.currentTarget.style.color=T.muted)}>
-              <span style={{width:16,height:1,background:"rgba(184,50,64,0.60)",display:"inline-block"}} aria-hidden />
-              {label}
-            </motion.a>
-          ))}
-        </nav>
-        <div style={{marginTop:"auto",display:"flex",gap:8}}>
-          {SOCIALS.map(({label,href,Icon})=>(
-            <motion.a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-              whileHover={{y:-3,scale:1.08}} transition={{type:"spring",stiffness:400,damping:16}}
-              style={{width:36,height:36,borderRadius:9,display:"flex",alignItems:"center",justifyContent:"center",color:T.faint,border:`1px solid ${T.border}`,backgroundColor:"rgba(255,255,255,0.03)",textDecoration:"none"}}>
-              <Icon />
-            </motion.a>
-          ))}
-        </div>
-      </motion.div>
-    </motion.div>
-  )
-}
-
-/* ── Navbar ── */
-function Navbar() {
-  const [scrolled,setScrolled] = useState(false)
-  const [menuOpen,setMenuOpen] = useState(false)
-  const [h,setH] = useState(false)
-  useEffect(() => {
-    const fn=()=>setScrolled(window.scrollY>48)
-    window.addEventListener("scroll",fn,{passive:true})
-    return ()=>window.removeEventListener("scroll",fn)
-  },[])
-  return (
-    <>
-      <motion.header initial={{y:-70,opacity:0}} animate={{y:0,opacity:1}} transition={{duration:0.7,ease}}
-        style={{position:"fixed",top:0,left:0,right:0,zIndex:400,height:64,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 32px",backdropFilter:scrolled?"blur(32px) saturate(0.85)":"none",WebkitBackdropFilter:scrolled?"blur(32px) saturate(0.85)":"none",background:scrolled?"rgba(22,27,34,0.78)":"transparent",borderBottom:`1px solid ${scrolled?"rgba(255,255,255,0.07)":"transparent"}`,transition:"background 0.4s,border-color 0.4s"} as React.CSSProperties}>
-        <DateTimeWidget />
-        <motion.a href="/" onHoverStart={()=>setH(true)} onHoverEnd={()=>setH(false)}
-          whileHover={{scale:1.03}} whileTap={{scale:0.96}}
-          style={{display:"inline-flex",alignItems:"center",gap:11,textDecoration:"none"}}>
-          <NMmark size={30} id="nm-svc-nav" hover={h} />
-          <span aria-hidden style={{width:1,height:14,background:"rgba(255,255,255,0.16)",flexShrink:0}} />
-          <motion.span animate={{opacity:h?1:0.70}} transition={{duration:0.25}}
-            style={{fontFamily:MONO,fontWeight:600,fontSize:11,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#fff",whiteSpace:"nowrap" as const}}>
-            Nadia Maar
-          </motion.span>
-        </motion.a>
-        <motion.button onClick={()=>setMenuOpen(o=>!o)}
-          whileHover={{scale:1.08}} whileTap={{scale:0.92}}
-          aria-label="Menu"
-          style={{background:"none",border:"none",cursor:"pointer",padding:"8px 4px",display:"flex",flexDirection:"column",gap:5,zIndex:401,flexShrink:0}}>
-          <motion.span animate={{rotate:menuOpen?45:0,y:menuOpen?7:0}} transition={{duration:0.26}}
-            style={{display:"block",width:22,height:1.8,background:menuOpen?"#fff":"rgba(255,255,255,0.80)",borderRadius:2,transformOrigin:"center"}} />
-          <motion.span animate={{opacity:menuOpen?0:1,width:menuOpen?0:14}} transition={{duration:0.18}}
-            style={{display:"block",width:14,height:1.8,background:"rgba(255,255,255,0.80)",borderRadius:2}} />
-          <motion.span animate={{rotate:menuOpen?-45:0,y:menuOpen?-7:0}} transition={{duration:0.26}}
-            style={{display:"block",width:22,height:1.8,background:menuOpen?"#fff":"rgba(255,255,255,0.80)",borderRadius:2,transformOrigin:"center"}} />
-        </motion.button>
-      </motion.header>
-      <AnimatePresence>{menuOpen && <MenuOverlay onClose={()=>setMenuOpen(false)} />}</AnimatePresence>
-    </>
-  )
 }
 
 /* ── ContactModal ── */
@@ -331,9 +192,23 @@ function createPortalIfNeeded(node: React.ReactNode) {
 ══════════════════════════════════════════════════════════════════════════ */
 interface OfferItem { icon: React.ReactNode; title: string; desc: string }
 interface Step      { title: string; desc: string }
+/** Il motivo animato che vive nell'hero: uno per servizio, scelto perché
+ *  racconta il mestiere invece di essere una decorazione qualsiasi. */
+type Motif = "conveyor" | "frame" | "nodes" | "bars" | "orbit"
+
+/** Come si dispongono le schede di "cosa offriamo". */
+type OfferLayout = "cards" | "wide" | "rows" | "stagger" | "bento"
+
 interface ServiceData {
   num: string; slug: string; title: string; subtitle: string; eyebrow: string
   gradient: string; accentColor: string
+  /** tinta piena del servizio: bordo del motivo, filo delle schede, numeri */
+  accent: string
+  motif: Motif
+  layout: OfferLayout
+  /** i tre occhielli di sezione, diversi per servizio: prima erano
+   *  "Cosa facciamo / Cosa offriamo / Come lo realizziamo" su tutte e cinque */
+  kickers: { what: string; offer: string; how: string }
   whatWeDo: { heading: string; body: string[]; stats: {value:string;label:string}[] }
   whatWeOffer: { heading: string; items: OfferItem[] }
   howWeDoIt: { heading: string; steps: Step[] }
@@ -352,8 +227,12 @@ const SERVICES: Record<string, ServiceData> = {
     title:"E-commerce ad Alta Conversione",
     subtitle:"Architetture Shopify su misura e headless commerce. Giacenze, cataloghi ad alto volume e logistica multi-corriere in un unico sistema: l'infrastruttura accompagna la crescita invece di frenarla.",
     eyebrow:"E-Commerce · Shopify · Automazione",
-    gradient:"linear-gradient(135deg,#7C222B 0%,#BE3648 100%)",
-    accentColor:"rgba(184,50,64,0.60)",
+    gradient:"linear-gradient(135deg,#B8323F 0%,#F0645C 100%)",
+    accentColor:"rgba(184,50,63,0.55)",
+    accent:"#E1483F",
+    motif:"conveyor",
+    layout:"cards",
+    kickers:{ what:"Il Problema", offer:"L'Infrastruttura", how:"Dall'Audit al Lancio" },
     whatWeDo:{
       heading:"Il tuo e-commerce è un asset — non un sito.",
       body:[
@@ -399,8 +278,12 @@ const SERVICES: Record<string, ServiceData> = {
     title:"Siti Corporate & Lead Generation",
     subtitle:"Presenza digitale per aziende e studi professionali. Architetture web costruite per reggere il confronto nel momento in cui il decisore vi sta valutando, e per trasformare quella visita in un contatto utile al commerciale.",
     eyebrow:"Corporate · UI/UX Premium · Lead Generation",
-    gradient:"linear-gradient(135deg,#AEB6C4 0%,#EDF1F7 100%)",
-    accentColor:"rgba(174,182,196,0.50)",
+    gradient:"linear-gradient(135deg,#3E6E8E 0%,#9FC7DE 100%)",
+    accentColor:"rgba(62,110,142,0.50)",
+    accent:"#5C93B8",
+    motif:"frame",
+    layout:"wide",
+    kickers:{ what:"Perché Conta", offer:"Cosa Comprende", how:"Il Percorso" },
     whatWeDo:{
       heading:"Il tuo sito è il tuo miglior commerciale.",
       body:[
@@ -446,8 +329,12 @@ const SERVICES: Record<string, ServiceData> = {
     title:"Applicazioni Web & Automazione Custom",
     subtitle:"Software su misura che collega CRM, ERP e sistemi di terze parti. Togliamo di mezzo i passaggi manuali, mettiamo i dati in un solo posto e costruiamo strumenti interni che lavorano anche quando l'ufficio è chiuso.",
     eyebrow:"Web App · CRM/ERP · Automazione Processi",
-    gradient:"linear-gradient(135deg,#AEB6C4 0%,#EDF1F7 100%)",
-    accentColor:"rgba(174,182,196,0.50)",
+    gradient:"linear-gradient(135deg,#4E7C6B 0%,#8FD3B4 100%)",
+    accentColor:"rgba(78,124,107,0.50)",
+    accent:"#5FA987",
+    motif:"nodes",
+    layout:"rows",
+    kickers:{ what:"Il Costo Nascosto", offer:"Cosa Costruiamo", how:"Come Procediamo" },
     whatWeDo:{
       heading:"Ogni processo manuale è un costo nascosto.",
       body:[
@@ -494,8 +381,12 @@ const SERVICES: Record<string, ServiceData> = {
     title:"SEO Strategico & Performance Marketing",
     subtitle:"Posizionamento organico previsto nell'architettura dal primo giorno e campagne Google e Meta governate sugli stessi dati. Due canali che si sostengono a vicenda, invece di competere per lo stesso budget.",
     eyebrow:"SEO Tecnico · Google Ads · Meta Ads",
-    gradient:"linear-gradient(135deg,#7C222B 0%,#DFA088 100%)",
-    accentColor:"rgba(184,50,64,0.60)",
+    gradient:"linear-gradient(135deg,#8A6A2F 0%,#E4C06A 100%)",
+    accentColor:"rgba(138,106,47,0.50)",
+    accent:"#C9A052",
+    motif:"bars",
+    layout:"stagger",
+    kickers:{ what:"La Logica", offer:"Le Leve", how:"Il Percorso" },
     whatWeDo:{
       heading:"L'organico è l'unico canale che non si spegne quando smetti di pagare.",
       body:[
@@ -541,8 +432,12 @@ const SERVICES: Record<string, ServiceData> = {
     title:"Integrazione AI & Sistemi Intelligenti",
     subtitle:"Agenti, modelli linguistici e ricerca sui documenti aziendali, integrati nei processi che già esistono. Non progetti pilota fini a sé stessi: casi d'uso scelti perché hanno un ritorno calcolabile.",
     eyebrow:"AI Agents · LLM · Automazione Intelligente",
-    gradient:"linear-gradient(135deg,#BE3648 0%,#DFA088 100%)",
-    accentColor:"rgba(184,50,64,0.60)",
+    gradient:"linear-gradient(135deg,#6A4C93 0%,#B79CE0 100%)",
+    accentColor:"rgba(106,76,147,0.50)",
+    accent:"#9070C4",
+    motif:"orbit",
+    layout:"bento",
+    kickers:{ what:"Quando Conviene", offer:"Gli Ambiti", how:"Dalla Valutazione alla Produzione" },
     whatWeDo:{
       heading:"L'AI conviene dove il processo è ripetitivo e i dati ci sono già.",
       body:[
@@ -588,6 +483,187 @@ const SERVICES: Record<string, ServiceData> = {
 /* ══════════════════════════════════════════════════════════════════════════
    SERVICE PAGE TEMPLATE
 ══════════════════════════════════════════════════════════════════════════ */
+/** #RRGGBB + alfa → rgba(). Gli accenti sono definiti in esadecimale una
+ *  volta sola, e da lì si ricavano bordi e velature senza duplicarli. */
+function hexA(hex: string, a: number): string {
+  const h = hex.replace("#", "")
+  const n = parseInt(h.length === 3 ? h.split("").map(c => c + c).join("") : h, 16)
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOTIVI DELL'HERO — uno per servizio
+   Tutti in SVG e a bassissimo contrasto: devono leggersi come una filigrana
+   dietro al titolo, non competere con il testo. Rispettano prefers-reduced-
+   motion tramite la classe svc-motif, che ferma le animazioni.
+══════════════════════════════════════════════════════════════════════════ */
+function HeroMotif({ motif, accent }: { motif: Motif; accent: string }) {
+  const line = hexA(accent, 0.30)
+  const soft = hexA(accent, 0.13)
+  const base: React.CSSProperties = {
+    position: "absolute", inset: 0, width: "100%", height: "100%",
+    pointerEvents: "none", zIndex: 0,
+  }
+
+  if (motif === "conveyor") {
+    /* e-commerce: nastri che scorrono, come merce che si muove */
+    return (
+      <svg style={base} className="svc-motif" viewBox="0 0 1200 420" preserveAspectRatio="none" aria-hidden>
+        {[70, 140, 210, 280, 350].map((y, i) => (
+          <g key={y}>
+            <line x1="0" y1={y} x2="1200" y2={y} stroke={soft} strokeWidth="1" />
+            <motion.rect y={y - 7} width="46" height="14" rx="3" fill="none" stroke={line} strokeWidth="1.1"
+              initial={{ x: -60 }} animate={{ x: 1260 }}
+              transition={{ duration: 13 + i * 2.5, repeat: Infinity, ease: "linear", delay: i * 1.7 }} />
+          </g>
+        ))}
+      </svg>
+    )
+  }
+
+  if (motif === "frame") {
+    /* corporate: cornici concentriche che respirano — ordine, misura */
+    return (
+      <svg style={base} className="svc-motif" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice" aria-hidden>
+        {[0, 1, 2, 3].map(i => (
+          <motion.rect key={i}
+            x={860 - i * 78} y={40 - i * 26} width={260 + i * 156} height={260 + i * 52} rx="4"
+            fill="none" stroke={i === 0 ? line : soft} strokeWidth="1"
+            animate={{ opacity: [0.35, 0.85, 0.35] }}
+            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: i * 0.8 }} />
+        ))}
+      </svg>
+    )
+  }
+
+  if (motif === "nodes") {
+    /* web app: nodi collegati che pulsano — sistemi che si parlano */
+    const N = [[880, 90], [1050, 150], [960, 250], [1120, 300], [820, 240]]
+    return (
+      <svg style={base} className="svc-motif" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice" aria-hidden>
+        {N.map(([x, y], i) => N.slice(i + 1).map(([x2, y2], j) => (
+          <line key={`${i}-${j}`} x1={x} y1={y} x2={x2} y2={y2} stroke={soft} strokeWidth="0.8" />
+        )))}
+        {N.map(([x, y], i) => (
+          <motion.circle key={i} cx={x} cy={y} r="5" fill="none" stroke={line} strokeWidth="1.2"
+            animate={{ r: [4, 8, 4], opacity: [0.4, 1, 0.4] }}
+            transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut", delay: i * 0.55 }} />
+        ))}
+      </svg>
+    )
+  }
+
+  if (motif === "bars") {
+    /* SEO: colonne che salgono a ritmi diversi — la crescita non è lineare */
+    return (
+      <svg style={base} className="svc-motif" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice" aria-hidden>
+        <line x1="820" y1="340" x2="1160" y2="340" stroke={soft} strokeWidth="1" />
+        {[0, 1, 2, 3, 4, 5].map(i => (
+          <motion.rect key={i} x={840 + i * 52} width="30" rx="2" fill="none" stroke={line} strokeWidth="1.1"
+            initial={{ height: 20, y: 320 }}
+            animate={{ height: [20, 60 + i * 26, 20], y: [320, 340 - (60 + i * 26), 320] }}
+            transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }} />
+        ))}
+      </svg>
+    )
+  }
+
+  /* AI: anelli in orbita attorno a un nucleo */
+  return (
+    <svg style={base} className="svc-motif" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice" aria-hidden>
+      <circle cx="1000" cy="200" r="6" fill="none" stroke={line} strokeWidth="1.4" />
+      {[52, 92, 132, 172].map((r, i) => (
+        <motion.ellipse key={r} cx="1000" cy="200" rx={r} ry={r * 0.42}
+          fill="none" stroke={i % 2 ? soft : line} strokeWidth="1"
+          style={{ transformOrigin: "1000px 200px" }}
+          animate={{ rotate: i % 2 ? [0, 360] : [360, 0] }}
+          transition={{ duration: 26 + i * 9, repeat: Infinity, ease: "linear" }} />
+      ))}
+    </svg>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   GRIGLIA DELL'OFFERTA — una disposizione per servizio
+   Le cinque pagine condividevano la stessa griglia a tre colonne: leggendole
+   una dopo l'altra sembravano la stessa pagina con parole diverse. La scheda
+   resta una sola, cambia come si dispone e quanto respira.
+══════════════════════════════════════════════════════════════════════════ */
+function OfferGrid({ data }: { data: ServiceData }) {
+  const items = data.whatWeOffer.items
+  const L = data.layout
+
+  /* rows: una colonna larga, la scheda diventa una riga con il filo a sinistra */
+  if (L === "rows") {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {items.map((item, i) => (
+          <Reveal key={i} delay={i * 0.05}>
+            <OfferCard item={item} gradient={data.gradient} accent={data.accent} variant="row" />
+          </Reveal>
+        ))}
+      </div>
+    )
+  }
+
+  /* wide: due colonne, più aria — adatto a un pubblico che legge, non scorre */
+  if (L === "wide") {
+    return (
+      <div className="svc-offer-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 18 }}>
+        {items.map((item, i) => (
+          <Reveal key={i} delay={i * 0.06} full>
+            <OfferCard item={item} gradient={data.gradient} accent={data.accent} variant="wide" />
+          </Reveal>
+        ))}
+      </div>
+    )
+  }
+
+  /* stagger: tre colonne sfalsate in verticale, come posizioni in classifica */
+  if (L === "stagger") {
+    return (
+      <div className="svc-offer-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, alignItems: "start" }}>
+        {items.map((item, i) => (
+          <Reveal key={i} delay={i * 0.06} full>
+            <div className="svc-stagger-cell" style={{ marginTop: (i % 3) * 26, height: "100%" }}>
+              <OfferCard item={item} gradient={data.gradient} accent={data.accent} />
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    )
+  }
+
+  /* bento: la prima occupa due colonne — c'è sempre un ambito che pesa di più */
+  if (L === "bento") {
+    return (
+      <div className="svc-offer-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
+        {/* lo span deve stare sull'elemento della griglia, non dentro Reveal:
+            altrimenti a occupare due colonne sarebbe il wrapper dell'animazione */}
+        {items.map((item, i) => (
+          <div key={i} className={i === 0 ? "svc-bento-lead" : undefined}
+            style={i === 0 ? { gridColumn: "span 2" } : undefined}>
+            <Reveal delay={i * 0.06} full>
+              <OfferCard item={item} gradient={data.gradient} accent={data.accent} variant={i === 0 ? "wide" : "card"} />
+            </Reveal>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  /* cards: tre colonne piane, la disposizione di partenza */
+  return (
+    <div className="svc-offer-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
+      {items.map((item, i) => (
+        <Reveal key={i} delay={i * 0.06} full>
+          <OfferCard item={item} gradient={data.gradient} accent={data.accent} />
+        </Reveal>
+      ))}
+    </div>
+  )
+}
+
 function ServicePage({data}:{data:ServiceData}) {
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -603,8 +679,15 @@ function ServicePage({data}:{data:ServiceData}) {
       <div style={{position:"relative",zIndex:1,paddingTop:64}}>
 
         {/* ── HERO ── */}
-        <section style={{padding:"80px 0 72px",borderBottom:`1px solid rgba(255,255,255,0.12)`}}>
-          <div style={{...WRAP,position:"relative"}} className="svc-wrap">
+        <section style={{padding:"80px 0 72px",borderBottom:`1px solid rgba(255,255,255,0.12)`,position:"relative",overflow:"hidden"}}>
+          {/* Motivo animato: uno per servizio. Non è decorazione generica —
+              ognuno prova a dire il mestiere della pagina in cui sta. */}
+          <HeroMotif motif={data.motif} accent={data.accent} />
+          {/* Stessa firma verticale dell'hero in home, tinta con l'accento
+              della pagina, così le cinque schermate restano riconoscibili
+              come parte dello stesso sito. */}
+          <div className="svc-wordmark" aria-hidden style={{WebkitTextStroke:`1px ${hexA(data.accent,0.16)}`}}>MAAR</div>
+          <div style={{...WRAP,position:"relative",zIndex:1}} className="svc-wrap">
             {/* breadcrumb */}
             <Reveal>
               <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:32}}>
@@ -613,13 +696,13 @@ function ServicePage({data}:{data:ServiceData}) {
                   <ArrowLeftIcon size={10} /> Home
                 </motion.a>
                 <span style={{color:"#FFFFFF"}}>·</span>
-                <span style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:T.accentLt}}>{data.eyebrow}</span>
+                <span style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:data.accent}}>{data.eyebrow}</span>
               </div>
             </Reveal>
 
             <Reveal delay={0.04}>
               <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#FFFFFF",marginBottom:20}}>
-                <span style={{color:T.accentLt}}>//</span>
+                <span style={{color:data.accent}}>//</span>
                 <span>[ {data.num} · Servizio ]</span>
               </div>
             </Reveal>
@@ -640,8 +723,8 @@ function ServicePage({data}:{data:ServiceData}) {
               <div style={{display:"flex",gap:12,flexWrap:"wrap" as const,alignItems:"center"}}>
                 <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                   onClick={()=>setModalOpen(true)}
-                  style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(184,50,64,0.80)",background:"linear-gradient(90deg,rgba(184,50,64,0.34) 0%,rgba(184,50,64,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
-                  <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(184,50,64,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"#FFFFFF",flexShrink:0}}>[{data.num}]</span>
+                  style={{display:"flex",alignItems:"stretch",borderRadius:12,border:`1px solid ${hexA(data.accent,0.80)}`,background:`linear-gradient(90deg,${hexA(data.accent,0.30)} 0%,${hexA(data.accent,0.17)} 100%)`,backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
+                  <span style={{padding:"14px 12px 14px 16px",borderRight:`1px solid ${hexA(data.accent,0.35)}`,display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"#FFFFFF",flexShrink:0}}>[{data.num}]</span>
                   <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 22px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"#FFFFFF",fontWeight:500}}>
                     {data.cta.btn} <ArrowRightIcon size={11} />
                   </span>
@@ -668,7 +751,7 @@ function ServicePage({data}:{data:ServiceData}) {
               <div>
                 <Reveal>
                   <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#FFFFFF",marginBottom:20}}>
-                    <span style={{color:T.accentLt}}>//</span><span>[ Cosa Facciamo ]</span>
+                    <span style={{color:data.accent}}>//</span><span>[ {data.kickers.what} ]</span>
                   </div>
                   <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:28}}>
                     {data.whatWeDo.heading}
@@ -703,19 +786,13 @@ function ServicePage({data}:{data:ServiceData}) {
           <div style={{...WRAP}} className="svc-wrap">
             <Reveal>
               <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#FFFFFF",marginBottom:20}}>
-                <span style={{color:T.accentLt}}>//</span><span>[ Cosa Offriamo ]</span>
+                <span style={{color:data.accent}}>//</span><span>[ {data.kickers.offer} ]</span>
               </div>
               <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:48}}>
                 {data.whatWeOffer.heading}
               </h2>
             </Reveal>
-            <div className="svc-offer-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}}>
-              {data.whatWeOffer.items.map((item,i)=>(
-                <Reveal key={i} delay={i*0.06}>
-                  <OfferCard item={item} gradient={data.gradient} />
-                </Reveal>
-              ))}
-            </div>
+            <OfferGrid data={data} />
           </div>
         </section>
 
@@ -724,7 +801,7 @@ function ServicePage({data}:{data:ServiceData}) {
           <div style={{...WRAP}} className="svc-wrap">
             <Reveal>
               <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#FFFFFF",marginBottom:20}}>
-                <span style={{color:T.accentLt}}>//</span><span>[ Come lo Realizziamo ]</span>
+                <span style={{color:data.accent}}>//</span><span>[ {data.kickers.how} ]</span>
               </div>
               <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:56}}>
                 {data.howWeDoIt.heading}
@@ -732,7 +809,7 @@ function ServicePage({data}:{data:ServiceData}) {
             </Reveal>
             <div style={{position:"relative"}}>
               {/* vertical connector line */}
-              <div aria-hidden style={{position:"absolute",left:28,top:48,bottom:48,width:1,background:`linear-gradient(180deg, ${data.accentColor}, rgba(184,50,64,0.08))`,zIndex:0}} />
+              <div aria-hidden style={{position:"absolute",left:28,top:48,bottom:48,width:1,background:`linear-gradient(180deg, ${hexA(data.accent,0.55)}, ${hexA(data.accent,0.06)})`,zIndex:0}} />
               <div style={{display:"flex",flexDirection:"column",gap:0}}>
                 {data.howWeDoIt.steps.map((step,i)=>(
                   <Reveal key={i} delay={i*0.07}>
@@ -754,8 +831,8 @@ function ServicePage({data}:{data:ServiceData}) {
 
                 <div style={{position:"relative",zIndex:1}}>
                   <div style={{display:"inline-flex",alignItems:"center",gap:10,padding:"7px 16px",borderRadius:9999,background:"rgba(184,50,64,0.10)",border:"1px solid rgba(184,50,64,0.35)",marginBottom:24}}>
-                    <PingDot color={T.accentLt} size={6} />
-                    <span style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.20em",textTransform:"uppercase" as const,color:T.accentLt}}>Disponibile · 2026</span>
+                    <PingDot color={data.accent} size={6} />
+                    <span style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.20em",textTransform:"uppercase" as const,color:data.accent}}>Disponibile · 2026</span>
                   </div>
                   <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(24px,3.2vw,44px)",fontWeight:800,lineHeight:1.1,letterSpacing:"-0.025em",color:"#FFFFFF",marginBottom:18,maxWidth:640,margin:"0 auto 18px"}}>
                     {data.cta.heading}
@@ -766,8 +843,8 @@ function ServicePage({data}:{data:ServiceData}) {
                   <div style={{display:"flex",justifyContent:"center",gap:12,flexWrap:"wrap" as const}}>
                     <motion.button whileHover={{scale:1.03}} whileTap={{scale:0.97}}
                       onClick={()=>setModalOpen(true)}
-                      style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(184,50,64,0.80)",background:"linear-gradient(90deg,rgba(184,50,64,0.34) 0%,rgba(184,50,64,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
-                      <span style={{padding:"14px 12px 14px 16px",borderRight:"1px solid rgba(184,50,64,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"#FFFFFF",flexShrink:0}}>[{data.num}]</span>
+                      style={{display:"flex",alignItems:"stretch",borderRadius:12,border:`1px solid ${hexA(data.accent,0.80)}`,background:`linear-gradient(90deg,${hexA(data.accent,0.30)} 0%,${hexA(data.accent,0.17)} 100%)`,backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden"}}>
+                      <span style={{padding:"14px 12px 14px 16px",borderRight:`1px solid ${hexA(data.accent,0.35)}`,display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"#FFFFFF",flexShrink:0}}>[{data.num}]</span>
                       <span style={{flex:1,display:"flex",alignItems:"center",gap:10,padding:"14px 24px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"#FFFFFF",fontWeight:500}}>
                         {data.cta.btn} <ArrowRightIcon size={11} />
                       </span>
@@ -843,19 +920,37 @@ function OtherServices({ current }: { current: string }) {
 }
 
 /* ── OfferCard ── */
-function OfferCard({item,gradient}:{item:OfferItem;gradient:string}) {
+/** variant: "card" verticale · "wide" più larga e distesa · "row" a riga intera */
+function OfferCard({item,gradient,accent,variant="card"}:{item:OfferItem;gradient:string;accent:string;variant?:"card"|"wide"|"row"}) {
   const [hov,setHov] = useState(false)
+  const row = variant === "row"
   return (
     <motion.div onHoverStart={()=>setHov(true)} onHoverEnd={()=>setHov(false)}
-      whileHover={{y:-6,scale:1.015}} transition={{duration:0.28,ease}}
-      style={{height:"100%",position:"relative",borderRadius:14,padding:"28px 24px",background:hov?"rgba(255,255,255,0.03)":"rgba(255,255,255,0.012)",border:`1px solid ${hov?"rgba(255,255,255,0.26)":"rgba(255,255,255,0.13)"}`,backdropFilter:"blur(6px)",WebkitBackdropFilter:"blur(6px)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.07)",display:"flex",flexDirection:"column",gap:0,overflow:"hidden",transition:"background 0.25s,border-color 0.25s"}}>
-      <div style={{width:44,height:44,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",background:hov?gradient:"rgba(255,255,255,0.06)",border:`1px solid ${hov?"transparent":"rgba(255,255,255,0.12)"}`,color:hov?"#fff":"#FFFFFF",marginBottom:18,flexShrink:0,transition:"background 0.3s,color 0.3s,border-color 0.3s"}}>
+      whileHover={row?{x:4}:{y:-5}} transition={{duration:0.28,ease}}
+      style={{height:"100%",position:"relative",borderRadius:14,
+        padding: row ? "20px 24px" : variant === "wide" ? "30px 28px" : "28px 24px",
+        background:hov?"rgba(255,255,255,0.03)":"rgba(255,255,255,0.012)",
+        border:`1px solid ${hov?"rgba(255,255,255,0.26)":"rgba(255,255,255,0.13)"}`,
+        backdropFilter:"blur(6px)",WebkitBackdropFilter:"blur(6px)",
+        boxShadow:"inset 0 1px 0 rgba(255,255,255,0.07)",
+        display:"flex",flexDirection: row ? "row" : "column",
+        alignItems: row ? "flex-start" : "stretch", gap: row ? 18 : 0,
+        overflow:"hidden",transition:"background 0.25s,border-color 0.25s"}}>
+      {/* filo verticale: nelle righe sostituisce la barra di fondo */}
+      {row && <div aria-hidden style={{position:"absolute",left:0,top:0,bottom:0,width:2,background:gradient,opacity:hov?1:0.5,transition:"opacity 0.3s"}} />}
+      <div style={{width: row?38:44,height: row?38:44,borderRadius:row?10:12,display:"flex",alignItems:"center",justifyContent:"center",background:hov?gradient:"rgba(255,255,255,0.06)",border:`1px solid ${hov?"transparent":"rgba(255,255,255,0.12)"}`,color:"#FFFFFF",marginBottom: row?0:18,flexShrink:0,transition:"background 0.3s,border-color 0.3s"}}>
         {item.icon}
       </div>
-      <h3 style={{fontFamily:DISPLAY,fontSize:16,fontWeight:700,color:"#FFFFFF",marginBottom:10,lineHeight:1.25}}>{item.title}</h3>
-      <p className="hp-body" style={{fontFamily:"'Inter',sans-serif",fontSize:13.5,color:T.muted,lineHeight:1.75,flex:1}}>{item.desc}</p>
-      <motion.div animate={{scaleX:hov?1:0}} transition={{duration:0.3,ease}}
-        style={{position:"absolute",bottom:0,left:0,right:0,height:2,background:gradient,transformOrigin:"left",borderRadius:"0 0 18px 18px"}} />
+      <div style={{display:"flex",flexDirection:"column",flex:1}}>
+        <h3 style={{fontFamily:DISPLAY,fontSize: variant==="wide"?17.5:16,fontWeight:700,color:"#FFFFFF",marginBottom:10,lineHeight:1.25}}>{item.title}</h3>
+        {/* trattino nella tinta della pagina: firma cromatica ripetuta su ogni scheda */}
+        <div aria-hidden style={{width:22,height:1.5,background:accent,borderRadius:2,marginBottom:12,opacity:hov?1:0.55,transition:"opacity 0.28s"}} />
+        <p className="hp-body" style={{fontFamily:"'Inter',sans-serif",fontSize: variant==="wide"?14.5:13.5,color:T.muted,lineHeight:1.75,flex:1}}>{item.desc}</p>
+      </div>
+      {!row && (
+        <motion.div animate={{scaleX:hov?1:0}} transition={{duration:0.3,ease}}
+          style={{position:"absolute",bottom:0,left:0,right:0,height:2,background:gradient,transformOrigin:"left"}} />
+      )}
     </motion.div>
   )
 }
