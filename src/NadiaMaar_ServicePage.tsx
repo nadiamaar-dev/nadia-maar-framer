@@ -826,9 +826,58 @@ function ServicePage({data}:{data:ServiceData}) {
           </div>
         </section>
 
+        <OtherServices current={data.slug} />
+
         <Footer onContact={()=>setModalOpen(true)} />
       </div>
     </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ALTRI SERVIZI
+   Chi arrivava su una di queste pagine — spesso da una ricerca, non dalla
+   home — si trovava in un vicolo cieco: le altre quattro non erano linkate
+   da nessuna parte, né qui né nel menu.
+══════════════════════════════════════════════════════════════════════════ */
+/* slug → rotta: "webapp" nei dati, "/web-app" nell'URL */
+const SERVICE_ROUTE: Record<string, string> = {
+  ecommerce: "/ecommerce", corporate: "/corporate", webapp: "/web-app", seo: "/seo", ai: "/ai",
+}
+
+function OtherServices({ current }: { current: string }) {
+  const others = Object.values(SERVICES).filter(s => s.slug !== current)
+  return (
+    <section style={{ padding: "72px 0", borderTop: `1px solid ${T.border}`, position: "relative" }}>
+      <div style={WRAP}>
+        <style>{`
+          .svc-others { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+          @media(max-width:900px){ .svc-others{grid-template-columns:repeat(2,1fr)!important;} }
+          @media(max-width:560px){ .svc-others{grid-template-columns:1fr!important;} }
+        `}</style>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 18 }}>
+          <span style={{ color: T.accentLt }}>//</span><span>[ Altri Servizi ]</span>
+        </div>
+        <div className="svc-others">
+          {others.map(s => (
+            <a key={s.slug} href={SERVICE_ROUTE[s.slug] ?? "/"}
+              style={{
+                display: "flex", flexDirection: "column" as const, gap: 8,
+                padding: "20px 18px", borderRadius: 12, textDecoration: "none",
+                background: "rgba(255,255,255,0.02)", border: `1px solid ${T.border}`,
+                transition: "background 0.2s, border-color 0.2s, transform 0.2s",
+              }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.06)"; el.style.borderColor = "rgba(255,255,255,0.28)"; el.style.transform = "translateY(-2px)" }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.02)"; el.style.borderColor = T.border; el.style.transform = "none" }}
+            >
+              <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: ".18em", color: T.accentLt }}>[ {s.num} ]</span>
+              <span style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 700, lineHeight: 1.28, letterSpacing: "-0.015em", color: "#FFFFFF" }}>{s.title}</span>
+              <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: ".1em", textTransform: "uppercase" as const, color: "#FFFFFF", opacity: 0.72 }}>{s.eyebrow}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
   )
 }
 

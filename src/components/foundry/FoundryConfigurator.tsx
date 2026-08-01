@@ -849,7 +849,7 @@ function LeadModal() {
               Configurazione salvata
             </h3>
             <p style={{ fontFamily: SANS, fontSize: 15.5, lineHeight: 1.7, color: "#FFFFFF", margin: "0 auto 22px", maxWidth: 390 }}>
-              Ti contatterò entro 24 ore per discutere i dettagli del progetto.
+              Ti ricontattiamo entro 24 ore per discutere i dettagli del progetto.
               {copySent
                 ? " Una copia del resoconto ti arriverà via email."
                 : " Intanto porta con te il blueprint: è il riepilogo di ciò che hai appena composto."}
@@ -878,7 +878,7 @@ function LeadModal() {
               Invia la tua Architettura
             </h3>
             <p style={{ fontFamily: SANS, fontSize: 15, lineHeight: 1.65, color: "#FFFFFF", margin: "0 0 18px" }}>
-              La analizzo personalmente e ti rispondo entro 24 ore. Il blueprint resta tuo: puoi salvarlo in PDF subito dopo l'invio.
+              Ogni configurazione viene letta personalmente: risposta entro 24 ore. Il blueprint resta tuo, puoi salvarlo in PDF subito dopo l'invio.
             </p>
 
             {bp && (
@@ -909,7 +909,7 @@ function LeadModal() {
 
               {leadStatus === "error" && (
                 <p role="alert" style={{ fontFamily: SANS, fontSize: 14, lineHeight: 1.6, color: "#FF8A96", margin: 0 }}>
-                  Invio non riuscito. Riprova tra qualche istante, oppure scrivimi direttamente dalla sezione contatti.
+                  Invio non riuscito. Riprova tra qualche istante, oppure scrivici direttamente dalla sezione contatti.
                 </p>
               )}
 

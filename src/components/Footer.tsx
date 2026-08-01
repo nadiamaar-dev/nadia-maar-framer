@@ -111,9 +111,12 @@ const SOCIALS = [
 const NAV_LINKS = [
   { label: "Home",      href: "/" },
   { label: "About",     href: "/about" },
-  { label: "Soluzioni", href: "/#s4" },
+  /* "Soluzioni" puntava a un'ancora che in pagina non esisteva e "Portfolio"
+     a una sezione mai renderizzata: entrambi ricaricavano la home senza
+     muoversi. Ora s4 esiste davvero e i progetti hanno la loro pagina. */
+  { label: "Servizi",   href: "/#s4" },
   { label: "Projects",  href: "/projects" },
-  { label: "Portfolio", href: "/#s6" },
+  { label: "Configuratore", href: "/#s7" },
   { label: "Contatti",  href: "/#s9" },
 ]
 

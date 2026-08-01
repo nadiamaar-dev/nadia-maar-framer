@@ -239,7 +239,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
   /* active section — only meaningful on home page */
   useEffect(() => {
     if (!isHome) return
-    const ids = ["s1", "s3", "s5", "s9"]
+    /* deve corrispondere agli id realmente presenti in NadiaMaar_Lab.tsx:
+       s3 apparteneva a una sezione spostata su About, s4/s6/s7 sono nuovi */
+    const ids = ["s1", "s4", "s5", "s6", "s7", "s9"]
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) setActiveId(e.target.id) })
     }, { threshold: 0.3 })
@@ -259,10 +261,15 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
 
   const NAV = [
     { num: "01", label: "Home",     sectionId: "s1", href: "/",          action: () => nav("s1", "/") },
-    { num: "02", label: "About",    sectionId: "",   href: "/about",     action: () => { window.location.href = "/about" } },
+    /* Le cinque pagine dei servizi non erano raggiungibili da nessun menu:
+       l'unica porta era la griglia in home. */
+    { num: "02", label: "Servizi",  sectionId: "s4", href: "/#s4",       action: () => nav("s4", "/#s4") },
     { num: "03", label: "Projects", sectionId: "",   href: "/projects",  action: () => { window.location.href = "/projects" } },
-    { num: "04", label: "Foundry",  sectionId: "",   href: "/foundry",   action: () => { window.location.href = "/foundry" } },
-    { num: "05", label: "Contatti", sectionId: "s9", href: "/#s9",       action: () => nav("s9", "/#s9") },
+    { num: "04", label: "About",    sectionId: "",   href: "/about",     action: () => { window.location.href = "/about" } },
+    /* "Foundry" indicava tre cose diverse nel sito: qui è la galleria degli
+       esperimenti, quindi si chiama Lab. Il configuratore resta in home. */
+    { num: "05", label: "Lab",      sectionId: "",   href: "/foundry",   action: () => { window.location.href = "/foundry" } },
+    { num: "06", label: "Contatti", sectionId: "s9", href: "/#s9",       action: () => nav("s9", "/#s9") },
   ]
 
   const MENU_SOCIALS = [
@@ -491,9 +498,11 @@ export default function Header() {
         {/* ── right: Foundry link + auth pill + hamburger ── */}
         <div style={{ flex: 1, display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 12 }}>
 
-          {/* Foundry — visible top-bar link (also in the menu) */}
+          {/* È l'elemento di navigazione più in vista: punta all'azione che
+              conta, cioè il configuratore. Prima portava alla galleria degli
+              esperimenti, che ora vive nel menu sotto il nome "Lab". */}
           <motion.a
-            href="/foundry" className="nm-hdr-foundry"
+            href="/#s7" className="nm-hdr-foundry"
             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             style={{
@@ -508,7 +517,7 @@ export default function Header() {
             onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.05)"; el.style.borderColor = "rgba(255,255,255,0.16)"; el.style.color = "#FFFFFF" }}
           >
             <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.accentLt, flexShrink: 0 }} />
-            Foundry
+            Configuratore
           </motion.a>
 
           {/* Auth button */}

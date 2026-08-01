@@ -19,40 +19,14 @@ import Footer from "./components/Footer"
 import FloatingContact from "./components/FloatingContact"
 import Header from "./components/Header"
 import FoundryConfigurator from "./components/foundry/FoundryConfigurator"
+import { PROCESSO } from "./data/process"
 
 /* ══════════════════════════════════════════════════════════════════════════
    INLINE SVG ICONS (replaces lucide-react)
 ══════════════════════════════════════════════════════════════════════════ */
-const MailIcon = ({ size = 15 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="4" width="20" height="16" rx="2"/>
-    <polyline points="22,4 12,13 2,4"/>
-  </svg>
-)
-const PhoneIcon = ({ size = 15 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.0 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
-  </svg>
-)
-const MapPinIcon = ({ size = 15 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
-    <circle cx="12" cy="10" r="3"/>
-  </svg>
-)
 const XIcon = ({ size = 13 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-  </svg>
-)
-const ArrowRightIcon = ({ size = 13 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-  </svg>
-)
-const WhatsAppIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
   </svg>
 )
 const GithubIcon = () => (
@@ -65,16 +39,6 @@ const InstagramIcon = () => (
     <rect x="2" y="2" width="20" height="20" rx="5"/>
     <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" strokeWidth="2"/>
-  </svg>
-)
-const TikTokIcon = () => (
-  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
-    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.84 1.56V6.81a4.85 4.85 0 01-1.07-.12z"/>
-  </svg>
-)
-const PinterestIcon = () => (
-  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
-    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.236 2.636 7.855 6.356 9.312-.088-.791-.167-2.005.035-2.868.181-.78 1.172-4.97 1.172-4.97s-.299-.598-.299-1.482c0-1.388.806-2.428 1.808-2.428.852 0 1.264.64 1.264 1.408 0 .858-.546 2.14-.828 3.33-.236.995.499 1.806 1.476 1.806 1.772 0 3.137-1.868 3.137-4.568 0-2.387-1.718-4.056-4.168-4.056-2.837 0-4.502 2.128-4.502 4.328 0 .857.33 1.776.741 2.279a.3.3 0 01.069.286c-.076.315-.245.995-.278 1.134-.044.183-.145.222-.335.134-1.249-.581-2.03-2.407-2.03-3.874 0-3.154 2.292-6.052 6.608-6.052 3.469 0 6.165 2.473 6.165 5.776 0 3.447-2.173 6.22-5.19 6.22-1.013 0-1.966-.527-2.292-1.148l-.623 2.378c-.226.869-.835 1.958-1.244 2.621.937.29 1.931.446 2.962.446 5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
   </svg>
 )
 const LinkedinIcon = () => (
@@ -442,30 +406,22 @@ const G = {
   shadow:    "inset 0 1px 0 rgba(255,255,255,0.63), 0 24px 64px rgba(8,12,28,0.55), 0 4px 14px rgba(8,12,28,0.35)",
   shadowHov: "inset 0 1px 0 rgba(255,255,255,0.72), 0 32px 80px rgba(8,12,28,0.70), 0 6px 18px rgba(8,12,28,0.42)",
 } as const
-const MONO_STYLE: React.CSSProperties = { fontFamily: MONO, letterSpacing: "0.14em", textTransform: "uppercase", fontSize: 12, fontWeight: 500 }
-
-/* white -> amber gradient text fill (matches Solar-Glass headline) */
-const gradText = (deg = 100): React.CSSProperties => ({
-  backgroundImage: `linear-gradient(${deg}deg, #FFFFFF 0%, #FF6B7D 48%, #FF3552 100%)`,
-  WebkitBackgroundClip: "text",
-  backgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-})
-
 const WRAP: React.CSSProperties = { maxWidth: 1120, margin: "0 auto", padding: "0 32px" }
 const SEC: React.CSSProperties  = { padding: "80px 0", position: "relative" }
 
 /* ══════════════════════════════════════════════════════════════════════════
    SHARED PRIMITIVES
 ══════════════════════════════════════════════════════════════════════════ */
-function useIsMobile(breakpoint = 800) {
-  const [mobile, setMobile] = useState(() => typeof window !== "undefined" && window.innerWidth <= breakpoint)
-  useEffect(() => {
-    const fn = () => setMobile(window.innerWidth <= breakpoint)
-    window.addEventListener("resize", fn, { passive: true })
-    return () => window.removeEventListener("resize", fn)
-  }, [breakpoint])
-  return mobile
+/* Una sola scrollIntoView non basta su questa pagina: mentre lo scorrimento
+   morbido è in corso, le sezioni che entrano in vista si compongono e l'altezza
+   sopra il bersaglio cambia. Il risultato era che il configuratore si fermava
+   circa mezzo schermo più in basso del previsto. Le passate successive
+   correggono la deriva e non fanno nulla quando la posizione è già giusta. */
+function scrollToSection(id: string) {
+  const go = () => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })
+  go()
+  window.setTimeout(go, 700)
+  window.setTimeout(go, 1500)
 }
 
 function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
@@ -492,156 +448,6 @@ function PingDot({ color = T.green, size = 10 }: { color?: string; size?: number
       <span style={{ width: "100%", height: "100%", borderRadius: "50%", background: color, display: "block", position: "relative" }} />
     </span>
   )
-}
-
-function Tag({ text, size }: { text: string; size?: "sm" }) {
-  const [h, setH] = useState(false)
-  const sm = size === "sm"
-  return (
-    <motion.span
-      onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}
-      animate={h
-        ? { background: T.accent, color: "#fff", borderColor: T.accent, boxShadow: `0 0 14px ${T.accentGlo}` }
-        : { background: "rgba(255,255,255,0.012)", color: T.muted, borderColor: "rgba(255,255,255,0.13)", boxShadow: "none" }
-      }
-      transition={{ duration: 0.18 }}
-      style={{ display: "inline-block", padding: sm ? "3px 9px" : "5px 11px", borderRadius: 9999, fontSize: sm ? 10 : 11, fontWeight: 600, cursor: "default", border: "1px solid transparent", letterSpacing: "0.03em" }}
-    >{text}</motion.span>
-  )
-}
-
-function Label({ text }: { text: string }) {
-  return (
-    <div style={{ display: "inline-flex", alignItems: "center", marginBottom: 20 }}>
-      <span className="label-shimmer" style={{
-        display: "inline-flex", alignItems: "center", gap: 10,
-        padding: "7px 16px 7px 12px",
-        borderRadius: 9999,
-        background: G.bg,
-        backdropFilter: G.blur,
-        WebkitBackdropFilter: G.blur,
-        border: `1px solid ${G.bd}`,
-        boxShadow: "0 2px 16px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.13)",
-      }}>
-        <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.accentLt, flexShrink: 0, boxShadow: `0 0 8px ${T.accentLt}` }} />
-        <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: T.text }}>{text}</span>
-      </span>
-    </div>
-  )
-}
-
-function Btn({ children, primary: _primary, small, type = "button", onClick }: {
-  children: React.ReactNode; primary?: boolean; small?: boolean; type?: "button" | "submit"; onClick?: () => void
-}) {
-  return (
-    <motion.button type={type} onClick={onClick} className="rainbow-btn"
-      whileHover={{ scale: 1.02, opacity: 0.92 }} whileTap={{ scale: 0.97 }}
-      transition={{ type: "spring", stiffness: 400, damping: 20 }}
-      style={{
-        position: "relative", padding: small ? "8px 20px" : "13px 30px",
-        borderRadius: 9999, fontSize: 12, fontWeight: 500,
-        cursor: "pointer", letterSpacing: "0.14em", textTransform: "uppercase" as const,
-        fontFamily: MONO, border: "1px solid rgba(255,255,255,0.24)",
-        background: "rgba(255,255,255,0.012)", backdropFilter: "blur(28px) saturate(1.5)",
-        WebkitBackdropFilter: "blur(28px) saturate(1.5)",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.012), 0 2px 12px rgba(0,0,0,0.20)",
-        color: T.text, transition: "opacity 0.2s",
-      } as React.CSSProperties}
-    >
-      <span style={{ position: "relative", zIndex: 1 }}>{children}</span>
-    </motion.button>
-  )
-}
-
-function GlassCard({ children, padding = "36px 30px", radius = 16, height = "100%", onClick }: {
-  children: React.ReactNode; padding?: string | number; radius?: number; height?: string | number; onClick?: () => void
-}) {
-  const [h, setH] = useState(false)
-  const [lx, setLx] = useState(50)
-  const [ly, setLy] = useState(50)
-  const ref = useRef<HTMLDivElement>(null)
-  const trackCursor = (e: React.MouseEvent) => {
-    const r = ref.current?.getBoundingClientRect()
-    if (r) { setLx(((e.clientX - r.left) / r.width) * 100); setLy(((e.clientY - r.top) / r.height) * 100) }
-  }
-  return (
-    <motion.div ref={ref} data-glow="" onClick={onClick}
-      onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)} onMouseMove={trackCursor}
-      whileHover={{ y: -12, scale: 1.022 }} whileTap={{ scale: 0.982 }}
-      transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
-      style={{
-        '--base': '205', '--spread': '40', '--radius': String(radius), '--border': '1.5', '--size': '270',
-        position: "relative",
-        backgroundColor: h ? G.bgHov : G.bg,
-        backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
-        borderTop:    `1px solid ${h ? "rgba(255,255,255,0.88)" : "rgba(255,255,255,0.72)"}`,
-        borderRight:  `1px solid ${h ? "rgba(255,255,255,0.34)" : "rgba(255,255,255,0.22)"}`,
-        borderBottom: `1px solid ${h ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.11)"}`,
-        borderLeft:   `1px solid ${h ? "rgba(255,255,255,0.34)" : "rgba(255,255,255,0.22)"}`,
-        borderRadius: radius, padding, height, cursor: onClick ? "pointer" : "default",
-        boxShadow: h ? G.shadowHov : G.shadow,
-        transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s",
-      } as React.CSSProperties}
-    >
-      <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", borderRadius: radius, background: h ? `radial-gradient(160px circle at ${lx}% ${ly}%, rgba(214,222,238,0.16) 0%, transparent 100%)` : "none", transition: "background 0.10s" }} />
-      <div aria-hidden style={{ position: "absolute", top: 0, left: "6%", right: "6%", height: 1, background: `linear-gradient(90deg, transparent, rgba(255,255,255,${h ? 0.22 : 0.10}), transparent)`, pointerEvents: "none", transition: "all 0.3s" }} />
-
-      {children}
-    </motion.div>
-  )
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   CORNER BRACKETS DECORATION
-══════════════════════════════════════════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════════════
-   HERO STAT NUMBERS
-══════════════════════════════════════════════════════════════════════════ */
-/* 4 distinct stat-card treatments — light / graphite / outline / accent */
-/* ── V3 Atelier-Grid stat card helpers ─────────────────────────────────── */
-function StatCorners() {
-  const s: React.CSSProperties = { position: "absolute", width: 10, height: 10, pointerEvents: "none" }
-  return (
-    <>
-      <span style={{ ...s, top: 9, left: 9, borderTop: "1.5px solid rgba(255,60,92,.55)", borderLeft: "1.5px solid rgba(255,60,92,.55)" }} />
-      <span style={{ ...s, bottom: 9, right: 9, borderBottom: "1.5px solid rgba(255,60,92,.55)", borderRight: "1.5px solid rgba(255,60,92,.55)" }} />
-    </>
-  )
-}
-
-function statNumeric(v: string): { n: number | null; suffix: string; prefix: string } {
-  const m = v.match(/(-?\d+(?:\.\d+)?)/)
-  if (!m) return { n: null, suffix: "", prefix: "" }
-  const n = parseFloat(m[1])
-  if (!Number.isInteger(n)) return { n: null, suffix: "", prefix: "" }
-  const idx = v.indexOf(m[1])
-  return { n, prefix: v.slice(0, idx), suffix: v.slice(idx + m[1].length) }
-}
-
-function StatCountUp({ target, suffix = "" }: { target: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const [val, setVal] = useState(0)
-  const [started, setStarted] = useState(false)
-  useEffect(() => {
-    const el = ref.current; if (!el) return
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setStarted(true); io.disconnect() } }, { threshold: 0 })
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-  useEffect(() => {
-    if (!started) return
-    let raf = 0
-    const start = performance.now(), dur = 1400
-    const tick = (t: number) => {
-      const p = Math.min(1, (t - start) / dur)
-      setVal(Math.round((1 - Math.pow(1 - p, 3)) * target))
-      if (p < 1) raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [started, target])
-  return <span ref={ref}>{val}{suffix}</span>
 }
 
 const HERO_SOCIALS = [
@@ -863,10 +669,13 @@ function Hero() {
                   initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease }}
                   style={{ fontFamily: DISPLAY, fontSize: "clamp(42px, 5.4vw, 82px)", fontWeight: 900, lineHeight: 0.95, letterSpacing: "-0.045em", margin: 0, color: "#FFFFFF", textTransform: "uppercase" as const, filter: "drop-shadow(0 12px 34px rgba(0,0,0,0.6))", textShadow: "0 4px 12px rgba(0, 0, 0, 0.8)" }}
                 >
+                  {/* Era il titolo professionale di una persona — "E-commerce
+                      Architect & Digital Strategist". Dice chi è chi scrive,
+                      non che cosa ottiene chi legge. Ora dichiara il risultato:
+                      la firma personale resta su About. */}
+                  <span>Architetture</span><br />
                   <span style={{ whiteSpace: "nowrap" }}>E&#8209;commerce</span><br />
-                  <span>Architect</span><br />
-                  <span>{"& "}</span>
-                  <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(240,243,249,0.88)", textShadow: "none" }}>Digital Strategist</span>
+                  <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(240,243,249,0.88)", textShadow: "none" }}>che scalano</span>
                 </motion.h1>
               </div>
 
@@ -891,7 +700,7 @@ function Hero() {
               initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, delay: 0.22, ease }}
               style={{ fontSize: "clamp(16px, 1.4vw, 17px)", color: "#FFFFFF", fontWeight: 400, fontFamily: "'Geist', system-ui, sans-serif", maxWidth: 340, lineHeight: 1.85, margin: "28px 0 0", letterSpacing: "0.01em", WebkitFontSmoothing: "antialiased" } as React.CSSProperties}
             >
-              Un'unica mente tra codice e business. Architetture digitali che scalano — senza intermediari, senza compromessi.
+              Studio di sviluppo e crescita digitale. Un solo interlocutore fra codice, dati e business — senza intermediari, senza compromessi.
             </motion.p>
 
             {/* Process flow — visual timeline */}
@@ -916,23 +725,26 @@ function Hero() {
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.36, ease }}
               style={{ display: "flex", gap: 10, marginTop: 44, maxWidth: 440 }}
             >
+              {/* L'azione principale porta al configuratore (s7): una richiesta
+                  che arriva da lì contiene già l'architettura, e vale molto di
+                  più di un contatto generico. Prima puntava a s9. */}
               <motion.button
-                onClick={() => document.getElementById("s9")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => scrollToSection("s7")}
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
                 style={{ flex: "1.5 1 0", minHeight: 54, padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(255,60,92,0.80)", background: "linear-gradient(90deg, rgba(255,60,92,0.34) 0%, rgba(255,60,92,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(255,60,92,0.20), inset 0 1px 0 rgba(255,255,255,0.15)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
               >
                 <span className="hp-hero-cta-index" style={{ padding: "0 14px", borderRight: "1px solid rgba(255,60,92,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[01]</span>
                 <span className="hp-hero-cta-inner" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", fontSize: 13, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
-                  <span>Discutiamo il Progetto</span>
+                  <span>Configura il Progetto</span>
                   <span style={{ fontSize: 15 }}>→</span>
                 </span>
               </motion.button>
               <motion.a
-                href="/projects" whileHover={{ y: -2, background: "rgba(255,255,255,0.13)", borderColor: "rgba(224,224,224,0.38)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                href="/#s9" whileHover={{ y: -2, background: "rgba(255,255,255,0.13)", borderColor: "rgba(224,224,224,0.38)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
                 style={{ flex: "1 1 0", minHeight: 54, padding: "0 18px", borderRadius: 9, fontFamily: MONO, fontSize: 13, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, textAlign: "center" as const, textDecoration: "none", border: "1px solid rgba(255,255,255,0.30)", background: "rgba(255,255,255,0.012)", color: T.text, boxShadow: "0 6px 28px rgba(8,12,28,0.42), inset 0 1px 0 rgba(255,255,255,0.012)" }}
               >
-                Esplora i Progetti <span style={{ fontSize: 15 }}>→</span>
+                Parliamo del Progetto <span style={{ fontSize: 15 }}>→</span>
               </motion.a>
             </motion.div>
 
@@ -1022,491 +834,6 @@ function Hero() {
 
 
 /* ══════════════════════════════════════════════════════════════════════════
-   §3  ALL-IN-ONE ADVANTAGE
-══════════════════════════════════════════════════════════════════════════ */
-const ADVANTAGES = [
-  {
-    n: "01", title: "Infrastrutture Senza Errori", body: "Architetture testate da chi le ha progettate. Codice pulito, automazioni e connessioni ai fornitori affidabili: zero bug in produzione, sistemi che reggono la scala.",
-    icon: (<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>),
-  },
-  {
-    n: "02", title: "Velocità di Esecuzione", body: "Nessun passaggio di consegne né perdita di informazioni. Dal codice alla campagna di marketing, tutto vive in un unico flusso perfettamente allineato.",
-    icon: (<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>),
-  },
-  {
-    n: "03", title: "Unico Referente Strategico", body: "Sviluppo tecnico, logica di business, integrazione AI e SEO gestiti da un'unica mente. Nessun rimpallo di responsabilità, nessuna scusa.",
-    icon: (<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>),
-  },
-]
-
-const ADV_VARIANTS = {
-  featured: { bg: "rgba(255,255,255,0.13)", bd: "rgba(255,255,255,0.50)", bdT: "rgba(255,255,255,0.80)", bdB: "rgba(255,255,255,0.13)", num: "#FFFFFF",             sh: "0 28px 72px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.72), inset 0 0 0 1px rgba(255,255,255,0.11)", tag: "rgba(255,255,255,0.63)" },
-  graphite: { bg: "rgba(255,255,255,0.012)", bd: "rgba(255,255,255,0.20)", bdT: "rgba(255,255,255,0.53)", bdB: "rgba(255,255,255,0.012)", num: "#FFFFFF", sh: "0 18px 52px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.40), inset 0 0 0 1px rgba(255,255,255,0.012)", tag: "rgba(255,255,255,0.63)" },
-  accent:   { bg: "rgba(255,255,255,0.13)", bd: "rgba(255,255,255,0.50)", bdT: "rgba(255,255,255,0.78)", bdB: "rgba(255,255,255,0.13)", num: "#FFFFFF",             sh: "0 24px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.70), inset 0 0 0 1px rgba(255,255,255,0.012)", tag: "rgba(255,255,255,0.72)" },
-} as const
-
-function AdvCard({ n, title, body, variant = "graphite", tall = false }: { n: string; title: string; body: string; variant?: keyof typeof ADV_VARIANTS; tall?: boolean }) {
-  const V = ADV_VARIANTS[variant]
-  return (
-    <motion.div
-      data-glow="" whileHover={{ y: -4 }} transition={{ type: "spring", stiffness: 400, damping: 24 }}
-      style={{
-        '--base': '205', '--spread': '36', '--radius': '18', '--border': '1', '--size': '240',
-        position: "relative", height: "100%", borderRadius: 18, overflow: "hidden",
-        padding: tall ? "28px 26px" : "20px 20px",
-        display: "flex", flexDirection: "column", justifyContent: tall ? "space-between" : "flex-start", gap: tall ? 0 : 10,
-        background: V.bg,
-        borderTop:    `1px solid ${V.bdT}`,
-        borderRight:  `1px solid ${V.bd}`,
-        borderBottom: `1px solid ${V.bdB}`,
-        borderLeft:   `1px solid ${V.bd}`,
-        boxShadow: V.sh,
-        backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
-      } as React.CSSProperties}
-    >
-      <span aria-hidden style={{ position: "absolute", top: 14, right: 16, fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.16em", color: V.tag }}>[ {n} ]</span>
-      <div style={{ fontFamily: DISPLAY, fontSize: tall ? 68 : 30, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", color: V.num, marginBottom: tall ? 0 : 12 }}>{n}</div>
-      <div>
-        <h3 style={{ fontSize: tall ? 17 : 14, fontWeight: 600, letterSpacing: "-0.012em", marginBottom: 8, color: T.text, lineHeight: 1.3 }}>{title}</h3>
-        <p className="hp-body" style={{ fontSize: 13, color: T.muted, lineHeight: 1.72, margin: 0 }}>{body}</p>
-      </div>
-    </motion.div>
-  )
-}
-
-/* ── V3 CatalogCard (reused for AllInOne) ─────────────────────────── */
-function CatalogCard({ index, children, style }: { index?: string; children: React.ReactNode; style?: React.CSSProperties }) {
-  const [hover, setHover] = useState(false)
-  return (
-    <div
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      style={{
-        position: "relative",
-        borderRadius: 16,
-        borderTop: `1px solid ${hover ? "rgba(224,224,224,0.55)" : "rgba(224,224,224,0.22)"}`,
-        borderRight: `1px solid ${hover ? "rgba(255,60,92,.55)" : "rgba(255,255,255,0.15)"}`,
-        borderBottom: `1px solid ${hover ? "rgba(255,60,92,.55)" : "rgba(255,255,255,0.11)"}`,
-        borderLeft: `1px solid ${hover ? "rgba(255,60,92,.55)" : "rgba(255,255,255,0.15)"}`,
-        background: hover ? "rgba(255,255,255,.58)" : "rgba(255,255,255,.5)",
-        backdropFilter: "blur(36px) saturate(1.1)",
-        WebkitBackdropFilter: "blur(36px) saturate(1.1)",
-        boxShadow: hover
-          ? "inset 0 1.5px 0 rgba(255,255,255,0.95), inset 1px 0 0 rgba(255,255,255,0.42), 0 20px 50px rgba(0,0,0,0.22)"
-          : "inset 0 1.5px 0 rgba(255,255,255,0.80), inset 1px 0 0 rgba(255,255,255,0.22), 0 12px 36px rgba(0,0,0,0.16)",
-        padding: "26px 24px 24px",
-        color: "#111826",
-        overflow: "hidden",
-        transition: "background .35s ease, border-color .35s ease, transform .35s ease, box-shadow .35s ease",
-        transform: hover ? "translateY(-3px)" : "none",
-        height: "100%",
-        boxSizing: "border-box" as const,
-        ...style,
-      }}
-    >
-      {/* rim-light shimmer — top-left ray of light */}
-      <span style={{
-        position: "absolute", inset: 0, borderRadius: 16,
-        background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.09) 30%, transparent 55%)",
-        pointerEvents: "none",
-      }} />
-      {/* corner brackets */}
-      <span style={{ position: "absolute", top: 9, left: 9, width: 10, height: 10, borderTop: "1.5px solid rgba(255,60,92,.55)", borderLeft: "1.5px solid rgba(255,60,92,.55)" }} />
-      <span style={{ position: "absolute", bottom: 9, right: 9, width: 10, height: 10, borderBottom: "1.5px solid rgba(255,60,92,.55)", borderRight: "1.5px solid rgba(255,60,92,.55)" }} />
-      {/* index */}
-      {index && (
-        <div style={{ position: "relative", fontFamily: MONO, fontSize: 11, letterSpacing: ".14em", color: T.accentLt, marginBottom: 14 }}>
-          [{index}]
-        </div>
-      )}
-      <div style={{ position: "relative" }}>{children}</div>
-    </div>
-  )
-}
-
-function MetodoCard({ n, title, body, icon, i }: { n: string; title: string; body: string; icon: React.ReactNode; i: number }) {
-  const [hov, setHov] = useState(false)
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.55, delay: i * 0.09, ease }}
-      onHoverStart={() => setHov(true)}
-      onHoverEnd={() => setHov(false)}
-      style={{ position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 4px 24px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)", height: "100%" }}
-    >
-      {/* Glass background — bottom fade mask */}
-      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, background: "rgba(255,255,255,0.008)", backdropFilter: "blur(6px) brightness(1.03)", WebkitBackdropFilter: "blur(6px) brightness(1.03)", WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", maskImage: "linear-gradient(to bottom, black 40%, transparent 85%)", pointerEvents: "none" }} />
-
-      {/* Gradient border — top + sides fade to mid */}
-      <div aria-hidden style={{ position: "absolute", inset: 0, borderRadius: 16, padding: 1, background: `linear-gradient(to bottom, ${hov ? "rgba(255,255,255,0.60)" : "rgba(255,255,255,0.53)"} 0%, transparent 52%)`, WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude", pointerEvents: "none", zIndex: 2, transition: "background 0.28s" }} />
-
-      {/* Big watermark number — behind content */}
-      <div aria-hidden style={{ position: "absolute", bottom: -10, right: 16, fontFamily: DISPLAY, fontSize: 130, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.06em", color: "rgba(255,60,92,0.10)", userSelect: "none" as const, pointerEvents: "none", zIndex: 1 }}>{n}</div>
-
-      {/* Content */}
-      <div style={{ position: "relative", zIndex: 3, padding: "28px 26px 36px", height: "100%", boxSizing: "border-box" as const, display: "flex", flexDirection: "column" }}>
-
-        {/* Top row: icon + tag */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 11, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.24)", color: "#FFFFFF" }}>
-            {icon}
-          </div>
-          <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.22em", color: "#FFFFFF" }}>[ {n} ]</span>
-        </div>
-
-        {/* Title */}
-        <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 20, lineHeight: 1.22, letterSpacing: "-0.02em", color: "#FFFFFF", margin: "0 0 14px" }}>{title}</h3>
-
-        {/* Red accent divider */}
-        <div style={{ width: 28, height: 1.5, background: `linear-gradient(90deg, ${T.accent}, transparent)`, marginBottom: 14, borderRadius: 2, opacity: hov ? 1 : 0.55, transition: "opacity 0.28s" }} />
-
-        {/* Body */}
-        <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.72, color: T.muted, margin: 0, flex: 1 }}>{body}</p>
-      </div>
-    </motion.div>
-  )
-}
-
-function AllInOne() {
-  return (
-    <section style={{ ...SEC, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s3" className="hp-sec">
-      <div style={WRAP} className="hp-wrap">
-        <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
-            <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Il Metodo — Manifesto ]</span>
-          </div>
-          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", marginBottom: 18, maxWidth: 780, color: T.text }}>
-            Il Metodo: Un Solo Partner, Zero Scuse.
-          </h2>
-          <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.75, maxWidth: 740, marginBottom: 40 }}>
-            Sviluppatore, designer, esperto di automazioni API e agenzia di marketing sono di solito quattro fornitori diversi — con costi frammentati, comunicazione lenta e responsabilità sfumate. Io li unisco in un'unica mente strategica.
-          </p>
-        </Reveal>
-
-        <style>{`
-          .aio-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-          .ris-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-          @media(max-width:700px){ .aio-grid{grid-template-columns:1fr!important;gap:10px!important;} .ris-grid{grid-template-columns:1fr!important;gap:10px!important;} }
-          @media(min-width:701px) and (max-width:960px){ .aio-grid{grid-template-columns:repeat(2,1fr)!important;} .ris-grid{grid-template-columns:repeat(2,1fr)!important;} }
-        `}</style>
-        <div className="aio-grid">
-          {ADVANTAGES.map((a, i) => (
-            <MetodoCard key={a.n} n={a.n} title={a.title} body={a.body} icon={a.icon} i={i} />
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   §  RISULTATI — Fatti, non promesse
-══════════════════════════════════════════════════════════════════════════ */
-const RISULTATI = [
-  { value: "100%",   symbol: "",    label: "Automazione dei processi di magazzino" },
-  { value: "< 0.5",  symbol: "s",   label: "Tempi di caricamento delle piattaforme" },
-  { value: "+150",   symbol: "%",   label: "Crescita media del traffico organico (SEO)" },
-]
-
-function RisultatiBlock() {
-  const SEP = (
-    <span aria-hidden style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,70,100,0.38)", flexShrink: 0 }} />
-  )
-  return (
-    <section style={{ padding: "36px 0" }}>
-      <div style={{ ...WRAP, display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap", gap: "14px 0" }} className="hp-wrap hp-risultati-row">
-        {RISULTATI.map(({ value, symbol, label }, i) => (
-          <React.Fragment key={i}>
-            <div className="hp-risultati-item" style={{ display: "flex", alignItems: "baseline", gap: 7, flexShrink: 0 }}>
-              <span className="hp-risultati-value" style={{ fontSize: 26, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", color: T.text }}>
-                {value}{symbol}
-              </span>
-              <span className="hp-risultati-label" style={{ fontSize: 13, fontWeight: 400, color: T.muted, whiteSpace: "nowrap" as const }}>
-                {label}
-              </span>
-            </div>
-            {i < RISULTATI.length - 1 && <span className="hp-risultati-sep" style={{ margin: "0 28px" }}>{SEP}</span>}
-          </React.Fragment>
-        ))}
-      </div>
-    </section>
-  )
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   §  TECNOLOGIA ALL'AVANGUARDIA
-══════════════════════════════════════════════════════════════════════════ */
-const TECH_POINTS = [
-  {
-    metric: "< 0.5s",
-    score: 96,
-    scoreLabel: "Performance",
-    icon: (
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-      </svg>
-    ),
-    title: "Caricamento Istantaneo",
-    body: "Un sito istantaneo abbatte il tasso di abbandono e aumenta drasticamente la conversione finale.",
-    color: "rgba(251,191,36,1)",
-    colorDim: "rgba(251,191,36,0.14)",
-    colorBd: "rgba(251,191,36,0.30)",
-  },
-  {
-    metric: "100/100",
-    score: 100,
-    scoreLabel: "Core Web Vitals",
-    icon: (
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-      </svg>
-    ),
-    title: "Core Web Vitals Perfetti",
-    body: "Google premia i siti tecnicamente perfetti. Vantaggio competitivo immediato sul posizionamento organico.",
-    color: T.accentLt,
-    colorDim: "rgba(255,70,100,0.14)",
-    colorBd: "rgba(255,70,100,0.32)",
-  },
-  {
-    metric: "99.9%",
-    score: 99,
-    scoreLabel: "Uptime",
-    icon: (
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-      </svg>
-    ),
-    title: "Infrastruttura Serverless",
-    body: "Zero downtime durante i picchi di traffico e massima protezione contro le vulnerabilità informatiche.",
-    color: T.green,
-    colorDim: "rgba(16,185,129,0.12)",
-    colorBd: "rgba(16,185,129,0.28)",
-  },
-]
-
-function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim, colorBd, index }: typeof TECH_POINTS[0] & { index: number }) {
-  const [hov, setHov] = useState(false)
-  const [inView, setInView] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-  const R = 26, C = 2 * Math.PI * R
-
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true) }, { threshold: 0.3 })
-    if (ref.current) obs.observe(ref.current)
-    return () => obs.disconnect()
-  }, [])
-
-  return (
-    <motion.div ref={ref}
-      initial={{ opacity: 0, x: -16 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.55, delay: index * 0.10, ease }}
-      onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
-      className="hp-tech-row"
-      style={{
-        position: "relative", display: "flex", alignItems: "stretch",
-        borderRadius: 14, overflow: "hidden",
-        background: hov ? "rgba(255,255,255,0.042)" : "rgba(255,255,255,0.018)",
-        border: `1px solid ${hov ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.07)"}`,
-        transition: "background 0.28s, border-color 0.28s",
-        cursor: "default",
-      } as React.CSSProperties}
-    >
-      {/* Left accent stripe */}
-      <div aria-hidden className="hp-tech-stripe" style={{ width: 3, flexShrink: 0, background: color, opacity: hov ? 1 : 0.55, transition: "opacity 0.28s", borderRadius: "14px 0 0 14px" }} />
-
-      {/* Metric block */}
-      <div className="hp-tech-metric" style={{ padding: "26px 28px", borderRight: "1px solid rgba(255,255,255,0.07)", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", minWidth: 148, flexShrink: 0, gap: 6 }}>
-        <span style={{ fontFamily: MONO, fontSize: 34, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.03em", color: hov ? color : "#FFFFFF", transition: "color 0.28s", whiteSpace: "nowrap" as const }}>{metric}</span>
-        <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>{scoreLabel}</span>
-        <div className="hp-tech-metric-progress" style={{ width: "100%", height: 2, background: "rgba(255,255,255,0.11)", borderRadius: 1, overflow: "hidden", marginTop: 2 }}>
-          <motion.div
-            initial={{ width: "0%" }}
-            animate={{ width: inView ? `${score}%` : "0%" }}
-            transition={{ duration: 1.2, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
-            style={{ height: "100%", background: color, borderRadius: 1 }}
-          />
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="hp-tech-content" style={{ padding: "26px 28px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 10 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", background: colorDim, border: `1px solid ${colorBd}`, color, flexShrink: 0, transition: "background 0.25s" }}>
-            {icon}
-          </div>
-          <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", color: "#FFFFFF", margin: 0, lineHeight: 1.2 }}>{title}</h3>
-        </div>
-        <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.68, color: T.muted, margin: 0 }}>{body}</p>
-      </div>
-
-      {/* Score ring */}
-      <div className="hp-tech-ring" style={{ padding: "26px 28px", borderLeft: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-        <div style={{ position: "relative", width: 64, height: 64 }}>
-          <svg viewBox="0 0 64 64" width="64" height="64" style={{ transform: "rotate(-90deg)" }}>
-            <circle cx="32" cy="32" r={R} fill="none" stroke="rgba(255,255,255,0.11)" strokeWidth="2.5" />
-            <motion.circle cx="32" cy="32" r={R} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round"
-              strokeDasharray={C}
-              initial={{ strokeDashoffset: C }}
-              animate={{ strokeDashoffset: inView ? C * (1 - score / 100) : C }}
-              transition={{ duration: 1.3, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
-            />
-          </svg>
-          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: hov ? color : "#FFFFFF", lineHeight: 1, transition: "color 0.28s" }}>{score}</span>
-            <span style={{ fontFamily: MONO, fontSize: 7.5, color: "#FFFFFF", letterSpacing: "0.08em" }}>/100</span>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  )
-}
-
-function TechGauge({ score }: { score: number }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [shown, setShown] = useState(false)
-  useEffect(() => {
-    const el = ref.current; if (!el) return
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setShown(true); io.disconnect() } }, { threshold: 0 })
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-  return (
-    <div ref={ref} style={{ height: 5, borderRadius: 99, background: "rgba(255,255,255,.08)", overflow: "hidden" }}>
-      <div style={{ height: "100%", width: shown ? `${score}%` : "0%", background: `linear-gradient(90deg, ${T.accentDim ? T.accent : "#D41F33"}, ${T.accentLt})`, borderRadius: 99, transition: "width 1.3s cubic-bezier(.2,.7,.2,1) .1s" }} />
-    </div>
-  )
-}
-
-function TechBlock() {
-  return (
-    <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
-      <div style={WRAP} className="hp-wrap">
-        <Reveal>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
-            <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Tecnologia all&apos;Avanguardia ]</span>
-          </div>
-          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(30px,3.4vw,50px)", fontWeight: 800, lineHeight: 1.06, letterSpacing: "-0.03em", margin: "0 0 18px", maxWidth: "min(680px,100%)", color: T.text }}>
-            Perché la Velocità Determina il tuo Fatturato
-          </h2>
-          <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.75, maxWidth: "min(740px,100%)", marginBottom: 40 }}>
-            Ogni millisecondo conta. Un&apos;architettura tecnica di alto livello non è un lusso — è il fondamento su cui si costruisce la crescita del fatturato.
-          </p>
-        </Reveal>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {TECH_POINTS.map((pt, i) => (
-            <TechRow key={pt.title} {...pt} index={i} />
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-
-/* ══════════════════════════════════════════════════════════════════════════
-   SKILL CARD ICONS
-══════════════════════════════════════════════════════════════════════════ */
-const TkShopify = () => (<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M3 5h14l-1.5 11H4.5L3 5z"/><path d="M7 5V3.5a3 3 0 0 1 6 0V5"/></svg>)
-const TkFramer  = () => (<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="4 2 16 2 16 10 10 10 10 18 4 10"/></svg>)
-const TkAPI     = () => (<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M5 7H3a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2"/><path d="M15 7h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><rect x="5" y="5" width="10" height="10" rx="2"/></svg>)
-const TkAI      = () => (<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="10" cy="10" r="3"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="10" y1="16" x2="10" y2="18"/><line x1="2" y1="10" x2="4" y2="10"/><line x1="16" y1="10" x2="18" y2="10"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="13.66" y1="13.66" x2="15.07" y2="15.07"/><line x1="4.93" y1="15.07" x2="6.34" y2="13.66"/><line x1="13.66" y1="6.34" x2="15.07" y2="4.93"/></svg>)
-
-const SKILL_CARDS_DATA = [
-  {
-    icon: <TkShopify />,
-    title: "E-Commerce Development",
-    tags: ["Shopify", "Liquid Optimization", "Enterprise Stores", "Cataloghi 30k+ SKU", "Scalable Platforms", "Conversion Rate Optimization"],
-  },
-  {
-    icon: <TkFramer />,
-    title: "Design & Frontend",
-    tags: ["Framer", "Webflow", "React Components", "UI/UX Design", "Fluid Animations", "Interactive Interfaces", "High-Impact Portfolios"],
-  },
-  {
-    icon: <TkAPI />,
-    title: "Process Engineering & API",
-    tags: ["Node.js", "Python", "Custom Middleware", "API Integration", "Real-Time Sync", "Dropshipping Systems", "ERP & CRM"],
-  },
-  {
-    icon: <TkAI />,
-    title: "AI & Growth Automation",
-    tags: ["AI Content Automation", "E-Commerce SEO", "AI Chatbots", "Conversion Recovery", "Smart Cart Recovery", "Meta Ads"],
-  },
-]
-
-function SkillCard({ icon, title, tags }: { icon: React.ReactNode; title: string; tags: string[] }) {
-  const [h, setH] = useState(false)
-  const [lx, setLx] = useState(50)
-  const [ly, setLy] = useState(50)
-  const ref = useRef<HTMLDivElement>(null)
-  const track = (e: React.MouseEvent) => {
-    const r = ref.current?.getBoundingClientRect()
-    if (r) { setLx(((e.clientX - r.left) / r.width) * 100); setLy(((e.clientY - r.top) / r.height) * 100) }
-  }
-  return (
-    <motion.div ref={ref} className="hp-skillcard" data-glow=""
-      onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)} onMouseMove={track}
-      whileHover={{ y: -8, scale: 1.016 }} whileTap={{ scale: 0.982 }}
-      transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
-      style={{
-        '--base': '205', '--spread': '36', '--radius': '18', '--border': '1', '--size': '200',
-        aspectRatio: "1 / 1",
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        padding: "22px",
-        borderRadius: 18,
-        overflow: "hidden",
-        backgroundColor: h ? "rgba(255,255,255,0.13)" : "rgba(255,255,255,0.012)",
-        backdropFilter: "blur(34px) brightness(1.14) saturate(0.70)",
-        WebkitBackdropFilter: "blur(34px) brightness(1.14) saturate(0.70)",
-        border: `1px solid ${h ? "rgba(255,255,255,0.36)" : "rgba(255,255,255,0.16)"}`,
-        /* 4. Depth shadow */
-        boxShadow: h
-          ? "0 16px 48px 0 rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.15)"
-          : "0 8px 32px 0 rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.012)",
-        transition: "background-color 0.28s, border-color 0.28s, box-shadow 0.32s",
-      } as React.CSSProperties}
-    >
-      {/* Subtle cursor-tracking glow — only on hover */}
-      <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", borderRadius: 18, background: h ? `radial-gradient(180px circle at ${lx}% ${ly}%, rgba(255,255,255,0.055) 0%, transparent 100%)` : "none", transition: "background 0.14s" }} />
-      {/* Top-edge reflection line */}
-      <div aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, pointerEvents: "none", background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,${h ? 0.22 : 0.10}) 40%, rgba(255,255,255,${h ? 0.18 : 0.07}) 70%, transparent 100%)` }} />
-      {/* Left-edge reflection line (glass edge illusion) */}
-      <div aria-hidden style={{ position: "absolute", top: 0, left: 0, width: 1, bottom: 0, pointerEvents: "none", background: `linear-gradient(180deg, rgba(255,255,255,${h ? 0.20 : 0.08}) 0%, transparent 60%)` }} />
-
-      {/* 5. Content — title + icon row */}
-      <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 14 }}>
-        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#FFFFFF", letterSpacing: "-0.015em", lineHeight: 1.35 }}>{title}</h3>
-        <div className="hp-skillcard-icon" style={{
-          width: 34, height: 34, borderRadius: 9, flexShrink: 0,
-          background: "rgba(255,255,255,0.09)",
-          border: "1px solid rgba(255,255,255,0.20)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          color: T.accentLt,
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15)",
-          transition: "background 0.22s",
-        }}>
-          {icon}
-        </div>
-      </div>
-
-      {/* 5. Tags — glass-tinted badges */}
-      <div style={{ position: "relative", zIndex: 1, display: "flex", flexWrap: "wrap", gap: 6, alignContent: "flex-start" }}>
-        {tags.map((tag, j) => <Tag key={j} text={tag} size="sm" />)}
-      </div>
-    </motion.div>
-  )
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
    §  LE SOLUZIONI — La Matrice di Conversione
 ══════════════════════════════════════════════════════════════════════════ */
 const SOLUZIONI = [
@@ -1583,97 +910,6 @@ const SOLUZIONI = [
     href: "/corporate",
   },
 ]
-
-function SoluzioneCard({ num, icon, gradient, glow, title, desc, cta, index }: typeof SOLUZIONI[0] & { index: number }) {
-  const [hovered, setHovered] = useState(false)
-  const variant = index === 0 ? "light" : index === SOLUZIONI.length - 1 ? "accent" : "graphite"
-  const SV = ({
-    light:    { bg: "rgba(255,255,255,0.13)",  bgHov: "rgba(255,255,255,0.17)", bd: "rgba(255,255,255,0.65)", bdHov: "rgba(255,255,255,0.82)" },
-    graphite: { bg: "rgba(255,255,255,0.012)",  bgHov: "rgba(255,255,255,0.12)", bd: "rgba(255,255,255,0.18)", bdHov: "rgba(255,255,255,0.36)" },
-    accent:   { bg: "rgba(255,255,255,0.13)",  bgHov: "rgba(255,255,255,0.17)", bd: "rgba(255,255,255,0.65)", bdHov: "rgba(255,255,255,0.82)" },
-  } as const)[variant]
-  return (
-    <motion.div
-      className="hp-sol-card"
-      data-glow=""
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, delay: index * 0.08, ease }}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      style={{
-        '--base': '205', '--spread': '36', '--radius': '20', '--border': '1', '--size': '220',
-        position: "relative",
-        borderRadius: 20,
-        padding: "36px 32px 32px",
-        background: hovered ? SV.bgHov : SV.bg,
-        backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
-        border: `1px solid ${hovered ? SV.bdHov : SV.bd}`,
-        boxShadow: hovered ? `0 18px 50px rgba(0,0,0,0.48), inset 0 1px 0 rgba(255,255,255,0.16)` : G.shadow,
-        cursor: "pointer",
-        transition: "border-color 0.25s, box-shadow 0.3s",
-        display: "flex",
-        flexDirection: "column",
-        gap: 0,
-        overflow: "hidden",
-      } as React.CSSProperties}
-    >
-      {/* glow orb on hover */}
-      <motion.div
-        aria-hidden
-        animate={{ opacity: hovered ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-        style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: `radial-gradient(circle, ${glow} 0%, transparent 70%)`, filter: "blur(30px)", pointerEvents: "none" }}
-      />
-
-      {/* left: icon column (стаёт левым блоком на мобайле) */}
-      <div className="hp-sol-card-head" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 24 }}>
-        <span className="hp-sol-card-num" style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.18em", color: "#FFFFFF", lineHeight: 1 }}>{num}</span>
-        <div className="hp-sol-card-icon" style={{
-          width: 46, height: 46, borderRadius: 14, flexShrink: 0,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          background: hovered ? gradient : "rgba(255,255,255,0.09)",
-          border: `1px solid ${hovered ? "transparent" : "rgba(255,255,255,0.16)"}`,
-          boxShadow: hovered ? `0 0 22px ${glow}` : "none",
-          color: hovered ? (variant === "graphite" ? "#070A11" : "#fff") : T.silver,
-          transition: "background 0.3s, border-color 0.3s, box-shadow 0.3s, color 0.3s",
-        }}>
-          {icon}
-        </div>
-      </div>
-
-      {/* right: text body */}
-      <div className="hp-sol-card-body" style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-        <h3 className="hp-sol-card-title" style={{ fontSize: 18, fontWeight: 700, lineHeight: 1.25, letterSpacing: "-0.02em", color: T.text, marginBottom: 14 }}>
-          {title}
-        </h3>
-
-        <p className="hp-sol-card-desc" style={{ fontSize: 14, color: T.muted, lineHeight: 1.78, marginBottom: 28, flex: 1 }}>
-          {desc}
-        </p>
-
-        <motion.div
-          animate={{ x: hovered ? 4 : 0 }}
-          transition={{ duration: 0.2 }}
-          style={{ display: "inline-flex", alignItems: "center", gap: 8, ...MONO_STYLE, color: hovered ? T.silver : T.faint, transition: "color 0.25s" }}
-        >
-          {cta}
-          <motion.span animate={{ x: hovered ? 4 : 0 }} transition={{ duration: 0.2 }}>
-            <ArrowRightIcon size={11} />
-          </motion.span>
-        </motion.div>
-      </div>
-
-      {/* bottom accent line */}
-      <motion.div
-        animate={{ scaleX: hovered ? 1 : 0 }}
-        transition={{ duration: 0.35, ease }}
-        style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: gradient, transformOrigin: "left", borderRadius: "0 0 20px 20px" }}
-      />
-    </motion.div>
-  )
-}
 
 function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
   const [hover, setHover] = useState(false)
@@ -1763,12 +999,16 @@ function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
 
 function SoluzioniMatrix() {
   return (
-    <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
+    /* id="s4": è l'ancora a cui puntano il menu e il piè di pagina. Prima la
+       sezione non ne aveva nessuna e il link "Soluzioni" ricaricava la home. */
+    <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} id="s4" className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Core Skills &amp; Tech Stack ]</span>
+            {/* il kicker precedente, "Core Skills & Tech Stack", era rimasto
+                da un'altra sezione e non aveva a che vedere con i servizi */}
+            <span>[ Servizi ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.6vw,48px)", fontWeight: 700, lineHeight: 1.06, letterSpacing: "-0.025em", margin: "0 0 16px", maxWidth: 780, color: T.text }}>
             Soluzioni ad Alta Ingegneria
@@ -1982,297 +1222,6 @@ function DiagnosiBlock() {
 /* ══════════════════════════════════════════════════════════════════════════
    §  IL MIO METODO — Perché lavorare con me
 ══════════════════════════════════════════════════════════════════════════ */
-const PERCHE_ITEMS = [
-  {
-    num: "01",
-    icon: (
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-      </svg>
-    ),
-    title: "Capacità di gestire la complessità",
-    body: "Sviluppo architetture pesanti. Sincronizzo ecosistemi con oltre 35.000 prodotti in tempo reale, senza far crollare le performance del sito.",
-    metric: "35.000+",
-    metricLabel: "prodotti sincronizzati",
-  },
-  {
-    num: "02",
-    icon: (
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      </svg>
-    ),
-    title: "Trasparenza e Approccio Diretto",
-    body: "Comunicazione chiara, zero costi nascosti, rispetto rigoroso di scadenze e confini. So esattamente quanto costa il tuo tempo.",
-    metric: "0",
-    metricLabel: "costi nascosti",
-  },
-  {
-    num: "03",
-    icon: (
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
-        <line x1="18" y1="8" x2="22" y2="8"/><line x1="20" y1="6" x2="20" y2="10"/>
-      </svg>
-    ),
-    title: "Unico Referente, Zero Scuse",
-    body: "Sviluppo tecnico, logica aziendale, integrazione AI e SEO gestiti da un'unica mente strategica. Nessun rimpallo di responsabilità.",
-    metric: "1",
-    metricLabel: "referente strategico",
-  },
-]
-
-function PurcheCard({ num, icon, title, body, metric, metricLabel, index }: typeof PERCHE_ITEMS[0] & { index: number }) {
-  const [hov, setHov] = useState(false)
-  return (
-    <motion.div
-      data-glow=""
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay: index * 0.10, ease }}
-      onHoverStart={() => setHov(true)}
-      onHoverEnd={() => setHov(false)}
-      style={{
-        '--base': '205', '--spread': '36', '--radius': '20', '--border': '1', '--size': '220',
-        position: "relative", borderRadius: 20, padding: "36px 30px 30px",
-        backgroundColor: hov ? "rgba(255,255,255,0.13)" : "rgba(255,255,255,0.012)",
-        backdropFilter: "blur(34px) brightness(1.14) saturate(0.70)",
-        WebkitBackdropFilter: "blur(34px) brightness(1.14) saturate(0.70)",
-        border: `1px solid ${hov ? "rgba(255,255,255,0.44)" : "rgba(255,255,255,0.16)"}`,
-        boxShadow: hov
-          ? "0 16px 48px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.60)"
-          : "0 4px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.30)",
-        transition: "background-color 0.28s, border-color 0.28s, box-shadow 0.32s",
-        display: "flex", flexDirection: "column", gap: 0, overflow: "hidden", cursor: "default",
-      } as React.CSSProperties}
-    >
-      {/* purple glow orb */}
-      <motion.div aria-hidden
-        animate={{ opacity: hov ? 1 : 0 }} transition={{ duration: 0.3 }}
-        style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "radial-gradient(circle, rgba(214,222,238,0.16) 0%, transparent 70%)", filter: "blur(30px)", pointerEvents: "none" }}
-      />
-
-      {/* top row: num + icon */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 28 }}>
-        <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.18em", color: "#FFFFFF", lineHeight: 1 }}>{num}</span>
-        <div style={{
-          width: 46, height: 46, borderRadius: 14, flexShrink: 0,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          background: hov ? "linear-gradient(135deg, #E4EAF6 0%, #B9C4D8 100%)" : "rgba(222,230,245,0.10)",
-          border: `1px solid ${hov ? "transparent" : "rgba(235,240,250,0.24)"}`,
-          color: hov ? "#060C18" : T.silver,
-          boxShadow: hov ? "0 0 22px rgba(214,222,238,0.36)" : "none",
-          transition: "background 0.28s, border-color 0.28s, color 0.28s, box-shadow 0.28s",
-        }}>
-          {icon}
-        </div>
-      </div>
-
-      {/* metric callout */}
-      <div style={{ marginBottom: 16 }}>
-        <span style={{
-          fontSize: 36, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em",
-          color: "#FFFFFF",
-        }}>{metric}</span>
-        <span style={{ fontSize: 11, fontWeight: 600, color: T.silver, letterSpacing: "0.10em", textTransform: "uppercase" as const, marginLeft: 10, verticalAlign: "middle", opacity: 0.80 }}>{metricLabel}</span>
-      </div>
-
-      {/* title */}
-      <h3 style={{ fontSize: 17, fontWeight: 700, letterSpacing: "-0.018em", color: T.text, marginBottom: 12, lineHeight: 1.28 }}>
-        {title}
-      </h3>
-
-      {/* body */}
-      <p className="hp-body" style={{ fontSize: 14, color: T.muted, lineHeight: 1.80, margin: 0, flex: 1 }}>
-        {body}
-      </p>
-
-      {/* bottom accent line */}
-      <motion.div
-        animate={{ scaleX: hov ? 1 : 0 }}
-        transition={{ duration: 0.34, ease }}
-        style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, #E4EAF6, #B9C4D8)", transformOrigin: "left", borderRadius: "0 0 20px 20px" }}
-      />
-    </motion.div>
-  )
-}
-
-function PurcheBlock() {
-  return (
-    <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
-      <div style={WRAP} className="hp-wrap">
-        <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
-            <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Il Mio Metodo ]</span>
-          </div>
-          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.6vw,48px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 40px", maxWidth: 560, color: T.text }}>
-            Perché lavorare con me.
-          </h2>
-        </Reveal>
-
-        <style>{`
-          .purche-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-          @media(max-width:700px){ .purche-grid { grid-template-columns:1fr !important; gap:10px !important; } }
-          @media(min-width:701px) and (max-width:960px){ .purche-grid { grid-template-columns:repeat(2,1fr) !important; } }
-        `}</style>
-        <div className="purche-grid">
-          {PERCHE_ITEMS.map((item, i) => (
-            <motion.div
-              key={item.num}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.55, delay: i * 0.08, ease }}
-              style={{ display: "flex" }}
-            >
-              <CatalogCard index={item.num} style={{ width: "100%", display: "flex", flexDirection: "column" }}>
-                <div style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: "clamp(28px,3.6vw,40px)", color: T.accentLt, letterSpacing: "-.02em", marginBottom: 4, lineHeight: 1 }}>
-                  {item.metric}
-                </div>
-                <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: ".14em", color: T.muted, textTransform: "uppercase" as const, marginBottom: 16 }}>
-                  {item.metricLabel}
-                </div>
-                <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 17, margin: "0 0 8px", color: "#060C18", lineHeight: 1.3 }}>{item.title}</h3>
-                <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.65, color: "rgba(15,23,42,.65)", margin: 0, flex: 1 }}>{item.body}</p>
-              </CatalogCard>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function SkillsCardsGrid() {
-  return (
-    <section style={{ ...SEC, padding: "44px 0", borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} className="hp-sec">
-      <div style={WRAP} className="hp-wrap">
-        <div style={{ textAlign: "center", marginBottom: 52 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginBottom: 18 }}>
-            <span style={{ width: 28, height: 1, background: T.accent, flexShrink: 0 }} />
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: T.accentLt }}>Stack Tecnologico</span>
-            <span style={{ width: 28, height: 1, background: T.accent, flexShrink: 0 }} />
-          </div>
-          <h2 style={{ fontSize: "clamp(26px, 3.4vw, 44px)", fontWeight: 700, lineHeight: 1.13, letterSpacing: "-0.028em", marginBottom: 12 }}>
-            Skills
-          </h2>
-          <p style={{ fontSize: 16, color: T.muted, lineHeight: 1.7 }}>
-            Esperienze UI/UX fluide e codice pulito
-          </p>
-        </div>
-        <div className="hp-skillcards" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 18 }}>
-          {SKILL_CARDS_DATA.map((card, i) => <SkillCard key={i} {...card} />)}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   §4  SKILLS
-══════════════════════════════════════════════════════════════════════════ */
-const SkillIconLayers = () => (
-  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7">
-    <defs><linearGradient id="sk-g1" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stopColor="#FF334B"/><stop offset="1" stopColor="#F0F3F9"/></linearGradient></defs>
-    <polygon points="12 2 2 7 12 12 22 7 12 2" stroke="url(#sk-g1)"/>
-    <polyline points="2 17 12 22 22 17" stroke="url(#sk-g1)"/>
-    <polyline points="2 12 12 17 22 12" stroke="url(#sk-g1)"/>
-  </svg>
-)
-const SkillIconCpu = () => (
-  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7">
-    <defs><linearGradient id="sk-g2" x1="1" y1="1" x2="23" y2="23" gradientUnits="userSpaceOnUse"><stop stopColor="#FF334B"/><stop offset="1" stopColor="#F0F3F9"/></linearGradient></defs>
-    <rect x="4" y="4" width="16" height="16" rx="2" stroke="url(#sk-g2)"/>
-    <rect x="9" y="9" width="6" height="6" stroke="url(#sk-g2)"/>
-    <line x1="9" y1="1" x2="9" y2="4" stroke="url(#sk-g2)"/>
-    <line x1="15" y1="1" x2="15" y2="4" stroke="url(#sk-g2)"/>
-    <line x1="9" y1="20" x2="9" y2="23" stroke="url(#sk-g2)"/>
-    <line x1="15" y1="20" x2="15" y2="23" stroke="url(#sk-g2)"/>
-    <line x1="20" y1="9" x2="23" y2="9" stroke="url(#sk-g2)"/>
-    <line x1="20" y1="14" x2="23" y2="14" stroke="url(#sk-g2)"/>
-    <line x1="1" y1="9" x2="4" y2="9" stroke="url(#sk-g2)"/>
-    <line x1="1" y1="14" x2="4" y2="14" stroke="url(#sk-g2)"/>
-  </svg>
-)
-const SkillIconRocket = () => (
-  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7">
-    <defs><linearGradient id="sk-g3" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stopColor="#FF334B"/><stop offset="1" stopColor="#F0F3F9"/></linearGradient></defs>
-    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" stroke="url(#sk-g3)"/>
-    <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" stroke="url(#sk-g3)"/>
-    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" stroke="url(#sk-g3)"/>
-    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" stroke="url(#sk-g3)"/>
-  </svg>
-)
-
-const SKILLS: { icon: React.ReactNode; title: string; items: { name: string; desc: string }[] }[] = [
-  { icon: <SkillIconLayers />, title: "Sviluppo & Architettura Web", items: [
-    { name: "Piattaforme E-Commerce Scalabili", desc: "Sviluppo avanzato su Shopify con ottimizzazione del codice Liquid per cataloghi massivi oltre i 30.000 prodotti. Store enterprise ottimizzati per conversioni e velocità di caricamento fulminee." },
-    { name: "Siti Corporate & Portfolio d'Impatto", desc: "Creazione di interfacce interattive e moderne con Framer e Webflow, utilizzando componentistica React personalizzata per animazioni fluide e una UX superiore." },
-    { name: "Ingegnerizzazione dei Processi & API", desc: "Integrazione e configurazione di API/Middleware personalizzati (Node.js, Python) per connettere in tempo reale fornitori, dropshipper, inventari, gestionali (ERP) e CRM." },
-  ]},
-  { icon: <SkillIconCpu />, title: "Intelligenza Artificiale & Automazione", items: [
-    { name: "Content Automation", desc: "Implementazione di sistemi AI per la generazione massiva e l'ottimizzazione SEO di schede prodotto, descrizioni e attributi tecnici, migliorando l'efficienza operativa." },
-    { name: "Customer Experience", desc: "Sviluppo di Chatbot intelligenti e assistenti virtuali per automatizzare il customer care e incrementare le conversioni." },
-    { name: "Smart Conversion & Recovery", desc: "Intercettazione intelligente degli abbandoni tramite AI. Sistemi automatizzati per il recupero dei carrelli e sconti dinamici in tempo reale, progettati per abbattere il tasso di abbandono e recuperare vendite perse." },
-  ]},
-  { icon: <SkillIconRocket />, title: "Performance Marketing & Growth", items: [
-    { name: "E-Commerce SEO", desc: "Architettura SEO avanzata studiata per garantire il massimo posizionamento organico su motori di ricerca per cataloghi di grandi dimensioni." },
-    { name: "Paid Advertising orientato al ROI", desc: "Strategia, setup e scaling di campagne pubblicitarie ad alto budget su Meta (Facebook & Instagram), Google Ads e Pinterest." },
-    { name: "UI/UX Design & Sviluppo Applicativo", desc: "Studio del comportamento dell'utente per interfacce fluide. Sviluppo di web app e funzionalità su misura per differenziare il brand sul mercato." },
-  ]},
-]
-
-function SkillAccordion({ icon, title, items, defaultOpen }: { icon: React.ReactNode; title: string; items: { name: string; desc: string }[]; defaultOpen?: boolean }) {
-  const [open, setOpen] = useState(defaultOpen ?? false)
-  return (
-    <Reveal>
-      <div data-glow="" style={{ '--base': '205', '--spread': '40', '--radius': '16', '--border': '1.5', '--size': '270', borderRadius: 16, position: "relative", backgroundColor: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${open ? "rgba(255,255,255,0.42)" : G.bd}`, boxShadow: open ? G.shadowHov : G.shadow, transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}>
-
-        <button onClick={() => setOpen(o => !o)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 18, padding: "26px 32px", background: open ? "rgba(255,255,255,0.09)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
-          <div style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: open ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.11)", border: `1px solid ${open ? "rgba(255,255,255,0.42)" : "rgba(255,255,255,0.22)"}`, boxShadow: open ? "0 0 14px rgba(214,222,238,0.24), inset 0 1px 0 rgba(255,255,255,0.11)" : "inset 0 1px 0 rgba(255,255,255,0.012)", transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s" }}>
-            {icon}
-          </div>
-          <span style={{ fontSize: 17, fontWeight: 600, letterSpacing: "-0.015em", flex: 1 }}>{title}</span>
-          <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3 }} style={{ fontSize: 11, color: T.accentLt, lineHeight: 1 }}>▼</motion.span>
-        </button>
-        <AnimatePresence initial={false}>
-          {open && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.4, ease }} style={{ overflow: "hidden" }}>
-              <div className="hp-skills-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 1, background: T.border }}>
-                {items.map((item, i) => (
-                  <div key={i} style={{ background: T.bg, padding: "28px 32px" }}>
-                    <h4 style={{ fontSize: 15, fontWeight: 600, color: T.text, marginBottom: 10, letterSpacing: "-0.01em" }}>{item.name}</h4>
-                    <p className="hp-body" style={{ fontSize: 14, color: T.muted, lineHeight: 1.8 }}>{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </Reveal>
-  )
-}
-
-function Skills() {
-  return (
-    <section id="s4" style={{ ...SEC, borderTop: `1px solid ${T.border}` }} className="hp-sec">
-      <div style={WRAP} className="hp-wrap">
-        <Reveal>
-          <Label text="Core Skills & Tech Stack" />
-          <h2 style={{ fontSize: "clamp(26px, 3.4vw, 44px)", fontWeight: 700, lineHeight: 1.13, letterSpacing: "-0.028em", marginBottom: 60, maxWidth: 560 }}>
-            Soluzioni su misura per scalare il tuo business online
-          </h2>
-        </Reveal>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {SKILLS.map((s, i) => <SkillAccordion key={i} {...s} defaultOpen={i === 0} />)}
-        </div>
-      </div>
-    </section>
-  )
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    §5  METHOD — CAROUSEL + ANIMATED VISUALS
@@ -2630,9 +1579,78 @@ function MethodCarousel() {
   )
 }
 
-function Method() {
+/* ══════════════════════════════════════════════════════════════════════════
+   §5  IL PROCESSO — striscia compatta
+   Il processo non compariva affatto in home: stava solo su About e nel PDF,
+   con parole diverse fra loro. Qui ci sono le quattro fasi in una riga sola
+   ciascuna; il dettaglio resta su About, a un clic di distanza.
+══════════════════════════════════════════════════════════════════════════ */
+function ProcessStrip() {
   return (
-    <section style={{ ...SEC, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s5" className="hp-sec">
+    <section style={{ ...SEC, borderTop: `1px solid ${T.border}` }} id="s5" className="hp-sec">
+      <div style={WRAP} className="hp-wrap">
+        <style>{`
+          .hp-proc-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+          @media(max-width:900px){ .hp-proc-grid{grid-template-columns:repeat(2,1fr)!important;} }
+          @media(max-width:560px){ .hp-proc-grid{grid-template-columns:1fr!important;gap:10px!important;} }
+        `}</style>
+
+        <Reveal>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
+            <span style={{ color: T.accentLt }}>//</span>
+            <span>[ Il Processo ]</span>
+          </div>
+          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 16px", maxWidth: 680, color: T.text }}>
+            Quattro fasi, nessuna sorpresa
+          </h2>
+          <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 640, margin: "0 0 40px" }}>
+            Dal primo confronto al monitoraggio dopo il lancio: ogni fase ha una durata dichiarata e un esito verificabile.
+          </p>
+        </Reveal>
+
+        <div className="hp-proc-grid">
+          {PROCESSO.map((f, i) => (
+            <motion.div key={f.n}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-10% 0px" }}
+              transition={{ duration: 0.5, delay: i * 0.08, ease }}
+              style={{
+                position: "relative", borderRadius: 14, padding: "22px 20px 24px",
+                background: "rgba(255,255,255,0.012)",
+                border: "1px solid rgba(255,255,255,0.13)",
+                backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07)",
+                display: "flex", flexDirection: "column" as const, gap: 10,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: ".18em", color: T.accentLt }}>[ {f.n} ]</span>
+                <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: ".1em", textTransform: "uppercase" as const, color: "#FFFFFF", border: "1px solid rgba(255,255,255,0.16)", borderRadius: 6, padding: "3px 8px", whiteSpace: "nowrap" as const }}>{f.dur}</span>
+              </div>
+              <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 17, lineHeight: 1.25, letterSpacing: "-0.015em", color: "#FFFFFF", margin: 0 }}>{f.title}</h3>
+              <div style={{ width: 26, height: 1.5, background: `linear-gradient(90deg, ${T.accent}, transparent)`, borderRadius: 2 }} />
+              <p style={{ fontFamily: SANS, fontSize: 14.5, lineHeight: 1.68, color: T.muted, margin: 0 }}>{f.short}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        <div style={{ marginTop: 28 }}>
+          <a href="/about" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase" as const, color: "#FFFFFF", textDecoration: "none", borderBottom: `1px solid ${T.accentLt}`, paddingBottom: 3 }}>
+            Il processo in dettaglio <span style={{ color: T.accentLt }}>→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* Si chiamava Method, ma il metodo non lo racconta: racconta il Cabinet, cioè
+   la trasparenza sul lavoro in corso. Il processo vero sta in ProcessStrip,
+   che ora la precede. */
+function Cabinet() {
+  return (
+    <section style={{ ...SEC, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s6" className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 32, marginBottom: 56, flexWrap: "wrap" as const }}>
@@ -2641,7 +1659,7 @@ function Method() {
             <div>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
                 <span style={{ width: 24, height: 1, background: "linear-gradient(90deg, rgba(255,60,92,0.50), transparent)" }} />
-                <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: ".22em", textTransform: "uppercase" as const, color: "rgba(255,60,92,0.55)" }}>Il Metodo di Lavoro</span>
+                <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: ".22em", textTransform: "uppercase" as const, color: "rgba(255,60,92,0.55)" }}>Lavoro Trasparente</span>
                 <span style={{ width: 24, height: 1, background: "linear-gradient(270deg, rgba(255,60,92,0.50), transparent)" }} />
               </div>
 
@@ -2674,91 +1692,6 @@ function Method() {
 /* ══════════════════════════════════════════════════════════════════════════
    §6  PORTFOLIO
 ══════════════════════════════════════════════════════════════════════════ */
-const PROJECTS = [
-  { title: "E-Commerce Enterprise", desc: "Store scalabile con catalogo 30k+ SKU, logistica sincronizzata e velocità di caricamento ottimizzata per conversioni massime.", tags: ["Shopify", "API Custom", "Liquid", "CRO"] },
-  { title: "Corporate Brand Identity", desc: "Sito istituzionale con interfaccia interattiva, animazioni React personalizzate e UX ad alto impatto visivo.", tags: ["Framer", "React Custom", "UI/UX"] },
-  { title: "SEO Architecture Platform", desc: "Infrastruttura SEO tecnica per catalogo massivo con architettura ottimizzata per il posizionamento organico.", tags: ["Webflow", "SEO Arch", "CMS"] },
-  { title: "API Integration Suite", desc: "Middleware per sincronizzazione ERP/CRM in tempo reale con aggiornamento automatico di stock, prezzi e ordini.", tags: ["Node.js", "Python", "REST API"] },
-  { title: "Growth Marketing System", desc: "Setup full-funnel con tracciamento avanzato, ottimizzazione CRO e campagne ad alto budget su Meta e Google.", tags: ["Meta Ads", "Google Ads", "Analytics"] },
-  { title: "AI Automation Engine", desc: "Sistema AI per generazione massiva di contenuti, ottimizzazione SEO prodotti e automazione dei processi operativi.", tags: ["AI / LLM", "Python", "Automation"] },
-]
-
-function ProjectCard({ title, desc, tags }: { title: string; desc: string; tags: string[] }) {
-  const [h, setH] = useState(false)
-  return (
-    <GlassCard padding={0} onClick={() => {}}>
-      <div style={{ height: 172, background: "linear-gradient(135deg, rgba(8,12,22,0.9) 0%, rgba(10,15,27,0.8) 100%)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", borderRadius: "16px 16px 0 0" }}>
-        <motion.div animate={{ opacity: h ? 0.6 : 0.2, scale: h ? 1.1 : 1 }} transition={{ duration: 0.35 }} style={{ fontSize: 44, color: T.accentLt }} onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}>◈</motion.div>
-        <AnimatePresence>
-          {h && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${T.accentDim}, rgba(255,60,92,0.07))` }} />}
-        </AnimatePresence>
-      </div>
-      <div style={{ padding: 24, display: "flex", flexDirection: "column", flex: 1 }}>
-        <h3 style={{ fontSize: 16, fontWeight: 600, letterSpacing: "-0.015em", marginBottom: 8, color: T.text }}>{title}</h3>
-        <p className="hp-body" style={{ fontSize: 13, color: T.muted, lineHeight: 1.75, marginBottom: 16, flex: 1 }}>{desc}</p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>{tags.map((tag, i) => <Tag key={i} text={tag} />)}</div>
-      </div>
-    </GlassCard>
-  )
-}
-
-function Portfolio() {
-  return (
-    <section id="s6" style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
-      <div style={WRAP} className="hp-wrap">
-        <Reveal>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
-            <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Social Proof / Portfolio ]</span>
-          </div>
-          <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 18px", maxWidth: 680, color: T.text }}>
-            Piattaforme che Guidano la Crescita
-          </h2>
-          <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.75, maxWidth: 620, marginBottom: 40 }}>
-            Esplora i progetti commerciali e corporate che ho ingegnerizzato, trasformandoli in asset digitali ad alto rendimento.
-          </p>
-        </Reveal>
-
-        <style>{`
-          .portfolio-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-          @media(max-width:700px){ .portfolio-grid { grid-template-columns:1fr !important; gap:10px !important; } }
-          @media(min-width:701px) and (max-width:960px){ .portfolio-grid { grid-template-columns:repeat(2,1fr) !important; } }
-        `}</style>
-        <div className="portfolio-grid">
-          {PROJECTS.map((p, i) => (
-            <motion.div
-              key={p.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.55, delay: (i % 3) * 0.07, ease }}
-              style={{ display: "flex" }}
-            >
-              <CatalogCard index={`0${i + 1}`} style={{ width: "100%", display: "flex", flexDirection: "column" }}>
-                <div style={{ fontFamily: MONO, fontSize: 10.5, color: "#FFFFFF", marginBottom: 12 }}>
-                  ls ~/projects/0{i + 1}
-                </div>
-                <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, margin: "0 0 10px", color: "#060C18", lineHeight: 1.25 }}>
-                  {p.title}
-                </h3>
-                <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.65, color: "rgba(15,23,42,.65)", margin: "0 0 16px", flex: 1 }}>
-                  {p.desc}
-                </p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-                  {p.tags.map(t => (
-                    <span key={t} style={{ fontFamily: MONO, fontSize: 10.5, color: T.accentLt, border: "1px solid rgba(255,60,92,.3)", borderRadius: 6, padding: "4px 9px" }}>
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </CatalogCard>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    §6b  CASE STUDIES FEATURE — teaser → /projects
@@ -2846,7 +1779,7 @@ function ProjectsFeature() {
             <div>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 18 }}>
                 <span style={{ color: T.accentLt }}>//</span>
-                <span>[ Case Studies ]</span>
+                <span>[ Casi Studio ]</span>
               </div>
 
               <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(34px,5vw,66px)", lineHeight: 0.98, letterSpacing: "-0.04em", margin: 0 }}>
@@ -2889,102 +1822,6 @@ function ProjectsFeature() {
 /* ══════════════════════════════════════════════════════════════════════════
    §8  FAQ
 ══════════════════════════════════════════════════════════════════════════ */
-const FAQS = [
-  { q: "D: Quale piattaforma è meglio per il mio business: Shopify o Framer?", a: "R: Dipende dal progetto. Se hai bisogno di un e-commerce con migliaia di prodotti e logistica complessa integrata, Shopify è imbattibile. Se cerchi un sito aziendale, una landing page o un portfolio ad altissimo impatto visivo e design sartoriale, Framer è la scelta ideale. Valuteremo lo strumento perfetto durante la nostra prima call." },
-  { q: "D: Puoi collegare qualsiasi fornitore o gestionale al mio sito?", a: "R: Sì. Sviluppo integrazioni API personalizzate e middleware su misura per sincronizzare in tempo reale stock, prezzi e ordini con i principali fornitori ed ERP europei e globali, eliminando la gestione manuale." },
-  { q: `D: Offri anche la gestione della pubblicità dopo lo sviluppo?`, a: `R: Certamente. Un sito eccellente non serve a nulla senza traffico qualificato. Offro un servizio completo "chiavi in mano" che include il lancio, il tracciamento avanzato e l'ottimizzazione di campagne pubblicitarie su Meta, Google e Pinterest.` },
-]
-
-function FAQItem({ q, a, open, onToggle }: { q: string; a: string; open: boolean; onToggle: () => void }) {
-  return (
-    <motion.div data-glow="" whileHover={open ? {} : { scale: 1.008 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-      style={{ '--base': '205', '--spread': '40', '--radius': '14', '--border': '1.5', '--size': '260', borderRadius: 14, position: "relative", backgroundColor: G.bg, backdropFilter: G.blur, WebkitBackdropFilter: G.blur, border: `1px solid ${open ? "rgba(255,255,255,0.42)" : G.bd}`, boxShadow: open ? G.shadowHov : G.shadow, transition: "background-color 0.25s, border-color 0.25s, box-shadow 0.3s" } as React.CSSProperties}
-    >
-
-      <button onClick={onToggle} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "22px 28px", background: open ? "rgba(255,255,255,0.09)" : "transparent", border: "none", cursor: "pointer", color: T.text, textAlign: "left", fontFamily: "inherit", transition: "background 0.25s" }}>
-        <span style={{ fontSize: 15, fontWeight: 600, lineHeight: 1.5 }}>{q}</span>
-        <motion.span animate={{ rotate: open ? 45 : 0 }} transition={{ duration: 0.25 }} style={{ fontSize: 24, color: T.silver, flexShrink: 0, lineHeight: 1 }}>+</motion.span>
-      </button>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.35, ease }} style={{ overflow: "hidden" }}>
-            <div style={{ padding: "0 28px 26px", background: "rgba(255,255,255,0.012)" }}>
-              <p className="hp-body" style={{ fontSize: 15, color: T.muted, lineHeight: 1.82 }}>{a}</p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  )
-}
-
-function FAQ() {
-  const [open, setOpen] = useState<number | null>(null)
-  return (
-    <section id="s8" style={SEC} className="hp-sec">
-      <div style={WRAP} className="hp-wrap">
-        <Reveal>
-          <Label text="FAQ — Friction Killers" />
-          <h2 style={{ fontSize: "clamp(26px, 3.4vw, 44px)", fontWeight: 700, lineHeight: 1.13, letterSpacing: "-0.028em", marginBottom: 48, maxWidth: 480 }}>Domande Frequenti</h2>
-        </Reveal>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 820 }}>
-          {FAQS.map((f, i) => (
-            <Reveal key={i}>
-              <FAQItem {...f} open={open === i} onToggle={() => setOpen(open === i ? null : i)} />
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   §9  CONTACT
-══════════════════════════════════════════════════════════════════════════ */
-/* ── Glass form fields ── */
-function GlassInput({ label, placeholder, type = "text", value, onChange }: {
-  label: string; placeholder: string; type?: string; value: string; onChange: (v: string) => void
-}) {
-  const [f, setF] = useState(false)
-  return (
-    <div>
-      <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
-      <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-        onFocus={() => setF(true)} onBlur={() => setF(false)} required
-        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(255,60,92,0.07)" : "rgba(255,255,255,0.012)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(255,70,100,0.55)" : "rgba(255,255,255,0.13)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", boxShadow: f ? "0 0 0 3px rgba(255,60,92,0.11), inset 0 1px 0 rgba(255,255,255,0.09)" : "inset 0 1px 0 rgba(255,255,255,0.012)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
-    </div>
-  )
-}
-
-function GlassTextarea({ label, placeholder, value, onChange }: {
-  label: string; placeholder: string; value: string; onChange: (v: string) => void
-}) {
-  const [f, setF] = useState(false)
-  return (
-    <div>
-      <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
-      <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={4}
-        onFocus={() => setF(true)} onBlur={() => setF(false)} required
-        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(255,60,92,0.07)" : "rgba(255,255,255,0.012)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(255,70,100,0.55)" : "rgba(255,255,255,0.13)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", resize: "none" as const, fontFamily: "inherit", boxSizing: "border-box" as const, boxShadow: f ? "0 0 0 3px rgba(255,60,92,0.11), inset 0 1px 0 rgba(255,255,255,0.09)" : "inset 0 1px 0 rgba(255,255,255,0.012)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
-    </div>
-  )
-}
-
-function GlassSelect({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
-  const [f, setF] = useState(false)
-  const options = ["E-commerce ad Alta Conversione", "Siti Corporate & Lead Generation", "Applicazioni Web & Automazione Custom", "SEO Strategico & Performance Marketing", "Integrazione AI & Sistemi Intelligenti"]
-  return (
-    <div>
-      <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
-      <select value={value} onChange={e => onChange(e.target.value)} onFocus={() => setF(true)} onBlur={() => setF(false)} required
-        style={{ width: "100%", padding: "13px 16px", background: f ? "rgba(255,60,92,0.07)" : "rgba(255,255,255,0.012)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? "rgba(255,70,100,0.55)" : "rgba(255,255,255,0.13)"}`, borderRadius: 12, color: value ? T.text : T.faint, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", appearance: "none" as const, cursor: "pointer", boxShadow: f ? "0 0 0 3px rgba(255,60,92,0.11), inset 0 1px 0 rgba(255,255,255,0.09)" : "inset 0 1px 0 rgba(255,255,255,0.012)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }}>
-        <option value="" disabled style={{ background: "#060C18", color: T.muted }}>Seleziona un'area...</option>
-        {options.map(o => <option key={o} value={o} style={{ background: "#060C18", color: T.text }}>{o}</option>)}
-      </select>
-    </div>
-  )
-}
 
 /* ── Contact modal ── */
 function ContactModal({ onClose }: { onClose: () => void }) {
@@ -3219,7 +2056,7 @@ function Contact() {
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Call to Action ]</span>
+            <span>[ Parliamone ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.2vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 16px", color: "#FFFFFF" }}>
             Pronto a scalare il tuo <span style={{ color: "#FFFFFF" }}>ecosistema digitale?</span>
@@ -3230,7 +2067,7 @@ function Contact() {
           viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.16, ease }}
           style={{ fontSize: 15, color: T.muted, lineHeight: 1.82, marginBottom: 52, maxWidth: 580 }}
         >
-          Prenota un audit gratuito: analizzo la tua architettura attuale, individuo i colli di bottiglia e ti consegno un piano d'azione chiaro, orientato ai numeri.
+          Prenota un audit gratuito: analizziamo la tua architettura attuale, individuiamo i colli di bottiglia e ti consegniamo un piano d'azione chiaro, orientato ai numeri.
         </motion.p>
 
         {/* CTA button */}
@@ -3249,525 +2086,6 @@ function Contact() {
 /* ══════════════════════════════════════════════════════════════════════════
    FOOTER (inlined from FooterSite.tsx)
 ══════════════════════════════════════════════════════════════════════════ */
-const FOOTER_DATA = {
-  name: "Nadia Maar",
-  tagline: "Architetture Digitali ad Alte Prestazioni. Sviluppo soluzioni end-to-end: da e-commerce scalabili a integrazioni API avanzate.",
-  email: "nadiamaar.dev@gmail.com",
-  location: "Remote · Europa",
-  contactUrl: "#s9",
-  contactCtaLabel: "Prenota una Call",
-  socials: [
-    { Icon: GithubIcon,    label: "GitHub",    href: "https://github.com/nadiamaar-dev" },
-    { Icon: InstagramIcon, label: "Instagram", href: "https://instagram.com/nadiamaar.dev" },
-    { Icon: TikTokIcon,    label: "TikTok",    href: "https://tiktok.com/@nadiamaar" },
-    { Icon: PinterestIcon, label: "Pinterest", href: "https://pinterest.com/nadiamaar" },
-    { Icon: LinkedinIcon,  label: "LinkedIn",  href: "https://linkedin.com/in/nadiamaar" },
-  ],
-  services: [
-    { label: "Shopify E-Commerce", href: "#s4" },
-    { label: "Landing Page",       href: "#s4" },
-    { label: "Video AI",           href: "#s4" },
-    { label: "Grafica & Branding", href: "#s4" },
-    { label: "Advertising",        href: "#s4" },
-  ],
-  nav: [
-    { label: "Home",      href: "#s1" },
-    { label: "Chi Sono",  href: "#s2" },
-    { label: "Portfolio", href: "#s6" },
-    { label: "Blog",      href: "#s1" },
-    { label: "Contatti",  href: "#s9" },
-  ],
-  copyright: "© 2025 Nadia Maar. Tutti i diritti riservati.",
-}
-
-function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <a href={href}
-      style={{ display: "flex", alignItems: "center", gap: 0, fontSize: 13, color: T.muted, textDecoration: "none", transition: "color 0.20s, gap 0.20s" }}
-      onMouseEnter={e => { e.currentTarget.style.color = T.text; e.currentTarget.style.gap = "6px" }}
-      onMouseLeave={e => { e.currentTarget.style.color = T.muted; e.currentTarget.style.gap = "0px" }}
-    >
-      <span style={{ color: T.accentLt, overflow: "hidden", width: 0, opacity: 0, transition: "width 0.20s, opacity 0.20s" }} aria-hidden>›</span>
-      {children}
-    </a>
-  )
-}
-
-function FooterSocialBtn({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
-  return (
-    <motion.a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-      data-glow=""
-      whileHover={{ scale: 1.08, y: -2 }} whileTap={{ scale: 0.92 }}
-      transition={{ type: "spring", stiffness: 400, damping: 16 }}
-      style={{ '--base': '205', '--spread': '36', '--radius': '10', '--border': '1', '--size': '140', width: 36, height: 36, borderRadius: 10, border: "1px solid rgba(255,255,255,0.18)", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, backgroundColor: "transparent", transition: "color 0.22s, border-color 0.22s, background-color 0.22s", flexShrink: 0, textDecoration: "none" } as React.CSSProperties}
-      onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.text; el.style.borderColor = "rgba(235,240,250,0.45)"; el.style.backgroundColor = "rgba(226,232,244,0.12)" }}
-      onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = T.muted; el.style.borderColor = "rgba(255,255,255,0.11)"; el.style.backgroundColor = "transparent" }}
-    >{children}</motion.a>
-  )
-}
-
-function FooterSection({ title, children }: { title: string; children: React.ReactNode }) {
-  const [open, setOpen] = useState(false)
-  const [mobile, setMobile] = useState(false)
-  useEffect(() => {
-    const check = () => setMobile(window.innerWidth <= 800)
-    check()
-    window.addEventListener("resize", check)
-    return () => window.removeEventListener("resize", check)
-  }, [])
-
-  if (!mobile) {
-    return (
-      <div>
-        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: T.faint, marginBottom: 20, margin: "0 0 20px" }}>{title}</p>
-        {children}
-      </div>
-    )
-  }
-
-  return (
-    <div style={{ borderBottom: `1px solid ${open ? "rgba(255,60,92,0.28)" : T.border}`, transition: "border-color 0.25s" }}>
-      <button
-        onClick={() => setOpen(o => !o)}
-        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: open ? "rgba(255,60,92,0.05)" : "transparent", border: "none", cursor: "pointer", padding: "16px 0", fontFamily: "inherit", transition: "background 0.25s" }}
-      >
-        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: open ? T.accentLt : T.faint, transition: "color 0.25s" }}>{title}</span>
-        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.28 }} style={{ color: open ? T.accentLt : T.faint, fontSize: 9, lineHeight: 1 }}>▼</motion.span>
-      </button>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            style={{ overflow: "hidden" }}
-          >
-            <div style={{ padding: "4px 0 20px" }}>{children}</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  )
-}
-
-const FOOTER_NAV = [
-  { label: "Servizi",    action: "s3" },
-  { label: "Soluzioni",  action: "s4" },
-  { label: "Risultati",  action: "s5" },
-  { label: "Metodo",     action: "s8" },
-  { label: "Contatti",   action: "s9" },
-]
-const FOOTER_SOCIALS_FULL = [
-  { label: "LinkedIn",  href: "https://linkedin.com/in/nadiamaar",        Icon: LinkedinIcon  },
-  { label: "GitHub",    href: "https://github.com/nadiamaar-dev",          Icon: GithubIcon    },
-  { label: "Instagram", href: "https://instagram.com/nadiamaar.dev",       Icon: InstagramIcon },
-  { label: "Discord",   href: "https://discord.gg/nadiamaar",              Icon: DiscordIcon   },
-]
-
-
-/* ══════════════════════════════════════════════════════════════════════════
-   DATE-TIME WIDGET
-══════════════════════════════════════════════════════════════════════════ */
-function DateTimeWidget() {
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 1000)
-    return () => clearInterval(id)
-  }, [])
-
-  const hh  = String(now.getHours()).padStart(2, "0")
-  const mm  = String(now.getMinutes()).padStart(2, "0")
-  const ss  = now.getSeconds()
-  const ssStr = String(ss).padStart(2, "0")
-  const day = new Intl.DateTimeFormat("en", { weekday: "short" }).format(now).toUpperCase()
-  const date = now.getDate()
-  const mon = new Intl.DateTimeFormat("en", { month: "short" }).format(now).toUpperCase()
-
-  return (
-    <div
-      className="hp-datetime"
-      aria-label="Local time"
-      style={{
-        position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-        display: "flex", alignItems: "center", gap: 10,
-        padding: "5px 14px 5px 8px", borderRadius: 100,
-        background: "rgba(255,255,255,0.012)",
-        backdropFilter: "blur(22px) saturate(1.6)", WebkitBackdropFilter: "blur(22px) saturate(1.6)",
-        border: "1px solid rgba(255,255,255,0.20)",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.012), 0 2px 14px rgba(0,0,0,0.22)",
-        whiteSpace: "nowrap", userSelect: "none", pointerEvents: "none", zIndex: 10,
-      } as React.CSSProperties}
-    >
-      {/* seconds arc */}
-      <svg width="22" height="22" viewBox="0 0 22 22" style={{ flexShrink: 0 }}>
-        <circle cx="11" cy="11" r="8.5" fill="none" stroke="rgba(255,255,255,0.012)" strokeWidth="1.5" />
-        <motion.circle
-          cx="11" cy="11" r="8.5"
-          fill="none" stroke="#FF334B" strokeWidth="1.5" strokeLinecap="round"
-          transform="rotate(-90 11 11)"
-          animate={{ pathLength: ss / 60 }}
-          transition={{ duration: 0.85, ease: "easeOut" }}
-        />
-      </svg>
-
-      {/* HH:MM + ss */}
-      <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.06em", color: "#FFFFFF", display: "inline-flex", alignItems: "baseline", gap: 1 }}>
-        {hh}
-        <motion.span
-          animate={{ opacity: [1, 0.2, 1] }}
-          transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
-          style={{ margin: "0 1px", color: "#FFFFFF" }}
-        >:</motion.span>
-        {mm}
-        <span style={{ fontSize: 9, marginLeft: 4, letterSpacing: "0.04em" }}>{ssStr}</span>
-      </span>
-
-      {/* divider */}
-      <span style={{ width: 1, height: 13, background: "rgba(255,255,255,0.13)", flexShrink: 0 }} />
-
-      {/* date */}
-      <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 500, letterSpacing: "0.14em", color: "#FFFFFF" }}>
-        {day} {date} {mon}
-      </span>
-    </div>
-  )
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   NAVBAR
-══════════════════════════════════════════════════════════════════════════ */
-const NAV_LINKS = [
-  { label: "Servizi",   id: "s4" },
-  { label: "Metodo",    id: "s5" },
-  { label: "Portfolio", id: "s6" },
-  { label: "Contatti",  id: "s9" },
-]
-
-function NMmark({ size = 32, id = "nm-g", hover = false }: { size?: number; id?: string; hover?: boolean }) {
-  return (
-    <svg viewBox="0 2 28 22" width={size} height={Math.round(size * 22 / 28)} fill="none" strokeLinecap="square" strokeLinejoin="miter">
-      <defs>
-        <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor={hover ? "#F0F3F9" : "rgba(255,255,255,0.90)"} />
-          <stop offset="44%"  stopColor={hover ? "#F0F3F9" : "rgba(255,255,255,0.90)"} />
-          <stop offset="56%"  stopColor="#FF334B" />
-          <stop offset="100%" stopColor={hover ? "#F72544" : "#FF3552"} />
-        </linearGradient>
-      </defs>
-      <motion.path
-        d="M 2,22 L 2,2 L 13,22 L 13,2 L 19.5,12 L 26,2 L 26,22"
-        stroke={`url(#${id})`}
-        strokeWidth="1.85"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 1 }}
-        transition={{ pathLength: { duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 }, opacity: { duration: 0.01 } }}
-      />
-    </svg>
-  )
-}
-
-function Logo3D({ onClick }: { onClick: () => void }) {
-  const [h, setH] = useState(false)
-  return (
-    <motion.button
-      onClick={onClick}
-      onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}
-      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }}
-      transition={{ type: "spring", stiffness: 420, damping: 22 }}
-      style={{ background: "none", border: "none", padding: 0, cursor: "pointer", flexShrink: 0 }}
-    >
-      <span style={{ display: "inline-flex", alignItems: "center", gap: 11 }}>
-        <span style={{ position: "relative", display: "inline-flex", flexShrink: 0 }}>
-          <NMmark size={30} id="nm-nav" hover={h} />
-          <motion.span aria-hidden
-            animate={{ opacity: h ? 1 : 0 }} transition={{ duration: 0.30 }}
-            style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(255,60,92,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }}
-          />
-        </span>
-        <span aria-hidden style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
-        <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.22em", textTransform: "uppercase" as const, whiteSpace: "nowrap" as const, color: h ? "#fff" : "#FFFFFF", transition: "color 0.28s" }}>
-          Nadia Maar
-        </span>
-      </span>
-    </motion.button>
-  )
-}
-
-function NavLinkAdv({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
-  const [h, setH] = useState(false)
-  const [lx, setLx] = useState(0)
-  const [ly, setLy] = useState(0)
-  const btnRef = useRef<HTMLButtonElement>(null)
-  const onMove = (e: React.MouseEvent) => { const r = btnRef.current?.getBoundingClientRect(); if (r) { setLx(e.clientX - r.left); setLy(e.clientY - r.top) } }
-  return (
-    <button ref={btnRef} onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} onMouseMove={onMove}
-      style={{ position: "relative", background: "none", border: "none", cursor: "pointer", color: active ? T.text : h ? T.text : T.muted, fontSize: 11, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase" as const, padding: "8px 16px", borderRadius: 8, overflow: "hidden", fontFamily: MONO, transition: "color 0.18s" }}>
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: h ? `radial-gradient(55px circle at ${lx}px ${ly}px, rgba(255,60,92,0.22) 0%, transparent 100%)` : "none", transition: "background 0.08s" }} />
-      <motion.div animate={{ opacity: h || active ? 1 : 0, background: active ? "rgba(255,60,92,0.14)" : "rgba(255,255,255,0.012)" }} transition={{ duration: 0.18 }} style={{ position: "absolute", inset: 0, borderRadius: 8, border: active ? "1px solid rgba(255,60,92,0.28)" : "1px solid transparent" }} />
-      {active && <motion.div layoutId="nav-active-dot" style={{ position: "absolute", bottom: 3, left: "50%", transform: "translateX(-50%)", width: 3, height: 3, borderRadius: "50%", background: T.accent, boxShadow: `0 0 6px ${T.accent}` }} />}
-      <span style={{ position: "relative" }}>{label}</span>
-    </button>
-  )
-}
-
-/* Large nav item — for mobile full-screen overlay */
-/* Shared nav item — used in both mobile and desktop panel */
-function MenuNavItem({ num, label, onClick, index, active = false }: { num: string; label: string; onClick: () => void; index: number; active?: boolean }) {
-  const [h, setH] = useState(false)
-  const lit = h || active
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 28 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.06 + index * 0.08, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <button
-        onClick={onClick}
-        onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
-        style={{
-          background: "none", border: "none", cursor: "pointer", width: "100%",
-          display: "flex", alignItems: "baseline", gap: 18, padding: "14px 0",
-          borderBottom: `1px solid ${lit ? "rgba(255,60,92,0.40)" : "rgba(255,255,255,0.11)"}`,
-          transition: "border-color 0.22s", textAlign: "left" as const, position: "relative",
-        }}
-      >
-        {/* accent left bar */}
-        <motion.span aria-hidden
-          animate={{ scaleY: lit ? 1 : 0, opacity: lit ? 1 : 0 }}
-          transition={{ duration: 0.2 }}
-          style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-50%)", width: 2, height: "60%", background: T.accent, borderRadius: 2, transformOrigin: "center" }}
-        />
-        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", color: lit ? T.accent : "#FFFFFF", transition: "color 0.22s", minWidth: 26, flexShrink: 0 }}>[{num}]</span>
-        <span style={{
-          fontFamily: DISPLAY, fontSize: "clamp(28px, 8vw, 46px)", fontWeight: 800,
-          letterSpacing: "-0.032em", lineHeight: 1.1,
-          color: active ? T.accentLt : h ? "#fff" : "#FFFFFF",
-          transition: "color 0.22s",
-        }}>{label}</span>
-        <motion.span
-          animate={{ x: lit ? 10 : 0, opacity: lit ? 1 : 0 }}
-          transition={{ duration: 0.18 }}
-          style={{ marginLeft: "auto", color: T.accentLt, fontSize: 20, lineHeight: 1, flexShrink: 0 }}
-        >→</motion.span>
-      </button>
-    </motion.div>
-  )
-}
-
-/* DesktopMenuNavItem now reuses MenuNavItem */
-function DesktopMenuNavItem({ num, label, onClick, index }: { num: string; label: string; onClick: () => void; index: number }) {
-  return <MenuNavItem num={num} label={label} onClick={onClick} index={index} />
-}
-
-function MenuOverlay({ onClose }: { onClose: () => void }) {
-  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" ? window.innerWidth <= 800 : false)
-
-  useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth <= 800)
-    window.addEventListener("resize", onResize)
-    document.body.style.overflow = "hidden"
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
-    document.addEventListener("keydown", onKey)
-    return () => { window.removeEventListener("resize", onResize); document.body.style.overflow = ""; document.removeEventListener("keydown", onKey) }
-  }, [onClose])
-
-  const goto = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); onClose() }
-
-  const NAV = [
-    { num: "01", label: "Home",      action: () => goto("s1"), sectionId: "s1" },
-    { num: "02", label: "About Me",  action: () => { window.location.href = "/about" }, sectionId: "" },
-    { num: "03", label: "Soluzioni", action: () => goto("s3"), sectionId: "s3" },
-    { num: "04", label: "Risultati", action: () => goto("s5"), sectionId: "s5" },
-    { num: "05", label: "Contatti",  action: () => goto("s9"), sectionId: "s9" },
-  ]
-
-  const MENU_SOCIALS = [
-    { label: "LI",  href: "https://linkedin.com/in/nadiamaar" },
-    { label: "GH",  href: "https://github.com/nadiamaar-dev" },
-    { label: "IG",  href: "https://instagram.com/nadiamaar.dev" },
-    { label: "DC",  href: "https://discord.gg/nadiamaar" },
-  ]
-
-  /* active section detection */
-  const [activeId, setActiveId] = useState("")
-  useEffect(() => {
-    const ids = ["s1","s3","s5","s9"]
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) setActiveId(e.target.id) })
-    }, { threshold: 0.3 })
-    ids.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el) })
-    return () => obs.disconnect()
-  }, [])
-
-  /* shared glass styles */
-  const GLASS = {
-    background: "rgba(15,23,42,0.82)",
-    backdropFilter: "blur(72px) brightness(1.08) saturate(0.80)",
-    WebkitBackdropFilter: "blur(72px) brightness(1.08) saturate(0.80)",
-  } as React.CSSProperties
-
-  /* shared footer row */
-  const menuFooter = (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.42, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      style={{ paddingBottom: 36, paddingTop: 22, borderTop: "1px solid rgba(255,255,255,0.20)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}
-    >
-      <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        <a href="mailto:nadiamaar.dev@gmail.com"
-          style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em", color: "#FFFFFF", textDecoration: "none", transition: "color 0.18s" }}
-          onMouseEnter={e => (e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.color = "#FFFFFF")}>
-          nadiamaar.dev@gmail.com
-        </a>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
-          <PingDot color={T.green} size={5} />
-          <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "rgba(190,245,220,0.80)" }}>Disponibile</span>
-        </div>
-      </div>
-      <div style={{ display: "flex", gap: 10 }}>
-        {MENU_SOCIALS.map(({ label, href }) => (
-          <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-            style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: "#FFFFFF", background: "rgba(255,255,255,0.012)", border: "1px solid rgba(255,255,255,0.24)", textDecoration: "none", transition: "all 0.18s" }}
-            onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color="#fff"; el.style.borderColor="rgba(255,60,92,0.55)"; el.style.background="rgba(255,60,92,0.14)" }}
-            onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.color="#FFFFFF"; el.style.borderColor="rgba(255,255,255,0.15)"; el.style.background="rgba(255,255,255,0.012)" }}
-          >{label}</a>
-        ))}
-      </div>
-    </motion.div>
-  )
-
-  if (isMobile) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        style={{ position: "fixed", inset: 0, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 28px", overflow: "hidden", ...GLASS }}
-      >
-        {/* top accent gradient line */}
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(255,60,92,0.70), rgba(255,70,100,0.45), transparent)", flexShrink: 0 }} />
-
-        {/* spacer — same height as navbar */}
-        <div style={{ height: 64, flexShrink: 0 }} />
-
-        {/* ghost MAAR */}
-        <div aria-hidden style={{ position: "absolute", bottom: "12%", left: "50%", transform: "translateX(-50%)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,32vw,160px)", letterSpacing: "-0.05em", color: "transparent", WebkitTextStroke: "1.6px rgba(255,255,255,0.16)", filter: "blur(0.4px)", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none", zIndex: 0 }}>MAAR</div>
-
-        {/* nav */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 20 }}>
-          {NAV.map((item, i) => (
-            <MenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} active={!!item.sectionId && activeId === item.sectionId} />
-          ))}
-        </div>
-
-        {menuFooter}
-      </motion.div>
-    )
-  }
-
-  /* Desktop — right slide panel + backdrop */
-  return (
-    <>
-      <motion.div
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-        transition={{ duration: 0.26 }}
-        onClick={onClose}
-        style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.28)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 299 }}
-      />
-
-      <motion.div
-        initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
-        transition={{ type: "spring", stiffness: 320, damping: 36 }}
-        style={{
-          position: "fixed", top: 0, right: 0, bottom: 0, width: 460, zIndex: 300,
-          display: "flex", flexDirection: "column", padding: "0 40px",
-          borderLeft: "1px solid rgba(255,255,255,0.26)",
-          ...GLASS,
-        }}
-      >
-        {/* top accent line */}
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(255,60,92,0.70) 40%, rgba(255,70,100,0.45) 70%, transparent)", flexShrink: 0 }} />
-
-        {/* header */}
-        <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
-          <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.26em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>Navigation</span>
-        </div>
-
-        {/* ghost MAAR — vertical right edge */}
-        <div aria-hidden style={{ position: "absolute", right: -8, top: 0, bottom: 0, display: "flex", alignItems: "center", pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
-          <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,9vw,130px)", letterSpacing: "-0.04em", color: "transparent", WebkitTextStroke: "1.4px rgba(255,255,255,0.15)", filter: "blur(0.4px)", userSelect: "none", lineHeight: 0.82 }}>MAAR</span>
-        </div>
-
-        {/* vermillion ambient glow */}
-        <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,60,92,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
-
-        {/* nav links */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 4 }}>
-          {NAV.map((item, i) => (
-            <MenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} active={!!item.sectionId && activeId === item.sectionId} />
-          ))}
-        </div>
-
-        {menuFooter}
-      </motion.div>
-    </>
-  )
-}
-
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 48)
-    window.addEventListener("scroll", fn, { passive: true })
-    return () => window.removeEventListener("scroll", fn)
-  }, [])
-
-  const goto = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
-
-  return (
-    <>
-      <motion.header
-        initial={{ y: -70, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.7, ease }}
-        style={{
-          position: "fixed", top: 0, left: 0, right: 0, zIndex: 400, height: 64,
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "0 32px",
-          backdropFilter: scrolled ? "blur(32px) saturate(0.85)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(32px) saturate(0.85)" : "none",
-          background: scrolled ? "rgba(15,23,42,0.78)" : "transparent",
-          borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.012)" : "transparent"}`,
-          transition: "background 0.4s, border-color 0.4s",
-        } as React.CSSProperties}
-      >
-        <DateTimeWidget />
-        <Logo3D onClick={() => goto("s1")} />
-
-        {/* hamburger */}
-        <motion.button
-          onClick={() => setMenuOpen(o => !o)}
-          whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
-          transition={{ type: "spring", stiffness: 400, damping: 20 }}
-          aria-label="Menu"
-          style={{ background: "none", border: "none", cursor: "pointer", padding: "8px 4px", display: "flex", flexDirection: "column", gap: 5, zIndex: 401, flexShrink: 0 }}
-        >
-          <motion.span animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 7 : 0 }} transition={{ duration: 0.26 }}
-            style={{ display: "block", width: 22, height: 1.8, background: menuOpen ? "#fff" : "rgba(255,255,255,0.80)", borderRadius: 2, transformOrigin: "center" }} />
-          <motion.span animate={{ opacity: menuOpen ? 0 : 1, width: menuOpen ? 0 : 14 }} transition={{ duration: 0.18 }}
-            style={{ display: "block", width: 14, height: 1.8, background: "rgba(255,255,255,0.80)", borderRadius: 2 }} />
-          <motion.span animate={{ rotate: menuOpen ? -45 : 0, y: menuOpen ? -7 : 0 }} transition={{ duration: 0.26 }}
-            style={{ display: "block", width: 22, height: 1.8, background: menuOpen ? "#fff" : "rgba(255,255,255,0.80)", borderRadius: 2, transformOrigin: "center" }} />
-        </motion.button>
-      </motion.header>
-
-      <AnimatePresence>
-        {menuOpen && <MenuOverlay onClose={() => setMenuOpen(false)} />}
-      </AnimatePresence>
-    </>
-  )
-}
 
 
 
@@ -3866,14 +2184,20 @@ export default function NadiaMaarLab() {
       <FloatingContact />
       <Header />
       <div style={{ position: "relative", zIndex: 1, paddingTop: 64 }}>
+        {/* L'ordine racconta una storia: prima il problema, poi che cosa si
+            costruisce, poi la prova che funziona, poi come si lavora e con
+            quale trasparenza. Il configuratore arriva alla fine, quando chi
+            legge ha gli elementi per comporre qualcosa di sensato — prima
+            stava al quarto posto, cioè prima ancora dell'elenco dei servizi. */}
         <Hero />
         <DiagnosiBlock />
-        <ProjectsFeature />
-        <FoundryConfigurator />
         <SoluzioniMatrix />
-        <AllInOne />
-        <TechBlock />
-        <Method />
+        <ProjectsFeature />
+        <ProcessStrip />
+        <Cabinet />
+        {/* ancora s7: il configuratore è un componente esterno e non può
+            portarsela dentro */}
+        <div id="s7"><FoundryConfigurator /></div>
         <Contact />
         <Footer />
       </div>

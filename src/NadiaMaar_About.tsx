@@ -28,6 +28,9 @@ import FloatingContact from "./components/FloatingContact"
 import Header from "./components/Header"
 import Background from "./components/Background"
 import FoundryShowcase from "./components/FoundryShowcase"
+import StudioApproach from "./components/studio/StudioApproach"
+import StudioCapabilities from "./components/studio/StudioCapabilities"
+import { PROCESSO, type Fase } from "./data/process"
 
 /* ══════════════════════════════════════════════════════════════════════════
    ICONS
@@ -37,73 +40,6 @@ const XIcon = ({ size = 13 }: { size?: number }) => (
     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
   </svg>
 )
-const ArrowUpRight = ({ size = 14 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
-  </svg>
-)
-const ArrowRight = ({ size = 16 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-  </svg>
-)
-const ChevronDown = ({ size = 14 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="6 9 12 15 18 9"/>
-  </svg>
-)
-const LinkedinIcon = ({ size = 14 }: { size?: number }) => (
-  <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/>
-    <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
-  </svg>
-)
-const InstagramIcon = () => (
-  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-    <rect x="2" y="2" width="20" height="20" rx="5"/>
-    <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
-    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" strokeWidth="2"/>
-  </svg>
-)
-const DiscordIcon = () => (
-  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
-    <path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.055 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-  </svg>
-)
-const GithubIcon = ({ size = 14 }: { size?: number }) => (
-  <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
-  </svg>
-)
-const MailIcon = ({ size = 14 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/>
-  </svg>
-)
-
-/* NM single-stroke geometric mark */
-function NMmark({ size = 32, id = "nm-g", hover = false }: { size?: number; id?: string; hover?: boolean }) {
-  return (
-    <svg viewBox="0 2 28 22" width={size} height={Math.round(size * 22 / 28)} fill="none" strokeLinecap="square" strokeLinejoin="miter">
-      <defs>
-        <linearGradient id={id} x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor={hover ? "#F0F3F9" : "rgba(255,255,255,0.90)"} />
-          <stop offset="44%"  stopColor={hover ? "#F0F3F9" : "rgba(255,255,255,0.90)"} />
-          <stop offset="56%"  stopColor="#BE3648" />
-          <stop offset="100%" stopColor={hover ? "#B8384A" : "#B83240"} />
-        </linearGradient>
-      </defs>
-      <motion.path
-        d="M 2,22 L 2,2 L 13,22 L 13,2 L 19.5,12 L 26,2 L 26,22"
-        stroke={`url(#${id})`}
-        strokeWidth="1.85"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 1 }}
-        transition={{ pathLength: { duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 }, opacity: { duration: 0.01 } }}
-      />
-    </svg>
-  )
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    DESIGN TOKENS — Obsidian + solar orange / copper aurora
@@ -128,28 +64,12 @@ const OR = (a: number) => `rgba(184,50,64,${a})`
 const RD = (a: number) => `rgba(120,20,30,${a})`
 
 // white -> amber gradient text fill
-const gradText = (deg = 180): React.CSSProperties => ({
-  backgroundImage: `linear-gradient(${deg}deg, #F0F3F9 0%, rgba(255,255,255,0.70) 48%, #B83240 100%)`,
-  WebkitBackgroundClip: "text",
-  backgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-})
 
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1]
 const MONO = "'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace"
 const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
 const BODY: React.CSSProperties = { fontFamily: "'Geist', system-ui, sans-serif", fontSize: "clamp(16px, 1.4vw, 17px)", fontWeight: 400, lineHeight: 1.85, letterSpacing: "0.01em" }
 const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&/*+<>{}[]"
-
-const G = {
-  bg:        "rgba(255,255,255,0.06)",
-  bgHov:     "rgba(255,255,255,0.10)",
-  bd:        "rgba(255,255,255,0.18)",
-  bdHov:     "rgba(255,255,255,0.46)",
-  blur:      "blur(16px) saturate(0.15)",
-  shadow:    "0 16px 52px 0 rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.14), inset 0 0 0 1px rgba(255,255,255,0.05)",
-  shadowHov: "0 32px 80px 0 rgba(0,0,0,0.70), inset 0 1px 0 rgba(255,255,255,0.22), inset 0 0 0 1px rgba(255,255,255,0.08)",
-} as const
 
 const MONO_LABEL: React.CSSProperties = {
   fontFamily: MONO, letterSpacing: "0.20em",
@@ -345,43 +265,8 @@ function PingDot({ color = T.accentLt, size = 7 }: { color?: string; size?: numb
 }
 
 /** Big translucent index numeral — editorial watermark behind card content. */
-function GhostNum({ n, size = 116, top = -6, right = 6 }: { n: string | number; size?: number; top?: number; right?: number }) {
-  return (
-    <span aria-hidden style={{
-      position: "absolute", top, right, fontFamily: DISPLAY, fontWeight: 900,
-      fontSize: size, lineHeight: 1, letterSpacing: "-0.06em", pointerEvents: "none",
-      color: "transparent", WebkitTextStroke: `1px ${LT(0.15)}`, userSelect: "none",
-    }}>{n}</span>
-  )
-}
-
-/** Warm brick spotlight that fades in from the base of a card on hover. */
-function HoverGlow({ show }: { show: boolean }) {
-  return (
-    <span aria-hidden style={{
-      position: "absolute", inset: 0, borderRadius: "inherit", pointerEvents: "none",
-      background: `radial-gradient(120% 88% at 50% 116%, ${OR(0.30)}, transparent 60%)`,
-      opacity: show ? 1 : 0, transition: "opacity 0.42s ease",
-    }} />
-  )
-}
-
-/** Spotlight-border vars for [data-glow] cards. */
-const glowVars = (radius = 18): React.CSSProperties => ({
-  ['--base' as string]: '28', ['--spread' as string]: '30',
-  ['--radius' as string]: String(radius), ['--border' as string]: '1.5', ['--size' as string]: '300',
-} as React.CSSProperties)
 
 /** Shared refined-glass surface. Pass hover state for the lit variant. */
-const glass = (hov = false): React.CSSProperties => ({
-  background: hov ? G.bgHov : G.bg,
-  backdropFilter: G.blur, WebkitBackdropFilter: G.blur,
-  border: `1px solid ${hov ? LT(0.42) : G.bd}`,
-  borderTop: `1px solid rgba(255,255,255,0.24)`,
-  boxShadow: hov ? `${G.shadowHov}, 0 0 46px ${OR(0.15)}` : G.shadow,
-  transition: "background .3s, border-color .3s, box-shadow .35s",
-})
-
 /** Numbered editorial section kicker — §NN —— EYEBROW. The cohesion backbone. */
 function Kicker({ index, text, center = false }: { index: string; text: string; center?: boolean }) {
   return (
@@ -394,26 +279,6 @@ function Kicker({ index, text, center = false }: { index: string; text: string; 
 }
 
 /** Magnetic wrapper — element gently follows the cursor. */
-function Magnetic({ children, strength = 0.32 }: { children: React.ReactNode; strength?: number }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [pos, setPos] = useState({ x: 0, y: 0 })
-  const onMove = (e: React.MouseEvent) => {
-    const el = ref.current; if (!el) return
-    const r = el.getBoundingClientRect()
-    setPos({ x: (e.clientX - (r.left + r.width / 2)) * strength, y: (e.clientY - (r.top + r.height / 2)) * strength })
-  }
-  return (
-    <motion.div
-      ref={ref} onMouseMove={onMove} onMouseLeave={() => setPos({ x: 0, y: 0 })}
-      animate={{ x: pos.x, y: pos.y }}
-      transition={{ type: "spring", stiffness: 200, damping: 15, mass: 0.4 }}
-      style={{ display: "inline-flex" }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
 function PillCTA({ label, href, onClick, target }: { label: string; href?: string; onClick?: () => void; target?: string }) {
   const [h, setH] = useState(false)
   const btnStyle: React.CSSProperties = {
@@ -472,36 +337,6 @@ function ScrambleLine({ text, delay = 0, style }: { text: string; delay?: number
 /* ══════════════════════════════════════════════════════════════════════════
    DATETIME WIDGET
 ══════════════════════════════════════════════════════════════════════════ */
-function DateTimeWidget() {
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 1000)
-    return () => clearInterval(id)
-  }, [])
-  const hh  = String(now.getHours()).padStart(2, "0")
-  const mm  = String(now.getMinutes()).padStart(2, "0")
-  const ss  = now.getSeconds()
-  const ssStr = String(ss).padStart(2, "0")
-  const day = new Intl.DateTimeFormat("en", { weekday: "short" }).format(now).toUpperCase()
-  const date = now.getDate()
-  const mon = new Intl.DateTimeFormat("en", { month: "short" }).format(now).toUpperCase()
-  return (
-    <div className="abt-datetime" aria-label="Local time" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", alignItems: "center", gap: 10, padding: "5px 14px 5px 8px", borderRadius: 100, background: "rgba(255,255,255,0.04)", backdropFilter: "blur(22px) saturate(1.6)", WebkitBackdropFilter: "blur(22px) saturate(1.6)", border: "1px solid rgba(255,255,255,0.16)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 14px rgba(0,0,0,0.22)", whiteSpace: "nowrap", userSelect: "none", pointerEvents: "none", zIndex: 10 } as React.CSSProperties}>
-      <svg width="22" height="22" viewBox="0 0 22 22" style={{ flexShrink: 0 }}>
-        <circle cx="11" cy="11" r="8.5" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" />
-        <motion.circle cx="11" cy="11" r="8.5" fill="none" stroke="#BE3648" strokeWidth="1.5" strokeLinecap="round" transform="rotate(-90 11 11)" animate={{ pathLength: ss / 60 }} transition={{ duration: 0.85, ease: "easeOut" }} />
-      </svg>
-      <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 600, letterSpacing: "0.06em", color: "#FFFFFF", display: "inline-flex", alignItems: "baseline", gap: 1 }}>
-        {hh}
-        <motion.span animate={{ opacity: [1, 0.2, 1] }} transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }} style={{ margin: "0 1px", color: "#FFFFFF" }}>:</motion.span>
-        {mm}
-        <span style={{ fontSize: 9, marginLeft: 4, letterSpacing: "0.04em" }}>{ssStr}</span>
-      </span>
-      <span style={{ width: 1, height: 13, background: "rgba(255,255,255,0.10)", flexShrink: 0 }} />
-      <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 500, letterSpacing: "0.14em", color: "#FFFFFF" }}>{day} {date} {mon}</span>
-    </div>
-  )
-}
 
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -529,206 +364,6 @@ function CursorRing() {
 /* ══════════════════════════════════════════════════════════════════════════
    NAVBAR
 ══════════════════════════════════════════════════════════════════════════ */
-function Logo3D({ onClick }: { onClick: () => void }) {
-  const [h, setH] = useState(false)
-  return (
-    <motion.button
-      onClick={onClick}
-      onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}
-      whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }}
-      transition={{ type: "spring", stiffness: 420, damping: 22 }}
-      style={{ background: "none", border: "none", padding: 0, cursor: "pointer", flexShrink: 0 }}
-    >
-      <span style={{ display: "inline-flex", alignItems: "center", gap: 11 }}>
-        <span style={{ position: "relative", display: "inline-flex", flexShrink: 0 }}>
-          <NMmark size={30} id="nm-abt-nav" hover={h} />
-          <motion.span aria-hidden
-            animate={{ opacity: h ? 1 : 0 }}
-            transition={{ duration: 0.30 }}
-            style={{ position: "absolute", right: -3, bottom: -1, width: 20, height: 20, background: "radial-gradient(circle, rgba(124,34,43,0.55) 0%, transparent 70%)", filter: "blur(7px)", pointerEvents: "none" }}
-          />
-        </span>
-        <span aria-hidden style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
-        <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.22em", textTransform: "uppercase" as const, whiteSpace: "nowrap" as const, color: h ? "#fff" : "#FFFFFF", transition: "color 0.28s" }}>
-          Nadia Maar
-        </span>
-      </span>
-    </motion.button>
-  )
-}
-
-function MenuNavItem({ num, label, onClick, index, active = false }: { num: string; label: string; onClick: () => void; index: number; active?: boolean }) {
-  const [h, setH] = useState(false)
-  const lit = h || active
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 28 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.06 + index * 0.08, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <button
-        onClick={onClick}
-        onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
-        style={{ background: "none", border: "none", cursor: "pointer", width: "100%", display: "flex", alignItems: "baseline", gap: 18, padding: "14px 0", borderBottom: `1px solid ${lit ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.08)"}`, transition: "border-color 0.22s", textAlign: "left" as const, position: "relative" }}
-      >
-        <motion.span aria-hidden
-          animate={{ scaleY: lit ? 1 : 0, opacity: lit ? 1 : 0 }}
-          transition={{ duration: 0.2 }}
-          style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-50%)", width: 2, height: "60%", background: T.accent, borderRadius: 2, transformOrigin: "center" }}
-        />
-        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", color: active ? T.accentLt : lit ? T.accent : "#FFFFFF", transition: "color 0.22s", minWidth: 26, flexShrink: 0 }}>[{num}]</span>
-        <span style={{ fontFamily: DISPLAY, fontSize: "clamp(28px, 8vw, 46px)", fontWeight: 800, letterSpacing: "-0.032em", lineHeight: 1.1, color: lit ? "#fff" : "#FFFFFF", transition: "color 0.22s" }}>{label}</span>
-        <motion.span animate={{ x: lit ? 6 : 0, opacity: lit ? 1 : 0 }} transition={{ duration: 0.20 }} style={{ marginLeft: "auto", color: T.accentLt, fontSize: 20, lineHeight: 1 }}>→</motion.span>
-      </button>
-    </motion.div>
-  )
-}
-
-function MenuOverlay({ onClose }: { onClose: () => void }) {
-  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" ? window.innerWidth <= 800 : false)
-
-  useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth <= 800)
-    window.addEventListener("resize", onResize)
-    document.body.style.overflow = "hidden"
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
-    document.addEventListener("keydown", onKey)
-    return () => { window.removeEventListener("resize", onResize); document.body.style.overflow = ""; document.removeEventListener("keydown", onKey) }
-  }, [onClose])
-
-  const isAboutPage = typeof window !== "undefined" && window.location.pathname.includes("about")
-
-  const NAV = [
-    { num: "01", label: "Home",      action: () => { window.location.href = "/" },     key: "Home" },
-    { num: "02", label: "About Me",  action: onClose,                                   key: "About Me" },
-    { num: "03", label: "Soluzioni", action: () => { window.location.href = "/#s3" },  key: "Soluzioni" },
-    { num: "04", label: "Risultati", action: () => { window.location.href = "/#s5" },  key: "Risultati" },
-    { num: "05", label: "Contatti",  action: () => { window.location.href = "/#s9" },  key: "Contatti" },
-  ]
-
-  const MENU_SOCIALS = [
-    { label: "LI",  href: "https://linkedin.com/in/nadiamaar" },
-    { label: "GH",  href: "https://github.com/nadiamaar-dev" },
-    { label: "IG",  href: "https://instagram.com/nadiamaar.dev" },
-    { label: "DC",  href: "https://discord.gg/nadiamaar" },
-  ]
-
-  const GLASS = {
-    background: "rgba(22,27,34,0.82)",
-    backdropFilter: "blur(72px) brightness(1.08) saturate(0.80)",
-    WebkitBackdropFilter: "blur(72px) brightness(1.08) saturate(0.80)",
-  } as React.CSSProperties
-
-  const menuFooter = (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.42, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      style={{ paddingBottom: 36, paddingTop: 22, borderTop: "1px solid rgba(255,255,255,0.17)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}
-    >
-      <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        <a href="mailto:nadiamaar.dev@gmail.com"
-          style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em", color: "#FFFFFF", textDecoration: "none", transition: "color 0.18s" }}
-          onMouseEnter={e => (e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.color = "#FFFFFF")}>
-          nadiamaar.dev@gmail.com
-        </a>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
-          <PingDot color={T.green} size={5} />
-          <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "rgba(190,245,220,0.80)" }}>Disponibile</span>
-        </div>
-      </div>
-      <div style={{ display: "flex", gap: 10 }}>
-        {MENU_SOCIALS.map(({ label, href }) => (
-          <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-            style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: "#FFFFFF", background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.20)", textDecoration: "none", transition: "all 0.18s" }}
-            onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.color="#fff"; el.style.borderColor="rgba(124,34,43,0.55)"; el.style.background="rgba(124,34,43,0.14)" }}
-            onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.color="#FFFFFF"; el.style.borderColor="rgba(255,255,255,0.12)"; el.style.background="rgba(255,255,255,0.07)" }}
-          >{label}</a>
-        ))}
-      </div>
-    </motion.div>
-  )
-
-  if (isMobile) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        style={{ position: "fixed", inset: 0, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 28px", overflow: "hidden", ...GLASS }}
-      >
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(124,34,43,0.70), rgba(190,54,72,0.45), transparent)", flexShrink: 0 }} />
-        <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
-          <NMmark size={26} id="nm-abt-menu-mob" hover={false} />
-        </div>
-        <div aria-hidden style={{ position: "absolute", bottom: "12%", left: "50%", transform: "translateX(-50%)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,32vw,160px)", letterSpacing: "-0.05em", color: "rgba(74,94,118,0.15)", filter: "blur(1px)", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none", zIndex: 0 }}>MAAR</div>
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 20 }}>
-          {NAV.map((item, i) => (
-            <MenuNavItem key={item.key} num={item.num} label={item.label} onClick={item.action} index={i} active={isAboutPage ? item.key === "About Me" : item.key === "Home"} />
-          ))}
-        </div>
-        {menuFooter}
-      </motion.div>
-    )
-  }
-
-  return (
-    <>
-      <motion.div
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-        transition={{ duration: 0.26 }}
-        onClick={onClose}
-        style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.28)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 299 }}
-      />
-      <motion.div
-        initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
-        transition={{ type: "spring", stiffness: 320, damping: 36 }}
-        style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: 460, zIndex: 300, display: "flex", flexDirection: "column", padding: "0 40px", borderLeft: "1px solid rgba(255,255,255,0.22)", ...GLASS }}
-      >
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, rgba(124,34,43,0.70) 40%, rgba(190,54,72,0.45) 70%, transparent)", flexShrink: 0 }} />
-        <div style={{ height: 64, display: "flex", alignItems: "center", flexShrink: 0 }}>
-          <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.26em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>Navigation</span>
-        </div>
-        <div aria-hidden style={{ position: "absolute", right: -8, top: 0, bottom: 0, display: "flex", alignItems: "center", pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
-          <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,9vw,130px)", letterSpacing: "-0.04em", color: "rgba(74,94,118,0.15)", filter: "blur(0.8px)", userSelect: "none", lineHeight: 0.82 }}>MAAR</span>
-        </div>
-        <div aria-hidden style={{ position: "absolute", bottom: "25%", right: -40, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(124,34,43,0.10) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 4 }}>
-          {NAV.map((item, i) => (
-            <MenuNavItem key={item.key} num={item.num} label={item.label} onClick={item.action} index={i} active={isAboutPage ? item.key === "About Me" : item.key === "Home"} />
-          ))}
-        </div>
-        {menuFooter}
-      </motion.div>
-    </>
-  )
-}
-
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 48)
-    window.addEventListener("scroll", fn, { passive: true })
-    return () => window.removeEventListener("scroll", fn)
-  }, [])
-  return (
-    <>
-      <motion.header initial={{ y: -70, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.7, ease }}
-        style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 400, height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px", backdropFilter: scrolled ? "blur(32px) saturate(0.85)" : "none", WebkitBackdropFilter: scrolled ? "blur(32px) saturate(0.85)" : "none", background: scrolled ? "rgba(22,27,34,0.78)" : "transparent", borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.07)" : "transparent"}`, transition: "background 0.4s, border-color 0.4s" } as React.CSSProperties}>
-        <Logo3D onClick={() => { window.location.href = "/" }} />
-        <DateTimeWidget />
-        <motion.button onClick={() => setMenuOpen(o => !o)} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
-          transition={{ type: "spring", stiffness: 400, damping: 20 }} aria-label="Menu"
-          style={{ background: "none", border: "none", cursor: "pointer", padding: "8px 4px", display: "flex", flexDirection: "column", gap: 5, zIndex: 401, flexShrink: 0 }}>
-          <motion.span animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 7 : 0 }} transition={{ duration: 0.26 }} style={{ display: "block", width: 22, height: 1.8, background: menuOpen ? "#fff" : "rgba(255,255,255,0.80)", borderRadius: 2, transformOrigin: "center" }} />
-          <motion.span animate={{ opacity: menuOpen ? 0 : 1, width: menuOpen ? 0 : 14 }} transition={{ duration: 0.18 }} style={{ display: "block", width: 14, height: 1.8, background: "rgba(255,255,255,0.80)", borderRadius: 2 }} />
-          <motion.span animate={{ rotate: menuOpen ? -45 : 0, y: menuOpen ? -7 : 0 }} transition={{ duration: 0.26 }} style={{ display: "block", width: 22, height: 1.8, background: menuOpen ? "#fff" : "rgba(255,255,255,0.80)", borderRadius: 2, transformOrigin: "center" }} />
-        </motion.button>
-      </motion.header>
-      <AnimatePresence>{menuOpen && <MenuOverlay onClose={() => setMenuOpen(false)} />}</AnimatePresence>
-    </>
-  )
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    §1  HERO — editorial labels · gradient headline · glass tablet · pill CTA
@@ -803,7 +438,7 @@ function HeroSection() {
           {/* LEFT */}
           <div>
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
-              <Kicker index="01" text="Architecture & Code" />
+              <Kicker index="01" text="Architettura & Codice" />
             </motion.div>
 
             <motion.h1
@@ -1059,7 +694,7 @@ function StatBento() {
       <div className="abt-wrap">
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 40 }}>
           <div>
-            <Kicker index="02" text="By The Numbers" />
+            <Kicker index="02" text="I Numeri" />
             <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px, 3vw, 44px)", fontWeight: 900, lineHeight: 1.02, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
               IMPATTO <span style={{ color: "#FFFFFF" }}>MISURABILE</span>
             </h2>
@@ -1105,9 +740,9 @@ function PhilosophySection() {
         <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}
           style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 64, flexWrap: "wrap", gap: 16 }}>
           <div>
-            <Kicker index="03" text="The Approach" />
+            <Kicker index="03" text="L'Approccio" />
             <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(32px, 3.8vw, 56px)", fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-              THE APPROACH
+              COME LAVORIAMO
             </h2>
           </div>
           <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.18em", color: T.faint, paddingBottom: 6 }}>3 principi · Studio NM</span>
@@ -1162,15 +797,9 @@ function PhilosophySection() {
 /* ══════════════════════════════════════════════════════════════════════════
    §4  PROCESS — horizontal ruler timeline
 ══════════════════════════════════════════════════════════════════════════ */
-//PLACEHOLDER process steps — replace durations/copy with real workflow
-const PROCESS = [
-  { n: "01", title: "Scoping & Strategia",     metric: "3–5",  metricLabel: "giorni di analisi",      dur: "3–5 giorni", desc: "Analizziamo obiettivi, target e vincoli. Definisco architettura e roadmap tecnica prima di scrivere una riga di codice." },
-  { n: "02", title: "UI/UX Design",            metric: "1–2",  metricLabel: "settimane di design",    dur: "1–2 sett.",  desc: "Concept UI premium in Framer. Scegli la direzione, la rifinisco fino al pixel garantendo un'esperienza sartoriale." },
-  { n: "03", title: "Sviluppo & Engineering",  metric: "2–4",  metricLabel: "settimane di sviluppo", dur: "2–4 sett.",  desc: "Codice frontend pulito, performante e scalabile. Test rigorosi ad ogni step per un'infrastruttura solida." },
-  { n: "04", title: "Launch & Growth",         metric: "24/7", metricLabel: "growth continuo",        dur: "Ongoing",    desc: "Go-live, SEO tecnica e campagne. Ottimizzazione continua sulla conversione per scalare il fatturato." },
-]
-
-function ProcessCard({ p, i }: { p: typeof PROCESS[number]; i: number }) {
+/* Le fasi arrivano da src/data/process.ts: le stesse che finiscono nella
+   roadmap in PDF e nella striscia in home. Un solo testo, tre superfici. */
+function ProcessCard({ p, i }: { p: Fase; i: number }) {
   const [hover, setHover] = useState(false)
   const SANS = "'Inter', system-ui, sans-serif"
   return (
@@ -1278,7 +907,7 @@ function ProcessSection() {
 
         {/* 2×2 card grid */}
         <div className="abt-process-cards">
-          {PROCESS.map((p, i) => <ProcessCard key={i} p={p} i={i} />)}
+          {PROCESSO.map((p, i) => <ProcessCard key={p.n} p={p} i={i} />)}
         </div>
       </div>
     </section>
@@ -1375,11 +1004,11 @@ function ToolkitSection() {
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 64 }}>
           <div>
             <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}>
-              <Kicker index="05" text="Core Capabilities" />
+              <Kicker index="05" text="Competenze" />
             </motion.div>
             <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.75, delay: 0.08, ease }}
               style={{ fontFamily: DISPLAY, fontSize: "clamp(30px, 4vw, 60px)", fontWeight: 900, lineHeight: 1.02, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-              TECH TOOLKIT
+              LO STACK
             </motion.h2>
           </div>
           <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}
@@ -1457,7 +1086,7 @@ function FAQSection() {
         <div className="abt-faq-grid" style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "0 80px", alignItems: "start" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}
             className="abt-faq-sticky" style={{ position: "sticky", top: 100 }}>
-            <Kicker index="07" text="FAQ" />
+            <Kicker index="06" text="Domande Frequenti" />
             <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px, 3vw, 44px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
               LOGICA&<br /><span style={{ color: "#FFFFFF" }}>TRASPARENZA</span>
             </h2>
@@ -1589,19 +1218,6 @@ function ContactModal({ onClose }: { onClose: () => void }) {
 /* ══════════════════════════════════════════════════════════════════════════
    SITE FOOTER — identical to main page
 ══════════════════════════════════════════════════════════════════════════ */
-const FOOTER_NAV_ABT = [
-  { label: "Servizi",    href: "/#s3" },
-  { label: "Soluzioni",  href: "/#s4" },
-  { label: "Risultati",  href: "/#s5" },
-  { label: "Metodo",     href: "/#s8" },
-  { label: "Contatti",   href: "/#s9" },
-]
-const FOOTER_SOCIALS_FULL = [
-  { label: "LinkedIn",  href: "https://linkedin.com/in/nadiamaar",        Icon: LinkedinIcon  },
-  { label: "GitHub",    href: "https://github.com/nadiamaar-dev",          Icon: GithubIcon    },
-  { label: "Instagram", href: "https://instagram.com/nadiamaar.dev",       Icon: InstagramIcon },
-  { label: "Discord",   href: "https://discord.gg/nadiamaar",              Icon: DiscordIcon   },
-]
 /* ══════════════════════════════════════════════════════════════════════════
    §8  FINAL CTA
 ══════════════════════════════════════════════════════════════════════════ */
@@ -1668,9 +1284,16 @@ export default function NadiaMaarAbout() {
         <HeroSection />
         <MarqueeStrip />
         <StatBento />
+        {/* L'approccio raccontato due volte: la filosofia qui, il manifesto
+            «un solo partner» che stava in home. Ora sono vicini e si leggono
+            come un discorso solo. */}
         <PhilosophySection />
+        <StudioApproach />
         <ProcessSection />
+        {/* Stesso ragionamento: le capacità e il perché tecnico erano su due
+            pagine diverse. */}
         <ToolkitSection />
+        <StudioCapabilities />
         <FAQSection />
         {/* moved here from the homepage — last content block before the CTA */}
         <FoundryShowcase />

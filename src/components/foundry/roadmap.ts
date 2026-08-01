@@ -1,4 +1,5 @@
 import type { Blueprint } from "./modules"
+import { PROCESSO } from "../../data/process"
 
 /* ══════════════════════════════════════════════════════════════════════════
    ROADMAP — il documento che il visitatore porta via
@@ -14,12 +15,9 @@ function esc(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
 }
 
-const FASI = [
-  { n: "01", t: "Analisi tecnica e di business", b: "Mappatura di processi, dati e vincoli esistenti. Definizione del perimetro e dei criteri di successo." },
-  { n: "02", t: "Design dell'interfaccia e architettura", b: "Progettazione dell'esperienza e dello schema dati. Scelta definitiva dello stack sui requisiti emersi." },
-  { n: "03", t: "Sviluppo e integrazioni", b: "Costruzione dei moduli selezionati e collegamento dei sistemi esterni, con rilasci verificabili." },
-  { n: "04", t: "Collaudo, lancio e misurazione", b: "Test su dati reali, messa in produzione, tracciamento e ottimizzazione continua." },
-]
+/* Le fasi arrivano da src/data/process.ts. Prima erano ridefinite qui, con
+   parole diverse, e chi leggeva About e poi apriva il PDF trovava due
+   descrizioni dello stesso processo che non coincidevano. */
 
 export function buildRoadmapHtml(bp: Blueprint, dateLabel: string): string {
   const scaffali = bp.scaffali
@@ -36,8 +34,8 @@ export function buildRoadmapHtml(bp: Blueprint, dateLabel: string): string {
     )
     .join("")
 
-  const fasi = FASI.map(
-    f => `<div class="fase"><span class="fase-n">${f.n}</span><div><p class="fase-t">${esc(f.t)}</p><p class="fase-b">${esc(f.b)}</p></div></div>`,
+  const fasi = PROCESSO.map(
+    f => `<div class="fase"><span class="fase-n">${f.n}</span><div><p class="fase-t">${esc(f.title)}</p><p class="fase-b">${esc(f.desc)}</p></div></div>`,
   ).join("")
 
   return `<!doctype html>
@@ -333,12 +331,12 @@ export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise
   }
 
   h2("Fasi di lavoro")
-  for (const f of FASI) {
-    const body = wrap(f.b, sans, 9.5, COL_W - 32)
+  for (const f of PROCESSO) {
+    const body = wrap(f.desc, sans, 9.5, COL_W - 32)
     room(14 + body.length * 13 + 9)
     y -= 14
     page.drawText(f.n, { x: MG.x, y, size: 9, font: mono, color: MUTED })
-    page.drawText(safe(f.t), { x: MG.x + 32, y, size: 10.5, font: bold, color: INK })
+    page.drawText(safe(f.title), { x: MG.x + 32, y, size: 10.5, font: bold, color: INK })
     for (const line of body) {
       y -= 13
       page.drawText(line, { x: MG.x + 32, y, size: 9.5, font: sans, color: BODY })

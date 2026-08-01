@@ -235,7 +235,7 @@ function clientHtml(p: LeadPayload): string {
             <tr><td style="padding:18px 20px;">
               <p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#10B981;">✓ &nbsp;La tua configurazione è stata salvata con successo.</p>
               <p style="margin:0;font-size:13px;line-height:1.65;color:#C9D3E0;">
-                Ti contatterò entro <strong style="color:#FFFFFF;">24 ore</strong> per discutere i dettagli del progetto: analizzo personalmente ogni configurazione e ti risponderò con una valutazione tecnica e i passi successivi.
+                Ti ricontattiamo entro <strong style="color:#FFFFFF;">24 ore</strong> per discutere i dettagli del progetto: ogni configurazione viene letta personalmente, e la risposta include una valutazione tecnica e i passi successivi.
               </p>
             </td></tr>
           </table>
