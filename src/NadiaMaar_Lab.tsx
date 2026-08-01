@@ -587,7 +587,12 @@ function Hero() {
           .hp-hl{ padding:22px 16px 20px !important; width:100%; box-sizing:border-box; }
           .hp-hl-tag{ font-size:7.5px !important; letter-spacing:.12em !important; left:14px !important; }
           .hp-hl-dim{ display:none !important; }
-          .hp-hero-h1{ font-size:44px !important; line-height:0.93 !important; letter-spacing:-0.04em !important; }
+          /* Il limite non è il gusto ma "E-COMMERCE", che non va a capo: a
+             375px stanno 43px, a 320px solo 36. Una misura legata alla
+             larghezza cresce fin dove può invece di fermarsi a due gradini
+             fissi (36 e 44px), e il tetto a 44px evita uno scalino quando si
+             passa alla regola desktop. */
+          .hp-hero-h1{ font-size:clamp(34px, 11vw, 44px) !important; line-height:0.93 !important; letter-spacing:-0.04em !important; }
           /* description */
           .hp-hero-desc{ margin-top:32px !important; font-size:16px !important; line-height:1.8 !important; max-width:100% !important; }
           /* grid */
@@ -613,10 +618,7 @@ function Hero() {
           .hp-hero-botnav{ margin-top:44px; padding-top:22px; gap:8px; }
           .hp-hero-scroll{ display:none !important; }
         }
-        /* ── Small phones (<400px) ── */
-        @media (max-width:400px){
-          .hp-hero-h1{ font-size:36px !important; line-height:0.92 !important; }
-        }
+        /* il salto fisso a 36px sotto i 400px non serve più: ci pensa il clamp */
       `}</style>
 
 
