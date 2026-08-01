@@ -27,6 +27,7 @@ import Footer from "./components/Footer"
 import FloatingContact from "./components/FloatingContact"
 import Header from "./components/Header"
 import Background from "./components/Background"
+import FoundryShowcase from "./components/FoundryShowcase"
 
 /* ══════════════════════════════════════════════════════════════════════════
    ICONS
@@ -1671,6 +1672,8 @@ export default function NadiaMaarAbout() {
         <ProcessSection />
         <ToolkitSection />
         <FAQSection />
+        {/* moved here from the homepage — last content block before the CTA */}
+        <FoundryShowcase />
         <FinalCTA onOpenModal={() => setModalOpen(true)} />
       </div>
       <Footer onContact={() => setModalOpen(true)} />

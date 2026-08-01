@@ -18,6 +18,7 @@ import Background from "./components/Background"
 import Footer from "./components/Footer"
 import FloatingContact from "./components/FloatingContact"
 import Header from "./components/Header"
+import FoundryConfigurator from "./components/foundry/FoundryConfigurator"
 
 /* ══════════════════════════════════════════════════════════════════════════
    INLINE SVG ICONS (replaces lucide-react)
@@ -261,6 +262,12 @@ const GLOBAL_CSS = `
 
   /* ── Mobile (<768px): everything 1-col ─────────────────────── */
   @media (max-width: 768px) {
+    /* Light 300 loses too much stroke on a dark screen: white-on-dark reads
+       thinner than the same weight on white. Regular 400 puts ~27% more ink
+       on the glyphs, which is the same gain as going to 18px but without
+       making every text block 13% taller. Declared later in this sheet than
+       the "p, li" weight-300 rule above, so it wins without !important. */
+    p, .hp-body { font-weight: 400; }
     .hp-grid-2 { grid-template-columns: 1fr !important; gap: 40px !important; }
     .hp-grid-3 { grid-template-columns: 1fr !important; gap: 16px !important; }
     .hp-skills-grid { grid-template-columns: 1fr !important; }
@@ -274,10 +281,6 @@ const GLOBAL_CSS = `
     .hp-hero-ctas { flex-wrap: nowrap !important; align-items: center !important; gap: 6px !important; }
     .hp-hero-primary-btn { flex: 0 0 auto !important; }
     .hp-hero-social-icons { width: 100% !important; justify-content: center !important; }
-    .hp-hero-stats { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; margin-top: 24px !important; }
-    .hp-hero-stat-item { padding: 12px 14px !important; gap: 8px !important; }
-    .hp-hero-stat-value { font-size: 17px !important; }
-    .hp-hero-stat-label { font-size: 10px !important; }
     .hp-method-row-num { font-size: 26px !important; width: 40px !important; }
     .hp-method-row-accent { width: 16px !important; }
     .hp-method-row-title { font-size: 14px !important; }
@@ -342,10 +345,6 @@ const GLOBAL_CSS = `
 
   @media (max-width: 480px) {
     .hp-hero-badge-text { letter-spacing: 0.06em !important; font-size: 8.5px !important; }
-    .hp-hero-stats { gap: 8px !important; }
-    .hp-hero-stat-item { padding: 10px 12px !important; }
-    .hp-hero-stat-value { font-size: 15px !important; }
-    .hp-hero-stat-label { font-size: 9px !important; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -391,7 +390,6 @@ const GLOBAL_CSS = `
   body { overflow-x: clip; max-width: 100%; touch-action: pan-y; }
   #root { overflow-x: clip; }
 
-  .hp-hero-stat-value { font-variant-numeric: tabular-nums; }
   .hp-hero-h1 { text-wrap: balance; }
   /* Delicate two-layer lift on section titles — navy-tinted to match the page atmosphere */
   h2 { text-wrap: balance; text-shadow: 0 1px 2px rgba(8,12,28,0.32), 0 4px 16px rgba(8,12,28,0.24); }
@@ -646,67 +644,6 @@ function StatCountUp({ target, suffix = "" }: { target: number; suffix?: string 
   return <span ref={ref}>{val}{suffix}</span>
 }
 
-function HeroStat({ value, label, index }: { value: string; label: string; index: number }) {
-  const [hover, setHover] = useState(false)
-  const nm = statNumeric(value)
-  return (
-    <div
-      className="hp-hero-stat-item"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      style={{
-        position: "relative",
-        padding: "18px 20px 20px",
-        overflow: "hidden",
-        display: "flex", flexDirection: "column",
-        cursor: "default",
-        borderRadius: 16,
-        background: hover ? "rgba(255,255,255,0.012)" : "rgba(255,255,255,0.02)",
-        border: "1px solid rgba(255,255,255,0.20)",
-        backdropFilter: "blur(2px)",
-        WebkitBackdropFilter: "blur(2px)",
-        boxShadow: hover ? "0 16px 44px rgba(8,12,28,0.50), 0 4px 12px rgba(8,12,28,0.30)" : "0 6px 24px rgba(8,12,28,0.35)",
-        transition: "all .30s ease",
-        transform: hover ? "translateY(-4px)" : "none",
-      }}
-    >
-      {/* index + label row */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-        <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: ".16em", color: "#FFFFFF" }}>
-          [0{index + 1}]
-        </span>
-        <span className="hp-hero-stat-label" style={{
-          fontFamily: MONO, fontSize: 9, letterSpacing: ".20em",
-          textTransform: "uppercase" as const,
-          color: "#FFFFFF",
-        } as React.CSSProperties}>
-          {label}
-        </span>
-      </div>
-
-      {/* divider */}
-      <div style={{
-        height: 1,
-        background: "linear-gradient(90deg, rgba(255,255,255,0.42), transparent)",
-        marginBottom: 14,
-        transition: "background .30s",
-      }} />
-
-      {/* big number */}
-      <span className="hp-hero-stat-value" style={{
-        fontFamily: DISPLAY,
-        fontSize: "clamp(32px, 3.2vw, 48px)",
-        fontWeight: 900,
-        lineHeight: 1,
-        letterSpacing: "-.04em",
-        color: "#FFFFFF",
-      } as React.CSSProperties}>
-        {nm.n !== null ? <>{nm.prefix}<StatCountUp target={nm.n} suffix={nm.suffix} /></> : value}
-      </span>
-    </div>
-  )
-}
-
 const HERO_SOCIALS = [
   { Icon: GithubIcon,    href: "https://github.com/nadiamaar-dev",          label: "GitHub"    },
   { Icon: LinkedinIcon,  href: "https://linkedin.com/in/nadiamaar",          label: "LinkedIn"  },
@@ -717,12 +654,6 @@ const HERO_SOCIALS = [
 /* ══════════════════════════════════════════════════════════════════════════
    §1  HERO — editorial (POSSESSD-style)
 ══════════════════════════════════════════════════════════════════════════ */
-const HERO_STATS = [
-  { value: "05+", label: "Anni" },
-  { value: "30k+", label: "Prodotti" },
-  { value: "100%", label: "Custom" },
-  { value: "+40%", label: "Conversion" },
-]
 
 /* Hero availability block.
    The right column used to state availability three times (SYS_STATUS,
@@ -796,7 +727,7 @@ function Hero() {
   return (
     <section style={{ ...SEC, minHeight: 800, display: "flex", alignItems: "center", overflow: "clip", position: "relative" }} id="s1" className="hp-sec hp-hero">
       <style>{`
-        .hp-hero-wordmark { position:absolute; right:14px; top:88px; z-index:0; pointer-events:none; writing-mode:vertical-rl; transform:rotate(180deg); font-family:${DISPLAY}; font-weight:900; font-size:clamp(150px,15vw,214px); letter-spacing:-0.04em; line-height:0.84; white-space:nowrap; color:rgba(255,255,255,0.012); -webkit-text-stroke:1px rgba(255,255,255,0.06); filter:blur(1px); user-select:none; }
+        .hp-hero-wordmark { position:absolute; right:14px; top:44px; z-index:0; pointer-events:none; writing-mode:vertical-rl; transform:rotate(180deg); font-family:${DISPLAY}; font-weight:900; font-size:clamp(150px,15vw,214px); letter-spacing:-0.04em; line-height:0.84; white-space:nowrap; color:rgba(255,255,255,0.018); -webkit-text-stroke:1px rgba(255,255,255,0.09); filter:blur(1px); user-select:none; }
         @media(max-width:1024px){.hp-hero-wordmark{display:none}}
         .hp-hero-nm { position:absolute; left:24px; bottom:34px; z-index:1; display:flex; align-items:center; gap:11px; }
         .hp-hero-nm .nm-l { font-family:${DISPLAY}; font-weight:800; font-size:16px; letter-spacing:0.04em; color:#fff; }
@@ -875,16 +806,10 @@ function Hero() {
           /* stats */
           .hp-hero-botnav{ margin-top:44px; padding-top:22px; gap:8px; }
           .hp-hero-scroll{ display:none !important; }
-          .hp-hero-stats-row{ display:grid !important; grid-template-columns:repeat(2,1fr) !important; gap:8px !important; width:100%; }
-          /* stat card */
-          .hp-hero-stat-item{ padding:12px 12px 14px !important; border-radius:12px !important; }
-          .hp-hero-stat-value{ font-size:24px !important; }
-          .hp-hero-stat-label{ font-size:8.5px !important; letter-spacing:.12em !important; }
         }
         /* ── Small phones (<400px) ── */
         @media (max-width:400px){
           .hp-hero-h1{ font-size:36px !important; line-height:0.92 !important; }
-          .hp-hero-stat-value{ font-size:20px !important; }
         }
       `}</style>
 
@@ -999,15 +924,15 @@ function Hero() {
               >
                 <span className="hp-hero-cta-index" style={{ padding: "0 14px", borderRight: "1px solid rgba(255,60,92,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[01]</span>
                 <span className="hp-hero-cta-inner" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", fontSize: 13, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
-                  <span>Prenota una Consultazione</span>
+                  <span>Discutiamo il Progetto</span>
                   <span style={{ fontSize: 15 }}>→</span>
                 </span>
               </motion.button>
               <motion.a
-                href="/foundry" whileHover={{ y: -2, background: "rgba(255,255,255,0.13)", borderColor: "rgba(224,224,224,0.38)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                href="/projects" whileHover={{ y: -2, background: "rgba(255,255,255,0.13)", borderColor: "rgba(224,224,224,0.38)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
                 style={{ flex: "1 1 0", minHeight: 54, padding: "0 18px", borderRadius: 9, fontFamily: MONO, fontSize: 13, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, textAlign: "center" as const, textDecoration: "none", border: "1px solid rgba(255,255,255,0.30)", background: "rgba(255,255,255,0.012)", color: T.text, boxShadow: "0 6px 28px rgba(8,12,28,0.42), inset 0 1px 0 rgba(255,255,255,0.012)" }}
               >
-                Esplora la Foundry <span style={{ fontSize: 15 }}>→</span>
+                Esplora i Progetti <span style={{ fontSize: 15 }}>→</span>
               </motion.a>
             </motion.div>
 
@@ -1080,18 +1005,10 @@ function Hero() {
 
         {/* bottom — stats grid V3 style + scroll cue */}
         <motion.div className="hp-hero-botnav" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.55, ease }}>
-          <div
-            className="hp-hero-stats-row"
-            style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10, width: "100%" }}
-          >
-            {HERO_STATS.map((s, i) => (
-              <HeroStat key={s.label} value={s.value} label={s.label} index={i} />
-            ))}
-          </div>
           <span className="hp-hero-scroll" style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>Scorri ↓</span>
         </motion.div>
 
-        {/* ── Social proof marquee — right under the stat cards ── */}
+        {/* ── Social proof marquee ── */}
         <SocialProof />
 
       </div>
@@ -3926,183 +3843,6 @@ function SocialProof() {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   §4b  DIGITAL FOUNDRY — interactive showcase
-══════════════════════════════════════════════════════════════════════════ */
-function MockPortal() {
-  return (
-    <svg viewBox="0 0 260 150" width="100%" height="100%">
-      <rect x="8" y="10" width="244" height="130" rx="10" fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.13)" />
-      <rect x="8" y="10" width="244" height="22" rx="10" fill="rgba(255,255,255,0.012)" />
-      {[20, 30, 40].map((cx, i) => <circle key={i} cx={cx} cy="21" r="2.6" fill={["#ff5f56", "#ffbd2e", "#27c93f"][i]} opacity="0.75" />)}
-      {/* sidebar */}
-      <rect x="8" y="32" width="60" height="108" fill="rgba(255,255,255,0.012)" />
-      {[44, 58, 72, 86].map((y, i) => (
-        <g key={y}>
-          <rect x="16" y={y} width="10" height="6" rx="1.5" fill={i === 0 ? "rgba(16,185,129,0.6)" : "rgba(255,255,255,0.15)"} />
-          <rect x="30" y={y + 1} width="28" height="4" rx="2" fill={i === 0 ? "rgba(16,185,129,0.45)" : "rgba(255,255,255,0.13)"} />
-        </g>
-      ))}
-      {/* rows */}
-      <rect x="78" y="42" width="80" height="8" rx="3" fill="rgba(255,255,255,0.16)" />
-      {[60, 78, 96, 114].map((y, i) => (
-        <g key={y}>
-          <rect x="78" y={y} width="164" height="16" rx="4" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.09)" />
-          <circle cx="88" cy={y + 8} r="3" fill="rgba(16,185,129,0.5)" />
-          <rect x="98" y={y + 5} width="70" height="4" rx="2" fill="rgba(255,255,255,0.16)" />
-          <rect x="210" y={y + 5} width="24" height="6" rx="3" fill={i % 2 ? "rgba(16,185,129,0.4)" : "rgba(255,255,255,0.13)"} />
-        </g>
-      ))}
-    </svg>
-  )
-}
-
-function MockCRM() {
-  const bars = [26, 40, 32, 54, 46, 64, 58]
-  return (
-    <svg viewBox="0 0 260 150" width="100%" height="100%">
-      <rect x="8" y="10" width="244" height="130" rx="10" fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.13)" />
-      <rect x="8" y="10" width="244" height="22" rx="10" fill="rgba(255,255,255,0.012)" />
-      {[20, 30, 40].map((cx, i) => <circle key={i} cx={cx} cy="21" r="2.6" fill={["#ff5f56", "#ffbd2e", "#27c93f"][i]} opacity="0.75" />)}
-      {/* KPI cards */}
-      {[0, 1, 2].map(i => (
-        <g key={i}>
-          <rect x={18 + i * 78} y="42" width="68" height="30" rx="6" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.012)" />
-          <rect x={26 + i * 78} y="49" width="30" height="8" rx="2" fill={i === 1 ? "rgba(16,185,129,0.6)" : "rgba(255,255,255,0.18)"} />
-          <rect x={26 + i * 78} y="61" width="46" height="4" rx="2" fill="rgba(255,255,255,0.13)" />
-        </g>
-      ))}
-      {/* chart */}
-      <rect x="18" y="82" width="224" height="50" rx="6" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.09)" />
-      {bars.map((h, i) => (
-        <motion.rect key={i} x={30 + i * 30} width="16" rx="2" fill={i === 5 ? "rgba(16,185,129,0.7)" : "rgba(255,255,255,0.16)"}
-          initial={{ height: 0, y: 126 }} whileInView={{ height: h, y: 126 - h }} viewport={{ once: true }} transition={{ delay: 0.1 + i * 0.06, duration: 0.5, ease }} />
-      ))}
-    </svg>
-  )
-}
-
-function MockHub() {
-  const nodes = [[70, 56], [190, 46], [206, 104], [64, 108]]
-  const cx = 130, cy = 82
-  return (
-    <svg viewBox="0 0 260 150" width="100%" height="100%">
-      <rect x="8" y="10" width="244" height="130" rx="10" fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.13)" />
-      <rect x="8" y="10" width="244" height="22" rx="10" fill="rgba(255,255,255,0.012)" />
-      {[20, 30, 40].map((c, i) => <circle key={i} cx={c} cy="21" r="2.6" fill={["#ff5f56", "#ffbd2e", "#27c93f"][i]} opacity="0.75" />)}
-      {nodes.map(([x, y], i) => (
-        <motion.path key={i} d={`M${cx},${cy}L${x},${y}`} stroke="rgba(16,185,129,0.30)" strokeWidth="1.2" strokeDasharray="4 3"
-          initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 + i * 0.1, duration: 0.6 }} />
-      ))}
-      {nodes.map(([x, y], i) => (
-        <g key={i}>
-          <motion.circle cx={x} cy={y} r="4" fill="rgba(255,255,255,0.6)"
-            initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 + i * 0.1, type: "spring", stiffness: 260 }} style={{ transformOrigin: `${x}px ${y}px` }} />
-          <motion.circle cx={cx} cy={cy} r="2.6" fill="rgba(16,185,129,0.9)"
-            animate={{ cx: [cx, x, cx], cy: [cy, y, cy], opacity: [0, 0.9, 0] }} transition={{ duration: 2, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }} />
-        </g>
-      ))}
-      <circle cx={cx} cy={cy} r="14" fill="rgba(16,185,129,0.14)" stroke="rgba(16,185,129,0.5)" strokeWidth="1.2" />
-      <text x={cx} y={cy + 3} textAnchor="middle" fontSize="7" fontWeight="700" fill="rgba(255,255,255,0.8)" fontFamily="Inter,sans-serif">HUB</text>
-    </svg>
-  )
-}
-
-const FOUNDRY_DEMOS = [
-  { tag: "B2B PORTAL", title: "Supplier Portal", desc: "Onboarding fornitori, listini e ordini sincronizzati in tempo reale.", Visual: MockPortal },
-  { tag: "CRM", title: "CRM Dashboard", desc: "Pipeline, clienti e metriche di vendita in un'unica dashboard.", Visual: MockCRM },
-  { tag: "DISTRIBUTION", title: "Distributor Hub", desc: "Rete distributori, stock multi-sede e logistica automatizzata.", Visual: MockHub },
-]
-
-function FoundryDemoCard({ d, i }: { d: typeof FOUNDRY_DEMOS[number]; i: number }) {
-  const [h, setH] = useState(false)
-  const { Visual } = d
-  return (
-    <motion.a
-      href="/foundry"
-      initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.55, delay: i * 0.09, ease }}
-      onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}
-      animate={{ y: h ? -2 : 0 }}
-      style={{
-        display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: 14, textDecoration: "none",
-        background: h ? "rgba(8,12,22,0.34)" : "rgba(8,12,22,0.20)",
-        backdropFilter: "none", WebkitBackdropFilter: "none",
-        border: `1px solid ${h ? "rgba(255,255,255,0.22)" : "rgba(255,255,255,0.13)"}`,
-        borderTop: `1px solid ${h ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.16)"}`,
-        boxShadow: h ? "0 8px 32px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.11)" : "inset 0 1px 0 rgba(255,255,255,0.012)",
-        transition: "background .24s, border-color .24s, box-shadow .24s",
-      } as React.CSSProperties}
-    >
-      {/* preview */}
-      <div style={{ padding: 14, background: "rgba(0,0,0,0.16)", borderBottom: "1px solid rgba(255,255,255,0.16)" }}>
-        <div style={{ borderRadius: 10, overflow: "hidden", aspectRatio: "260 / 150" }}>
-          <Visual />
-        </div>
-      </div>
-      {/* body */}
-      <div style={{ padding: "20px 22px 22px", flex: 1, display: "flex", flexDirection: "column" }}>
-        <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", color: T.green, marginBottom: 9 }}>{d.tag}</div>
-        <h3 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 18, letterSpacing: "-0.02em", color: "#FFFFFF", margin: "0 0 8px" }}>{d.title}</h3>
-        <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", lineHeight: 1.7, color: T.muted, margin: 0, flex: 1 }}>{d.desc}</p>
-        <motion.span animate={{ opacity: h ? 1 : 0.4, x: h ? 0 : -4 }} transition={{ duration: 0.25 }}
-          style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10, letterSpacing: ".16em", textTransform: "uppercase" as const, color: T.green }}>
-          Apri demo <span style={{ fontSize: 14 }}>→</span>
-        </motion.span>
-      </div>
-    </motion.a>
-  )
-}
-
-function FoundryShowcase() {
-  return (
-    <section id="foundry-showcase" style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
-      <div style={WRAP} className="hp-wrap">
-        <style>{`
-          .foundry-head { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; flex-wrap:wrap; margin-bottom:44px; }
-          .foundry-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-          @media(max-width:900px){ .foundry-grid{ grid-template-columns:1fr !important; gap:12px !important; } .foundry-head{ margin-bottom:32px; } }
-          @media(min-width:901px) and (max-width:1100px){ .foundry-grid{ gap:12px; } }
-        `}</style>
-
-        <Reveal>
-          <div className="foundry-head">
-            {/* left — eyebrow + title + subtitle */}
-            <div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
-                <span style={{ color: T.green }}>//</span>
-                <span>[ Digital Foundry ]</span>
-              </div>
-              <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(28px,3.6vw,46px)", fontWeight: 800, lineHeight: 1.08, letterSpacing: "-0.035em", margin: "0 0 18px", maxWidth: 760, color: T.text }}>
-                Digital Foundry:<br />
-                <span style={{ color: "#FFFFFF" }}>Costruisci la tua architettura</span>
-              </h2>
-              <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 620, margin: 0 }}>
-                Non comprare a scatola chiusa. Esplora la nostra libreria di soluzioni reali (CRM, Portali B2B, E-commerce), testa le demo e costruisci il tuo Blueprint per un preventivo istantaneo.
-              </p>
-            </div>
-
-            {/* right — CTA button, top-right at title level */}
-            <motion.a
-              href="/foundry" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
-              style={{ flexShrink: 0, minHeight: 52, borderRadius: 12, cursor: "pointer", textDecoration: "none", border: "1px solid rgba(16,185,129,0.28)", background: "rgba(16,185,129,0.08)", backdropFilter: "blur(20px) brightness(1.08) saturate(1.3)", WebkitBackdropFilter: "blur(20px) brightness(1.08) saturate(1.3)", boxShadow: "0 0 12px rgba(16,185,129,0.10), inset 0 1px 0 rgba(190,245,220,0.10)", display: "inline-flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
-            >
-              <span style={{ padding: "0 14px", borderRight: "1px solid rgba(16,185,129,0.20)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(190,245,220,0.70)" }}>[→]</span>
-              <span style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 22px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "rgba(190,245,220,0.92)" }}>
-                Entra nella Foundry <span style={{ fontSize: 14 }}>→</span>
-              </span>
-            </motion.a>
-          </div>
-        </Reveal>
-
-        <div className="foundry-grid">
-          {FOUNDRY_DEMOS.map((d, i) => <FoundryDemoCard key={d.title} d={d} i={i} />)}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
    ROOT EXPORT — default export for Framer
 ══════════════════════════════════════════════════════════════════════════ */
 export default function NadiaMaarLab() {
@@ -4128,11 +3868,11 @@ export default function NadiaMaarLab() {
       <div style={{ position: "relative", zIndex: 1, paddingTop: 64 }}>
         <Hero />
         <DiagnosiBlock />
-        <FoundryShowcase />
+        <ProjectsFeature />
+        <FoundryConfigurator />
         <SoluzioniMatrix />
         <AllInOne />
         <TechBlock />
-        <ProjectsFeature />
         <Method />
         <Contact />
         <Footer />

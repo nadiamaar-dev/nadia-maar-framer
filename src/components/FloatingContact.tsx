@@ -81,7 +81,10 @@ export default function FloatingContact() {
   const btnRef  = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768)
+    /* 900 e non 768: il configuratore passa a colonna singola a 900px, e in
+       quella fascia il pulsante ancorato a metà altezza finisce sopra le sue
+       schede. Sotto i 900 va agganciato in basso a destra. */
+    const check = () => setIsMobile(window.innerWidth < 900)
     check()
     window.addEventListener("resize", check, { passive: true })
     return () => window.removeEventListener("resize", check)
@@ -204,6 +207,7 @@ export default function FloatingContact() {
 
       {/* trigger button */}
       <motion.button ref={btnRef}
+        className="nm-float-trigger"
         onClick={() => setOpen(o => !o)}
         whileHover={{ scale: 1.09 }} whileTap={{ scale: 0.92 }}
         transition={{ type: "spring", stiffness: 440, damping: 20 }}

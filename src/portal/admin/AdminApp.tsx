@@ -2,11 +2,13 @@ import React, { useCallback, useEffect, useRef, useState } from "react"
 import Background from "../../components/Background"
 import { useBlueprint } from "../../context/BlueprintContext"
 import type { AdminHome, ClientRecord, PortalAction } from "../../lib/api"
-import { fetchAdminHome, fetchClients, subscribe, supabase } from "../../lib/api"
+import type { FoundryLead } from "../../lib/api"
+import { fetchAdminHome, fetchClients, fetchLeads, subscribe, supabase } from "../../lib/api"
 import Shell, { type ShellNavItem } from "../Shell"
 import { Btn, DISPLAY, Glass, Icon, Loading, MONO, T } from "../ui"
 import Billing from "./Billing"
 import Clients from "./Clients"
+import LeadsAdmin from "./LeadsAdmin"
 import DossierAdmin from "./DossierAdmin"
 import MeetingsAdmin from "./MeetingsAdmin"
 import MessagesAdmin from "./MessagesAdmin"
@@ -22,17 +24,19 @@ const SECTIONS: Omit<ShellNavItem, "badge">[] = [
   { id: "fatturazione", label: "Fatturazione", icon: "invoice" },
   { id: "messaggi", label: "Messaggi", icon: "chat" },
   { id: "supporto", label: "Supporto", icon: "ticket" },
+  { id: "richieste", label: "Richieste", icon: "bolt" },
 ]
 
 const WATCHED_TABLES = [
   "profiles", "client_projects", "project_stages", "project_events",
-  "conversations", "meetings", "client_invoices", "support_tickets",
+  "conversations", "meetings", "client_invoices", "support_tickets", "foundry_leads",
 ]
 
 export default function AdminApp() {
   const { user } = useBlueprint()
   const [home, setHome] = useState<AdminHome | null>(null)
   const [clients, setClients] = useState<ClientRecord[]>([])
+  const [leads, setLeads] = useState<FoundryLead[]>([])
   const [failed, setFailed] = useState(false)
   const [section, setSection] = useState("panoramica")
   const [projectId, setProjectId] = useState<string | null>(null)
@@ -40,9 +44,16 @@ export default function AdminApp() {
 
   const reload = useCallback(async () => {
     try {
-      const [h, c] = await Promise.all([fetchAdminHome(), fetchClients()])
+      const [h, c, l] = await Promise.all([
+        fetchAdminHome(),
+        fetchClients(),
+        /* la tabella potrebbe non esistere ancora (migrazione non applicata):
+           in quel caso la sezione resta vuota invece di far fallire tutto */
+        fetchLeads().catch(() => [] as FoundryLead[]),
+      ])
       setHome(h)
       setClients(c)
+      setLeads(l)
       setFailed(false)
     } catch {
       setFailed(true)
@@ -97,7 +108,9 @@ export default function AdminApp() {
     )
   }
 
-  const badgeFor = (id: string) => home.actions.filter(a => a.section === id).length || undefined
+  const newLeads = leads.filter(l => l.status === "new").length
+  const badgeFor = (id: string) =>
+    id === "richieste" ? newLeads || undefined : home.actions.filter(a => a.section === id).length || undefined
   const items: ShellNavItem[] = SECTIONS.map(s => ({
     ...s,
     badge: s.id === "panoramica" ? undefined : badgeFor(s.id),
@@ -128,6 +141,7 @@ export default function AdminApp() {
       ) : undefined}
     >
       {section === "panoramica" && <Overview home={home} onAction={handleAction} />}
+      {section === "richieste" && <LeadsAdmin leads={leads} reload={reload} />}
       {section === "clienti" && (
         <Clients
           clients={clients}
