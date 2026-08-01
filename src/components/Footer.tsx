@@ -260,7 +260,7 @@ export default function Footer({ onContact }: FooterProps) {
                 onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.12)" }}
               >
                 <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(255,255,255,0.14)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "#FFFFFF", flexShrink: 0 }}>[✉]</span>
-                <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.faint }}>Scrivimi</span>
+                <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.faint }}>Scrivici</span>
               </motion.button>
             )}
           </div>

@@ -32,41 +32,12 @@ const SVC_CSS = `
   ::-webkit-scrollbar-track { background: #060C18; }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); border-radius: 4px; }
   ::placeholder { color: rgba(255,255,255,0.22) !important; }
-  :root { --x:-9999; --y:-9999; }
-  /* brick text — semi-transparent + warm glow, matching button quality */
+  /* Il testo color mattone aveva un alone diffuso su tre livelli: era
+     l'equivalente testuale dei riflessi tolti dalle schede. Resta il colore. */
   [style*="color: #BE3648"],
-  [style*='color: "#BE3648"'] {
-    color: rgba(184,50,64,0.82) !important;
-    text-shadow:
-      0 0 52px rgba(184,50,64,0.38),
-      0 0 18px rgba(184,50,64,0.26),
-      0 2px 6px rgba(0,0,0,0.28);
-  }
-  [style*="color: #7C222B"],
-  [style*='color: "#7C222B"'] {
-    text-shadow: 0 0 24px rgba(184,50,64,0.45), 0 0 8px rgba(184,50,64,0.26);
-  }
-  [data-glow] {
-    --border-size: calc(var(--border,1.5) * 1px);
-    --spotlight-size: calc(var(--size,260) * 1px);
-    --hue: calc(var(--base,28) + (var(--xp,0) * var(--spread,40)));
-    background-image: radial-gradient(var(--spotlight-size) var(--spotlight-size) at calc(var(--x,-9999)*1px) calc(var(--y,-9999)*1px), hsl(var(--hue) 24% 82%/0.05), transparent);
-    background-size: calc(100% + (2*var(--border-size))) calc(100% + (2*var(--border-size)));
-    background-position: 50% 50%; background-attachment: fixed;
-  }
-  [data-glow]::before,[data-glow]::after {
-    pointer-events:none; content:""; position:absolute;
-    inset:calc(var(--border-size)*-1); border:var(--border-size) solid transparent;
-    border-radius:calc(var(--radius,16)*1px); background-attachment:fixed;
-    background-size:calc(100% + (2*var(--border-size))) calc(100% + (2*var(--border-size)));
-    background-repeat:no-repeat; background-position:50% 50%;
-    mask:linear-gradient(transparent,transparent),linear-gradient(white,white);
-    mask-clip:padding-box,border-box; mask-composite:intersect;
-    -webkit-mask:linear-gradient(transparent,transparent),linear-gradient(white,white);
-    -webkit-mask-clip:padding-box,border-box; -webkit-mask-composite:destination-in;
-  }
-  [data-glow]::before { background-image:radial-gradient(calc(var(--spotlight-size)*0.7) calc(var(--spotlight-size)*0.7) at calc(var(--x,-9999)*1px) calc(var(--y,-9999)*1px), hsl(var(--hue) 26% 74%/0.50), transparent 100%); filter:brightness(2); }
-  [data-glow]::after  { background-image:radial-gradient(calc(var(--spotlight-size)*0.4) calc(var(--spotlight-size)*0.4) at calc(var(--x,-9999)*1px) calc(var(--y,-9999)*1px), hsl(0 100% 100%/0.22), transparent 100%); }
+  [style*='color: "#BE3648"'] { color: rgba(184,50,64,0.88) !important; }
+  /* Lo spotlight che inseguiva il cursore è stato rimosso: in home e su
+     About le schede sono vetro piatto, senza riflessi mobili. */
   @keyframes colon-blink { 0%,100%{opacity:.55} 50%{opacity:.15} }
   .dt-colon { animation: colon-blink 1s ease-in-out infinite; display:inline-block; }
   @media(max-width:768px){
@@ -620,18 +591,6 @@ const SERVICES: Record<string, ServiceData> = {
 function ServicePage({data}:{data:ServiceData}) {
   const [modalOpen, setModalOpen] = useState(false)
 
-  useEffect(() => {
-    const sync = (e: PointerEvent) => {
-      const r = document.documentElement
-      r.style.setProperty("--x", e.clientX.toFixed(2))
-      r.style.setProperty("--y", e.clientY.toFixed(2))
-      r.style.setProperty("--xp", (e.clientX/window.innerWidth).toFixed(4))
-      r.style.setProperty("--yp", (e.clientY/window.innerHeight).toFixed(4))
-    }
-    document.addEventListener("pointermove", sync)
-    return () => document.removeEventListener("pointermove", sync)
-  }, [])
-
   return (
     <div style={{background:T.bg,color:T.text,fontFamily:"'Inter','SF Pro Display',-apple-system,BlinkMacSystemFont,system-ui,sans-serif",minHeight:"100vh",position:"relative"}}>
       <style dangerouslySetInnerHTML={{__html:SVC_CSS}} />
@@ -695,7 +654,9 @@ function ServicePage({data}:{data:ServiceData}) {
             </Reveal>
 
             {/* accent glow orb */}
-            <div aria-hidden style={{position:"absolute",top:"-20%",right:"-5%",width:500,height:500,borderRadius:"50%",background:`radial-gradient(circle,${data.accentColor} 0%,transparent 65%)`,filter:"blur(80px)",pointerEvents:"none",zIndex:-1}} />
+            {/* il bagliore colorato dietro al titolo è stato tolto: il fondo
+                arriva già da <Background />, come in home e su About, e una
+                seconda sorgente luminosa per pagina spezzava la continuità */}
           </div>
         </section>
 
@@ -722,8 +683,8 @@ function ServicePage({data}:{data:ServiceData}) {
               <div style={{display:"flex",flexDirection:"column",gap:16}}>
                 {data.whatWeDo.stats.map((s,i)=>(
                   <Reveal key={i} delay={i*0.08}>
-                    <motion.div data-glow="" whileHover={{x:6,scale:1.02}} transition={{duration:0.25,ease}}
-                      style={{"--base":"28","--spread":"36","--radius":"16","--border":"1","--size":"180",display:"flex",alignItems:"center",gap:20,padding:"22px 24px",borderRadius:16,background:"rgba(255,255,255,0.055)",border:"1px solid rgba(255,255,255,0.20)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",position:"relative",overflow:"hidden"} as React.CSSProperties}>
+                    <motion.div whileHover={{x:4}} transition={{duration:0.25,ease}}
+                      style={{display:"flex",alignItems:"center",gap:20,padding:"22px 24px",borderRadius:14,background:"rgba(255,255,255,0.012)",border:"1px solid rgba(255,255,255,0.13)",backdropFilter:"blur(6px)",WebkitBackdropFilter:"blur(6px)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.07)",position:"relative",overflow:"hidden"}}>
                       <div style={{position:"absolute",left:0,top:0,bottom:0,width:3,background:data.gradient,borderRadius:"16px 0 0 16px"}} />
                       <div style={{paddingLeft:8}}>
                         <div style={{fontFamily:DISPLAY,fontSize:32,fontWeight:800,color:"#FFFFFF",letterSpacing:"-0.03em",lineHeight:1}}>{s.value}</div>
@@ -787,10 +748,8 @@ function ServicePage({data}:{data:ServiceData}) {
         <section style={{padding:"100px 0 80px"}}>
           <div style={{...WRAP}} className="svc-wrap">
             <Reveal>
-              <motion.div data-glow="" whileHover={{scale:1.005}} transition={{duration:0.4,ease}}
-                style={{"--base":"28","--spread":"60","--radius":"24","--border":"1.5","--size":"400",position:"relative",borderRadius:24,padding:"64px 56px",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.20)",backdropFilter:"blur(40px)",WebkitBackdropFilter:"blur(40px)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.63),0 32px 80px rgba(0,0,0,0.50)",overflow:"hidden",textAlign:"center"} as React.CSSProperties}>
-                {/* glow orbs */}
-                <div aria-hidden style={{position:"absolute",top:"-30%",left:"50%",transform:"translateX(-50%)",width:600,height:400,borderRadius:"50%",background:`radial-gradient(ellipse,${data.accentColor} 0%,transparent 60%)`,filter:"blur(60px)",pointerEvents:"none"}} />
+              <motion.div transition={{duration:0.4,ease}}
+                style={{position:"relative",borderRadius:16,padding:"64px 56px",background:"rgba(255,255,255,0.012)",border:"1px solid rgba(255,255,255,0.13)",backdropFilter:"blur(6px)",WebkitBackdropFilter:"blur(6px)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.07)",overflow:"hidden",textAlign:"center"}}>
                 <div aria-hidden style={{position:"absolute",bottom:0,left:0,right:0,height:1,background:`linear-gradient(90deg,transparent,${data.accentColor},transparent)`}} />
 
                 <div style={{position:"relative",zIndex:1}}>
@@ -817,7 +776,7 @@ function ServicePage({data}:{data:ServiceData}) {
                       style={{display:"inline-flex",alignItems:"center",gap:8,padding:"14px 22px",borderRadius:12,border:`1px solid ${T.border}`,background:"rgba(255,255,255,0.04)",fontFamily:MONO,fontSize:11,letterSpacing:"0.14em",textTransform:"uppercase" as const,color:T.faint,textDecoration:"none",transition:"all 0.2s"}}
                       onMouseEnter={e=>{const el=e.currentTarget as HTMLElement;el.style.color="#fff";el.style.borderColor="rgba(255,255,255,0.28)"}}
                       onMouseLeave={e=>{const el=e.currentTarget as HTMLElement;el.style.color=T.faint;el.style.borderColor=T.border}}>
-                      <MailIcon size={13} /> Scrivimi
+                      <MailIcon size={13} /> Scrivici
                     </motion.a>
                   </div>
                 </div>
@@ -864,11 +823,13 @@ function OtherServices({ current }: { current: string }) {
               style={{
                 display: "flex", flexDirection: "column" as const, gap: 8,
                 padding: "20px 18px", borderRadius: 12, textDecoration: "none",
-                background: "rgba(255,255,255,0.02)", border: `1px solid ${T.border}`,
+                background: "rgba(255,255,255,0.012)", border: "1px solid rgba(255,255,255,0.13)",
+                backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07)",
                 transition: "background 0.2s, border-color 0.2s, transform 0.2s",
               }}
-              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.06)"; el.style.borderColor = "rgba(255,255,255,0.28)"; el.style.transform = "translateY(-2px)" }}
-              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.02)"; el.style.borderColor = T.border; el.style.transform = "none" }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.03)"; el.style.borderColor = "rgba(255,255,255,0.26)"; el.style.transform = "translateY(-2px)" }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.012)"; el.style.borderColor = "rgba(255,255,255,0.13)"; el.style.transform = "none" }}
             >
               <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: ".18em", color: T.accentLt }}>[ {s.num} ]</span>
               <span style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 700, lineHeight: 1.28, letterSpacing: "-0.015em", color: "#FFFFFF" }}>{s.title}</span>
@@ -885,9 +846,9 @@ function OtherServices({ current }: { current: string }) {
 function OfferCard({item,gradient}:{item:OfferItem;gradient:string}) {
   const [hov,setHov] = useState(false)
   return (
-    <motion.div data-glow="" onHoverStart={()=>setHov(true)} onHoverEnd={()=>setHov(false)}
+    <motion.div onHoverStart={()=>setHov(true)} onHoverEnd={()=>setHov(false)}
       whileHover={{y:-6,scale:1.015}} transition={{duration:0.28,ease}}
-      style={{"--base":"28","--spread":"36","--radius":"18","--border":"1","--size":"200",height:"100%",position:"relative",borderRadius:18,padding:"28px 24px",background:hov?"rgba(255,255,255,0.09)":"rgba(255,255,255,0.05)",border:`1px solid ${hov?"rgba(255,255,255,0.42)":"rgba(255,255,255,0.12)"}`,backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",boxShadow:hov?"inset 0 1px 0 rgba(255,255,255,0.63),0 20px 50px rgba(0,0,0,0.42)":"inset 0 1px 0 rgba(255,255,255,0.28),0 12px 36px rgba(0,0,0,0.28)",display:"flex",flexDirection:"column",gap:0,overflow:"hidden",transition:"background 0.25s,border-color 0.25s,box-shadow 0.3s"} as React.CSSProperties}>
+      style={{height:"100%",position:"relative",borderRadius:14,padding:"28px 24px",background:hov?"rgba(255,255,255,0.03)":"rgba(255,255,255,0.012)",border:`1px solid ${hov?"rgba(255,255,255,0.26)":"rgba(255,255,255,0.13)"}`,backdropFilter:"blur(6px)",WebkitBackdropFilter:"blur(6px)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.07)",display:"flex",flexDirection:"column",gap:0,overflow:"hidden",transition:"background 0.25s,border-color 0.25s"}}>
       <div style={{width:44,height:44,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",background:hov?gradient:"rgba(255,255,255,0.06)",border:`1px solid ${hov?"transparent":"rgba(255,255,255,0.12)"}`,color:hov?"#fff":"#FFFFFF",marginBottom:18,flexShrink:0,transition:"background 0.3s,color 0.3s,border-color 0.3s"}}>
         {item.icon}
       </div>
