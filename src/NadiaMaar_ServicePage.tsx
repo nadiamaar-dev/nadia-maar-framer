@@ -379,46 +379,46 @@ const SERVICES: Record<string, ServiceData> = {
   ecommerce: {
     num:"01", slug:"ecommerce",
     title:"E-commerce ad Alta Conversione",
-    subtitle:"Architetture Shopify custom e headless commerce scalabili. Automazione totale di magazzini, cataloghi massivi e logistica multi-corriere. Costruiamo infrastrutture che convertono e scalano senza attriti.",
+    subtitle:"Architetture Shopify su misura e headless commerce. Giacenze, cataloghi ad alto volume e logistica multi-corriere in un unico sistema: l'infrastruttura accompagna la crescita invece di frenarla.",
     eyebrow:"E-Commerce · Shopify · Automazione",
     gradient:"linear-gradient(135deg,#7C222B 0%,#BE3648 100%)",
     accentColor:"rgba(184,50,64,0.60)",
     whatWeDo:{
       heading:"Il tuo e-commerce è un asset — non un sito.",
       body:[
-        "Troppe aziende trattano il loro store online come una vetrina statica. Noi lo progettiamo come un sistema vivo: inventory sincronizzato in tempo reale, checkout ottimizzato per ridurre l'abbandono, integrazioni con i tuoi fornitori che eliminano l'errore umano.",
-        "Lavoriamo con cataloghi da 500 a 30.000+ SKU, marketplace B2B, configuratori di prodotto complessi e architetture multi-store internazionali. Il risultato è un'infrastruttura che scala senza rallentare."
+        "Molte aziende trattano lo store online come una vetrina statica. Noi lo progettiamo come un sistema operativo: giacenze allineate in tempo reale, checkout costruito per ridurre l'abbandono, integrazioni con i fornitori che tolgono di mezzo l'inserimento manuale.",
+        "Lavoriamo su cataloghi da poche centinaia a oltre 30.000 referenze, marketplace B2B, configuratori di prodotto e architetture multi-store internazionali. Il perimetro cambia, il principio no: l'architettura si dimensiona prima del picco, non dopo."
       ],
       stats:[
-        {value:"30k+",label:"SKU gestiti in real-time"},
-        {value:"<1.2s",label:"Tempo di caricamento target"},
-        {value:"99.9%",label:"Uptime garantito"},
+        {value:"30K+",label:"SKU gestiti su progetti reali"},
+        {value:"<1.2s",label:"LCP: obiettivo su ogni build"},
+        {value:"0",label:"Over-selling ammesso in produzione"},
       ]
     },
     whatWeOffer:{
       heading:"Cosa costruiamo per te",
       items:[
-        {icon:iconStroke("M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18","M16 10a4 4 0 01-8 0"),title:"Shopify Custom & Headless",desc:"Temi su misura, app private, checkout personalizzato. Architetture Hydrogen/Remix per performance estreme."},
-        {icon:iconStroke("M22 12h-4l-3 9L9 3l-3 9H2"),title:"Automazione Magazzino",desc:"Sincronizzazione stock in real-time con ERP, fornitori e marketplace. Zero discrepanze, zero perdite di vendita."},
-        {icon:iconStroke("M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2","M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"),title:"Catalogo & Prezzi B2B",desc:"Gestione avanzata di varianti, listini riservati per cliente, sconti scalabili, cataloghi personalizzati per segmento."},
-        {icon:iconStroke("M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z","M12 7v5l3 3"),title:"Logistica Integrata",desc:"Connessione con GLS, DHL, BRT, SDA. Label automation, tracking in tempo reale, resi semplificati."},
-        {icon:iconStroke("M3 3h18v18H3zM3 9h18M3 15h18M9 3v18"),title:"Core Web Vitals Perfetti",desc:"LCP <1.2s, CLS 0, INP ottimale. Ottimizzazione immagini, lazy loading, CDN e caching stratificato."},
-        {icon:iconStroke("M18 20V10","M12 20V4","M6 20v-6"),title:"Analytics & CRO",desc:"GA4 avanzato, heatmap, funnel di conversione. A/B test continuo per massimizzare il revenue per sessione."},
+        {icon:iconStroke("M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18","M16 10a4 4 0 01-8 0"),title:"Shopify su misura & headless",desc:"Temi custom, app private, checkout personalizzato. Architetture Hydrogen o Remix quando il tema standard diventa il collo di bottiglia."},
+        {icon:iconStroke("M22 12h-4l-3 9L9 3l-3 9H2"),title:"Magazzino sincronizzato",desc:"Giacenze allineate con ERP, fornitori e marketplace. Un solo dato di verità, così il venduto non supera mai il disponibile."},
+        {icon:iconStroke("M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2","M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"),title:"Catalogo e listini B2B",desc:"Varianti, listini riservati per cliente, sconti a scaglioni e cataloghi differenziati per segmento commerciale."},
+        {icon:iconStroke("M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z","M12 7v5l3 3"),title:"Logistica integrata",desc:"Connessione con GLS, DHL, BRT e SDA: etichette generate in automatico, tracking in tempo reale, flusso resi senza scambi di email."},
+        {icon:iconStroke("M3 3h18v18H3zM3 9h18M3 15h18M9 3v18"),title:"Core Web Vitals",desc:"LCP sotto 1,2s, layout stabile, interazione nella fascia verde. Immagini, caricamento differito, CDN e cache a più livelli."},
+        {icon:iconStroke("M18 20V10","M12 20V4","M6 20v-6"),title:"Misurazione e CRO",desc:"GA4 con eventi e-commerce, mappe di calore, imbuto di checkout. Test A/B sulle fasi che perdono più carrelli."},
       ]
     },
     howWeDoIt:{
-      heading:"Il nostro processo — dall'audit al lancio",
+      heading:"Dall'audit al lancio",
       steps:[
-        {title:"Audit Tecnico & Revenue Analysis",desc:"Analizziamo il tuo stack attuale, identifichiamo i bottleneck di conversione e stimiamo il revenue loss mensile. Uscite con un report dettagliato e priorità chiare."},
-        {title:"Architettura & Pianificazione",desc:"Progettiamo l'infrastruttura scalabile: scelta dello stack tecnologico, mappa delle integrazioni, piano migrazioni dati e timeline di rilascio."},
-        {title:"Sviluppo & Integrazioni",desc:"Costruiamo tema custom, app private, API connectors. Ogni integrazione è testata su dati reali prima di toccare la produzione."},
-        {title:"QA, Load Test & UAT",desc:"Test di carico su traffico simulato, verifica di tutti i flussi critici (checkout, resi, notifiche), sign-off con il tuo team prima del go-live."},
-        {title:"Lancio Graduale & Monitoring",desc:"Rollout progressivo con feature flag. Dashboard di monitoring real-time per le prime 72h post-lancio. Sei completamente coperti."},
+        {title:"Audit tecnico e analisi delle perdite",desc:"Analizziamo lo stack attuale, individuiamo i punti in cui il funnel perde e ne quantifichiamo l'impatto. Ne esce un report con le priorità in ordine di ritorno."},
+        {title:"Architettura e pianificazione",desc:"Scelta dello stack, mappa delle integrazioni, piano di migrazione dei dati e calendario dei rilasci."},
+        {title:"Sviluppo e integrazioni",desc:"Tema su misura, app private, connettori API. Ogni integrazione viene provata su dati reali prima di toccare la produzione."},
+        {title:"Collaudo e test di carico",desc:"Traffico simulato sui picchi previsti, verifica dei flussi critici — checkout, resi, notifiche — e approvazione del tuo team prima del go-live."},
+        {title:"Lancio graduale e presidio",desc:"Rilascio progressivo con feature flag e rientro immediato se qualcosa non torna. Monitoraggio attivo nelle prime 72 ore."},
       ]
     },
     cta:{
-      heading:"Vuoi un e-commerce che scala davvero?",
-      sub:"Analizziamo gratuitamente il tuo store attuale e identifichiamo i punti di perdita. Nessun impegno.",
+      heading:"Il tuo store regge la prossima campagna?",
+      sub:"Analisi gratuita dello store attuale, con i punti di perdita in ordine di impatto. Nessun impegno.",
       btn:"Richiedi l'Audit Gratuito"
     }
   },
@@ -426,46 +426,46 @@ const SERVICES: Record<string, ServiceData> = {
   corporate: {
     num:"02", slug:"corporate",
     title:"Siti Corporate & Lead Generation",
-    subtitle:"Identità digitale d'élite per aziende e professionisti. Architetture web studiate per posizionarsi come leader di settore e trasformare visitatori qualificati in clienti B2B.",
+    subtitle:"Presenza digitale per aziende e studi professionali. Architetture web costruite per reggere il confronto nel momento in cui il decisore vi sta valutando, e per trasformare quella visita in un contatto utile al commerciale.",
     eyebrow:"Corporate · UI/UX Premium · Lead Generation",
     gradient:"linear-gradient(135deg,#AEB6C4 0%,#EDF1F7 100%)",
     accentColor:"rgba(174,182,196,0.50)",
     whatWeDo:{
       heading:"Il tuo sito è il tuo miglior commerciale.",
       body:[
-        "Un sito corporate mediocre non è neutro — è attivamente dannoso. Comunica insicurezza, allontana i decision maker e brucia il budget delle tue campagne. Noi costruiamo identità digitali che trasmettono autorità al primo secondo.",
-        "Ogni elemento — dalla tipografia alla micro-animazione, dalla struttura degli heading alla velocità di caricamento — è progettato per un obiettivo specifico: convertire il visitatore giusto in una lead qualificata e pronta a parlare con il tuo team commerciale."
+        "Un sito corporate mediocre non è neutro: lavora contro di te. Chi deve firmare un contratto importante ti valuta anche da lì, e ogni euro speso in campagne finisce su una pagina che non regge il confronto. Costruiamo presenze digitali che sostengono il posizionamento invece di indebolirlo.",
+        "Tipografia, gerarchia dei contenuti, micro-interazioni, tempi di caricamento: ogni scelta risponde a un obiettivo dichiarato, cioè portare il visitatore giusto a lasciare un contatto con cui il tuo commerciale possa davvero lavorare."
       ],
       stats:[
-        {value:"2.3×",label:"Aumento medio lead qualificate"},
-        {value:"<0.8s",label:"LCP target su desktop"},
-        {value:"100",label:"Lighthouse Performance Score"},
+        {value:"100",label:"Lighthouse Performance: soglia di consegna"},
+        {value:"<0.8s",label:"LCP su desktop: obiettivo di progetto"},
+        {value:"1",label:"Referente unico dal brief al lancio"},
       ]
     },
     whatWeOffer:{
       heading:"Architettura completa per la tua presenza digitale",
       items:[
-        {icon:iconStroke("M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"),title:"Design System Premium",desc:"Figma-to-code ad alta fedeltà. Design token system, componenti riutilizzabili, dark/light mode e animazioni coerenti."},
-        {icon:iconStroke("M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2","M12 3a4 4 0 010 8 4 4 0 010-8z"),title:"Lead Generation Architecture",desc:"Form ad alta conversione, CRM integration (HubSpot, Salesforce), automazione email follow-up e qualificazione lead automatica."},
-        {icon:iconStroke("M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"),title:"CMS Headless",desc:"Sanity o Contentful per gestione editoriale autonoma. Il tuo team aggiorna contenuti senza toccare il codice."},
-        {icon:iconStroke("M22 12h-4l-3 9L9 3l-3 9H2"),title:"Performance Estrema",desc:"Next.js App Router, SSR/SSG ibrido, ISR per contenuto dinamico. Aziende enterprise su infrastruttura che regge qualsiasi picco."},
-        {icon:iconStroke("M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"),title:"SEO Strutturale",desc:"Schema markup, sitemap dinamica, Open Graph, Core Web Vitals ottimizzati. Visibilità organica integrata dall'architettura."},
-        {icon:iconStroke("M18 20V10","M12 20V4","M6 20v-6"),title:"Analytics Avanzate",desc:"GA4 con eventi custom, heatmap Hotjar, funnel tracking e dashboard executive per monitorare il ROI in tempo reale."},
+        {icon:iconStroke("M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"),title:"Design system",desc:"Dal file Figma al codice senza scarti: token, componenti riutilizzabili, tema chiaro e scuro, animazioni coerenti su tutto il sito."},
+        {icon:iconStroke("M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2","M12 3a4 4 0 010 8 4 4 0 010-8z"),title:"Architettura di acquisizione",desc:"Moduli progettati per essere compilati davvero, collegamento a HubSpot o Salesforce, sequenze di follow-up e qualificazione automatica del contatto."},
+        {icon:iconStroke("M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"),title:"CMS headless",desc:"Sanity o Contentful: il tuo team pubblica e aggiorna senza passare dallo sviluppo e senza rischiare di rompere il layout."},
+        {icon:iconStroke("M22 12h-4l-3 9L9 3l-3 9H2"),title:"Performance",desc:"Next.js con App Router, rendering ibrido statico e dinamico, rigenerazione incrementale per le sezioni che cambiano spesso."},
+        {icon:iconStroke("M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"),title:"SEO strutturale",desc:"Dati strutturati, sitemap dinamica, Open Graph, Core Web Vitals. La visibilità organica nasce dall'architettura, non da un plugin aggiunto dopo."},
+        {icon:iconStroke("M18 20V10","M12 20V4","M6 20v-6"),title:"Misurazione",desc:"GA4 con eventi su misura, mappe di calore, imbuti di conversione e un pannello sintetico pensato per la direzione."},
       ]
     },
     howWeDoIt:{
-      heading:"Dal brief alla lead acquisition — il nostro metodo",
+      heading:"Dal brief al primo contatto qualificato",
       steps:[
-        {title:"Discovery & Strategia",desc:"Workshop di 2h per comprendere il tuo mercato, ICP (Ideal Customer Profile), competitors e obiettivi di crescita. Definiamo KPI misurabili prima di disegnare un pixel."},
-        {title:"Design & Prototipo",desc:"Wireframe low-fi → design system → prototipo interattivo in Figma. Approvi ogni schermata prima che inizi lo sviluppo. Zero sorprese."},
-        {title:"Sviluppo & Integrazioni",desc:"Next.js + CMS headless + CRM. Coding standard enterprise: TypeScript, test E2E, CI/CD. Performance verificata ad ogni commit."},
-        {title:"SEO & Content Setup",desc:"Struttura URL ottimizzata, meta tag template, schema markup, sitemap e configurazione Search Console. Il sito indicizza dal primo giorno."},
-        {title:"Lancio & Ottimizzazione",desc:"Go-live con monitoring attivo. Nei 30 giorni successivi analizziamo i dati reali e ottimizziamo headline, CTA e flussi di lead generation."},
+        {title:"Discovery e strategia",desc:"Due ore di confronto su mercato, cliente ideale, concorrenti e obiettivi di crescita. Gli indicatori si definiscono prima di disegnare qualsiasi schermata."},
+        {title:"Design e prototipo",desc:"Wireframe, design system, prototipo navigabile in Figma. Approvi ogni schermata prima che parta lo sviluppo: nessuna sorpresa a fine lavoro."},
+        {title:"Sviluppo e integrazioni",desc:"Next.js, CMS headless e CRM. TypeScript, test end-to-end e integrazione continua: le performance si verificano a ogni commit, non alla fine."},
+        {title:"Impianto SEO",desc:"Struttura degli URL, modelli di meta tag, dati strutturati, sitemap e Search Console. Il sito è indicizzabile dal primo giorno di vita."},
+        {title:"Lancio e taratura",desc:"Go-live con monitoraggio attivo. Nei trenta giorni successivi si interviene su titoli, inviti all'azione e percorsi di contatto sulla base dei dati reali."},
       ]
     },
     cta:{
       heading:"Il tuo brand merita una presenza all'altezza.",
-      sub:"Mostrati un'analisi del tuo sito attuale e discutiamo come trasformarlo in un asset che genera lead qualificate.",
+      sub:"Ti mostriamo un'analisi del sito attuale e ne discutiamo insieme: dove perde autorevolezza e dove perde contatti.",
       btn:"Analizza il mio Sito"
     }
   },
@@ -473,47 +473,47 @@ const SERVICES: Record<string, ServiceData> = {
   webapp: {
     num:"03", slug:"webapp",
     title:"Applicazioni Web & Automazione Custom",
-    subtitle:"Software su misura che integra CRM, ERP e sistemi terzi. Eliminiamo i processi manuali, connettiamo i tuoi dati e costruiamo strumenti interni che lavorano per te 24/7 senza errori umani.",
+    subtitle:"Software su misura che collega CRM, ERP e sistemi di terze parti. Togliamo di mezzo i passaggi manuali, mettiamo i dati in un solo posto e costruiamo strumenti interni che lavorano anche quando l'ufficio è chiuso.",
     eyebrow:"Web App · CRM/ERP · Automazione Processi",
     gradient:"linear-gradient(135deg,#AEB6C4 0%,#EDF1F7 100%)",
     accentColor:"rgba(174,182,196,0.50)",
     whatWeDo:{
       heading:"Ogni processo manuale è un costo nascosto.",
       body:[
-        "Il vero costo di un'operazione manuale non è solo il tempo — è l'errore umano, il ritardo di decisione e la scalabilità zero. Quando un coordinatore trascorre 3 ore al giorno a copiare dati tra sistemi, stai pagando un ingegnere per fare il lavoro di un script.",
-        "Costruiamo applicazioni web e sistemi di automazione che integrano i tuoi tool esistenti, eliminano la routine e restituiscono al tuo team il tempo per il lavoro ad alto valore. Ogni euro investito in automazione si ripaga in 3-6 mesi."
+        "Il costo di un'operazione manuale non è solo il tempo: sono gli errori di trascrizione, le decisioni prese in ritardo e l'impossibilità di crescere senza assumere. Quando una persona passa tre ore al giorno a spostare dati fra due sistemi, stai pagando una professionalità per fare il lavoro di uno script.",
+        "Costruiamo applicazioni web e automazioni che parlano con gli strumenti già in uso, tolgono la routine e restituiscono al team le ore che oggi finiscono in copia-incolla. Il ritorno si calcola prima di iniziare, sul costo reale del processo attuale."
       ],
       stats:[
-        {value:"-80%",label:"Riduzione tempi operativi"},
-        {value:"Zero",label:"Errori da inserimento manuale"},
-        {value:"3-6m",label:"Payback period medio"},
+        {value:"1",label:"Fonte unica per ogni dato"},
+        {value:"24/7",label:"Automazioni attive senza presidio"},
+        {value:"0",label:"Passaggi di copia-incolla previsti"},
       ]
     },
     whatWeOffer:{
       heading:"Soluzioni software per ogni livello di complessità",
       items:[
-        {icon:iconStroke("M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"),title:"App Web Custom",desc:"React/Next.js frontend, Node.js o Python backend. Architettura scalabile, auth enterprise, role-based access control."},
-        {icon:iconStroke("M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z","M22 10H2"),title:"Integrazioni CRM/ERP",desc:"Salesforce, HubSpot, SAP, Odoo, gestionale custom. Dati sincronizzati, flussi automatici, zero copia-incolla."},
-        {icon:iconStroke("M13 10V3L4 14h7v7l9-11h-7z"),title:"Automazione Workflow",desc:"n8n, Zapier, script custom Python/Node. Processi trigger-based, alert intelligenti, report automatici."},
-        {icon:iconStroke("M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"),title:"API Gateway & Middleware",desc:"Microservizi REST e GraphQL. Centralizza le chiamate API, gestisci i rate limit, monitora in real-time."},
-        {icon:iconStroke("M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z","M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"),title:"Dashboard Analitiche",desc:"Dati di business in real-time. KPI customizzati, drill-down interattivi, report schedulati via email o Slack."},
-        {icon:iconStroke("M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"),title:"Portali B2B",desc:"Area riservata clienti e partner. Gestione ordini, fatture, documentazione e comunicazione centralizzata."},
+        {icon:iconStroke("M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"),title:"Applicazioni web su misura",desc:"Frontend React o Next.js, backend Node.js o Python. Autenticazione, permessi per ruolo e un'architettura che regge la crescita del team."},
+        {icon:iconStroke("M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z","M22 10H2"),title:"Integrazioni CRM ed ERP",desc:"Salesforce, HubSpot, SAP, Odoo o gestionale interno. I dati si allineano da soli, in una direzione decisa e sempre tracciabile."},
+        {icon:iconStroke("M13 10V3L4 14h7v7l9-11h-7z"),title:"Automazione dei flussi",desc:"n8n, Zapier o script dedicati in Python e Node. Attivazioni su evento, avvisi mirati, report che partono da soli."},
+        {icon:iconStroke("M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"),title:"Gateway API e middleware",desc:"Servizi REST e GraphQL che centralizzano le chiamate, governano i limiti di traffico e rendono visibile ciò che passa fra i sistemi."},
+        {icon:iconStroke("M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z","M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"),title:"Pannelli di controllo",desc:"Numeri di business aggiornati, indicatori scelti insieme, approfondimento fino al singolo record, invii programmati via email o Slack."},
+        {icon:iconStroke("M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"),title:"Portali B2B",desc:"Area riservata per clienti e partner: ordini, fatture, documenti e comunicazioni in un unico posto, con traccia di chi ha fatto cosa."},
       ]
     },
     howWeDoIt:{
-      heading:"Analysis → Build → Automate → Support",
+      heading:"Dall'analisi dei processi al presidio",
       steps:[
-        {title:"Analisi dei Processi",desc:"Mappatura completa dei flussi esistenti. Identifichiamo ogni passaggio manuale, ogni integrazione mancante e calcoliamo il costo operativo attuale."},
-        {title:"Progettazione dell'Architettura",desc:"Schema tecnico del sistema: quali tool connettiamo, come fluiscono i dati, quali automazioni attivare. Tutto approvato prima di scrivere una riga di codice."},
-        {title:"Sviluppo Iterativo",desc:"Sprint settimanali con demo live. Vedi il prodotto crescere in tempo reale e puoi dare feedback ad ogni iterazione."},
-        {title:"Integrazione & Test",desc:"Connessione con i sistemi esistenti in ambiente staging. Test di carico, test di sicurezza, verifica dei flussi critici con dati reali anonimi."},
-        {title:"Deploy & Formazione",desc:"Rilascio in produzione con rollback automatico in caso di anomalie. Sessione di formazione per il tuo team e documentazione tecnica completa."},
-        {title:"Supporto & Evoluzione",desc:"Monitoring proattivo post-lancio. Il sistema cresce con te: nuove automazioni, nuove integrazioni, nuovi moduli su richiesta."},
+        {title:"Analisi dei processi",desc:"Mappatura dei flussi esistenti: ogni passaggio manuale, ogni integrazione mancante e il costo operativo di come si lavora oggi."},
+        {title:"Progettazione dell'architettura",desc:"Schema del sistema: quali strumenti si collegano, come si muovono i dati, quali automazioni entrano in gioco. Approvato prima di scrivere una riga di codice."},
+        {title:"Sviluppo a iterazioni",desc:"Sprint settimanali con dimostrazione dal vivo: vedi crescere il prodotto e puoi correggere la rotta a ogni passaggio."},
+        {title:"Integrazione e collaudo",desc:"Collegamento ai sistemi esistenti in ambiente di prova, test di carico e di sicurezza, verifica dei flussi critici su dati reali resi anonimi."},
+        {title:"Rilascio e formazione",desc:"Messa in produzione con rientro automatico in caso di anomalia, sessione di formazione per il team e documentazione tecnica completa."},
+        {title:"Presidio ed evoluzione",desc:"Monitoraggio dopo il rilascio. Il sistema cresce con te: nuove automazioni, nuove integrazioni, nuovi moduli quando servono davvero."},
       ]
     },
     cta:{
       heading:"Ogni ora persa in processi manuali è denaro bruciato.",
-      sub:"Raccontaci il tuo workflow più costoso. In 30 minuti ti diciamo come automatizzarlo e quanto risparmieresti.",
+      sub:"Raccontaci il processo che vi costa di più. In mezz'ora ti diciamo se si può automatizzare, come, e che cosa serve per farlo.",
       btn:"Parla dei tuoi Processi"
     }
   },
@@ -521,46 +521,46 @@ const SERVICES: Record<string, ServiceData> = {
   seo: {
     num:"04", slug:"seo",
     title:"SEO Strategico & Performance Marketing",
-    subtitle:"Posizionamento organico integrato nell'architettura dal primo giorno. Google Ads e Meta Ads scalabili a costi decrescenti. Costruiamo canali di acquisizione che lavorano anche mentre dormi.",
+    subtitle:"Posizionamento organico previsto nell'architettura dal primo giorno e campagne Google e Meta governate sugli stessi dati. Due canali che si sostengono a vicenda, invece di competere per lo stesso budget.",
     eyebrow:"SEO Tecnico · Google Ads · Meta Ads",
     gradient:"linear-gradient(135deg,#7C222B 0%,#DFA088 100%)",
     accentColor:"rgba(184,50,64,0.60)",
     whatWeDo:{
-      heading:"Il traffico organico è il tuo asset più redditizio.",
+      heading:"L'organico è l'unico canale che non si spegne quando smetti di pagare.",
       body:[
-        "Dipendere al 100% dalle Ads è come affittare la tua visibilità: smetti di pagare, sparisci. Il SEO costruisce un asset che si apprezza nel tempo — ogni articolo posizionato, ogni backlink acquisito, ogni pagina ottimizzata è un investimento che restituisce traffico per anni.",
-        "Il nostro approccio integra SEO tecnico, content strategy e Performance Marketing in un'unica architettura coerente. Paghiamo le Ads finché il canale organico non è abbastanza forte da sostituirle, riducendo progressivamente il costo di acquisizione."
+        "Dipendere solo dalle campagne significa affittare la propria visibilità: il giorno in cui il budget si ferma, si ferma anche il traffico. Il lavoro organico costruisce invece qualcosa che resta — una pagina ben posizionata continua a portare visite molto dopo essere stata scritta.",
+        "Teniamo insieme SEO tecnico, strategia dei contenuti e campagne a pagamento in un unico piano. Le campagne coprono la domanda mentre l'organico cresce; man mano che l'organico regge, il peso del budget si sposta."
       ],
       stats:[
-        {value:"+340%",label:"Crescita traffico organico medio (12m)"},
-        {value:"-60%",label:"Riduzione CPA dopo 6 mesi"},
-        {value:"Top 3",label:"Posizionamenti su query transazionali"},
+        {value:"12–18",label:"Mesi: orizzonte realistico dell'organico"},
+        {value:"0",label:"Tecniche a rischio penalizzazione"},
+        {value:"1",label:"Pannello unico per organico e campagne"},
       ]
     },
     whatWeOffer:{
-      heading:"L'ecosistema completo per dominare l'acquisizione",
+      heading:"Le leve su cui lavoriamo",
       items:[
-        {icon:iconStroke("M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"),title:"SEO Tecnico",desc:"Core Web Vitals, crawlability, hreflang, schema markup, sitemap dinamica, log file analysis. Tutto ciò che Google non riesce a ignorare."},
-        {icon:iconStroke("M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"),title:"Keyword Strategy",desc:"Analisi intent-based del mercato, keyword gap vs competitor, architettura dei contenuti con cluster tematici e pillar pages."},
-        {icon:iconStroke("M4 6h16M4 12h16M4 18h7"),title:"Content Architecture",desc:"Brief SEO-driven per ogni pagina chiave, ottimizzazione on-page, internal linking strategico e aggiornamento dei contenuti esistenti."},
-        {icon:iconStroke("M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"),title:"Google Ads",desc:"Search, Shopping e Performance Max ottimizzati con Smart Bidding. ROAS minimo garantito contrattualmente dopo il primo mese."},
-        {icon:iconStroke("M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"),title:"Meta & Social Ads",desc:"Campagne Feed, Stories e Reels su Meta. Retargeting stratificato, lookalike audience e creative testing sistematico."},
-        {icon:iconStroke("M15 10l4.553-2.069A1 1 0 0121 8.87V15.13a1 1 0 01-1.447.9L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"),title:"Reporting & Insights",desc:"Dashboard in real-time con posizioni, traffico, conversioni e ROAS. Report mensile con analisi e raccomandazioni prioritizzate."},
+        {icon:iconStroke("M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"),title:"SEO tecnico",desc:"Core Web Vitals, scansione, hreflang, dati strutturati, sitemap dinamica, analisi dei log del server. La parte che Google misura e che dipende solo da noi."},
+        {icon:iconStroke("M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"),title:"Strategia delle query",desc:"Analisi per intento di ricerca, confronto con i concorrenti, architettura dei contenuti per gruppi tematici e pagine pilastro."},
+        {icon:iconStroke("M4 6h16M4 12h16M4 18h7"),title:"Architettura dei contenuti",desc:"Brief per ogni pagina che conta, ottimizzazione on-page, collegamenti interni ragionati e revisione di ciò che è già pubblicato."},
+        {icon:iconStroke("M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"),title:"Google Ads",desc:"Search, Shopping e Performance Max con offerte automatiche governate. L'obiettivo di ROAS si fissa insieme nel brief e si rivede ogni mese sui dati reali."},
+        {icon:iconStroke("M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"),title:"Meta e social ads",desc:"Campagne su Feed, Storie e Reels. Retargeting per livelli di interesse, pubblici simili e test sistematico dei creativi."},
+        {icon:iconStroke("M15 10l4.553-2.069A1 1 0 0121 8.87V15.13a1 1 0 01-1.447.9L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"),title:"Report e letture",desc:"Pannello aggiornato con posizioni, traffico, conversioni e ritorno sulla spesa. Ogni mese un'analisi con le azioni in ordine di priorità."},
       ]
     },
     howWeDoIt:{
-      heading:"Dal silenzio alla top 3 — il percorso strutturato",
+      heading:"Dall'audit alla crescita stabile",
       steps:[
-        {title:"SEO Audit Completo",desc:"Analisi tecnica del sito, crawl report, analisi dei competitor organici, identificazione delle quick win e delle opportunità a lungo termine. Risultato: roadmap prioritizzata."},
-        {title:"Keyword & Content Strategy",desc:"Mappa delle keyword per ogni stadio del funnel, architettura dei contenuti, competitor gap analysis. Decidiamo cosa creare, cosa ottimizzare e cosa eliminare."},
-        {title:"Implementazione Tecnica",desc:"Fix tecnici sul sito, schema markup, ottimizzazione velocità, correzione errori di crawl. Parallelo all'implementazione, lancio delle campagne Ads iniziali."},
-        {title:"Content Production & Link Building",desc:"Produzione dei contenuti ottimizzati, digital PR per backlink autorevoli, guest posting e menzioni editoriali. Costruiamo autorità domain in modo white-hat."},
-        {title:"Ottimizzazione Continua",desc:"Ogni mese: analisi dei dati, A/B test su landing page Ads, aggiornamento contenuti in calo, espansione verso nuovi cluster keyword. Il sistema migliora costantemente."},
+        {title:"Audit SEO",desc:"Analisi tecnica del sito, report di scansione, studio dei concorrenti organici, interventi rapidi e opportunità di lungo periodo. Ne esce una roadmap in ordine di priorità."},
+        {title:"Strategia di query e contenuti",desc:"Mappa delle ricerche per ogni fase del percorso d'acquisto, architettura dei contenuti, confronto con i concorrenti. Si decide cosa creare, cosa rivedere e cosa togliere."},
+        {title:"Interventi tecnici",desc:"Correzioni sul sito, dati strutturati, tempi di caricamento, errori di scansione. In parallelo partono le prime campagne, che intanto coprono la domanda."},
+        {title:"Produzione e autorevolezza",desc:"Contenuti ottimizzati, digital PR per citazioni autorevoli, rapporti editoriali. Solo tecniche che reggono un aggiornamento dell'algoritmo."},
+        {title:"Taratura mensile",desc:"Analisi dei dati, test sulle pagine di atterraggio, aggiornamento dei contenuti in calo, apertura di nuovi gruppi tematici quando i primi sono consolidati."},
       ]
     },
     cta:{
       heading:"Ogni giorno senza SEO è un giorno regalato ai competitor.",
-      sub:"Analisi gratuita del tuo posizionamento attuale vs competitor. In 30 minuti sai dove sei e dove puoi arrivare.",
+      sub:"Analisi gratuita del posizionamento attuale a confronto con i concorrenti. In mezz'ora sai dove sei, che cosa manca e in che ordine intervenire.",
       btn:"Ottieni l'Analisi SEO Gratuita"
     }
   },
@@ -568,47 +568,47 @@ const SERVICES: Record<string, ServiceData> = {
   ai: {
     num:"05", slug:"ai",
     title:"Integrazione AI & Sistemi Intelligenti",
-    subtitle:"Agenti AI, LLM e sistemi RAG integrati nei tuoi processi aziendali. Riduciamo i costi operativi, acceleriamo le decisioni e liberiamo il tuo team per il lavoro ad alto valore strategico.",
+    subtitle:"Agenti, modelli linguistici e ricerca sui documenti aziendali, integrati nei processi che già esistono. Non progetti pilota fini a sé stessi: casi d'uso scelti perché hanno un ritorno calcolabile.",
     eyebrow:"AI Agents · LLM · Automazione Intelligente",
     gradient:"linear-gradient(135deg,#BE3648 0%,#DFA088 100%)",
     accentColor:"rgba(184,50,64,0.60)",
     whatWeDo:{
-      heading:"L'AI non è il futuro. È il vantaggio competitivo di oggi.",
+      heading:"L'AI conviene dove il processo è ripetitivo e i dati ci sono già.",
       body:[
-        "Le aziende che stanno integrando AI nei loro processi oggi non stanno sperimentando — stanno costruendo un vantaggio strutturale che diventerà sempre più difficile da colmare. Non si tratta di automazione superficiale: si tratta di sistemi che ragionano, contestualizzano e migliorano nel tempo.",
-        "Implementiamo soluzioni AI concrete e misurabili: agenti che gestiscono il supporto clienti 24/7, sistemi RAG che rendono ricercabile la knowledge base aziendale, pipeline di contenuto che producono 1000 descrizioni prodotto in 10 minuti. ROI verificabile entro 90 giorni."
+        "Il valore non arriva dall'adottare un modello, ma dallo scegliere il punto giusto in cui inserirlo. Un'attività ripetitiva, con regole chiare e dati già disponibili, è il candidato ideale. Un processo che cambia forma a ogni cliente, quasi mai — e dirlo prima fa risparmiare mesi.",
+        "Implementiamo cose che poi restano in produzione: assistenti che rispondono alle richieste ricorrenti, sistemi che rendono cercabile la documentazione interna, generazione assistita delle schede prodotto. Ogni caso d'uso parte da una misura del prima, così il dopo è verificabile."
       ],
       stats:[
-        {value:"-75%",label:"Riduzione costi operativi routinari"},
-        {value:"24/7",label:"Operatività senza intervento umano"},
-        {value:"90gg",label:"Time-to-value su implementazione"},
+        {value:"2",label:"Settimane per il primo prototipo utile"},
+        {value:"1",label:"Caso d'uso alla volta, misurato"},
+        {value:"0",label:"Dati inviati a modelli non concordati"},
       ]
     },
     whatWeOffer:{
-      heading:"Soluzioni AI pronte per l'impresa",
+      heading:"Dove l'AI porta un vantaggio reale",
       items:[
-        {icon:iconStroke("M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15M14.25 3.104c.251.023.501.05.75.082M19.8 15l-1.575 1.548M19.8 15H4.2",""),title:"Agenti AI Custom",desc:"LangChain, AutoGen, CrewAI. Agenti che eseguono task complessi in autonomia: ricerca, analisi, redazione, notifica, escalation."},
-        {icon:iconStroke("M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"),title:"RAG Systems",desc:"Rendi ricercabile la tua knowledge base aziendale. Manuali, contratti, email, documenti: il sistema trova e sintetizza in secondi."},
-        {icon:iconStroke("M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"),title:"LLM Integration",desc:"OpenAI GPT-4o, Anthropic Claude, Mistral, Llama self-hosted. Scegliamo il modello giusto per costo, latenza e compliance."},
-        {icon:iconStroke("M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18","M16 10a4 4 0 01-8 0"),title:"AI per E-commerce",desc:"Generazione massiva di descrizioni prodotto SEO-friendly, pricing dinamico basato su competitor, chatbot di supporto pre-vendita."},
-        {icon:iconStroke("M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"),title:"Chatbot B2B",desc:"Assistenti conversazionali per qualificazione lead, supporto tecnico e onboarding clienti. Integrazione con CRM e live chat umana in escalation."},
-        {icon:iconStroke("M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"),title:"AI Analytics",desc:"Modelli predittivi per churn, inventory e domanda. Anomaly detection automatica. Insight che arrivano prima che il problema emerga."},
+        {icon:iconStroke("M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15M14.25 3.104c.251.023.501.05.75.082M19.8 15l-1.575 1.548M19.8 15H4.2",""),title:"Agenti su misura",desc:"LangChain, AutoGen, CrewAI. Sequenze che cercano, analizzano, redigono e passano la mano all'operatore quando il caso esce dal previsto."},
+        {icon:iconStroke("M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"),title:"Ricerca sui documenti interni",desc:"Manuali, contratti, capitolati, email: il sistema trova il passaggio giusto e ne cita la fonte, invece di inventare una risposta plausibile."},
+        {icon:iconStroke("M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"),title:"Scelta e integrazione dei modelli",desc:"OpenAI, Anthropic, Mistral o modelli ospitati da voi. Il criterio è costo, latenza e vincoli di riservatezza, non la moda del mese."},
+        {icon:iconStroke("M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18","M16 10a4 4 0 01-8 0"),title:"AI per l'e-commerce",desc:"Schede prodotto generate e poi revisionate, arricchimento del catalogo, assistente di pre-vendita collegato alle giacenze reali."},
+        {icon:iconStroke("M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"),title:"Assistenti conversazionali",desc:"Qualificazione dei contatti, primo livello di supporto, onboarding. Collegati al CRM, con passaggio a una persona nel momento in cui serve."},
+        {icon:iconStroke("M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"),title:"Modelli predittivi",desc:"Previsione della domanda e delle scorte, rilevamento delle anomalie, segnali che arrivano prima che il problema si veda in bilancio."},
       ]
     },
     howWeDoIt:{
       heading:"Dalla valutazione al sistema in produzione",
       steps:[
-        {title:"AI Readiness Assessment",desc:"Valutiamo i tuoi dati disponibili, i processi candidati all'automazione e il potenziale ROI di ogni use case. Uscite con una roadmap di implementazione prioritizzata."},
-        {title:"Proof of Concept",desc:"Sviluppiamo un PoC funzionante sul caso d'uso più ad alto impatto entro 2 settimane. Misuri i risultati su dati reali prima di impegnarti sull'implementazione completa."},
-        {title:"Architettura del Sistema",desc:"Progettazione dell'infrastruttura AI: scelta dei modelli, pipeline di dati, storage vettoriale, guardrail di sicurezza e fallback per i casi edge."},
-        {title:"Integrazione nei Processi",desc:"Connessione con i tuoi sistemi esistenti (CRM, ERP, e-commerce, database). Il sistema AI diventa un componente invisibile del workflow quotidiano."},
-        {title:"Training & Fine-tuning",desc:"Addestriamo il sistema sui tuoi dati specifici, testiamo i casi limite e configuriamo i meccanismi di feedback per il miglioramento continuo."},
-        {title:"Deploy & Monitoring",desc:"Rilascio graduale con A/B contro il processo manuale. Dashboard di monitoring per accuracy, latenza e costi token. Il sistema si ottimizza nel tempo."},
+        {title:"Valutazione di fattibilità",desc:"Quali dati esistono e in che stato, quali processi sono candidati e quale ritorno è plausibile per ciascuno. Ne esce una lista ordinata per rapporto fra valore e sforzo."},
+        {title:"Prototipo sul caso più promettente",desc:"Due settimane per una versione funzionante sul caso a maggiore impatto. Si misura sui vostri dati prima di impegnarsi sull'implementazione completa."},
+        {title:"Architettura",desc:"Scelta dei modelli, flusso dei dati, archivio vettoriale, limiti di sicurezza e comportamento previsto quando il modello non sa rispondere."},
+        {title:"Integrazione nei processi",desc:"Collegamento a CRM, ERP, e-commerce e banche dati. Il sistema diventa un passaggio del lavoro quotidiano, non uno strumento a parte da ricordarsi di aprire."},
+        {title:"Adattamento ai vostri dati",desc:"Messa a punto sui casi reali, prove sui casi limite, raccolta strutturata dei riscontri per migliorare nel tempo."},
+        {title:"Rilascio e presidio",desc:"Attivazione graduale a confronto con il processo manuale. Monitoraggio di accuratezza, tempi di risposta e costo per richiesta."},
       ]
     },
     cta:{
-      heading:"Ogni processo manuale è una opportunità AI.",
-      sub:"Identifica con noi i tre processi con più alto ROI di automazione. Sessione gratuita di 45 minuti, output concreto garantito.",
+      heading:"Non tutti i processi meritano l'AI. Alcuni sì.",
+      sub:"In 45 minuti guardiamo insieme i vostri processi e individuiamo quelli che valgono un'automazione — e quelli che non la valgono.",
       btn:"Prenota la Sessione AI"
     }
   }
