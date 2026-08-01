@@ -669,13 +669,10 @@ function Hero() {
                   initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease }}
                   style={{ fontFamily: DISPLAY, fontSize: "clamp(42px, 5.4vw, 82px)", fontWeight: 900, lineHeight: 0.95, letterSpacing: "-0.045em", margin: 0, color: "#FFFFFF", textTransform: "uppercase" as const, filter: "drop-shadow(0 12px 34px rgba(0,0,0,0.6))", textShadow: "0 4px 12px rgba(0, 0, 0, 0.8)" }}
                 >
-                  {/* Era il titolo professionale di una persona — "E-commerce
-                      Architect & Digital Strategist". Dice chi è chi scrive,
-                      non che cosa ottiene chi legge. Ora dichiara il risultato:
-                      la firma personale resta su About. */}
-                  <span>Architetture</span><br />
                   <span style={{ whiteSpace: "nowrap" }}>E&#8209;commerce</span><br />
-                  <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(240,243,249,0.88)", textShadow: "none" }}>che scalano</span>
+                  <span>Architect</span><br />
+                  <span>{"& "}</span>
+                  <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(240,243,249,0.88)", textShadow: "none" }}>Digital Strategist</span>
                 </motion.h1>
               </div>
 
@@ -700,7 +697,7 @@ function Hero() {
               initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, delay: 0.22, ease }}
               style={{ fontSize: "clamp(16px, 1.4vw, 17px)", color: "#FFFFFF", fontWeight: 400, fontFamily: "'Geist', system-ui, sans-serif", maxWidth: 340, lineHeight: 1.85, margin: "28px 0 0", letterSpacing: "0.01em", WebkitFontSmoothing: "antialiased" } as React.CSSProperties}
             >
-              Studio di sviluppo e crescita digitale. Un solo interlocutore fra codice, dati e business — senza intermediari, senza compromessi.
+              Un'unica mente tra codice e business. Architetture digitali che scalano — senza intermediari, senza compromessi.
             </motion.p>
 
             {/* Process flow — visual timeline */}
