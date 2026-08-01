@@ -1,10 +1,13 @@
 import type { Blueprint } from "./modules"
 
 /* ══════════════════════════════════════════════════════════════════════════
-   ROADMAP — documento stampabile (→ PDF via "Salva come PDF" del browser)
-   Generato in un iframe nascosto: nessuna dipendenza esterna, nessun popup
-   da sbloccare, funziona identico in locale e su Vercel.
-   Documento chiaro su fondo bianco: è pensato per la stampa, non per lo schermo.
+   ROADMAP — il documento che il visitatore porta via
+   Due strade per lo stesso contenuto:
+     · downloadRoadmapPdf  scarica un vero file .pdf (via pdf-lib, caricata
+       solo al click). È la strada normale.
+     · printRoadmap        apre la finestra di stampa su un iframe isolato.
+       Resta come rete di sicurezza se il modulo PDF non si carica.
+   Documento chiaro su fondo bianco: è pensato per la carta, non per lo schermo.
 ══════════════════════════════════════════════════════════════════════════ */
 
 function esc(s: string): string {
@@ -128,4 +131,267 @@ export function printRoadmap(bp: Blueprint, dateLabel: string): void {
   }
   if (frame.contentWindow?.document.readyState === "complete") go()
   else frame.onload = go
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PDF SCARICABILE
+   Il testo resta vettoriale: si seleziona, si cerca, si stampa senza sgranare.
+   Niente cattura dello schermo, niente browser headless sul server — il file
+   nasce nel browser e pesa qualche decina di kB.
+
+   pdf-lib entra con un import dinamico: chi non tocca il pulsante non la
+   scarica mai, quindi il peso della pagina non cambia.
+══════════════════════════════════════════════════════════════════════════ */
+
+const A4 = { w: 595.28, h: 841.89 }          // punti tipografici
+const MG  = { top: 56, bottom: 62, x: 46 }   // il fondo lascia posto al piè di pagina
+const COL_W = A4.w - MG.x * 2
+
+/* Le Standard Font del PDF parlano WinAnsi. Un carattere fuori tabella non
+   degrada: fa fallire l'intera generazione. Qui i pochi segni plausibili
+   vengono sostituiti e il resto scartato, così il file esce comunque. */
+const WIN_EXTRA = new Set([..."€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ"])
+const SUBS: Record<string, string> = {
+  "→": "->", "←": "<-", "↔": "<->", "✓": "-", "✗": "x", " ": " ", "−": "-",
+}
+
+function safe(s: string): string {
+  let out = ""
+  for (const ch of s) {
+    if (SUBS[ch] !== undefined) { out += SUBS[ch]; continue }
+    const c = ch.codePointAt(0)!
+    if (c === 9 || c === 10 || c === 13) { out += " "; continue }
+    if (c < 32 || c === 127) continue
+    if (c >= 128 && c <= 159) continue      // controlli C1: non esistono in WinAnsi
+    if (c <= 255 || WIN_EXTRA.has(ch)) out += ch
+  }
+  return out
+}
+
+function slug(s: string): string {
+  const base = s.normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[^A-Za-z0-9]+/g, "-").replace(/^-+|-+$/g, "").toLowerCase()
+  return base || "roadmap"
+}
+
+/** Compone il documento e restituisce i byte. Separata dallo scaricamento
+    perché non tocca il DOM: si può generare e ispezionare fuori dal browser. */
+export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise<Uint8Array> {
+  const { PDFDocument, StandardFonts, rgb } = await import("pdf-lib")
+
+  const doc    = await PDFDocument.create()
+  const sans   = await doc.embedFont(StandardFonts.Helvetica)
+  const bold   = await doc.embedFont(StandardFonts.HelveticaBold)
+  const italic = await doc.embedFont(StandardFonts.HelveticaOblique)
+  const mono   = await doc.embedFont(StandardFonts.Courier)
+
+  const INK   = rgb(0.078, 0.094, 0.122)   // #14181F
+  const BODY  = rgb(0.235, 0.271, 0.322)   // #3C4552
+  const MUTED = rgb(0.353, 0.396, 0.447)   // #5A6572
+  const RULE  = rgb(0.847, 0.867, 0.894)   // #D8DDE4
+
+  type Font = typeof sans
+  type Color = typeof INK
+
+  let page = doc.addPage([A4.w, A4.h])
+  let y = A4.h - MG.top
+
+  /** Apre una pagina nuova se l'altezza richiesta non ci sta più. */
+  function room(h: number) {
+    if (y - h >= MG.bottom) return
+    page = doc.addPage([A4.w, A4.h])
+    y = A4.h - MG.top
+  }
+
+  function wrap(text: string, font: Font, size: number, max: number): string[] {
+    const out: string[] = []
+    let line = ""
+    for (const word of safe(text).split(/\s+/).filter(Boolean)) {
+      const next = line ? `${line} ${word}` : word
+      if (font.widthOfTextAtSize(next, size) <= max) { line = next; continue }
+      if (line) out.push(line)
+      /* una parola più larga della colonna (URL, codice) va spezzata a forza,
+         altrimenti uscirebbe dal margine destro */
+      if (font.widthOfTextAtSize(word, size) > max) {
+        let chunk = ""
+        for (const ch of word) {
+          if (font.widthOfTextAtSize(chunk + ch, size) > max) { out.push(chunk); chunk = ch }
+          else chunk += ch
+        }
+        line = chunk
+      } else line = word
+    }
+    if (line) out.push(line)
+    return out
+  }
+
+  /* pdf-lib non espone la spaziatura fra lettere: i micro-titoli in
+     monospaziato la usano, quindi si disegnano carattere per carattere. */
+  function tracked(text: string, size: number, font: Font, color: Color, gap: number) {
+    let x = MG.x
+    for (const ch of safe(text)) {
+      page.drawText(ch, { x, y, size, font, color })
+      x += font.widthOfTextAtSize(ch, size) + gap
+    }
+  }
+
+  function para(text: string, font: Font, size: number, color: Color, lead: number, after: number, indent = 0) {
+    for (const line of wrap(text, font, size, COL_W - indent)) {
+      room(lead)
+      y -= lead
+      page.drawText(line, { x: MG.x + indent, y, size, font, color })
+    }
+    y -= after
+  }
+
+  function rule(color: Color, thickness = 1) {
+    page.drawLine({
+      start: { x: MG.x, y }, end: { x: A4.w - MG.x, y },
+      thickness, color,
+    })
+  }
+
+  function h2(label: string) {
+    room(40)
+    y -= 26
+    tracked(label.toUpperCase(), 8.5, mono, MUTED, 1.8)
+    y -= 12
+  }
+
+  /* ── Intestazione ──────────────────────────────────────────────────── */
+  y -= 9
+  tracked("NADIA MAAR - DIGITAL FOUNDRY", 8, mono, MUTED, 1.9)
+  y -= 12
+  for (const line of wrap(bp.vector.label, bold, 20, COL_W)) {
+    y -= 23
+    page.drawText(line, { x: MG.x, y, size: 20, font: bold, color: INK })
+  }
+  y -= 15
+  tracked(`${bp.vector.node} · ${bp.vector.stack}`.toUpperCase(), 8.5, mono, MUTED, 1.3)
+  y -= 12
+  rule(INK, 1.6)
+
+  /* ── Riga dati: complessità · durata · data ────────────────────────── */
+  y -= 20
+  const cells: [string, string][] = [
+    ["Complessità", bp.complexity.label],
+    ["Durata orientativa", bp.complexity.weeks],
+    ["Data", dateLabel],
+  ]
+  const cellW = (COL_W - 28 * 2) / 3
+  cells.forEach(([k, v], i) => {
+    const x = MG.x + i * (cellW + 28)
+    let cx = x
+    for (const ch of safe(k.toUpperCase())) {
+      page.drawText(ch, { x: cx, y, size: 7.5, font: mono, color: MUTED })
+      cx += mono.widthOfTextAtSize(ch, 7.5) + 1.3
+    }
+    const val = wrap(v, bold, 12, cellW)[0] ?? ""
+    page.drawText(val, { x, y: y - 15, size: 12, font: bold, color: INK })
+  })
+  y -= 15 + 13
+  rule(RULE)
+
+  /* ── Corpo ─────────────────────────────────────────────────────────── */
+  h2("Obiettivo")
+  para(bp.obiettivo, sans, 11, INK, 16, 0)
+
+  h2("Architettura")
+  para(bp.architettura, sans, 11, INK, 16, 9)
+  para(bp.vector.tech, sans, 11, INK, 16, 0)
+
+  h2("Componenti")
+  for (const shelf of bp.scaffali) {
+    /** Titolo del gruppo con la sua sottolineatura. */
+    const shelfHead = (label: string) => {
+      y -= 16
+      tracked(label.toUpperCase(), 8, mono, MUTED, 1.7)
+      y -= 7
+      rule(RULE)
+      y -= 4
+    }
+
+    /* il titolo dello scaffale non deve restare solo in fondo alla pagina */
+    room(58)
+    shelfHead(shelf.label)
+
+    for (const r of shelf.righe) {
+      const tech = wrap(r.tech, sans, 9.5, COL_W)
+      const wasOn = page
+      room(15 + tech.length * 13 + 8)
+      /* se il gruppo è proseguito su una pagina nuova il titolo è rimasto
+         indietro, e queste righe sembrerebbero non appartenere a nulla */
+      if (page !== wasOn) shelfHead(`${shelf.label} (segue)`)
+      y -= 15
+      page.drawText(safe(r.node), { x: MG.x, y, size: 11, font: bold, color: INK })
+      for (const line of tech) {
+        y -= 13
+        page.drawText(line, { x: MG.x, y, size: 9.5, font: sans, color: BODY })
+      }
+      y -= 8
+    }
+  }
+
+  h2("Fasi di lavoro")
+  for (const f of FASI) {
+    const body = wrap(f.b, sans, 9.5, COL_W - 32)
+    room(14 + body.length * 13 + 9)
+    y -= 14
+    page.drawText(f.n, { x: MG.x, y, size: 9, font: mono, color: MUTED })
+    page.drawText(safe(f.t), { x: MG.x + 32, y, size: 10.5, font: bold, color: INK })
+    for (const line of body) {
+      y -= 13
+      page.drawText(line, { x: MG.x + 32, y, size: 9.5, font: sans, color: BODY })
+    }
+    y -= 9
+  }
+
+  h2("Nota")
+  para(
+    "Complessità e durata sono una stima tecnica preliminare, basata sui moduli selezionati. " +
+    "Il perimetro definitivo si stabilisce dopo l'analisi dei processi e dei sistemi esistenti.",
+    italic, 9, MUTED, 14, 0,
+  )
+
+  /* ── Piè di pagina, uguale su ogni pagina ──────────────────────────── */
+  const pages = doc.getPages()
+  pages.forEach((p, i) => {
+    p.drawLine({
+      start: { x: MG.x, y: MG.bottom - 20 }, end: { x: A4.w - MG.x, y: MG.bottom - 20 },
+      thickness: 1, color: RULE,
+    })
+    let x = MG.x
+    for (const ch of "NADIA MAAR · DIGITAL FOUNDRY") {
+      p.drawText(ch, { x, y: MG.bottom - 34, size: 7.5, font: mono, color: MUTED })
+      x += mono.widthOfTextAtSize(ch, 7.5) + 1.2
+    }
+    const num = `${i + 1} / ${pages.length}`
+    p.drawText(num, {
+      x: A4.w - MG.x - mono.widthOfTextAtSize(num, 7.5),
+      y: MG.bottom - 34, size: 7.5, font: mono, color: MUTED,
+    })
+  })
+
+  doc.setTitle(`Roadmap — ${bp.vector.label}`)
+  doc.setAuthor("Nadia Maar")
+  doc.setSubject(`${bp.vector.node} · ${bp.complexity.label} · ${bp.complexity.weeks}`)
+  doc.setCreator("Nadia Maar — Digital Foundry")
+  doc.setProducer("Nadia Maar — Digital Foundry")
+
+  return doc.save()
+}
+
+/** Genera il file e lo consegna al browser come download. */
+export async function downloadRoadmapPdf(bp: Blueprint, dateLabel: string): Promise<void> {
+  const bytes = await buildRoadmapPdf(bp, dateLabel)
+  const blob = new Blob([bytes as unknown as BlobPart], { type: "application/pdf" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = `roadmap-${slug(bp.vector.node)}.pdf`
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  /* revoca differita: Safari legge il blob dopo il click, non durante */
+  setTimeout(() => URL.revokeObjectURL(url), 5000)
 }

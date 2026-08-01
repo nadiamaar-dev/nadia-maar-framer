@@ -4,9 +4,9 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import {
   VECTORS, ADDON_GROUPS, CANVAS_BANDS, GROUP_COLOR,
   baseFor, addonsOf, vectorById, buildBlueprint, complexityOf,
-  type GroupId, type Item, type VectorId,
+  type Blueprint, type GroupId, type Item, type VectorId,
 } from "./modules"
-import { printRoadmap } from "./roadmap"
+import { downloadRoadmapPdf, printRoadmap } from "./roadmap"
 import { useFoundryStore, type Step } from "./store"
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -294,6 +294,28 @@ function StepAddons() {
 /* ══════════════════════════════════════════════════════════════════════════
    PASSO 4 — indice di complessità + azioni
 ══════════════════════════════════════════════════════════════════════════ */
+/* Il PDF nasce nel browser: pdf-lib viene scaricata solo al primo click, per
+   questo serve uno stato di attesa invece di un download istantaneo. Se il
+   modulo non arriva — rete che cade, deploy in corso — si ripiega sulla
+   finestra di stampa: meglio due clic in più che restare a mani vuote. */
+function useRoadmapPdf(bp: Blueprint | null) {
+  const [busy, setBusy] = useState(false)
+  const run = useCallback(async () => {
+    if (!bp || busy) return
+    setBusy(true)
+    const date = new Date().toLocaleDateString("it-IT", { day: "2-digit", month: "long", year: "numeric" })
+    try {
+      await downloadRoadmapPdf(bp, date)
+    } catch (err) {
+      console.error("[foundry] PDF non generato, ripiego sulla stampa:", err)
+      printRoadmap(bp, date)
+    } finally {
+      setBusy(false)
+    }
+  }, [bp, busy])
+  return { busy, run }
+}
+
 function StepActions() {
   const vector    = useFoundryStore(s => s.vector)
   const selected  = useFoundryStore(s => s.selected)
@@ -316,10 +338,7 @@ function StepActions() {
   }, [])
 
   const bp = useMemo(() => buildBlueprint(vector, selected), [vector, selected])
-  const onPrint = useCallback(() => {
-    if (!bp) return
-    printRoadmap(bp, new Date().toLocaleDateString("it-IT", { day: "2-digit", month: "long", year: "numeric" }))
-  }, [bp])
+  const pdf = useRoadmapPdf(bp)
 
   if (!cx) return null
 
@@ -353,13 +372,13 @@ function StepActions() {
           <span className="fc-cta-ix">[→]</span>
           <span className="fc-cta-tx">Richiedi Proposta <span style={{ fontSize: 14 }}>→</span></span>
         </motion.button>
-        <motion.button className="fc-ghost fc-ghost-wide" onClick={onPrint} whileTap={{ scale: 0.98 }}>
-          Genera Roadmap PDF
+        <motion.button className="fc-ghost fc-ghost-wide" onClick={pdf.run} disabled={pdf.busy} whileTap={{ scale: 0.98 }}>
+          {pdf.busy ? "Preparazione…" : "Scarica Roadmap PDF"}
         </motion.button>
       </div>
 
       <p className="fc-actions-note">
-        La roadmap si apre nella finestra di stampa del browser: scegli <strong>Salva come PDF</strong> per conservarla.
+        Un PDF con architettura, stima di impegno e fasi di lavoro: si scarica subito, senza lasciare l'email.
       </p>
     </>
   )
@@ -711,11 +730,9 @@ function LeadModal() {
     [vector, selected],
   )
 
-  /* stampa su un iframe isolato, quindi il blocco di scroll del modale
-     (body position:fixed) non interferisce e il modale resta aperto */
-  const savePdf = useCallback(() => {
-    if (bp) printRoadmap(bp, new Date().toLocaleDateString("it-IT", { day: "2-digit", month: "long", year: "numeric" }))
-  }, [bp])
+  /* il download non tocca la pagina, quindi il blocco di scroll del modale
+     (body position:fixed) non interferisce e la conferma resta aperta */
+  const pdf = useRoadmapPdf(bp)
 
   useEffect(() => {
     /* la tastiera software che si apre durante l'animazione d'ingresso fa
@@ -843,10 +860,10 @@ function LeadModal() {
                 portata proprio adesso. */}
             <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
               {bp && (
-                <motion.button className="fc-cta" onClick={savePdf}
+                <motion.button className="fc-cta" onClick={pdf.run} disabled={pdf.busy}
                   whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}>
                   <span className="fc-cta-ix">[↓]</span>
-                  <span className="fc-cta-tx">Genera Roadmap PDF</span>
+                  <span className="fc-cta-tx">{pdf.busy ? "Preparazione…" : "Scarica Roadmap PDF"}</span>
                 </motion.button>
               )}
               <button className="fc-ghost" onClick={closeModal}>Chiudi</button>
@@ -1173,6 +1190,8 @@ const CSS = `
   }
   .fc-ghost:hover { background:rgba(255,255,255,0.09); border-color:rgba(255,255,255,0.36); }
   .fc-ghost-wide { min-height:54px; }
+  /* mentre il modulo PDF si scarica il pulsante resta visibile ma inerte */
+  .fc-cta:disabled, .fc-ghost:disabled { opacity:0.62; cursor:progress; }
 
   /* il pulsante fisso di contatto copre i CTA del configuratore */
   body[data-fc-cta="1"] .nm-float-trigger { opacity:0; pointer-events:none; visibility:hidden; transition:opacity 0.25s; }

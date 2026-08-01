@@ -14,6 +14,10 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (!id.includes("node_modules")) return
+          // pdf-lib serve solo a chi scarica la roadmap: senza una regola
+          // propria finirebbe in "vendor", che è nel caricamento iniziale, e
+          // l'import dinamico non servirebbe più a niente.
+          if (id.includes("pdf-lib") || id.includes("pako")) return "pdf"
           if (id.includes("framer-motion")) return "framer-motion"
           if (id.includes("@supabase")) return "supabase"
           if (id.includes("react-dom") || id.includes("/react/") || id.includes("scheduler")) return "react"
