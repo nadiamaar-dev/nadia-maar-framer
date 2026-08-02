@@ -317,13 +317,15 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
 
   const NAV = [
     { num: "01", label: "Home",     sectionId: "s1", href: "/",          action: () => nav("s1", "/") },
+    /* "About" suonava come "chi sono": la pagina però è I Numeri → L'Approccio
+       → Il Processo → Competenze, cioè il metodo di lavoro, non una bio.
+       Subito dopo Home perché è il metodo a spiegare perché scegliere lo
+       studio, prima ancora di entrare nel dettaglio dei singoli servizi. */
+    { num: "02", label: "Metodo",   sectionId: "",   href: "/about",     action: () => { window.location.href = "/about" } },
     /* Voce ad accordion: apre le cinque pagine invece di rimandare
        all'ancora della griglia in home. Vedi SERVIZI qui sotto. */
-    { num: "02", label: "Servizi",  sectionId: "",   href: "#servizi",   action: () => {} },
-    { num: "03", label: "Projects", sectionId: "",   href: "/projects",  action: () => { window.location.href = "/projects" } },
-    /* "About" suonava come "chi sono": la pagina però è I Numeri → L'Approccio
-       → Il Processo → Competenze, cioè il metodo di lavoro, non una bio. */
-    { num: "04", label: "Metodo",   sectionId: "",   href: "/about",     action: () => { window.location.href = "/about" } },
+    { num: "03", label: "Servizi",  sectionId: "",   href: "#servizi",   action: () => {} },
+    { num: "04", label: "Projects", sectionId: "",   href: "/projects",  action: () => { window.location.href = "/projects" } },
     /* "Foundry" indicava tre cose diverse nel sito: qui è la galleria degli
        esperimenti, quindi si chiama Lab. Il configuratore resta in home. */
     { num: "05", label: "Lab",      sectionId: "",   href: "/foundry",   action: () => { window.location.href = "/foundry" } },
