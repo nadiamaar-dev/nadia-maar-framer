@@ -4,6 +4,7 @@ import Footer from "./components/Footer"
 import FloatingContact from "./components/FloatingContact"
 import Header from "./components/Header"
 import Background from "./components/Background"
+import FoundryConfigurator from "./components/foundry/FoundryConfigurator"
 
 /* ── tokens ── */
 const T = {
@@ -12,6 +13,7 @@ const T = {
   accent: "#B83240", accentLt: "#BE3648", green: "#10B981",
   surface: "rgba(255,255,255,0.055)", surfaceHi: "rgba(255,255,255,0.10)",
 } as const
+const SANS = "'Geist','Space Grotesk',system-ui,sans-serif"
 const MONO = "'JetBrains Mono','SF Mono',ui-monospace,monospace"
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const BODY: React.CSSProperties = { fontFamily: "'Geist', system-ui, sans-serif", fontSize: "clamp(16px, 1.4vw, 17px)", fontWeight: 400, lineHeight: 1.85, letterSpacing: "0.01em" }
@@ -199,6 +201,25 @@ type Motif = "conveyor" | "frame" | "nodes" | "bars" | "orbit"
 /** Come si dispongono le schede di "cosa offriamo". */
 type OfferLayout = "cards" | "wide" | "rows" | "stagger" | "bento"
 
+/* ── Blocco esclusivo di ogni pagina ────────────────────────────────────────
+   Le cinque pagine avevano le stesse identiche sezioni nello stesso ordine.
+   Qui ognuna guadagna un blocco che le altre non hanno, scelto per la
+   domanda che quel cliente si fa davvero prima di scrivere. */
+type ExtraBlock =
+  /** e-commerce: che cosa viene verificato prima di dire che è pronto */
+  | { kind: "checklist"; kicker: string; heading: string; intro: string; items: string[] }
+  /** corporate: due modi di intendere lo stesso sito, messi a confronto */
+  | { kind: "compare"; kicker: string; heading: string; left: { title: string; points: string[] }; right: { title: string; points: string[] } }
+  /** web app: una giornata prima e dopo l'automazione */
+  | { kind: "flow"; kicker: string; heading: string; before: string[]; after: string[] }
+  /** SEO: che cosa succede mese per mese, senza promesse di scorciatoie */
+  | { kind: "timeline"; kicker: string; heading: string; phases: { when: string; what: string }[] }
+  /** AI: dove NON conviene — l'unico modo onesto di parlarne */
+  | { kind: "limits"; kicker: string; heading: string; intro: string; items: { t: string; d: string }[] }
+
+/** Ordine delle sezioni: cambia da pagina a pagina. */
+type SectionId = "what" | "offer" | "how" | "extra"
+
 interface ServiceData {
   num: string; slug: string; title: string; subtitle: string; eyebrow: string
   gradient: string; accentColor: string
@@ -209,6 +230,9 @@ interface ServiceData {
   /** i tre occhielli di sezione, diversi per servizio: prima erano
    *  "Cosa facciamo / Cosa offriamo / Come lo realizziamo" su tutte e cinque */
   kickers: { what: string; offer: string; how: string }
+  /** sequenza delle sezioni, diversa per ogni servizio */
+  order: SectionId[]
+  extra: ExtraBlock
   whatWeDo: { heading: string; body: string[]; stats: {value:string;label:string}[] }
   whatWeOffer: { heading: string; items: OfferItem[] }
   howWeDoIt: { heading: string; steps: Step[] }
@@ -233,6 +257,23 @@ const SERVICES: Record<string, ServiceData> = {
     motif:"conveyor",
     layout:"cards",
     kickers:{ what:"Il Problema", offer:"L'Infrastruttura", how:"Dall'Audit al Lancio" },
+    order:["what","offer","extra","how"],
+    extra:{
+      kind:"checklist",
+      kicker:"Prima del Go-Live",
+      heading:"Che cosa viene verificato prima di dire che è pronto",
+      intro:"Un e-commerce non si consegna perché «il sito si vede». Si consegna quando questi punti sono verdi su dati reali, non su un ambiente di prova pulito.",
+      items:[
+        "Il venduto non supera mai il disponibile, nemmeno con due ordini nello stesso secondo",
+        "Il checkout regge il traffico del picco previsto, misurato con traffico simulato",
+        "Ogni prezzo e ogni giacenza hanno una sola fonte, e si sa qual è",
+        "Le etichette di spedizione si generano senza intervento manuale",
+        "Un reso parte dal cliente e arriva in magazzino senza scambi di email",
+        "LCP sotto 1,2s sulle schede prodotto, non solo in home",
+        "Se un fornitore non risponde, il sito continua a vendere ciò che ha",
+        "Esiste un modo per tornare indietro entro un minuto se qualcosa non torna",
+      ],
+    },
     whatWeDo:{
       heading:"Il tuo e-commerce è un asset — non un sito.",
       body:[
@@ -284,6 +325,26 @@ const SERVICES: Record<string, ServiceData> = {
     motif:"frame",
     layout:"wide",
     kickers:{ what:"Perché Conta", offer:"Cosa Comprende", how:"Il Percorso" },
+    order:["extra","what","offer","how"],
+    extra:{
+      kind:"compare",
+      kicker:"Due Modi di Intenderlo",
+      heading:"Vetrina o strumento commerciale",
+      left:{ title:"Sito vetrina", points:[
+        "Racconta l'azienda a chi già la conosce",
+        "Si aggiorna quando qualcuno se ne ricorda",
+        "I contatti arrivano in una casella condivisa",
+        "Nessuno sa quale pagina abbia portato la richiesta",
+        "Il confronto con i concorrenti non è mai stato fatto",
+      ]},
+      right:{ title:"Strumento commerciale", points:[
+        "Risponde alle domande che il decisore si fa prima di scrivere",
+        "Il team pubblica in autonomia, senza passare dallo sviluppo",
+        "Il contatto entra nel CRM già qualificato",
+        "Ogni richiesta porta con sé la pagina da cui è nata",
+        "Le pagine chiave si rivedono sui dati, non sulle opinioni",
+      ]},
+    },
     whatWeDo:{
       heading:"Il tuo sito è il tuo miglior commerciale.",
       body:[
@@ -335,6 +396,25 @@ const SERVICES: Record<string, ServiceData> = {
     motif:"nodes",
     layout:"rows",
     kickers:{ what:"Il Costo Nascosto", offer:"Cosa Costruiamo", how:"Come Procediamo" },
+    order:["what","extra","offer","how"],
+    extra:{
+      kind:"flow",
+      kicker:"Una Giornata Tipo",
+      heading:"Lo stesso lavoro, prima e dopo",
+      before:[
+        "Si esporta il file dal gestionale",
+        "Si sistemano a mano le colonne che non tornano",
+        "Si carica sul CRM e si controlla che non ci siano doppioni",
+        "Si avvisa il commerciale su WhatsApp",
+        "A fine mese si ricostruisce il report cercando negli allegati",
+      ],
+      after:[
+        "Il gestionale scrive sul CRM appena il dato cambia",
+        "I doppioni non entrano: la regola sta nel sistema",
+        "Il commerciale riceve una notifica con il contesto già dentro",
+        "Il report esiste sempre, aggiornato, senza che qualcuno lo compili",
+      ],
+    },
     whatWeDo:{
       heading:"Ogni processo manuale è un costo nascosto.",
       body:[
@@ -387,6 +467,18 @@ const SERVICES: Record<string, ServiceData> = {
     motif:"bars",
     layout:"stagger",
     kickers:{ what:"La Logica", offer:"Le Leve", how:"Il Percorso" },
+    order:["what","offer","how","extra"],
+    extra:{
+      kind:"timeline",
+      kicker:"Che Cosa Aspettarsi",
+      heading:"I primi dodici mesi, senza scorciatoie",
+      phases:[
+        { when:"Mese 1–2", what:"Correzioni tecniche e struttura. In questa fase i numeri si muovono poco: si sta togliendo ciò che frena." },
+        { when:"Mese 3–4", what:"Prime pagine posizionate sulle ricerche di coda lunga. Il traffico cresce su termini specifici, non ancora su quelli generici." },
+        { when:"Mese 5–8", what:"I gruppi tematici si consolidano. Le pagine si sostengono a vicenda e iniziano a salire anche le query più contese." },
+        { when:"Mese 9–12", what:"L'organico regge una quota stabile della domanda. Da qui il budget delle campagne può iniziare a spostarsi." },
+      ],
+    },
     whatWeDo:{
       heading:"L'organico è l'unico canale che non si spegne quando smetti di pagare.",
       body:[
@@ -438,6 +530,19 @@ const SERVICES: Record<string, ServiceData> = {
     motif:"orbit",
     layout:"bento",
     kickers:{ what:"Quando Conviene", offer:"Gli Ambiti", how:"Dalla Valutazione alla Produzione" },
+    order:["what","extra","offer","how"],
+    extra:{
+      kind:"limits",
+      kicker:"Quando Diciamo di No",
+      heading:"Dove l'AI non conviene",
+      intro:"Metà del valore di questo lavoro sta nell'escludere i casi sbagliati prima di spenderci mesi. Questi li scartiamo in fase di valutazione.",
+      items:[
+        { t:"Processi che cambiano a ogni cliente", d:"Se non esiste una regola ricorrente, non c'è niente da automatizzare: c'è da riprogettare il processo, ed è un altro lavoro." },
+        { t:"Dati assenti o inaffidabili", d:"Un modello addestrato su archivi incompleti restituisce risposte sicure e sbagliate. Prima si sistemano i dati." },
+        { t:"Decisioni con responsabilità legale", d:"Approvazioni contrattuali, valutazioni del personale, questioni sanitarie: l'AI può preparare, non decidere." },
+        { t:"Volumi troppo bassi", d:"Sotto una certa soglia di ripetizioni il costo di costruzione e presidio non rientra. Meglio dirlo subito." },
+      ],
+    },
     whatWeDo:{
       heading:"L'AI conviene dove il processo è ripetitivo e i dati ci sono già.",
       body:[
@@ -599,7 +704,7 @@ function OfferGrid({ data }: { data: ServiceData }) {
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {items.map((item, i) => (
           <Reveal key={i} delay={i * 0.05}>
-            <OfferCard item={item} gradient={data.gradient} accent={data.accent} variant="row" />
+            <OfferCard item={item} gradient={data.gradient} accent={data.accent} index={i} variant="row" />
           </Reveal>
         ))}
       </div>
@@ -612,7 +717,7 @@ function OfferGrid({ data }: { data: ServiceData }) {
       <div className="svc-offer-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 18 }}>
         {items.map((item, i) => (
           <Reveal key={i} delay={i * 0.06} full>
-            <OfferCard item={item} gradient={data.gradient} accent={data.accent} variant="wide" />
+            <OfferCard item={item} gradient={data.gradient} accent={data.accent} index={i} variant="wide" />
           </Reveal>
         ))}
       </div>
@@ -626,7 +731,7 @@ function OfferGrid({ data }: { data: ServiceData }) {
         {items.map((item, i) => (
           <Reveal key={i} delay={i * 0.06} full>
             <div className="svc-stagger-cell" style={{ marginTop: (i % 3) * 26, height: "100%" }}>
-              <OfferCard item={item} gradient={data.gradient} accent={data.accent} />
+              <OfferCard item={item} gradient={data.gradient} accent={data.accent} index={i} />
             </div>
           </Reveal>
         ))}
@@ -644,7 +749,7 @@ function OfferGrid({ data }: { data: ServiceData }) {
           <div key={i} className={i === 0 ? "svc-bento-lead" : undefined}
             style={i === 0 ? { gridColumn: "span 2" } : undefined}>
             <Reveal delay={i * 0.06} full>
-              <OfferCard item={item} gradient={data.gradient} accent={data.accent} variant={i === 0 ? "wide" : "card"} />
+              <OfferCard item={item} gradient={data.gradient} accent={data.accent} index={i} variant={i === 0 ? "wide" : "card"} />
             </Reveal>
           </div>
         ))}
@@ -657,10 +762,248 @@ function OfferGrid({ data }: { data: ServiceData }) {
     <div className="svc-offer-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
       {items.map((item, i) => (
         <Reveal key={i} delay={i * 0.06} full>
-          <OfferCard item={item} gradient={data.gradient} accent={data.accent} />
+          <OfferCard item={item} gradient={data.gradient} accent={data.accent} index={i} />
         </Reveal>
       ))}
     </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SEZIONI — escono nell'ordine dichiarato in data.order
+══════════════════════════════════════════════════════════════════════════ */
+const SEC: React.CSSProperties = { padding: "88px 0", borderBottom: "1px solid rgba(255,255,255,0.12)" }
+
+function SecHead({ kicker, heading, accent, gap = 48 }: { kicker: string; heading: string; accent: string; gap?: number }) {
+  return (
+    <Reveal>
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
+        <span style={{ color: accent }}>//</span><span>[ {kicker} ]</span>
+      </div>
+      <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(22px,2.8vw,38px)", fontWeight: 700, lineHeight: 1.15, letterSpacing: "-0.02em", color: "#FFFFFF", marginBottom: gap }}>
+        {heading}
+      </h2>
+    </Reveal>
+  )
+}
+
+function PageSection({ id, data }: { id: SectionId; data: ServiceData }) {
+  if (id === "what") {
+    return (
+      <section style={SEC}>
+        <div style={{ ...WRAP }} className="svc-wrap">
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px 80px", alignItems: "start" }} className="svc-what-grid">
+            <style>{`.svc-what-grid{@media(max-width:768px){grid-template-columns:1fr!important}}`}</style>
+            <div>
+              <Reveal>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
+                  <span style={{ color: data.accent }}>//</span><span>[ {data.kickers.what} ]</span>
+                </div>
+                <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(22px,2.8vw,38px)", fontWeight: 700, lineHeight: 1.15, letterSpacing: "-0.02em", color: "#FFFFFF", marginBottom: 28 }}>
+                  {data.whatWeDo.heading}
+                </h2>
+                {data.whatWeDo.body.map((p, i) => (
+                  <p key={i} style={{ ...BODY, color: T.muted, marginBottom: i < data.whatWeDo.body.length - 1 ? 20 : 0 }}>{p}</p>
+                ))}
+              </Reveal>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {data.whatWeDo.stats.map((s, i) => (
+                <Reveal key={i} delay={i * 0.08}>
+                  <motion.div whileHover={{ x: 4 }} transition={{ duration: 0.25, ease }}
+                    style={{ display: "flex", alignItems: "center", gap: 20, padding: "22px 24px", borderRadius: 14, background: "rgba(255,255,255,0.012)", border: "1px solid rgba(255,255,255,0.13)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07)", position: "relative", overflow: "hidden" }}>
+                    <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 3, background: data.gradient, borderRadius: "16px 0 0 16px" }} />
+                    <div style={{ paddingLeft: 8 }}>
+                      <div style={{ fontFamily: DISPLAY, fontSize: 32, fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.03em", lineHeight: 1 }}>{s.value}</div>
+                      <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: T.faint, marginTop: 6 }}>{s.label}</div>
+                    </div>
+                  </motion.div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (id === "offer") {
+    return (
+      <section style={SEC}>
+        <div style={{ ...WRAP }} className="svc-wrap">
+          <SecHead kicker={data.kickers.offer} heading={data.whatWeOffer.heading} accent={data.accent} />
+          <OfferGrid data={data} />
+        </div>
+      </section>
+    )
+  }
+
+  if (id === "how") {
+    return (
+      <section style={SEC}>
+        <div style={{ ...WRAP }} className="svc-wrap">
+          <SecHead kicker={data.kickers.how} heading={data.howWeDoIt.heading} accent={data.accent} gap={56} />
+          <div style={{ position: "relative" }}>
+            <div aria-hidden style={{ position: "absolute", left: 28, top: 48, bottom: 48, width: 1, background: `linear-gradient(180deg, ${hexA(data.accent, 0.55)}, ${hexA(data.accent, 0.06)})`, zIndex: 0 }} />
+            <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+              {data.howWeDoIt.steps.map((step, i) => (
+                <Reveal key={i} delay={i * 0.07}>
+                  <ProcessStep step={step} index={i} total={data.howWeDoIt.steps.length} gradient={data.gradient} accentColor={data.accentColor} />
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  return <ExtraSection data={data} />
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   BLOCCO ESCLUSIVO — cinque forme, una per servizio
+══════════════════════════════════════════════════════════════════════════ */
+function ExtraSection({ data }: { data: ServiceData }) {
+  const e = data.extra
+  const A = data.accent
+  const head = <SecHead kicker={e.kicker} heading={e.heading} accent={A} gap={"intro" in e ? 22 : 44} />
+  const intro = "intro" in e && e.intro
+    ? <Reveal><p style={{ ...BODY, color: T.muted, maxWidth: 720, marginBottom: 44 }}>{e.intro}</p></Reveal>
+    : null
+
+  /* e-commerce — elenco di verifiche, due colonne, segno di spunta nell'accento */
+  if (e.kind === "checklist") {
+    return (
+      <section style={SEC}>
+        <div style={{ ...WRAP }} className="svc-wrap">
+          {head}{intro}
+          <style>{`.svc-check{display:grid;grid-template-columns:1fr 1fr;gap:14px 40px}@media(max-width:768px){.svc-check{grid-template-columns:1fr!important}}`}</style>
+          <div className="svc-check">
+            {e.items.map((it, i) => (
+              <Reveal key={i} delay={i * 0.04}>
+                <div style={{ display: "flex", gap: 14, alignItems: "flex-start", paddingBottom: 14, borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+                  <span aria-hidden style={{ flexShrink: 0, marginTop: 3, width: 16, height: 16, borderRadius: 4, border: `1px solid ${hexA(A, 0.55)}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke={A} strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                  </span>
+                  <span style={{ ...BODY, fontSize: 15, lineHeight: 1.6, color: T.muted }}>{it}</span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  /* corporate — due colonne a confronto, quella giusta con il filo colorato */
+  if (e.kind === "compare") {
+    const col = (c: { title: string; points: string[] }, good: boolean) => (
+      <div style={{ position: "relative", borderRadius: 16, padding: "30px 28px", background: good ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.008)", border: `1px solid ${good ? hexA(A, 0.34) : "rgba(255,255,255,0.10)"}`, height: "100%", boxSizing: "border-box" as const }}>
+        <h3 style={{ fontFamily: DISPLAY, fontSize: 19, fontWeight: 700, color: good ? "#FFFFFF" : "rgba(255,255,255,0.62)", margin: "0 0 6px" }}>{c.title}</h3>
+        <div aria-hidden style={{ width: 28, height: 1.5, background: good ? A : "rgba(255,255,255,0.18)", borderRadius: 2, marginBottom: 20 }} />
+        <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 13 }}>
+          {c.points.map((pt, i) => (
+            <li key={i} style={{ display: "flex", gap: 11, alignItems: "flex-start" }}>
+              <span aria-hidden style={{ flexShrink: 0, marginTop: 8, width: 5, height: 5, borderRadius: "50%", background: good ? A : "rgba(255,255,255,0.24)" }} />
+              <span style={{ ...BODY, fontSize: 14.5, lineHeight: 1.62, color: good ? T.muted : "rgba(255,255,255,0.55)" }}>{pt}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+    return (
+      <section style={SEC}>
+        <div style={{ ...WRAP }} className="svc-wrap">
+          {head}
+          <style>{`.svc-cmp{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch}@media(max-width:768px){.svc-cmp{grid-template-columns:1fr!important}}`}</style>
+          <div className="svc-cmp">
+            <Reveal full>{col(e.left, false)}</Reveal>
+            <Reveal delay={0.08} full>{col(e.right, true)}</Reveal>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  /* web app — prima e dopo, due colonne con la freccia in mezzo */
+  if (e.kind === "flow") {
+    const list = (title: string, rows: string[], good: boolean) => (
+      <div>
+        <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: good ? A : "rgba(255,255,255,0.45)", marginBottom: 18 }}>{title}</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {rows.map((r, i) => (
+            <div key={i} style={{ display: "flex", gap: 13, alignItems: "flex-start", padding: "14px 16px", borderRadius: 11, background: good ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.008)", border: `1px solid ${good ? hexA(A, 0.26) : "rgba(255,255,255,0.09)"}` }}>
+              <span style={{ fontFamily: MONO, fontSize: 10, color: good ? A : "rgba(255,255,255,0.35)", flexShrink: 0, marginTop: 3 }}>{String(i + 1).padStart(2, "0")}</span>
+              <span style={{ ...BODY, fontSize: 14.5, lineHeight: 1.6, color: good ? T.muted : "rgba(255,255,255,0.55)", textDecoration: good ? "none" : "line-through", textDecorationColor: "rgba(255,255,255,0.22)" }}>{r}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+    return (
+      <section style={SEC}>
+        <div style={{ ...WRAP }} className="svc-wrap">
+          {head}
+          <style>{`.svc-flow{display:grid;grid-template-columns:1fr 1fr;gap:40px}@media(max-width:768px){.svc-flow{grid-template-columns:1fr!important;gap:32px}}`}</style>
+          <div className="svc-flow">
+            <Reveal>{list("Oggi", e.before, false)}</Reveal>
+            <Reveal delay={0.1}>{list("Dopo", e.after, true)}</Reveal>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  /* SEO — linea del tempo orizzontale, quattro tappe */
+  if (e.kind === "timeline") {
+    return (
+      <section style={SEC}>
+        <div style={{ ...WRAP }} className="svc-wrap">
+          {head}
+          <style>{`.svc-tl{display:grid;grid-template-columns:repeat(4,1fr);gap:0}@media(max-width:900px){.svc-tl{grid-template-columns:1fr!important;gap:26px}.svc-tl-line{display:none!important}}`}</style>
+          <div style={{ position: "relative" }}>
+            <div className="svc-tl-line" aria-hidden style={{ position: "absolute", left: 0, right: 0, top: 7, height: 1, background: `linear-gradient(90deg, ${hexA(A, 0.5)}, ${hexA(A, 0.12)})` }} />
+            <div className="svc-tl">
+              {e.phases.map((ph, i) => (
+                <Reveal key={i} delay={i * 0.09}>
+                  <div style={{ paddingRight: 26, position: "relative" }}>
+                    <motion.span aria-hidden
+                      style={{ display: "block", width: 15, height: 15, borderRadius: "50%", border: `1px solid ${hexA(A, 0.75)}`, background: "#060C18", marginBottom: 22 }}
+                      animate={{ boxShadow: [`0 0 0 0 ${hexA(A, 0.30)}`, `0 0 0 9px ${hexA(A, 0)}`] }}
+                      transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut", delay: i * 0.5 }} />
+                    <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: A, marginBottom: 10 }}>{ph.when}</div>
+                    <p style={{ ...BODY, fontSize: 14.5, lineHeight: 1.65, color: T.muted, margin: 0 }}>{ph.what}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  /* AI — dove non conviene: righe sobrie, nessuna icona allegra */
+  return (
+    <section style={SEC}>
+      <div style={{ ...WRAP }} className="svc-wrap">
+        {head}{intro}
+        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+          {e.items.map((it, i) => (
+            <Reveal key={i} delay={i * 0.06}>
+              <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 22, padding: "24px 0", borderTop: i === 0 ? "1px solid rgba(255,255,255,0.10)" : "none", borderBottom: "1px solid rgba(255,255,255,0.10)" }}>
+                <span aria-hidden style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.18em", color: hexA(A, 0.75), paddingTop: 4 }}>—</span>
+                <div>
+                  <h3 style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 700, color: "#FFFFFF", margin: "0 0 8px" }}>{it.t}</h3>
+                  <p style={{ ...BODY, fontSize: 15, lineHeight: 1.68, color: T.muted, margin: 0 }}>{it.d}</p>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -743,83 +1086,10 @@ function ServicePage({data}:{data:ServiceData}) {
           </div>
         </section>
 
-        {/* ── COSA FACCIAMO ── */}
-        <section style={{padding:"88px 0",borderBottom:`1px solid rgba(255,255,255,0.12)`}}>
-          <div style={{...WRAP}} className="svc-wrap">
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"64px 80px",alignItems:"start"}} className="svc-what-grid">
-              <style>{`.svc-what-grid{@media(max-width:768px){grid-template-columns:1fr!important}}`}</style>
-              <div>
-                <Reveal>
-                  <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#FFFFFF",marginBottom:20}}>
-                    <span style={{color:data.accent}}>//</span><span>[ {data.kickers.what} ]</span>
-                  </div>
-                  <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:28}}>
-                    {data.whatWeDo.heading}
-                  </h2>
-                  {data.whatWeDo.body.map((p,i)=>(
-                    <p key={i} style={{...BODY,color:T.muted,marginBottom:i<data.whatWeDo.body.length-1?20:0}}>
-                      {p}
-                    </p>
-                  ))}
-                </Reveal>
-              </div>
-              <div style={{display:"flex",flexDirection:"column",gap:16}}>
-                {data.whatWeDo.stats.map((s,i)=>(
-                  <Reveal key={i} delay={i*0.08}>
-                    <motion.div whileHover={{x:4}} transition={{duration:0.25,ease}}
-                      style={{display:"flex",alignItems:"center",gap:20,padding:"22px 24px",borderRadius:14,background:"rgba(255,255,255,0.012)",border:"1px solid rgba(255,255,255,0.13)",backdropFilter:"blur(6px)",WebkitBackdropFilter:"blur(6px)",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.07)",position:"relative",overflow:"hidden"}}>
-                      <div style={{position:"absolute",left:0,top:0,bottom:0,width:3,background:data.gradient,borderRadius:"16px 0 0 16px"}} />
-                      <div style={{paddingLeft:8}}>
-                        <div style={{fontFamily:DISPLAY,fontSize:32,fontWeight:800,color:"#FFFFFF",letterSpacing:"-0.03em",lineHeight:1}}>{s.value}</div>
-                        <div style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:T.faint,marginTop:6}}>{s.label}</div>
-                      </div>
-                    </motion.div>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── COSA OFFRIAMO ── */}
-        <section style={{padding:"88px 0",borderBottom:`1px solid rgba(255,255,255,0.12)`}}>
-          <div style={{...WRAP}} className="svc-wrap">
-            <Reveal>
-              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#FFFFFF",marginBottom:20}}>
-                <span style={{color:data.accent}}>//</span><span>[ {data.kickers.offer} ]</span>
-              </div>
-              <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:48}}>
-                {data.whatWeOffer.heading}
-              </h2>
-            </Reveal>
-            <OfferGrid data={data} />
-          </div>
-        </section>
-
-        {/* ── COME LO REALIZZIAMO ── */}
-        <section style={{padding:"88px 0",borderBottom:`1px solid rgba(255,255,255,0.12)`}}>
-          <div style={{...WRAP}} className="svc-wrap">
-            <Reveal>
-              <div style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:10.5,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:"#FFFFFF",marginBottom:20}}>
-                <span style={{color:data.accent}}>//</span><span>[ {data.kickers.how} ]</span>
-              </div>
-              <h2 style={{fontFamily:DISPLAY,fontSize:"clamp(22px,2.8vw,38px)",fontWeight:700,lineHeight:1.15,letterSpacing:"-0.02em",color:"#FFFFFF",marginBottom:56}}>
-                {data.howWeDoIt.heading}
-              </h2>
-            </Reveal>
-            <div style={{position:"relative"}}>
-              {/* vertical connector line */}
-              <div aria-hidden style={{position:"absolute",left:28,top:48,bottom:48,width:1,background:`linear-gradient(180deg, ${hexA(data.accent,0.55)}, ${hexA(data.accent,0.06)})`,zIndex:0}} />
-              <div style={{display:"flex",flexDirection:"column",gap:0}}>
-                {data.howWeDoIt.steps.map((step,i)=>(
-                  <Reveal key={i} delay={i*0.07}>
-                    <ProcessStep step={step} index={i} total={data.howWeDoIt.steps.length} gradient={data.gradient} accentColor={data.accentColor} />
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Le sezioni escono nell'ordine dichiarato dal servizio: su corporate
+            il confronto apre la pagina, su web app la giornata tipo arriva
+            subito dopo il problema, sulla SEO la linea del tempo chiude. */}
+        {data.order.map(id => <PageSection key={id} id={id} data={data} />)}
 
         {/* ── CTA ── */}
         <section style={{padding:"100px 0 80px"}}>
@@ -861,6 +1131,12 @@ function ServicePage({data}:{data:ServiceData}) {
             </Reveal>
           </div>
         </section>
+
+        {/* Chi arriva qui da una ricerca ha appena letto che cosa si può fare:
+            è il momento in cui comporre la propria architettura ha senso, e
+            una richiesta che nasce dal configuratore vale molto più di un
+            modulo di contatto generico. Stesso widget della home. */}
+        <div id="configuratore"><FoundryConfigurator /></div>
 
         <OtherServices current={data.slug} />
 
@@ -920,37 +1196,58 @@ function OtherServices({ current }: { current: string }) {
 }
 
 /* ── OfferCard ── */
-/** variant: "card" verticale · "wide" più larga e distesa · "row" a riga intera */
-function OfferCard({item,gradient,accent,variant="card"}:{item:OfferItem;gradient:string;accent:string;variant?:"card"|"wide"|"row"}) {
+/** Stessa costruzione della scheda in home (StudioApproach): vetro con la
+ *  base che sfuma, bordo a gradiente che si spegne a metà, numero grande in
+ *  filigrana dietro al contenuto. Cambia la tinta, che qui è quella della
+ *  pagina invece del rosso del sito.
+ *  variant: "card" verticale · "wide" più distesa · "row" a riga intera */
+function OfferCard({item,gradient,accent,index=0,variant="card"}:{item:OfferItem;gradient:string;accent:string;index?:number;variant?:"card"|"wide"|"row"}) {
   const [hov,setHov] = useState(false)
   const row = variant === "row"
+  const num = String(index + 1).padStart(2, "0")
   return (
-    <motion.div onHoverStart={()=>setHov(true)} onHoverEnd={()=>setHov(false)}
+    <motion.div
+      onHoverStart={()=>setHov(true)} onHoverEnd={()=>setHov(false)}
       whileHover={row?{x:4}:{y:-5}} transition={{duration:0.28,ease}}
-      style={{height:"100%",position:"relative",borderRadius:14,
-        padding: row ? "20px 24px" : variant === "wide" ? "30px 28px" : "28px 24px",
-        background:hov?"rgba(255,255,255,0.03)":"rgba(255,255,255,0.012)",
-        border:`1px solid ${hov?"rgba(255,255,255,0.26)":"rgba(255,255,255,0.13)"}`,
-        backdropFilter:"blur(6px)",WebkitBackdropFilter:"blur(6px)",
-        boxShadow:"inset 0 1px 0 rgba(255,255,255,0.07)",
-        display:"flex",flexDirection: row ? "row" : "column",
-        alignItems: row ? "flex-start" : "stretch", gap: row ? 18 : 0,
-        overflow:"hidden",transition:"background 0.25s,border-color 0.25s"}}>
-      {/* filo verticale: nelle righe sostituisce la barra di fondo */}
-      {row && <div aria-hidden style={{position:"absolute",left:0,top:0,bottom:0,width:2,background:gradient,opacity:hov?1:0.5,transition:"opacity 0.3s"}} />}
-      <div style={{width: row?38:44,height: row?38:44,borderRadius:row?10:12,display:"flex",alignItems:"center",justifyContent:"center",background:hov?gradient:"rgba(255,255,255,0.06)",border:`1px solid ${hov?"transparent":"rgba(255,255,255,0.12)"}`,color:"#FFFFFF",marginBottom: row?0:18,flexShrink:0,transition:"background 0.3s,border-color 0.3s"}}>
-        {item.icon}
+      style={{position:"relative",borderRadius:16,overflow:"hidden",height:"100%",
+        boxShadow:"0 4px 24px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)"}}>
+
+      {/* vetro con la base che sfuma */}
+      <div aria-hidden style={{position:"absolute",inset:0,borderRadius:16,background:"rgba(255,255,255,0.008)",
+        backdropFilter:"blur(6px) brightness(1.03)",WebkitBackdropFilter:"blur(6px) brightness(1.03)",
+        WebkitMaskImage:"linear-gradient(to bottom, black 40%, transparent 85%)",
+        maskImage:"linear-gradient(to bottom, black 40%, transparent 85%)",pointerEvents:"none"}} />
+
+      {/* bordo a gradiente: pieno in alto, spento a metà scheda */}
+      <div aria-hidden style={{position:"absolute",inset:0,borderRadius:16,padding:1,
+        background:`linear-gradient(to bottom, ${hov?"rgba(255,255,255,0.60)":"rgba(255,255,255,0.53)"} 0%, transparent 52%)`,
+        WebkitMask:"linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+        WebkitMaskComposite:"xor",maskComposite:"exclude",pointerEvents:"none",zIndex:2,transition:"background 0.28s"}} />
+
+      {/* numero in filigrana, nella tinta della pagina */}
+      <div aria-hidden style={{position:"absolute",bottom:row?-24:-10,right:16,fontFamily:DISPLAY,
+        fontSize:row?96:130,fontWeight:900,lineHeight:1,letterSpacing:"-0.06em",
+        color:hexA(accent,0.11),userSelect:"none" as const,pointerEvents:"none",zIndex:1}}>{num}</div>
+
+      <div style={{position:"relative",zIndex:3,height:"100%",boxSizing:"border-box" as const,
+        padding: row ? "22px 26px" : variant === "wide" ? "30px 28px 38px" : "28px 26px 36px",
+        display:"flex",flexDirection: row ? "row" : "column",alignItems: row ? "flex-start" : "stretch",gap: row ? 20 : 0}}>
+
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom: row?0:26,flexShrink:0}}>
+          <div style={{width: row?38:40,height: row?38:40,borderRadius:11,display:"flex",alignItems:"center",justifyContent:"center",
+            background:hov?gradient:"rgba(255,255,255,0.09)",border:`1px solid ${hov?"transparent":"rgba(255,255,255,0.24)"}`,
+            color:"#FFFFFF",transition:"background 0.3s,border-color 0.3s"}}>
+            {item.icon}
+          </div>
+          {!row && <span style={{fontFamily:MONO,fontSize:9,fontWeight:600,letterSpacing:"0.22em",color:"#FFFFFF"}}>[ {num} ]</span>}
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",flex:1}}>
+          <h3 style={{fontFamily:DISPLAY,fontWeight:700,fontSize: variant==="wide"?21:20,lineHeight:1.22,letterSpacing:"-0.02em",color:"#FFFFFF",margin:"0 0 14px"}}>{item.title}</h3>
+          <div aria-hidden style={{width:28,height:1.5,background:`linear-gradient(90deg, ${accent}, transparent)`,marginBottom:14,borderRadius:2,opacity:hov?1:0.55,transition:"opacity 0.28s"}} />
+          <p className="hp-body" style={{fontFamily:SANS,fontSize: variant==="wide"?15.5:15,lineHeight:1.72,color:T.muted,margin:0,flex:1}}>{item.desc}</p>
+        </div>
       </div>
-      <div style={{display:"flex",flexDirection:"column",flex:1}}>
-        <h3 style={{fontFamily:DISPLAY,fontSize: variant==="wide"?17.5:16,fontWeight:700,color:"#FFFFFF",marginBottom:10,lineHeight:1.25}}>{item.title}</h3>
-        {/* trattino nella tinta della pagina: firma cromatica ripetuta su ogni scheda */}
-        <div aria-hidden style={{width:22,height:1.5,background:accent,borderRadius:2,marginBottom:12,opacity:hov?1:0.55,transition:"opacity 0.28s"}} />
-        <p className="hp-body" style={{fontFamily:"'Inter',sans-serif",fontSize: variant==="wide"?14.5:13.5,color:T.muted,lineHeight:1.75,flex:1}}>{item.desc}</p>
-      </div>
-      {!row && (
-        <motion.div animate={{scaleX:hov?1:0}} transition={{duration:0.3,ease}}
-          style={{position:"absolute",bottom:0,left:0,right:0,height:2,background:gradient,transformOrigin:"left"}} />
-      )}
     </motion.div>
   )
 }
