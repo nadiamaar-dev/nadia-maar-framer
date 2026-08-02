@@ -939,9 +939,26 @@ function LeadModal() {
 /* ══════════════════════════════════════════════════════════════════════════
    SEZIONE
 ══════════════════════════════════════════════════════════════════════════ */
-export default function FoundryConfigurator() {
+/**
+ * initialVector — usato dalle pagine servizio. Chi legge /seo ha già risposto
+ * alla domanda del primo passo semplicemente essendo lì: ripeterla sarebbe un
+ * passo indietro. Con il nucleo già scelto il configuratore parte dal secondo
+ * passo e diventa il seguito della pagina, non un nuovo inizio.
+ * Il widget NON prende la tinta della pagina: pulsanti, badge dei passi e
+ * nodi del canvas restano rossi ovunque compaia. È un prodotto riconoscibile,
+ * e colorarne solo l'occhiello avrebbe fatto sembrare il resto un errore.
+ */
+export default function FoundryConfigurator({ initialVector }: { initialVector?: VectorId } = {}) {
   const mobile    = useMedia("(max-width: 900px)")
   const modalOpen = useFoundryStore(s => s.modalOpen)
+  const preset    = Boolean(initialVector)
+
+  useEffect(() => {
+    if (!initialVector) return
+    /* solo se il visitatore non ha ancora scelto da sé: se è tornato su e ha
+       cambiato nucleo, la sua scelta vince */
+    if (useFoundryStore.getState().vector === null) useFoundryStore.getState().pickVector(initialVector)
+  }, [initialVector])
 
   return (
     <section style={{ ...SEC, borderTop: `1px solid ${T.border}` }} className="hp-sec">
@@ -953,11 +970,22 @@ export default function FoundryConfigurator() {
             <span>[ Digital Foundry — Configuratore ]</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(34px,5vw,66px)", lineHeight: 0.98, letterSpacing: "-0.04em", margin: 0 }}>
-            <span style={{ color: "#FFFFFF" }}>Componi la tua </span>
-            <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.63)" }}>Architettura</span>
+            {preset ? (
+              <>
+                <span style={{ color: "#FFFFFF" }}>Completa la tua </span>
+                <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.63)" }}>Architettura</span>
+              </>
+            ) : (
+              <>
+                <span style={{ color: "#FFFFFF" }}>Componi la tua </span>
+                <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.63)" }}>Architettura</span>
+              </>
+            )}
           </h2>
           <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: "#FFFFFF", lineHeight: 1.8, maxWidth: 620, margin: "20px 0 0" }}>
-            Quattro passi, in linguaggio semplice. Il configuratore assembla dal vivo l'architettura tecnica della soluzione, ne stima l'impegno e la traduce in un blueprint che puoi salvare.
+            {preset
+              ? "Il nucleo è già quello di questa pagina. Aggiungi i moduli che ti servono attorno: il configuratore assembla dal vivo l'architettura, ne stima l'impegno e la traduce in un blueprint che puoi salvare."
+              : "Quattro passi, in linguaggio semplice. Il configuratore assembla dal vivo l'architettura tecnica della soluzione, ne stima l'impegno e la traduce in un blueprint che puoi salvare."}
           </p>
         </Reveal>
 

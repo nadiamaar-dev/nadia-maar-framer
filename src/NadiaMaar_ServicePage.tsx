@@ -5,6 +5,7 @@ import FloatingContact from "./components/FloatingContact"
 import Header from "./components/Header"
 import Background from "./components/Background"
 import FoundryConfigurator from "./components/foundry/FoundryConfigurator"
+import type { VectorId } from "./components/foundry/modules"
 
 /* ── tokens ── */
 const T = {
@@ -1144,11 +1145,13 @@ function ServicePage({data}:{data:ServiceData}) {
           </div>
         </section>
 
-        {/* Chi arriva qui da una ricerca ha appena letto che cosa si può fare:
-            è il momento in cui comporre la propria architettura ha senso, e
-            una richiesta che nasce dal configuratore vale molto più di un
-            modulo di contatto generico. Stesso widget della home. */}
-        <div id="configuratore"><FoundryConfigurator /></div>
+        {/* Stesso widget della home, ma con il nucleo già impostato su questa
+            pagina: gli id dei vettori e gli slug dei servizi coincidono uno a
+            uno. Senza, il primo passo avrebbe chiesto di scegliere fra i
+            cinque servizi a chi ne sta già leggendo uno. */}
+        <div id="configuratore">
+          <FoundryConfigurator initialVector={data.slug as VectorId} />
+        </div>
 
         <OtherServices current={data.slug} />
 
