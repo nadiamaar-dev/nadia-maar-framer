@@ -117,7 +117,7 @@ const NAV_LINKS = [
   { label: "Servizi",   href: "/#s4" },
   { label: "Projects",  href: "/projects" },
   { label: "Configuratore", href: "/#s7" },
-  { label: "Contatti",  href: "/#s9" },
+  { label: "Contatti",  href: "/contatti" },
 ]
 
 /* ── NMmark ── */
@@ -241,7 +241,7 @@ export default function Footer({ onContact }: FooterProps) {
             <div style={{ height: 1, background: "rgba(255,255,255,0.07)", margin: "2px 0" }} />
 
             <motion.a
-              href="/#s9"
+              href="/contatti"
               whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}
               transition={{ type: "spring", stiffness: 400, damping: 22 }}
               style={{ display: "inline-flex", alignItems: "stretch", borderRadius: 10, textDecoration: "none", border: "1px solid rgba(184,50,64,0.50)", background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", overflow: "hidden", width: "fit-content", transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s" }}

@@ -28,6 +28,7 @@
 ══════════════════════════════════════════════════════════════════════════ */
 
 import { CANVAS_BANDS, ITEMS, VECTORS, complexityOf, buildBlueprint, type VectorId } from "../src/components/foundry/modules"
+import { clientIp, escTg, insertLead, oneLine, readEnv, sendTelegram, tgHandle, tooMany } from "../src/lib/leadIntake"
 
 /* req/res tipizzati a mano: la funzione è compilata da Vercel, non dal tsc
    del progetto (tsconfig include solo src/), quindi niente @vercel/node. */
@@ -53,19 +54,8 @@ function esc(s: unknown): string {
   return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
 }
 
-/** Elimina CR/LF: un subject con a capo permetterebbe di iniettare header. */
-function oneLine(s: string, max = 160): string {
-  return s.replace(/[\r\n]+/g, " ").trim().slice(0, max)
-}
-
 function isStr(v: unknown, max = MAX.text): v is string {
   return typeof v === "string" && v.length <= max
-}
-
-/* letto da globalThis: il file resta type-checkabile senza @types/node e
-   senza rischiare una ridichiarazione di `process` sul builder di Vercel */
-function readEnv(): Record<string, string | undefined> {
-  return (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env ?? {}
 }
 
 /* ── Validazione ─────────────────────────────────────────────────────────────
@@ -258,48 +248,6 @@ function clientHtml(p: LeadPayload): string {
 </html>`
 }
 
-/* ── Salvataggio su Supabase (PostgREST, nessun SDK) ─────────────────────────
-   Scrive con la chiave anon: la policy fl_anon_insert consente solo INSERT su
-   public.foundry_leads, quindi anche se la chiave è pubblica non si può
-   rileggere né modificare nulla. Nessuna service-role key sul server. */
-async function saveLead(p: LeadPayload, emailSent: boolean): Promise<boolean> {
-  const env = readEnv()
-  const url = env.SUPABASE_URL ?? env.VITE_SUPABASE_URL
-  const key = env.SUPABASE_ANON_KEY ?? env.VITE_SUPABASE_ANON_KEY
-  if (!url || !key) return false
-
-  const row = {
-    name: p.contact.name,
-    email: p.contact.email,
-    messenger: p.contact.messenger,
-    vector_id: p.vector?.id ?? "",
-    vector_label: p.vector?.label ?? "",
-    vector_node: p.vector?.node ?? "",
-    vector_stack: p.vector?.stack ?? null,
-    complexity: p.complexity?.label ?? null,
-    weeks: p.complexity?.weeks ?? null,
-    level: p.complexity?.level ?? null,
-    module_ids: p.modules.map(m => m.id),
-    modules: p.modules.map(m => ({ node: m.node, tech: m.tech, group: m.group, label: m.label })),
-    blueprint: p.blueprint,
-    page: p.meta?.page ?? null,
-    email_sent: emailSent,
-  }
-
-  const r = await fetch(`${url.replace(/\/+$/, "")}/rest/v1/foundry_leads`, {
-    method: "POST",
-    headers: {
-      apikey: key,
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-      Prefer: "return=minimal",
-    },
-    body: JSON.stringify(row),
-  })
-  if (!r.ok) throw new Error(`Supabase ${r.status}: ${await r.text()}`)
-  return true
-}
-
 /* ── Invio via Resend (REST, nessun SDK) ─────────────────────────────────── */
 async function send(apiKey: string, msg: { from: string; to: string; subject: string; html: string; replyTo?: string }) {
   const r = await fetch("https://api.resend.com/emails", {
@@ -320,12 +268,6 @@ async function send(apiKey: string, msg: { from: string; to: string; subject: st
    Nessun dominio, nessun record DNS, nessuna cartella spam: per avvisare il
    proprietario è la via più corta. Il contenuto è lo stesso brief delle email,
    compresso in un messaggio leggibile dal telefono. */
-
-/* Telegram accetta solo &, <, > come entità: le altre non sono garantite,
-   quindi qui NON si riusa esc() che trasforma anche le virgolette. */
-function escTg(s: unknown): string {
-  return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-}
 
 const GROUP_LABEL: Record<string, string> = Object.fromEntries(
   CANVAS_BANDS.map(b => [b.id, b.label]),
@@ -365,47 +307,6 @@ function telegramText(p: LeadPayload): string {
   return L.join("\n")
 }
 
-async function sendTelegram(token: string, chatId: string, text: string) {
-  const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text,
-      parse_mode: "HTML",
-      /* il link mailto genererebbe un'anteprima inutile in coda al messaggio */
-      disable_web_page_preview: true,
-    }),
-  })
-  /* Telegram sa rispondere 200 con ok:false (es. parse_mode non valido):
-     controllare solo lo stato HTTP lascerebbe passare un invio fallito. */
-  const body = (await r.json().catch(() => null)) as { ok?: boolean; description?: string } | null
-  if (!r.ok || body?.ok === false) throw new Error(`Telegram ${r.status}: ${body?.description ?? "errore sconosciuto"}`)
-}
-
-/* ── Freno anti-flood ────────────────────────────────────────────────────────
-   In memoria: le istanze serverless sono effimere e più d'una può essere viva,
-   quindi non è una garanzia — è un freno a mano contro gli invii ripetuti dallo
-   stesso IP. Per un limite reale serve uno store condiviso (KV/Upstash). */
-const HITS = new Map<string, number[]>()
-const WINDOW_MS = 10 * 60 * 1000
-const MAX_HITS = 5
-
-function tooMany(ip: string): boolean {
-  const now = Date.now()
-  const seen = (HITS.get(ip) ?? []).filter(t => now - t < WINDOW_MS)
-  seen.push(now)
-  HITS.set(ip, seen)
-  if (HITS.size > 500) for (const [k, v] of HITS) if (!v.some(t => now - t < WINDOW_MS)) HITS.delete(k)
-  return seen.length > MAX_HITS
-}
-
-function clientIp(req: Req): string {
-  const f = req.headers["x-forwarded-for"]
-  const raw = Array.isArray(f) ? f[0] : f
-  return (raw ?? "").split(",")[0].trim() || "unknown"
-}
-
 /* ── Handler ─────────────────────────────────────────────────────────────── */
 export default async function handler(req: Req, res: Res) {
   if (req.method !== "POST") {
@@ -430,7 +331,7 @@ export default async function handler(req: Req, res: Res) {
     return
   }
 
-  if (tooMany(clientIp(req))) {
+  if (tooMany(clientIp(req.headers))) {
     res.status(429).json({ ok: false, error: "too_many_requests" })
     return
   }
@@ -498,7 +399,24 @@ export default async function handler(req: Req, res: Res) {
   /* ─ 3. Salvataggio (fonte di verità) ──────────────────────────────────── */
   let stored = false
   try {
-    stored = await saveLead(p, clientCopy)
+    stored = await insertLead({
+      name: p.contact.name,
+      email: p.contact.email,
+      messenger: p.contact.messenger,
+      vector_id: p.vector?.id ?? null,
+      vector_label: p.vector?.label ?? null,
+      vector_node: p.vector?.node ?? null,
+      vector_stack: p.vector?.stack ?? null,
+      complexity: p.complexity?.label ?? null,
+      weeks: p.complexity?.weeks ?? null,
+      level: p.complexity?.level ?? null,
+      module_ids: p.modules.map(m => m.id),
+      modules: p.modules.map(m => ({ node: m.node, tech: m.tech, group: m.group, label: m.label })),
+      blueprint: p.blueprint,
+      page: p.meta?.page ?? null,
+      email_sent: clientCopy,
+      source: "configuratore",
+    })
   } catch (err) {
     console.error("[foundry-lead] salvataggio su Supabase fallito:", err)
   }

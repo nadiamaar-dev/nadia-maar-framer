@@ -26,6 +26,7 @@ import {
 import Footer from "./components/Footer"
 import FloatingContact from "./components/FloatingContact"
 import Header from "./components/Header"
+import { sendContact, withExtras } from "./lib/sendContact"
 import Background from "./components/Background"
 import FoundryShowcase from "./components/FoundryShowcase"
 import StudioApproach from "./components/studio/StudioApproach"
@@ -1153,6 +1154,8 @@ function GlassSelect({ label, value, onChange }: { label: string; value: string;
 function ContactModal({ onClose }: { onClose: () => void }) {
   const [fields, setFields] = useState({ name: "", email: "", site: "", area: "", msg: "" })
   const [sent, setSent] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [failed, setFailed] = useState(false)
   const set = (k: keyof typeof fields) => (v: string) => setFields(f => ({ ...f, [k]: v }))
   const overlayRef = useRef<HTMLDivElement>(null)
 
@@ -1185,7 +1188,17 @@ function ContactModal({ onClose }: { onClose: () => void }) {
             </motion.button>
           </div>
           {!sent ? (
-            <form onSubmit={e => { e.preventDefault(); setSent(true) }} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <form onSubmit={async e => {
+                e.preventDefault()
+                if (busy) return
+                setBusy(true); setFailed(false)
+                const ok = await sendContact({
+                  name: fields.name, email: fields.email,
+                  message: withExtras(fields.msg, { "Sito": fields.site, "Area": fields.area }),
+                })
+                setBusy(false)
+                if (ok) setSent(true); else setFailed(true)
+              }} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <div className="contact-modal-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <GlassInput label="Nome" placeholder="Il tuo nome" value={fields.name} onChange={set("name")} />
                 <GlassInput label="Email" placeholder="email@azienda.it" type="email" value={fields.email} onChange={set("email")} />
@@ -1193,7 +1206,12 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               <GlassInput label="Sito Web" placeholder="https://tuosito.it (opzionale)" value={fields.site} onChange={set("site")} />
               <GlassSelect label="Cosa dobbiamo risolvere?" value={fields.area} onChange={set("area")} />
               <GlassTextarea label="Messaggio" placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={set("msg")} />
-              <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 380, damping: 18 }}
+              {failed && (
+                <p role="alert" style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.06em", lineHeight: 1.6, color: "rgba(255,120,120,0.95)", margin: 0 }}>
+                  Invio non riuscito. Riprova, oppure scrivici a nadiamaar.dev@gmail.com
+                </p>
+              )}
+              <motion.button type="submit" disabled={busy} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 380, damping: 18 }}
                 style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(184,50,64,0.80)", background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
                 <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[→]</span>
                 <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF", padding: "14px 0" }}>Invia Richiesta →</span>

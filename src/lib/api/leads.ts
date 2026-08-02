@@ -19,6 +19,10 @@ export type FoundryLead = {
   messenger?: string
   vectorLabel: string
   vectorNode: string
+  /* le richieste dal modulo contatti non hanno architettura: hanno un testo */
+  source: "configuratore" | "contatti"
+  message?: string
+  company?: string
   vectorStack?: string
   complexity?: string
   weeks?: string
@@ -41,6 +45,9 @@ function mapLead(r: any): FoundryLead {
     messenger: r.messenger ?? undefined,
     vectorLabel: r.vector_label ?? "",
     vectorNode: r.vector_node ?? "",
+    source: r.source === "contatti" ? "contatti" : "configuratore",
+    message: r.message ?? undefined,
+    company: r.company ?? undefined,
     vectorStack: r.vector_stack ?? undefined,
     complexity: r.complexity ?? undefined,
     weeks: r.weeks ?? undefined,

@@ -119,14 +119,21 @@ export default function LeadsAdmin({ leads, reload }: { leads: FoundryLead[]; re
                     <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 4 }}>
                       <span style={{ fontFamily: DISPLAY, fontSize: 15, fontWeight: 700, color: T.text }}>{l.name}</span>
                       <Badge tone={st.tone} dot={l.status === "new"}>{st.label}</Badge>
+                      <Badge tone={l.source === "contatti" ? "steel" : "copper"}>
+                        {l.source === "contatti" ? "Modulo contatti" : "Configuratore"}
+                      </Badge>
                       {/* niente badge sulla copia email: la notifica passa da
                           Telegram e la copia al cliente è disattivata, quindi
                           comparirebbe su ogni riga senza dire nulla. Il campo
                           emailSent resta, se un giorno le email si accendono. */}
                     </div>
+                    {/* Una richiesta dal modulo contatti non ha architettura né
+                        moduli: mostrarne il conteggio a zero direbbe il falso.
+                        Al suo posto l'azienda e l'inizio del messaggio. */}
                     <div style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.06em", color: T.muted }}>
-                      {l.vectorNode} · {l.modules.length} {l.modules.length === 1 ? "modulo" : "moduli"}
-                      {l.complexity ? ` · ${l.complexity} · ${l.weeks ?? ""}` : ""}
+                      {l.source === "contatti"
+                        ? [l.company, l.message?.replace(/\s+/g, " ").slice(0, 60)].filter(Boolean).join(" · ") || "—"
+                        : `${l.vectorNode} · ${l.modules.length} ${l.modules.length === 1 ? "modulo" : "moduli"}${l.complexity ? ` · ${l.complexity} · ${l.weeks ?? ""}` : ""}`}
                     </div>
                   </div>
                   <span style={{ fontFamily: MONO, fontSize: 11, color: T.muted, flexShrink: 0 }}>
@@ -143,9 +150,14 @@ export default function LeadsAdmin({ leads, reload }: { leads: FoundryLead[]; re
                     <div style={{ display: "flex", gap: 22, flexWrap: "wrap" }}>
                       <LeadFact k="Email" v={<a href={`mailto:${l.email}`} style={{ color: T.text }}>{l.email}</a>} />
                       {l.messenger && <LeadFact k="Telegram / WhatsApp" v={l.messenger} />}
+                      {l.company && <LeadFact k="Azienda" v={l.company} />}
                       <LeadFact k="Ricevuta" v={fmtDateTime(l.createdAt)} />
                       {l.vectorStack && <LeadFact k="Stack" v={l.vectorStack} />}
                     </div>
+
+                    {/* il messaggio: è tutto ciò che una richiesta dal modulo
+                        contatti porta con sé, quindi va per esteso e per primo */}
+                    {l.message && <LeadBlock k="Messaggio" v={l.message} />}
 
                     {/* architettura */}
                     {l.blueprint && (

@@ -6,6 +6,7 @@ import NadiaMaar from "./NadiaMaar_Lab" // landing: eager, protects the homepage
    pages out of the initial homepage download. */
 const NadiaMaarAbout    = lazy(() => import("./NadiaMaar_About"))
 const NadiaMaarProjects = lazy(() => import("./NadiaMaar_Projects"))
+const NadiaMaarContatti = lazy(() => import("./NadiaMaar_Contatti"))
 const EcommercePage     = lazy(() => import("./NadiaMaar_ServicePage").then(m => ({ default: m.EcommercePage })))
 const CorporatePage     = lazy(() => import("./NadiaMaar_ServicePage").then(m => ({ default: m.CorporatePage })))
 const WebAppPage        = lazy(() => import("./NadiaMaar_ServicePage").then(m => ({ default: m.WebAppPage })))
@@ -27,6 +28,7 @@ export default function App() {
   switch (path) {
     case "/about":     el = <NadiaMaarAbout />; break
     case "/projects":  el = <NadiaMaarProjects />; break
+    case "/contatti":  el = <NadiaMaarContatti />; break
     case "/ecommerce": el = <EcommercePage />; break
     case "/corporate": el = <CorporatePage />; break
     case "/web-app":   el = <WebAppPage />; break

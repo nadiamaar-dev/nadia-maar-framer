@@ -4,6 +4,7 @@ import Footer from "./components/Footer"
 import FloatingContact from "./components/FloatingContact"
 import Header from "./components/Header"
 import Background from "./components/Background"
+import { sendContact } from "./lib/sendContact"
 import FoundryConfigurator from "./components/foundry/FoundryConfigurator"
 import type { VectorId } from "./components/foundry/modules"
 
@@ -132,6 +133,8 @@ function ScrollProgress() {
 /* ── ContactModal ── */
 function ContactModal({onClose}:{onClose:()=>void}) {
   const [sent,setSent] = useState(false)
+  const [busy,setBusy] = useState(false)
+  const [failed,setFailed] = useState(false)
   const [form,setForm] = useState({name:"",email:"",company:"",message:""})
   const set=(k:keyof typeof form)=>(e:React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)=>setForm(f=>({...f,[k]:e.target.value}))
   const inp:React.CSSProperties={width:"100%",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.20)",borderRadius:10,padding:"12px 16px",color:"#fff",fontFamily:MONO,fontSize:12,letterSpacing:"0.06em",outline:"none",transition:"border-color 0.2s"}
@@ -170,8 +173,19 @@ function ContactModal({onClose}:{onClose:()=>void}) {
               <textarea placeholder="Descrivi il tuo progetto o problema principale..." value={form.message} onChange={set("message")} rows={4}
                 style={{...inp,resize:"none" as const,lineHeight:1.65}}
                 onFocus={e=>(e.target.style.borderColor="rgba(184,50,64,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
-              <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
-                onClick={()=>setSent(true)}
+              {failed && (
+                <p role="alert" style={{fontFamily:MONO,fontSize:10.5,letterSpacing:"0.06em",lineHeight:1.6,color:"rgba(255,120,120,0.95)",margin:0}}>
+                  Invio non riuscito. Riprova, oppure scrivici a nadiamaar.dev@gmail.com
+                </p>
+              )}
+              <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} disabled={busy}
+                onClick={async()=>{
+                  if (busy) return
+                  setBusy(true); setFailed(false)
+                  const ok = await sendContact({ name: form.name, email: form.email, company: form.company, message: form.message })
+                  setBusy(false)
+                  if (ok) setSent(true); else setFailed(true)
+                }}
                 style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(184,50,64,0.80)",background:"linear-gradient(90deg,rgba(184,50,64,0.34) 0%,rgba(184,50,64,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden",marginTop:4}}>
                 <span style={{padding:"12px 14px 12px 16px",borderRight:"1px solid rgba(184,50,64,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"#FFFFFF",flexShrink:0}}>[→]</span>
                 <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 20px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"#FFFFFF",fontWeight:500}}>Invia Messaggio</span>

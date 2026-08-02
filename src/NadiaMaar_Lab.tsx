@@ -18,6 +18,7 @@ import Background from "./components/Background"
 import Footer from "./components/Footer"
 import FloatingContact from "./components/FloatingContact"
 import Header from "./components/Header"
+import { sendContact, withExtras } from "./lib/sendContact"
 import FoundryConfigurator from "./components/foundry/FoundryConfigurator"
 import { PROCESSO } from "./data/process"
 
@@ -1826,6 +1827,8 @@ function ProjectsFeature() {
 function ContactModal({ onClose }: { onClose: () => void }) {
   const [fields, setFields] = useState({ name: "", email: "", site: "", area: "", msg: "" })
   const [sent, setSent] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [failed, setFailed] = useState(false)
   const set = (k: keyof typeof fields) => (v: string) => setFields(f => ({ ...f, [k]: v }))
   const overlayRef = useRef<HTMLDivElement>(null)
 
@@ -1911,7 +1914,17 @@ function ContactModal({ onClose }: { onClose: () => void }) {
           </div>
 
           {!sent ? (
-            <form onSubmit={e => { e.preventDefault(); setSent(true) }} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <form onSubmit={async e => {
+                e.preventDefault()
+                if (busy) return
+                setBusy(true); setFailed(false)
+                const ok = await sendContact({
+                  name: fields.name, email: fields.email,
+                  message: withExtras(fields.msg, { "Sito": fields.site, "Area": fields.area }),
+                })
+                setBusy(false)
+                if (ok) setSent(true); else setFailed(true)
+              }} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {/* grid Nome + Email */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                 <div>
@@ -1954,7 +1967,12 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               {/* divider */}
               <div style={{ height: 1, background: "rgba(255,255,255,0.11)", margin: "4px 0" }} />
 
-              <button type="submit"
+              {failed && (
+                <p role="alert" style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.06em", lineHeight: 1.6, color: "rgba(255,120,120,0.95)", margin: 0 }}>
+                  Invio non riuscito. Riprova, oppure scrivici a nadiamaar.dev@gmail.com
+                </p>
+              )}
+              <button type="submit" disabled={busy}
                 style={{ width: "100%", padding: "13px 32px", borderRadius: 10, cursor: "pointer", border: "1px solid rgba(255,70,100,0.28)", background: "rgba(255,70,100,0.08)", backdropFilter: "blur(20px) brightness(1.08) saturate(1.2)", WebkitBackdropFilter: "blur(20px) brightness(1.08) saturate(1.2)", boxShadow: "0 0 12px rgba(255,70,100,0.10), inset 0 1px 0 rgba(255,70,100,0.10)", color: "rgba(255,70,100,0.92)", fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, transition: "all .22s" }}
                 onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(255,70,100,0.14)"; el.style.boxShadow="0 0 20px rgba(255,70,100,0.18), inset 0 1px 0 rgba(255,70,100,0.15)"; el.style.transform="translateY(-1px)"; el.style.borderColor="rgba(255,70,100,0.50)" }}
                 onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(255,70,100,0.08)"; el.style.boxShadow="0 0 12px rgba(255,70,100,0.10), inset 0 1px 0 rgba(255,70,100,0.10)"; el.style.transform=""; el.style.borderColor="rgba(255,70,100,0.28)" }}

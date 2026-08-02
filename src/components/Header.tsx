@@ -329,7 +329,10 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
     /* "Foundry" indicava tre cose diverse nel sito: qui è la galleria degli
        esperimenti, quindi si chiama Lab. Il configuratore resta in home. */
     { num: "05", label: "Lab",      sectionId: "",   href: "/foundry",   action: () => { window.location.href = "/foundry" } },
-    { num: "06", label: "Contatti", sectionId: "s9", href: "/#s9",       action: () => nav("s9", "/#s9") },
+    /* Portava alla sezione CTA della home: da un'altra pagina significava
+       ricaricare la home e scorrere. Ora è una pagina vera, con i canali
+       diretti e un modulo che spedisce davvero. */
+    { num: "06", label: "Contatti", sectionId: "",   href: "/contatti",  action: () => { window.location.href = "/contatti" } },
   ]
 
   /* etichette corte: nel menu contano leggibilità e riconoscibilità, non
