@@ -110,7 +110,7 @@ const SOCIALS = [
    from other pages it navigates to /#anchor */
 const NAV_LINKS = [
   { label: "Home",      href: "/" },
-  { label: "About",     href: "/about" },
+  { label: "Metodo",    href: "/about" },
   /* "Soluzioni" puntava a un'ancora che in pagina non esisteva e "Portfolio"
      a una sezione mai renderizzata: entrambi ricaricavano la home senza
      muoversi. Ora s4 esiste davvero e i progetti hanno la loro pagina. */
