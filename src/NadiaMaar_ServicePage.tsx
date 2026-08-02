@@ -741,18 +741,30 @@ function OfferGrid({ data }: { data: ServiceData }) {
 
   /* bento: la prima occupa due colonne — c'è sempre un ambito che pesa di più */
   if (L === "bento") {
+    /* La prima scheda occupa due colonne, le altre una: con sei voci restano
+       due righe piene e l'ultima si ritrovava sola in un terzo di riga, con
+       due buchi accanto. L'ultima prende quindi lo spazio che avanza — con
+       sei voci è una fascia a tutta larghezza, che chiude il blocco invece
+       di lasciarlo a metà. */
+    const n = items.length
+    const lastSpan = (3 - (n % 3)) % 3 || 3
+    const span = (i: number) => i === 0 ? 2 : i === n - 1 ? lastSpan : 1
     return (
       <div className="svc-offer-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
         {/* lo span deve stare sull'elemento della griglia, non dentro Reveal:
             altrimenti a occupare due colonne sarebbe il wrapper dell'animazione */}
-        {items.map((item, i) => (
-          <div key={i} className={i === 0 ? "svc-bento-lead" : undefined}
-            style={i === 0 ? { gridColumn: "span 2" } : undefined}>
-            <Reveal delay={i * 0.06} full>
-              <OfferCard item={item} gradient={data.gradient} accent={data.accent} index={i} variant={i === 0 ? "wide" : "card"} />
-            </Reveal>
-          </div>
-        ))}
+        {items.map((item, i) => {
+          const s = span(i)
+          return (
+            <div key={i} className={s > 1 ? "svc-bento-lead" : undefined}
+              style={s > 1 ? { gridColumn: `span ${s}` } : undefined}>
+              <Reveal delay={i * 0.06} full>
+                <OfferCard item={item} gradient={data.gradient} accent={data.accent} index={i}
+                  variant={s === 3 ? "row" : s === 2 ? "wide" : "card"} />
+              </Reveal>
+            </div>
+          )
+        })}
       </div>
     )
   }
