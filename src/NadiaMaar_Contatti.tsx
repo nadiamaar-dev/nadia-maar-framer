@@ -17,11 +17,13 @@
  * della sua assenza.
  */
 
-import React, { useState } from "react"
-import { motion } from "framer-motion"
+import React, { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
+import { AnimatePresence, motion } from "framer-motion"
 import Background from "./components/Background"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
+import FoundryConfigurator from "./components/foundry/FoundryConfigurator"
 import { sendContact } from "./lib/sendContact"
 
 const T = {
@@ -232,6 +234,70 @@ function ContactForm() {
   )
 }
 
+/* ── Configuratore in finestra ───────────────────────────────────────────────
+   Prima il pulsante puntava a /#s7: portava via dalla pagina dei contatti,
+   ricaricava la home e faceva scorrere fin quasi in fondo. Chi era arrivato
+   qui per scrivere si ritrovava altrove. Ora il widget si apre sul posto.
+
+   z-index 800: sopra l'header (500) e il pulsante flottante (401), ma sotto
+   il modale del lead che il configuratore apre al quarto passo (2000), che
+   deve restare in cima. */
+function ConfiguratorDialog({ onClose }: { onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
+    window.addEventListener("keydown", onKey)
+
+    /* blocco di scroll compatibile con iOS: overflow:hidden su <html> lì non basta */
+    const y = window.scrollY
+    const b = document.body.style
+    const prev = { position: b.position, top: b.top, width: b.width, overflow: b.overflow }
+    b.position = "fixed"; b.top = `-${y}px`; b.width = "100%"; b.overflow = "hidden"
+
+    return () => {
+      window.removeEventListener("keydown", onKey)
+      b.position = prev.position; b.top = prev.top; b.width = prev.width; b.overflow = prev.overflow
+      window.scrollTo(0, y)
+    }
+  }, [onClose])
+
+  return createPortal(
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      transition={{ duration: 0.26 }}
+      onClick={e => { if (e.target === e.currentTarget) onClose() }}
+      role="dialog" aria-modal="true" aria-label="Configuratore"
+      style={{
+        position: "fixed", inset: 0, zIndex: 800, overflowY: "auto", overscrollBehavior: "contain",
+        background: "rgba(3,7,14,0.72)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
+        padding: "0 0 40px",
+      }}>
+      <motion.div
+        initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }}
+        transition={{ duration: 0.34, ease }}
+        onClick={e => e.stopPropagation()}
+        style={{
+          position: "relative", maxWidth: 1200, margin: "0 auto",
+          background: T.bg, borderRadius: 18, overflow: "hidden",
+          border: "1px solid rgba(255,255,255,0.14)", boxShadow: "0 40px 120px rgba(0,0,0,0.6)",
+        }}>
+        <button onClick={onClose} aria-label="Chiudi"
+          style={{
+            position: "sticky", top: 14, left: "100%", zIndex: 5, transform: "translateX(-58px)",
+            width: 40, height: 40, borderRadius: 11, cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.22)",
+            color: "#FFFFFF", fontSize: 20, lineHeight: 1, fontFamily: MONO,
+          }}>×</button>
+        {/* margine negativo: il pulsante è sticky e non deve lasciare un vuoto */}
+        <div style={{ marginTop: -54 }}>
+          <FoundryConfigurator />
+        </div>
+      </motion.div>
+    </motion.div>,
+    document.body,
+  )
+}
+
 /* ── Pagina ──────────────────────────────────────────────────────────────── */
 const COSA_SCRIVERE = [
   "Che cosa vendi o gestisci, e su quale piattaforma gira oggi",
@@ -248,6 +314,7 @@ const DOPO = [
 
 export default function NadiaMaarContatti() {
   const hasLegale = Object.values(LEGALE).some(v => v !== "—")
+  const [cfgOpen, setCfgOpen] = useState(false)
 
   return (
     <div style={{ background: T.bg, color: T.text, fontFamily: SANS, minHeight: "100vh", position: "relative" }}>
@@ -347,9 +414,10 @@ export default function NadiaMaarContatti() {
                     Il configuratore monta l'architettura in quattro passi e la traduce in un blueprint scaricabile. La richiesta arriva già con il perimetro definito.
                   </p>
                 </div>
-                <a href="/#s7" style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "14px 22px", borderRadius: 11, textDecoration: "none", border: "1px solid rgba(255,255,255,0.28)", background: "rgba(255,255,255,0.03)", fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF", flexShrink: 0 }}>
+                <button onClick={() => setCfgOpen(true)}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "14px 22px", borderRadius: 11, cursor: "pointer", border: "1px solid rgba(255,255,255,0.28)", background: "rgba(255,255,255,0.03)", fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF", flexShrink: 0 }}>
                   Apri il configuratore <span style={{ color: T.accentLt }}>→</span>
-                </a>
+                </button>
               </div>
             </Reveal>
           </div>
@@ -372,6 +440,10 @@ export default function NadiaMaarContatti() {
       </div>
 
       <Footer />
+
+      <AnimatePresence>
+        {cfgOpen && <ConfiguratorDialog onClose={() => setCfgOpen(false)} />}
+      </AnimatePresence>
     </div>
   )
 }
