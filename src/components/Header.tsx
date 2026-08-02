@@ -126,6 +126,62 @@ function MenuNavItem({ num, label, onClick, index, active = false }: {
   )
 }
 
+/* ── Voce di menu con sottovoci (Servizi) ─────────────────────────────────
+   Prima "Servizi" portava all'ancora della griglia in home: da qualsiasi
+   pagina significava ricaricare la home e scorrere, per poi cliccare una
+   seconda volta. Qui le cinque pagine sono raggiungibili in un clic. */
+function MenuNavGroup({ num, label, items, index, path }: {
+  num: string; label: string; items: { label: string; href: string }[]; index: number; path: string
+}) {
+  const onChild = items.some(i => i.href === path)
+  /* se sei già dentro una delle cinque, l'elenco è aperto: la voce corrente
+     deve essere visibile senza dover prima capire che c'è un accordion */
+  const [open, setOpen] = useState(onChild)
+  const [h, setH] = useState(false)
+  const lit = h || open || onChild
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.06 + index * 0.08, duration: 0.55, ease }}>
+      <button onClick={() => setOpen(o => !o)} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+        aria-expanded={open}
+        style={{ background: h ? "rgba(184,50,64,0.07)" : "transparent", border: "none", cursor: "pointer", width: "100%", display: "flex", alignItems: "baseline", gap: 18, padding: "14px 0", borderBottom: `1px solid ${lit ? "rgba(184,50,64,0.45)" : "rgba(255,255,255,0.08)"}`, transition: "border-color 0.22s, background 0.28s", textAlign: "left" as const, position: "relative" }}>
+        <motion.span aria-hidden
+          animate={{ scaleY: lit ? 1 : 0, opacity: lit ? 1 : 0 }} transition={{ duration: 0.2 }}
+          style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-50%)", width: 2, height: "60%", background: T.accent, borderRadius: 2, transformOrigin: "center" }} />
+        <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", color: lit ? T.accent : "#FFFFFF", transition: "color 0.22s", minWidth: 26, flexShrink: 0 }}>[{num}]</span>
+        <span style={{ fontFamily: DISPLAY, fontSize: "clamp(28px,8vw,46px)", fontWeight: 800, letterSpacing: "-0.032em", lineHeight: 1.1, color: onChild ? T.accentLt : "#FFFFFF", transition: "color 0.22s" }}>{label}</span>
+        <motion.span aria-hidden animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.22 }}
+          style={{ marginLeft: "auto", color: lit ? T.accent : "rgba(255,255,255,0.55)", fontSize: 15, lineHeight: 1, flexShrink: 0, alignSelf: "center" }}>⌄</motion.span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease }} style={{ overflow: "hidden" }}>
+            <div style={{ paddingLeft: 44, paddingTop: 6, paddingBottom: 10 }}>
+              {items.map((s, i) => {
+                const here = s.href === path
+                return (
+                  <a key={s.href} href={s.href}
+                    style={{ display: "flex", alignItems: "center", gap: 12, padding: "9px 0", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.paddingLeft = "6px"; (el.querySelector("[data-lb]") as HTMLElement).style.color = "#FFFFFF" }}
+                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.paddingLeft = "0px"; (el.querySelector("[data-lb]") as HTMLElement).style.color = here ? T.accentLt : "rgba(255,255,255,0.78)" }}
+                  >
+                    <span aria-hidden style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.18em", color: here ? T.accent : "rgba(255,255,255,0.34)", flexShrink: 0 }}>0{i + 1}</span>
+                    <span data-lb style={{ fontFamily: DISPLAY, fontSize: 17, fontWeight: 600, letterSpacing: "-0.015em", color: here ? T.accentLt : "rgba(255,255,255,0.78)", transition: "color 0.2s" }}>{s.label}</span>
+                  </a>
+                )
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  )
+}
+
 /* ── Auth section inside the menu ── */
 function MenuAuthSection({ onClose }: { onClose: () => void }) {
   const { user, openAuthModal, signOut } = useBlueprint()
@@ -261,15 +317,25 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
 
   const NAV = [
     { num: "01", label: "Home",     sectionId: "s1", href: "/",          action: () => nav("s1", "/") },
-    /* Le cinque pagine dei servizi non erano raggiungibili da nessun menu:
-       l'unica porta era la griglia in home. */
-    { num: "02", label: "Servizi",  sectionId: "s4", href: "/#s4",       action: () => nav("s4", "/#s4") },
+    /* Voce ad accordion: apre le cinque pagine invece di rimandare
+       all'ancora della griglia in home. Vedi SERVIZI qui sotto. */
+    { num: "02", label: "Servizi",  sectionId: "",   href: "#servizi",   action: () => {} },
     { num: "03", label: "Projects", sectionId: "",   href: "/projects",  action: () => { window.location.href = "/projects" } },
     { num: "04", label: "About",    sectionId: "",   href: "/about",     action: () => { window.location.href = "/about" } },
     /* "Foundry" indicava tre cose diverse nel sito: qui è la galleria degli
        esperimenti, quindi si chiama Lab. Il configuratore resta in home. */
     { num: "05", label: "Lab",      sectionId: "",   href: "/foundry",   action: () => { window.location.href = "/foundry" } },
     { num: "06", label: "Contatti", sectionId: "s9", href: "/#s9",       action: () => nav("s9", "/#s9") },
+  ]
+
+  /* etichette corte: nel menu contano leggibilità e riconoscibilità, non
+     il titolo completo della pagina */
+  const SERVIZI = [
+    { label: "E-commerce",        href: "/ecommerce" },
+    { label: "Siti Corporate",    href: "/corporate" },
+    { label: "Applicazioni Web",  href: "/web-app"   },
+    { label: "SEO & Performance", href: "/seo"       },
+    { label: "Integrazione AI",   href: "/ai"        },
   ]
 
   const MENU_SOCIALS = [
@@ -365,7 +431,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         <div aria-hidden style={{ position: "absolute", bottom: "10%", left: "50%", transform: "translateX(-50%)", fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(80px,32vw,160px)", letterSpacing: "-0.05em", color: "rgba(255,255,255,0.022)", filter: "blur(1px)", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none", zIndex: 0 }}>MAAR</div>
 
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 20 }}>
-          {NAV.map((item, i) => (
+          {NAV.map((item, i) => item.href === "#servizi" ? (
+            <MenuNavGroup key={item.label} num={item.num} label={item.label} items={SERVIZI} index={i} path={path} />
+          ) : (
             <MenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} active={isActive(item)} />
           ))}
           <MenuAuthSection onClose={onClose} />
@@ -422,7 +490,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         <div aria-hidden style={{ position: "absolute", top: "8%", right: 0, width: 180, height: 180, borderRadius: "50%", background: "radial-gradient(circle, rgba(184,50,64,0.06) 0%, transparent 70%)", filter: "blur(50px)", pointerEvents: "none" }} />
 
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 0, position: "relative", zIndex: 1, paddingLeft: 4 }}>
-          {NAV.map((item, i) => (
+          {NAV.map((item, i) => item.href === "#servizi" ? (
+            <MenuNavGroup key={item.label} num={item.num} label={item.label} items={SERVIZI} index={i} path={path} />
+          ) : (
             <MenuNavItem key={item.label} num={item.num} label={item.label} onClick={item.action} index={i} active={isActive(item)} />
           ))}
           <MenuAuthSection onClose={onClose} />
