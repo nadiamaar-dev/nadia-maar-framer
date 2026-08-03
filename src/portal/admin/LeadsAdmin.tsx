@@ -130,13 +130,13 @@ export default function LeadsAdmin({ leads, reload }: { leads: FoundryLead[]; re
                     {/* Una richiesta dal modulo contatti non ha architettura né
                         moduli: mostrarne il conteggio a zero direbbe il falso.
                         Al suo posto l'azienda e l'inizio del messaggio. */}
-                    <div style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.06em", color: T.muted }}>
+                    <div style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.06em", color: T.secondary }}>
                       {l.source === "contatti"
                         ? [l.company, l.message?.replace(/\s+/g, " ").slice(0, 60)].filter(Boolean).join(" · ") || "—"
                         : `${l.vectorNode} · ${l.modules.length} ${l.modules.length === 1 ? "modulo" : "moduli"}${l.complexity ? ` · ${l.complexity} · ${l.weeks ?? ""}` : ""}`}
                     </div>
                   </div>
-                  <span style={{ fontFamily: MONO, fontSize: 11, color: T.muted, flexShrink: 0 }}>
+                  <span style={{ fontFamily: MONO, fontSize: 11, color: T.secondary, flexShrink: 0 }}>
                     {relativeDate(l.createdAt)}
                   </span>
                   <Icon name={open ? "chevronD" : "chevronR"} size={16} />
@@ -176,13 +176,13 @@ export default function LeadsAdmin({ leads, reload }: { leads: FoundryLead[]; re
                         }, {}),
                       ).map(([group, mods]) => (
                         <div key={group}>
-                          <div style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.2em", textTransform: "uppercase", color: T.muted, marginBottom: 6 }}>
+                          <div style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: T.secondary, marginBottom: 6 }}>
                             {GROUP_LABEL[group] ?? group}
                           </div>
                           {mods.map(m => (
                             <div key={m.node} style={{ marginBottom: 8 }}>
                               <div style={{ fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 700, color: T.text }}>{m.node}</div>
-                              <div style={{ fontSize: 13, lineHeight: 1.55, color: T.muted }}>{m.tech}</div>
+                              <div style={{ fontSize: 13, lineHeight: 1.55, color: T.secondary }}>{m.tech}</div>
                             </div>
                           ))}
                         </div>
@@ -223,7 +223,7 @@ export default function LeadsAdmin({ leads, reload }: { leads: FoundryLead[]; re
 function LeadFact({ k, v }: { k: string; v: React.ReactNode }) {
   return (
     <div>
-      <div style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: T.muted, marginBottom: 3 }}>{k}</div>
+      <div style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.secondary, marginBottom: 3 }}>{k}</div>
       <div style={{ fontSize: 13.5, color: T.text }}>{v}</div>
     </div>
   )
@@ -232,7 +232,7 @@ function LeadFact({ k, v }: { k: string; v: React.ReactNode }) {
 function LeadBlock({ k, v }: { k: string; v: string }) {
   return (
     <div>
-      <div style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: T.muted, marginBottom: 4 }}>{k}</div>
+      <div style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.secondary, marginBottom: 4 }}>{k}</div>
       <p style={{ fontSize: 13.5, lineHeight: 1.6, color: T.text, margin: 0 }}>{v}</p>
     </div>
   )

@@ -51,7 +51,7 @@ export default function ProjectsBoard({ home, onOpenProject }: {
                   <div style={{
                     width: 34, height: 34, borderRadius: 10, flexShrink: 0,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    background: "rgba(255,255,255,0.05)", border: `1px solid ${T.border}`, color: T.faint,
+                    background: "rgba(255,255,255,0.05)", border: `1px solid ${T.border}`, color: T.secondary,
                   }}>
                     <Icon name="folder" size={15} />
                   </div>
@@ -61,7 +61,7 @@ export default function ProjectsBoard({ home, onOpenProject }: {
                       <Badge tone={st.tone} dot>{st.label}</Badge>
                       {unread > 0 && <Badge tone="copper" dot>{unread} da leggere</Badge>}
                     </div>
-                    <p style={{ fontFamily: MONO, fontSize: 10, color: T.faint, margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <p style={{ fontFamily: MONO, fontSize: 11, color: T.secondary, margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {p.clientName} · {fmtDate(p.createdAt)}
                     </p>
                   </div>

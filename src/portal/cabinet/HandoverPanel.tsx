@@ -13,26 +13,32 @@ function SecretRow({ label, value, secret = false }: { label: string; value: str
     } catch { /* clipboard blocked — ignore */ }
   }
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-      <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.14em", textTransform: "uppercase", color: T.faint, width: 70, flexShrink: 0 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+      <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: T.secondary, width: 70, flexShrink: 0 }}>
         {label}
       </span>
+      {/* a truncated password is a password you cannot use: once revealed the
+          value wraps instead of running off the end of a fixed-width row */}
       <span style={{
-        flex: 1, minWidth: 0, fontFamily: MONO, fontSize: 12, color: T.text,
-        overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+        flex: 1, minWidth: 120, fontFamily: MONO, fontSize: 12.5, color: T.text,
+        wordBreak: shown ? "break-all" : "normal",
         letterSpacing: shown ? "normal" : "0.15em",
       }}>
         {shown ? value : "••••••••••"}
       </span>
       {secret && (
         <button onClick={() => setShown(s => !s)} title={shown ? "Nascondi" : "Mostra"}
-          style={{ background: "none", border: "none", cursor: "pointer", color: T.faint, display: "inline-flex", padding: 4 }}>
-          <Icon name={shown ? "x" : "search"} size={13} />
+          className="portal-icon-btn"
+          style={{ background: "none", border: "none", cursor: "pointer", color: T.text, display: "inline-flex", alignItems: "center", justifyContent: "center", padding: 4 }}>
+          {/* was `x` / `search`, which read as "close" and "find" */}
+          <Icon name={shown ? "lock" : "search"} size={13} />
         </button>
       )}
       <button onClick={copy} title="Copia"
-        style={{ background: "none", border: "none", cursor: "pointer", color: copied ? T.green : T.faint, display: "inline-flex", padding: 4 }}>
-        <Icon name={copied ? "check" : "paperclip"} size={13} />
+        className="portal-icon-btn"
+        style={{ background: "none", border: "none", cursor: "pointer", color: copied ? T.green : T.text, display: "inline-flex", alignItems: "center", justifyContent: "center", padding: 4 }}>
+        {/* was `paperclip`, which means "attach", not "copy" */}
+        <Icon name={copied ? "check" : "doc"} size={13} />
       </button>
     </div>
   )
@@ -43,7 +49,9 @@ function CredCard({ c }: { c: ProjectCredential }) {
   return (
     <div style={{
       padding: "16px 18px", borderRadius: 14,
-      background: "rgba(184,50,64,0.06)", border: "1px solid rgba(184,50,64,0.22)",
+      /* credentials are the densest thing in the cabinet — they get a floor */
+      background: `linear-gradient(rgba(184,50,64,0.10), rgba(184,50,64,0.10)), ${T.surface}`,
+      border: "1px solid rgba(184,50,64,0.22)",
       borderLeft: "2px solid rgba(184,50,64,0.6)",
       display: "flex", flexDirection: "column", gap: 12,
     }}>
@@ -51,7 +59,7 @@ function CredCard({ c }: { c: ProjectCredential }) {
         <span style={{
           width: 34, height: 34, borderRadius: 10, flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
-          background: "rgba(184,50,64,0.14)", border: "1px solid rgba(184,50,64,0.30)", color: T.copperLt,
+          background: "rgba(184,50,64,0.14)", border: "1px solid rgba(184,50,64,0.30)", color: T.copperTx,
         }}>
           <Icon name={isAccess ? "lock" : "external"} size={16} />
         </span>
@@ -74,7 +82,7 @@ function CredCard({ c }: { c: ProjectCredential }) {
       )}
 
       {c.note && (
-        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.55, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>
+        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.55, color: T.secondary, margin: 0, whiteSpace: "pre-wrap" }}>
           {c.note}
         </p>
       )}
@@ -108,13 +116,13 @@ export default function HandoverPanel({ credentials, completed }: { credentials:
       <Note tone="copper">Questi accessi sono riservati: conservali in un luogo sicuro e non condividerli.</Note>
       {access.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: T.faint, margin: 0 }}>Accessi & credenziali</p>
+          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.secondary, margin: 0 }}>Accessi & credenziali</p>
           {access.map(c => <CredCard key={c.id} c={c} />)}
         </div>
       )}
       {resources.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: T.faint, margin: 0 }}>Guide & risorse</p>
+          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.secondary, margin: 0 }}>Guide & risorse</p>
           {resources.map(c => <CredCard key={c.id} c={c} />)}
         </div>
       )}

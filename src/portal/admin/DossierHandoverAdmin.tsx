@@ -107,8 +107,8 @@ export default function DossierHandoverAdmin({ projectId, clientId }: { projectI
       <Glass variant="panel" style={{ padding: 20 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: creds.length > 0 ? 14 : 0 }}>
           <div>
-            <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>Consegna</p>
-            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, color: T.faint, margin: "5px 0 0" }}>Accessi (hosting, pannello) e risorse. Visibili al cliente solo dopo il rilascio.</p>
+            <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>Consegna</p>
+            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, color: T.secondary, margin: "5px 0 0" }}>Accessi (hosting, pannello) e risorse. Visibili al cliente solo dopo il rilascio.</p>
           </div>
           <Btn variant="primary" icon="plus" onClick={openNew}>Nuovo</Btn>
         </div>
@@ -124,7 +124,7 @@ export default function DossierHandoverAdmin({ projectId, clientId }: { projectI
                   display: "flex", alignItems: "center", gap: 12, padding: "13px 15px", borderRadius: 12,
                   background: "rgba(255,255,255,0.05)", border: `1px solid ${T.border}`,
                 }}>
-                  <span style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(184,50,64,0.12)", border: "1px solid rgba(184,50,64,0.26)", color: T.copperLt }}>
+                  <span style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(184,50,64,0.12)", border: "1px solid rgba(184,50,64,0.26)", color: T.copperTx }}>
                     <Icon name={c.kind === "access" ? "lock" : "external"} size={15} />
                   </span>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -160,7 +160,7 @@ export default function DossierHandoverAdmin({ projectId, clientId }: { projectI
             background: "rgba(16,30,44,0.98)", border: "1px solid rgba(255,255,255,0.20)",
             boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 40px 100px rgba(0,0,0,0.72)",
           }}>
-            <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>Consegna</p>
+            <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>Consegna</p>
             <h3 style={{ fontFamily: DISPLAY, fontSize: 19, fontWeight: 800, color: T.text, margin: "6px 0 18px" }}>
               {draft.id ? "Modifica accesso" : "Nuovo accesso"}
             </h3>
@@ -193,7 +193,7 @@ export default function DossierHandoverAdmin({ projectId, clientId }: { projectI
                 <Textarea value={draft.note} onChange={e => setDraft({ ...draft, note: e.target.value })} rows={3} placeholder="Istruzioni per il cliente…" style={{ resize: "vertical" }} />
               </Field>
               {!draft.id && (
-                <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 13, color: T.muted }}>
+                <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 13, color: T.secondary }}>
                   <input type="checkbox" checked={draft.release} onChange={e => setDraft({ ...draft, release: e.target.checked })} style={{ accentColor: "#B83240", width: 16, height: 16 }} />
                   Rilascia subito al cliente
                 </label>

@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react"
 import { useToast } from "../../context/ToastContext"
-import type { AdminHome, ClientDocument, ClientRecord, DocType, InvoiceStatus } from "../../lib/api"
+import type { AdminHome, ClientDocument, ClientRecord, DocType, Invoice, InvoiceStatus } from "../../lib/api"
 import {
-  createInvoice, deleteDocument, fetchDocuments, fmtBytes, fmtDate, fmtEur,
-  getDocumentDownloadUrl, nextInvoiceNumber, updateInvoiceStatus, uploadDocument,
+  attachInvoicePdf, createInvoice, deleteDocument, fetchDocuments, fmtBytes, fmtDate, fmtEur,
+  getDocumentDownloadUrl, getInvoicePdfUrl, nextInvoiceNumber, updateInvoiceStatus, uploadDocument,
 } from "../../lib/api"
 import {
-  Badge, Btn, Empty, Field, FileBtn, Glass, Input, INVOICE_STATUS, Loading, Modal, MONO, Row,
+  Badge, Btn, DISPLAY, Empty, Field, FileBtn, Glass, Input, INVOICE_STATUS, Loading, Modal, MONO, Row,
   SectionTitle, Select, Stat, T, Tabs, Textarea,
 } from "../ui"
 
@@ -62,6 +62,27 @@ export default function Billing({ home, clients, reload }: {
     }
   }
 
+  /* ── Invoice PDF ──
+     Nothing ever wrote pdf_path, so the download the client is offered
+     never existed. The admin attaches it here. */
+  const [pdfFor, setPdfFor] = useState<string | null>(null)
+  const pdfUrlOf = (i: Invoice) => getInvoicePdfUrl(i)
+
+  async function attachPdf(invoice: Invoice, files: File[]) {
+    const file = files[0]
+    if (!file || pdfFor) return
+    setPdfFor(invoice.id)
+    try {
+      await attachInvoicePdf(invoice, file)
+      toast.success(`PDF allegato a ${invoice.number}`)
+      reload()
+    } catch {
+      toast.error("Allegato non riuscito.")
+    } finally {
+      setPdfFor(null)
+    }
+  }
+
   async function setStatus(id: string, status: InvoiceStatus, msg: string) {
     setActingId(id)
     try {
@@ -75,11 +96,18 @@ export default function Billing({ home, clients, reload }: {
     }
   }
 
-  /* ── Documents ── */
+  /* ── Documents ──
+     Same fix as in ClientWorkspace: without a project the journal trigger
+     skips the upload, and without the signature flag the client gets no
+     action item. Both are now set here. */
   const [docClient, setDocClient] = useState("")
   const [docs, setDocs] = useState<ClientDocument[] | null>(null)
   const [docType, setDocType] = useState<DocType>("report")
+  const [docProjectId, setDocProjectId] = useState("")
+  const [docRequiresSig, setDocRequiresSig] = useState(false)
   const [uploading, setUploading] = useState(false)
+
+  const docClientProjects = home.projects.filter(p => p.clientId === docClient)
 
   const loadDocs = useCallback(async (cid: string) => {
     setDocs(null)
@@ -87,13 +115,21 @@ export default function Billing({ home, clients, reload }: {
   }, [])
 
   useEffect(() => { if (docClient) loadDocs(docClient) }, [docClient, loadDocs])
+  /* the project list belongs to the previous client — drop it */
+  useEffect(() => { setDocProjectId("") }, [docClient])
 
   async function handleUpload(files: File[]) {
     if (!files.length || !docClient) return
     setUploading(true)
     try {
-      for (const f of files) await uploadDocument(docClient, f, docType)
-      toast.success("Documento caricato")
+      for (const f of files) {
+        await uploadDocument(docClient, f, docType, {
+          projectId: docProjectId || undefined,
+          requiresSignature: docRequiresSig,
+        })
+      }
+      toast.success(docRequiresSig ? "Documento inviato — il cliente deve firmarlo" : "Documento caricato")
+      setDocRequiresSig(false)
       loadDocs(docClient)
     } catch {
       toast.error("Caricamento non riuscito.")
@@ -121,7 +157,7 @@ export default function Billing({ home, clients, reload }: {
         right={<Btn variant="primary" icon="plus" onClick={openInvoice}>Nuova fattura</Btn>}
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))", gap: 12 }}>
         <Stat label="Da incassare" value={fmtEur(due.reduce((s, i) => s + i.amount, 0))} icon="euro" tone={due.length > 0 ? "amber" : "green"} hint={`${due.length} fatture aperte`} />
         <Stat label="Incassato" value={fmtEur(paid.reduce((s, i) => s + i.amount, 0))} icon="checkCircle" tone="green" hint={`${paid.length} fatture`} />
         <Stat label="Scadute" value={String(home.invoices.filter(i => i.status === "overdue").length)} icon="warn" tone={home.invoices.some(i => i.status === "overdue") ? "red" : "steel"} />
@@ -180,6 +216,18 @@ export default function Billing({ home, clients, reload }: {
                         {i.status === "sent" && !declared && (
                           <Btn size="sm" variant="danger" icon="warn" busy={actingId === i.id} onClick={() => setStatus(i.id, "overdue", "Segnata come scaduta")} title="Segna scaduta" />
                         )}
+                        {/* pdf_path had no writer at all, so the client's "PDF"
+                            button could never resolve to anything */}
+                        {pdfUrlOf(i) ? (
+                          <a href={pdfUrlOf(i)!} target="_blank" rel="noreferrer" style={{ textDecoration: "none", display: "inline-flex" }}>
+                            <Btn size="sm" variant="ghost" icon="download" title="Apri il PDF">PDF</Btn>
+                          </a>
+                        ) : (
+                          <FileBtn size="sm" variant="ghost" icon="paperclip" accept="application/pdf"
+                            busy={pdfFor === i.id} onFiles={f => attachPdf(i, f)} title="Allega il PDF della fattura">
+                            PDF
+                          </FileBtn>
+                        )}
                       </span>
                     }
                   />
@@ -202,6 +250,17 @@ export default function Billing({ home, clients, reload }: {
                 <Select value={docType} onChange={e => setDocType(e.target.value as DocType)} style={{ width: 150 }}>
                   {(Object.keys(DOC_TYPES) as DocType[]).map(t => <option key={t} value={t}>{DOC_TYPES[t]}</option>)}
                 </Select>
+                {docClientProjects.length > 0 && (
+                  <Select value={docProjectId} onChange={e => setDocProjectId(e.target.value)} style={{ width: 180 }}
+                    title="Collega il documento a un progetto: senza, non finisce nel diario del cliente">
+                    <option value="">Nessun progetto</option>
+                    {docClientProjects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                  </Select>
+                )}
+                <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 13, color: T.secondary }}>
+                  <input type="checkbox" checked={docRequiresSig} onChange={e => setDocRequiresSig(e.target.checked)} style={{ accentColor: "#B83240", width: 16, height: 16 }} />
+                  Richiede firma
+                </label>
                 <FileBtn variant="primary" icon="plus" busy={uploading} onFiles={handleUpload}>Carica</FileBtn>
               </>
             )}
@@ -222,7 +281,10 @@ export default function Billing({ home, clients, reload }: {
                   title={d.name}
                   sub={`${DOC_TYPES[d.type]} · ${fmtBytes(d.sizeBytes)} · ${fmtDate(d.uploadedAt)}`}
                   right={
-                    <span style={{ display: "inline-flex", gap: 7 }}>
+                    <span style={{ display: "inline-flex", gap: 7, alignItems: "center" }}>
+                      {d.requiresSignature && (
+                        d.signedAt ? <Badge tone="green" dot>Firmato</Badge> : <Badge tone="amber" dot>Attesa firma</Badge>
+                      )}
                       <a href={getDocumentDownloadUrl(d)} target="_blank" rel="noreferrer" style={{ textDecoration: "none", display: "inline-flex" }} onClick={e => e.stopPropagation()}>
                         <Btn size="sm" variant="ghost" icon="download">Apri</Btn>
                       </a>

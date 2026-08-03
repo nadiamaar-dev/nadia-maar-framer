@@ -1,17 +1,21 @@
 import React, { useState } from "react"
 import { useToast } from "../../context/ToastContext"
-import type { AdminHome, SupportTicket, TicketStatus } from "../../lib/api"
-import { fmtDateTime, relativeDate, updateTicket } from "../../lib/api"
-import { fmtEur } from "../../lib/api"
+import type { AdminHome, Conversation, SupportTicket, TicketStatus } from "../../lib/api"
 import {
-  Badge, Btn, DISPLAY, Empty, Field, Glass, Icon, Input, Modal, MONO, SectionTitle, Select,
+  fmtDateTime, getOrCreateTicketConversation, isUnreadFor, relativeDate, updateTicket,
+} from "../../lib/api"
+import { fmtEur } from "../../lib/api"
+import ChatThread from "../ChatThread"
+import {
+  Badge, Btn, DISPLAY, Empty, Field, Glass, Icon, Input, Loading, Modal, MONO, SectionTitle, Select,
   T, Tabs, Textarea, TICKET_PRIORITY, TICKET_STATUS,
 } from "../ui"
 
 type Filter = "aperti" | "tutti"
 
-export default function SupportAdmin({ home, reload }: {
+export default function SupportAdmin({ home, adminId, reload }: {
   home: AdminHome
+  adminId: string
   reload: () => void
 }) {
   const toast = useToast()
@@ -22,10 +26,28 @@ export default function SupportAdmin({ home, reload }: {
   const [estAmount, setEstAmount] = useState("")
   const [estHours, setEstHours] = useState("")
   const [busy, setBusy] = useState(false)
+  const [chatTicket, setChatTicket] = useState<SupportTicket | null>(null)
+  const [chatConvo, setChatConvo] = useState<Conversation | null>(null)
 
   const openCount = home.tickets.filter(t => t.status !== "resolved").length
   const list = filter === "aperti" ? home.tickets.filter(t => t.status !== "resolved") : home.tickets
   const projectName = (id?: string) => home.projects.find(p => p.id === id)?.name
+  const threadFor = (ticketId: string) => home.threads.find(t => t.ticketId === ticketId)
+
+  async function openTicketChat(t: SupportTicket) {
+    setChatTicket(t)
+    setChatConvo(null)
+    try {
+      const convo = await getOrCreateTicketConversation({
+        ticketId: t.id, clientId: t.clientId, projectId: t.projectId,
+        subject: `Ticket — ${t.subject}`,
+      })
+      setChatConvo(convo)
+    } catch {
+      setChatTicket(null)
+      toast.error("Impossibile aprire la discussione.")
+    }
+  }
 
   function openReply(t: SupportTicket) {
     setReply(t.adminNote ?? "")
@@ -97,14 +119,21 @@ export default function SupportAdmin({ home, reload }: {
                         {t.estimateAcceptedAt ? " · approvato" : ""}
                       </Badge>
                     )}
+                    {(() => {
+                      const th = threadFor(t.id)
+                      return th && isUnreadFor(th, "admin") ? <Badge tone="copper" dot>Nuovo messaggio</Badge> : null
+                    })()}
+                    <Btn size="sm" variant="ghost" icon="chat" onClick={() => openTicketChat(t)}>
+                      {threadFor(t.id) ? "Discussione" : "Apri chat"}
+                    </Btn>
                     <Btn size="sm" variant={t.status === "new" ? "primary" : "outline"} icon="send" onClick={() => openReply(t)}>
                       {t.adminNote ? "Aggiorna risposta" : "Rispondi"}
                     </Btn>
                   </div>
-                  <p style={{ fontFamily: MONO, fontSize: 9.5, color: T.ghost, margin: "6px 0 0" }}>
+                  <p style={{ fontFamily: MONO, fontSize: 11, color: T.tertiary, margin: "6px 0 0" }}>
                     {t.clientName} · {relativeDate(t.createdAt)}
                   </p>
-                  <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.55, color: T.faint, margin: "8px 0 0", whiteSpace: "pre-wrap" }}>
+                  <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.55, color: T.secondary, margin: "8px 0 0", whiteSpace: "pre-wrap" }}>
                     {t.message}
                   </p>
                   {t.adminNote && (
@@ -112,14 +141,14 @@ export default function SupportAdmin({ home, reload }: {
                       marginTop: 10, padding: "10px 13px", borderRadius: 10,
                       background: "rgba(184,50,64,0.10)", borderLeft: `2px solid ${T.copper}`,
                     }}>
-                      <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.16em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>
+                      <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>
                         <Icon name="sparkle" size={10} /> La tua risposta
                       </p>
-                      <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.55, color: T.muted, margin: "6px 0 0", whiteSpace: "pre-wrap" }}>
+                      <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.55, color: T.secondary, margin: "6px 0 0", whiteSpace: "pre-wrap" }}>
                         {t.adminNote}
                       </p>
                       {t.respondedAt && (
-                        <p style={{ fontFamily: MONO, fontSize: 8.5, color: T.ghost, margin: "6px 0 0" }}>{fmtDateTime(t.respondedAt)}</p>
+                        <p style={{ fontFamily: MONO, fontSize: 11, color: T.tertiary, margin: "6px 0 0" }}>{fmtDateTime(t.respondedAt)}</p>
                       )}
                     </div>
                   )}
@@ -146,13 +175,13 @@ export default function SupportAdmin({ home, reload }: {
         <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
           {replying && (
             <div style={{ padding: "10px 13px", borderRadius: 10, background: "rgba(255,255,255,0.035)", border: `1px solid ${T.border}` }}>
-              <p style={{ fontFamily: MONO, fontSize: 9, color: T.ghost, margin: 0 }}>{replying.clientName}</p>
-              <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.5, color: T.faint, margin: "5px 0 0", whiteSpace: "pre-wrap" }}>
+              <p style={{ fontFamily: MONO, fontSize: 11, color: T.tertiary, margin: 0 }}>{replying.clientName}</p>
+              <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.5, color: T.secondary, margin: "5px 0 0", whiteSpace: "pre-wrap" }}>
                 {replying.message}
               </p>
             </div>
           )}
-          <Field label="Risposta" hint="Visibile al cliente nella sua area Supporto.">
+          <Field label="Risposta" hint="Un solo campo: riscriverlo sostituisce la risposta precedente. Per un botta e risposta usa la discussione.">
             <Textarea value={reply} onChange={e => setReply(e.target.value)} rows={5} autoFocus style={{ resize: "vertical" }} />
           </Field>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
@@ -170,6 +199,19 @@ export default function SupportAdmin({ home, reload }: {
             </Field>
           </div>
         </div>
+      </Modal>
+
+      {/* Ticket discussion */}
+      <Modal
+        open={!!chatTicket}
+        onClose={() => { setChatTicket(null); setChatConvo(null) }}
+        kicker="Discussione ticket"
+        title={chatTicket?.subject ?? ""}
+        width={680}
+      >
+        {chatConvo
+          ? <ChatThread conversation={chatConvo} role="admin" authorId={adminId} height={440} onChanged={reload} />
+          : <Loading label="Apro la discussione" />}
       </Modal>
     </div>
   )

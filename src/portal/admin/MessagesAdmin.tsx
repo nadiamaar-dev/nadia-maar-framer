@@ -49,7 +49,7 @@ export default function MessagesAdmin({ home, adminId, reload }: {
         sub="Le discussioni di fase vivono nei dossier dei progetti."
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16, alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))", gap: 16, alignItems: "start" }}>
         {/* Thread list */}
         <Glass variant="panel" style={{ padding: 12, maxWidth: 420 }}>
           {inbox.length === 0 ? (
@@ -76,15 +76,15 @@ export default function MessagesAdmin({ home, adminId, reload }: {
                       {unread && <span style={{ width: 7, height: 7, borderRadius: 99, background: T.copperLt, flexShrink: 0, boxShadow: "0 0 8px rgba(212,105,90,0.8)" }} />}
                       <span style={{
                         flex: 1, minWidth: 0, fontFamily: DISPLAY, fontSize: 12.5, fontWeight: unread ? 800 : 600,
-                        color: c.status === "closed" ? T.faint : T.text,
+                        color: c.status === "closed" ? T.secondary : T.text,
                         overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                       }}>
                         {c.subject}
                       </span>
-                      <span style={{ fontFamily: MONO, fontSize: 8.5, color: T.ghost, flexShrink: 0 }}>{relativeDate(c.lastMessageAt)}</span>
+                      <span style={{ fontFamily: MONO, fontSize: 11, color: T.tertiary, flexShrink: 0 }}>{relativeDate(c.lastMessageAt)}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                      <span style={{ fontFamily: MONO, fontSize: 9, color: T.faint, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      <span style={{ fontFamily: MONO, fontSize: 11, color: T.secondary, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {c.clientName ?? "—"}
                       </span>
                       <Badge tone={cs.tone} dot>{cs.label}</Badge>
@@ -105,7 +105,7 @@ export default function MessagesAdmin({ home, adminId, reload }: {
                   <h3 style={{ fontFamily: DISPLAY, fontSize: 14.5, fontWeight: 800, color: T.text, margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {selected.subject}
                   </h3>
-                  <p style={{ fontFamily: MONO, fontSize: 9.5, color: T.faint, margin: "4px 0 0" }}>{selected.clientName ?? "—"}</p>
+                  <p style={{ fontFamily: MONO, fontSize: 11, color: T.secondary, margin: "4px 0 0" }}>{selected.clientName ?? "—"}</p>
                 </div>
                 {selected.status === "closed" ? (
                   <Btn size="sm" variant="outline" icon="play" onClick={() => setStatus("open")}>Riapri</Btn>

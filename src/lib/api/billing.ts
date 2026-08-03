@@ -98,6 +98,37 @@ export async function declareInvoicePaid(id: string): Promise<void> {
   if (error) throw error
 }
 
+/**
+ * Attach the PDF of an invoice. Nothing ever wrote pdf_path, so the client's
+ * "PDF" button could never resolve to anything — it is now reachable.
+ * Same bucket as the documents; the row is what makes it downloadable.
+ */
+export async function attachInvoicePdf(invoice: Invoice, file: File): Promise<string> {
+  const storagePath = `${invoice.clientId}/invoices/${invoice.number}-${Date.now()}-${safeStorageName(file.name)}`
+  const { error: storageErr } = await supabase.storage
+    .from("client-documents")
+    .upload(storagePath, file, { upsert: false })
+  if (storageErr) throw storageErr
+  const { error } = await supabase
+    .from("client_invoices")
+    .update({ pdf_path: storagePath })
+    .eq("id", invoice.id)
+  if (error) throw error
+  return storagePath
+}
+
+/**
+ * pdf_path may hold either a full URL (legacy/hand-set) or a storage path.
+ * The client view used to render the button only for values starting with
+ * "http", which silently hid every storage-backed PDF.
+ */
+export function getInvoicePdfUrl(invoice: Invoice): string | null {
+  if (!invoice.pdfPath) return null
+  if (/^https?:\/\//i.test(invoice.pdfPath)) return invoice.pdfPath
+  const { data } = supabase.storage.from("client-documents").getPublicUrl(invoice.pdfPath)
+  return data.publicUrl
+}
+
 /** Next progressive number for the current year: "FAT-2026-004". */
 export function nextInvoiceNumber(existing: Invoice[]): string {
   const year = new Date().getFullYear()

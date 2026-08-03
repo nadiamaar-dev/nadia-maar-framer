@@ -177,8 +177,8 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
           className="portal-link"
           style={{
             display: "inline-flex", alignItems: "center", gap: 6, background: "none", border: "none",
-            padding: 0, marginBottom: 10, fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em",
-            textTransform: "uppercase", color: T.ghost, cursor: "pointer",
+            padding: 0, marginBottom: 10, fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em",
+            textTransform: "uppercase", color: T.tertiary, cursor: "pointer",
           }}
         >
           <Icon name="arrowL" size={11} /> Progetti
@@ -191,11 +191,11 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
               </h2>
               <Badge tone={st.tone} dot>{st.label}</Badge>
             </div>
-            <p style={{ fontFamily: MONO, fontSize: 10.5, color: T.faint, margin: "7px 0 0" }}>
+            <p style={{ fontFamily: MONO, fontSize: 11, color: T.secondary, margin: "7px 0 0" }}>
               {project.clientName} · {project.clientEmail} · avviato {fmtDate(project.createdAt)}
             </p>
             {project.description && (
-              <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6, color: T.faint, margin: "10px 0 0", maxWidth: 640, whiteSpace: "pre-wrap" }}>
+              <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6, color: T.secondary, margin: "10px 0 0", maxWidth: 640, whiteSpace: "pre-wrap" }}>
                 {project.description}
               </p>
             )}
@@ -211,7 +211,7 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
               <p style={{ fontFamily: DISPLAY, fontSize: 13, fontWeight: 800, color: T.text, margin: 0 }}>
                 {stages.filter(s => s.status === "done").length}/{stages.length} fasi
               </p>
-              <p style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: T.ghost, margin: "3px 0 0" }}>
+              <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: T.tertiary, margin: "3px 0 0" }}>
                 completate
               </p>
             </div>
@@ -277,7 +277,7 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
                         {s.approvalState === "changes_requested" && s.revisionNote && (
                           <span style={{ flexBasis: "100%", display: "flex", gap: 8, alignItems: "flex-start", padding: "9px 12px", borderRadius: 10, background: "rgba(248,113,113,0.10)", border: "1px solid rgba(248,113,113,0.28)" }}>
                             <Icon name="edit" size={13} style={{ color: T.red, marginTop: 2, flexShrink: 0 }} />
-                            <span className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.5, color: T.muted }}>
+                            <span className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.5, color: T.secondary }}>
                               <strong style={{ color: T.text }}>Modifiche richieste:</strong> {s.revisionNote}
                             </span>
                           </span>
@@ -470,7 +470,7 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
           </>
         }
       >
-        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0 }}>
+        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.secondary, margin: 0 }}>
           La fase viene segnata come completata e quella successiva si attiva.
           {advancing?.approvalState === "requested" && " C'è una richiesta di approvazione ancora aperta: chiudendo la fase la superi manualmente."}
           {" "}Se era l'ultima, il progetto risulterà completato.
@@ -512,7 +512,7 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
                 className="portal-range"
                 style={{ flex: 1 }}
               />
-              <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 700, color: T.copperLt, minWidth: 44, textAlign: "right" }}>
+              <span style={{ fontFamily: MONO, fontSize: 14, fontWeight: 700, color: T.copperTx, minWidth: 44, textAlign: "right" }}>
                 {editProgress}%
               </span>
             </div>
@@ -539,7 +539,7 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
           </>
         }
       >
-        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0 }}>
+        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.secondary, margin: 0 }}>
           La fase è ancora in coda e non è mai partita: eliminarla non tocca il lavoro fatto.
         </p>
       </Modal>

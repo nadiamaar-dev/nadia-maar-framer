@@ -10,6 +10,7 @@ function mapConversation(r: any): Conversation {
     clientName: r.profiles?.company_name || r.profiles?.email || undefined,
     projectId: r.project_id ?? undefined,
     stageId: r.stage_id ?? undefined,
+    ticketId: r.ticket_id ?? undefined,
     subject: r.subject,
     status: r.status as ConversationStatus,
     lastMessageAt: r.last_message_at,
@@ -105,6 +106,40 @@ export async function getOrCreateStageConversation(payload: {
       project_id: payload.projectId,
       stage_id: payload.stageId,
       subject: payload.subject.trim(),
+    })
+    .select()
+    .single()
+  if (error) throw error
+  return mapConversation(data)
+}
+
+/**
+ * One discussion thread per support ticket, created lazily on first open.
+ * A ticket carries a single admin_note that every reply overwrites, so the
+ * back-and-forth has to live somewhere that keeps history — the chat already
+ * does attachments, unread markers and admin notifications, so it does.
+ */
+export async function getOrCreateTicketConversation(payload: {
+  ticketId: string
+  clientId: string
+  projectId?: string
+  subject: string
+}): Promise<Conversation> {
+  const { data: existing, error: findErr } = await supabase
+    .from("conversations")
+    .select("*")
+    .eq("ticket_id", payload.ticketId)
+    .limit(1)
+    .maybeSingle()
+  if (findErr) throw findErr
+  if (existing) return mapConversation(existing)
+  const { data, error } = await supabase
+    .from("conversations")
+    .insert({
+      client_id: payload.clientId,
+      project_id: payload.projectId ?? null,
+      ticket_id: payload.ticketId,
+      subject: payload.subject.trim().slice(0, 200),
     })
     .select()
     .single()

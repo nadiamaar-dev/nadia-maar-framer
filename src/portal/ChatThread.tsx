@@ -5,7 +5,7 @@ import {
   sendMessage, subscribe, updateConversationStatus, uploadAttachment,
 } from "../lib/api"
 import type { Attachment, Conversation, Message } from "../lib/api"
-import { Btn, DISPLAY, FileBtn, Icon, Loading, MONO, T } from "./ui"
+import { Btn, ConfirmDialog, DISPLAY, FileBtn, Icon, Loading, MONO, T } from "./ui"
 
 const EDIT_WINDOW_MS = 15 * 60_000
 
@@ -26,13 +26,21 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
   const [uploading, setUploading] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editText, setEditText] = useState("")
+  const [toDelete, setToDelete] = useState<Message | null>(null)
+  const [deleting, setDeleting] = useState(false)
+  /* a failed fetch used to render as "Nessun messaggio." — telling the
+     client an empty conversation when the network had failed */
+  const [failed, setFailed] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const load = useCallback(async () => {
     try {
       const list = await fetchMessages(conversation.id)
       setMessages(list)
+      setFailed(false)
       markConversationRead(conversation.id).then(() => onChanged?.()).catch(() => {})
+    } catch {
+      setFailed(true)
     } finally {
       setLoading(false)
     }
@@ -99,16 +107,38 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
     await load()
   }
 
+  async function confirmDelete() {
+    const m = toDelete
+    if (!m || deleting) return
+    setDeleting(true)
+    try {
+      await deleteMessage(m.id)
+      setToDelete(null)
+      await load()
+      onChanged?.()
+    } catch {
+      toast.error("Eliminazione non riuscita.")
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height, minHeight: 260 }}>
       {/* Messages */}
       <div ref={scrollRef} style={{ flex: 1, overflowY: "auto", padding: "4px 2px", display: "flex", flexDirection: "column", gap: 10 }}>
         {loading ? (
           <Loading label="Apro la conversazione" />
+        ) : failed ? (
+          <div style={{ margin: "auto", textAlign: "center", padding: 24 }}>
+            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 700, color: T.text, margin: 0 }}>Messaggi non caricati</p>
+            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.secondary, margin: "4px 0 12px" }}>La conversazione non è vuota: non siamo riusciti a leggerla.</p>
+            <Btn size="sm" variant="primary" onClick={load}>Riprova</Btn>
+          </div>
         ) : messages.length === 0 ? (
           <div style={{ margin: "auto", textAlign: "center", padding: 24 }}>
-            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, color: T.faint, margin: 0 }}>Nessun messaggio.</p>
-            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12, color: T.ghost, margin: "4px 0 0" }}>Scrivi il primo messaggio qui sotto.</p>
+            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, color: T.secondary, margin: 0 }}>Nessun messaggio.</p>
+            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12, color: T.tertiary, margin: "4px 0 0" }}>Scrivi il primo messaggio qui sotto.</p>
           </div>
         ) : (
           messages.map(m => {
@@ -137,7 +167,7 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                   WebkitBackdropFilter: m.isDeleted ? "none" : "blur(8px)",
                 }}>
                   {m.isDeleted ? (
-                    <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, fontStyle: "italic", color: T.ghost, margin: 0 }}>
+                    <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, fontStyle: "italic", color: T.tertiary, margin: 0 }}>
                       Messaggio eliminato
                     </p>
                   ) : editingId === m.id ? (
@@ -167,52 +197,59 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                       )}
                       {m.attachments.length > 0 && (
                         <div style={{ display: "flex", flexDirection: "column", gap: 5, marginTop: m.content ? 9 : 0 }}>
-                          {m.attachments.map((a, i) => (
-                            <a
-                              key={i}
-                              href={a.publicUrl ?? "#"}
-                              target="_blank" rel="noreferrer"
-                              className="portal-link"
-                              style={{
-                                display: "flex", alignItems: "center", gap: 7,
-                                padding: "6px 10px", borderRadius: 9,
-                                background: "rgba(0,0,0,0.24)", border: "1px solid rgba(255,255,255,0.18)",
-                                textDecoration: "none", color: T.muted,
-                              }}
-                            >
-                              <Icon name="paperclip" size={11} />
-                              <span style={{ fontFamily: MONO, fontSize: 10.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 220 }}>
-                                {a.name}
-                              </span>
-                              <span style={{ fontFamily: MONO, fontSize: 9, color: T.ghost, flexShrink: 0 }}>{fmtBytes(a.size)}</span>
-                            </a>
-                          ))}
+                          {m.attachments.map((a, i) => {
+                            /* an attachment without a URL used to render as a
+                               link to "#", which navigates nowhere and looks
+                               broken; unavailable is stated instead */
+                            const body = (
+                              <>
+                                <Icon name="paperclip" size={11} />
+                                <span style={{ fontFamily: MONO, fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 220 }}>
+                                  {a.name}
+                                </span>
+                                <span style={{ fontFamily: MONO, fontSize: 11, color: "rgba(255,255,255,0.62)", flexShrink: 0 }}>
+                                  {a.publicUrl ? fmtBytes(a.size) : "non disponibile"}
+                                </span>
+                              </>
+                            )
+                            const box: React.CSSProperties = {
+                              display: "flex", alignItems: "center", gap: 7,
+                              padding: "6px 10px", borderRadius: 9,
+                              background: "rgba(0,0,0,0.24)", border: "1px solid rgba(255,255,255,0.18)",
+                              textDecoration: "none", color: "#FFFFFF",
+                            }
+                            return a.publicUrl ? (
+                              <a key={i} href={a.publicUrl} target="_blank" rel="noreferrer" className="portal-link" style={box}>{body}</a>
+                            ) : (
+                              <span key={i} style={{ ...box, opacity: 0.6 }}>{body}</span>
+                            )
+                          })}
                         </div>
                       )}
                     </>
                   )}
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4, padding: "0 5px" }}>
-                  <span style={{ fontFamily: MONO, fontSize: 8.5, color: T.ghost, letterSpacing: "0.04em" }}>
+                  <span style={{ fontFamily: MONO, fontSize: 11, color: T.tertiary, letterSpacing: "0.04em" }}>
                     {fmtDateTime(m.createdAt)}{m.editedAt ? " · modificato" : ""}
                   </span>
                   {canModify(m) && editingId !== m.id && (
                     <>
                       <button
-                        className="portal-link"
+                        className="portal-link portal-icon-btn"
                         onClick={() => { setEditingId(m.id); setEditText(m.content) }}
-                        style={{ background: "none", border: "none", padding: 0, color: T.ghost, cursor: "pointer", display: "flex" }}
+                        style={{ background: "none", border: "none", padding: 0, color: T.secondary, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                         title="Modifica"
                       >
-                        <Icon name="edit" size={10.5} />
+                        <Icon name="edit" size={12} />
                       </button>
                       <button
-                        className="portal-link"
-                        onClick={async () => { await deleteMessage(m.id); await load() }}
-                        style={{ background: "none", border: "none", padding: 0, color: T.ghost, cursor: "pointer", display: "flex" }}
+                        className="portal-link portal-icon-btn"
+                        onClick={() => setToDelete(m)}
+                        style={{ background: "none", border: "none", padding: 0, color: T.secondary, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                         title="Elimina"
                       >
-                        <Icon name="trash" size={10.5} />
+                        <Icon name="trash" size={12} />
                       </button>
                     </>
                   )}
@@ -228,9 +265,9 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
         <div style={{
           marginTop: 12, padding: "12px 16px", borderRadius: 12, textAlign: "center",
           background: "rgba(255,255,255,0.04)", border: `1px dashed ${T.border}`,
-          fontFamily: DISPLAY, fontSize: 13, color: T.ghost,
+          fontFamily: DISPLAY, fontSize: 13, color: T.secondary,
         }}>
-          Conversazione chiusa
+          Conversazione chiusa — riaprila dalla sezione Messaggi per rispondere.
         </div>
       ) : (
         <div style={{ marginTop: 12, borderTop: "1px solid rgba(255,255,255,0.14)", paddingTop: 12 }}>
@@ -241,7 +278,7 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                   display: "inline-flex", alignItems: "center", gap: 6,
                   padding: "4px 10px", borderRadius: 8,
                   background: "rgba(184,50,64,0.12)", border: "1px solid rgba(184,50,64,0.28)",
-                  fontFamily: MONO, fontSize: 10, color: T.copperLt,
+                  fontFamily: MONO, fontSize: 11, color: T.copperTx,
                 }}>
                   <Icon name="paperclip" size={10} />
                   {a.name}
@@ -280,6 +317,18 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={toDelete !== null}
+        onClose={() => setToDelete(null)}
+        onConfirm={confirmDelete}
+        kicker="Messaggio"
+        title="Eliminare il messaggio?"
+        confirmLabel="Elimina"
+        confirmIcon="trash"
+        busy={deleting}
+        body="Resta al suo posto come «messaggio eliminato»: l'altra parte vede che c'era qualcosa, non cosa."
+      />
     </div>
   )
 }

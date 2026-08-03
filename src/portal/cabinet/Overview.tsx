@@ -3,7 +3,7 @@ import type { ClientHome, PortalAction } from "../../lib/api"
 import { fmtDateTime, fmtEur, isUnreadFor } from "../../lib/api"
 import GuideStrip from "./GuideStrip"
 import {
-  DISPLAY, Empty, Glass, Icon, MONO, PROJECT_STATUS, Row, SectionTitle, Stat, T, TL, Timeline,
+  Collapsible, DISPLAY, Empty, Glass, Icon, MONO, PROJECT_STATUS, Row, SectionTitle, Stat, T, TL, Timeline,
   type IconName, type Tone,
 } from "../ui"
 
@@ -23,8 +23,8 @@ function Greeting({ name }: { name?: string }) {
   const firstName = name?.split(" ")[0] ?? name?.split("@")[0]
   return (
     <div style={{ paddingBottom: 4 }}>
-      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 10, fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.22em", textTransform: "uppercase", color: T.faint }}>
-        <span style={{ color: T.copperLt }}>//</span>
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 10, fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: T.secondary }}>
+        <span style={{ color: T.copperTx }}>//</span>
         <span>{now.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" })}</span>
       </div>
       <h1 style={{
@@ -32,11 +32,11 @@ function Greeting({ name }: { name?: string }) {
         color: TL.text, margin: 0, letterSpacing: "-0.025em", lineHeight: 1.15,
       }}>
         {saluto}{firstName ? (
-          <>, <span style={{ color: T.copperLt }}>{firstName}</span></>
+          <>, <span style={{ color: T.copperTx }}>{firstName}</span></>
         ) : ""}
       </h1>
       <p className="pt-body" style={{
-        fontFamily: DISPLAY, fontSize: 14, color: TL.muted,
+        fontFamily: DISPLAY, fontSize: 14, color: TL.secondary,
         margin: "6px 0 0", lineHeight: 1.5,
       }}>
         Ecco un riepilogo del tuo spazio di lavoro.
@@ -69,7 +69,7 @@ export default function Overview({ home, onAction, onOpenProject, userName }: {
       <GuideStrip home={home} />
 
       {/* KPI row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))", gap: 12 }}>
         <Stat label="Progetti attivi" value={String(active.length)} icon="layers" tone="copper"
           hint={home.projects.length > active.length ? `${home.projects.length} totali` : undefined} />
         <Stat label="Da saldare" value={fmtEur(dueSum)} icon="euro" tone={dueSum > 0 ? "amber" : "green"} />
@@ -77,9 +77,9 @@ export default function Overview({ home, onAction, onOpenProject, userName }: {
         <Stat label="Messaggi non letti" value={String(unread)} icon="chat" tone={unread > 0 ? "copper" : "steel"} />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: 16, alignItems: "start" }}>
         {/* Action center */}
-        <Glass variant="panel" style={{ padding: 20 }}>
+        <Glass variant="work" style={{ padding: 20 }}>
           <SectionTitle kicker="Azioni" title="Da fare ora" sub={home.actions.length === 0 ? undefined : `${home.actions.length} in attesa di te`} />
           {home.actions.length === 0 ? (
             <Empty icon="checkCircle" title="Tutto in ordine" hint="Nessuna azione richiesta al momento." />
@@ -103,22 +103,30 @@ export default function Overview({ home, onAction, onOpenProject, userName }: {
           )}
         </Glass>
 
-        {/* Activity */}
-        <Glass variant="panel" style={{ padding: 20 }}>
-          <SectionTitle kicker="Diario" title="Attività recente" />
-          <div style={{ marginTop: 14 }}>
+        {/* Activity — folded by default: it is the panel you consult now and
+            then, and open it costs the overview a screenful of height. The
+            count in the header keeps the collapsed state informative. */}
+        <Glass variant="work" style={{ padding: 20 }}>
+          <Collapsible
+            kicker="Diario"
+            title="Attività recente"
+            sub={home.events.length === 0
+              ? "Nessuna attività"
+              : `${home.events.length} event${home.events.length === 1 ? "o" : "i"}`}
+            storageKey="nm-cab-diario"
+          >
             {home.events.length === 0 ? (
               <Empty icon="sparkle" title="Ancora nessuna attività" hint="Qui vedrai avanzamenti, fatture e riunioni." />
             ) : (
               <Timeline events={home.events} showProject limit={10} />
             )}
-          </div>
+          </Collapsible>
         </Glass>
       </div>
 
       {/* Projects strip */}
       {home.projects.length > 0 && (
-        <Glass variant="panel" style={{ padding: 20 }}>
+        <Glass variant="work" style={{ padding: 20 }}>
           <SectionTitle kicker="Progetti" title="I tuoi progetti" />
           <div style={{ display: "flex", flexDirection: "column", gap: 7, marginTop: 14 }}>
             {home.projects.slice(0, 4).map(p => {
@@ -133,7 +141,7 @@ export default function Overview({ home, onAction, onOpenProject, userName }: {
                   title={p.name}
                   sub={stages.length > 0 ? `${done}/${stages.length} fasi completate` : st.label}
                   right={
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: DISPLAY, fontSize: 11, color: T.faint }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: DISPLAY, fontSize: 11, color: T.secondary }}>
                       {st.label}
                       <Icon name="chevronR" size={13} />
                     </span>

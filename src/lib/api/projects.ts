@@ -141,6 +141,22 @@ export async function fetchProjectStages(projectId: string): Promise<ProjectStag
   return (data ?? []).map(mapStage)
 }
 
+/**
+ * Every stage the client has bounced back for revision, across all projects.
+ * Admin-only in practice — RLS returns just the caller's own rows otherwise.
+ * The admin home needs this because it fetches projects, not stages, and a
+ * revision request is otherwise invisible outside the project dossier.
+ */
+export async function fetchStagesAwaitingRevision(): Promise<ProjectStage[]> {
+  const { data, error } = await supabase
+    .from("project_stages")
+    .select("*")
+    .eq("approval_state", "changes_requested")
+    .order("updated_at", { ascending: false })
+  if (error) throw error
+  return (data ?? []).map(mapStage)
+}
+
 export async function createStage(projectId: string, title: string, orderIndex: number): Promise<ProjectStage> {
   const key = title.toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "fase"
   const { data, error } = await supabase

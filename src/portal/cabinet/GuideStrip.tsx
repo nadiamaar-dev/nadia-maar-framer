@@ -1,6 +1,6 @@
 import React from "react"
 import type { ClientHome } from "../../lib/api"
-import { DISPLAY, MONO, T, TL } from "../ui"
+import { DISPLAY, Glass, MONO, T } from "../ui"
 
 type Step = { key: string; label: string; hint: string }
 
@@ -40,13 +40,18 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
   const cur = currentStep(home)
 
   return (
-    <div style={{
-      borderRadius: 16,
-      background: "rgba(255,255,255,0.008)",
-      border: "1px solid rgba(255,255,255,0.16)",
-      overflow: "hidden",
-      position: "relative",
-    }}>
+    /* Frosted, like every other card in the cabinet — this one used to be a
+       flat solid slab (T.surface with no blur), so it read as a plainer,
+       older-generation panel next to the frosted work cards around it. */
+    <Glass variant="work" style={{ padding: 0, position: "relative", overflow: "hidden" }}>
+      <style>{`
+        @keyframes gsPulse {
+          0%, 100% { opacity: 0.55; transform: scale(1); }
+          50% { opacity: 0; transform: scale(1.55); }
+        }
+        .gs-pulse { animation: gsPulse 2.2s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) { .gs-pulse { display: none; } }
+      `}</style>
 
       {/* top highlight spray */}
       <div aria-hidden style={{
@@ -64,17 +69,17 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
       }}>
         <div style={{
           display: "inline-flex", alignItems: "center", gap: 7,
-          fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.20em",
+          fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em",
           textTransform: "uppercase" as const,
           color: "#FFFFFF",
         }}>
-          <span style={{ color: "rgba(184,50,64,0.60)" }}>//</span>
+          <span style={{ color: T.copperTx }}>//</span>
           <span>Come procede il tuo progetto</span>
         </div>
         <span style={{
-          fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em",
+          fontFamily: MONO, fontSize: 11, letterSpacing: "0.06em",
           fontWeight: 600,
-          color: cur === STEPS.length - 1 ? "#10B981" : "rgba(184,50,64,0.70)",
+          color: cur === STEPS.length - 1 ? "#10B981" : T.copperTx,
         }}>
           {cur + 1} / {STEPS.length}
         </span>
@@ -108,12 +113,14 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
               : active
               ? "rgba(184,50,64,0.70)"
               : "rgba(255,255,255,0.12)"
-            const nodeCol = done ? "#fff" : active ? "#BE3648" : "#FFFFFF"
+            const nodeCol = done ? "#fff" : active ? T.copperTx : "#FFFFFF"
 
-            /* line colour */
+            /* line colour — a done segment now reads as filled progress
+               rather than a slightly brighter hairline */
             const lineCol = done
-              ? "rgba(16,185,129,0.35)"
+              ? "rgba(16,185,129,0.60)"
               : "rgba(255,255,255,0.08)"
+            const lineGlow = done ? "0 0 6px rgba(16,185,129,0.30)" : "none"
 
             /* label */
             const labelCol = "#FFFFFF"
@@ -122,19 +129,32 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
               <div key={s.key} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
                 {/* connector + circle row */}
                 <div style={{ display: "flex", alignItems: "center", width: "100%", marginBottom: 10 }}>
-                  <div style={{ flex: 1, height: 1, background: i === 0 ? "transparent" : lineCol }} />
+                  <div style={{ flex: 1, height: 2, borderRadius: 1, background: i === 0 ? "transparent" : lineCol, boxShadow: i === 0 ? "none" : lineGlow }} />
+                  {/* Pulse ring is a CHILD of the sized circle div, not a
+                      sibling in an unsized wrapper — a wrapper only as big
+                      as its static content still counts the ring's absolute
+                      -5px bleed toward its scrollWidth, which overflowed the
+                      row. StageGrid's own "in corso" ring avoids this by
+                      nesting the same way. */}
                   <div style={{
                     width: active ? 40 : 34,
                     height: active ? 40 : 34,
                     borderRadius: "50%",
                     flexShrink: 0,
+                    position: "relative", zIndex: 1,
                     display: "flex", alignItems: "center", justifyContent: "center",
                     background: nodeBg,
                     border: `2px solid ${nodeBd}`,
                     color: nodeCol,
-                    boxShadow: active ? "0 0 0 4px rgba(184,50,64,0.10)" : "none",
+                    boxShadow: active ? "0 0 0 4px rgba(184,50,64,0.12), 0 0 16px rgba(184,50,64,0.20)" : done ? "0 0 10px rgba(16,185,129,0.20)" : "none",
                     transition: "all 0.3s ease",
                   }}>
+                    {active && (
+                      <span aria-hidden className="gs-pulse" style={{
+                        position: "absolute", inset: -5, borderRadius: "50%",
+                        border: "1.5px solid rgba(184,50,64,0.55)",
+                      }} />
+                    )}
                     {done
                       ? <Check />
                       : <span style={{ fontFamily: MONO, fontSize: active ? 13 : 11, fontWeight: 700, letterSpacing: "0.02em" }}>
@@ -142,7 +162,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
                         </span>
                     }
                   </div>
-                  <div style={{ flex: 1, height: 1, background: isLast ? "transparent" : lineCol }} />
+                  <div style={{ flex: 1, height: 2, borderRadius: 1, background: isLast ? "transparent" : lineCol, boxShadow: isLast ? "none" : lineGlow }} />
                 </div>
 
                 {/* label */}
@@ -176,11 +196,12 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
                   display: "flex", alignItems: "center", justifyContent: "center",
                   background: done ? "#10B981" : active ? "rgba(184,50,64,0.18)" : "rgba(255,255,255,0.04)",
                   border: `2px solid ${done ? "#10B981" : active ? "rgba(184,50,64,0.70)" : "rgba(255,255,255,0.10)"}`,
-                  color: done ? "#fff" : active ? "#BE3648" : "#FFFFFF",
+                  color: done ? "#fff" : active ? T.copperTx : "#FFFFFF",
+                  boxShadow: active ? "0 0 0 4px rgba(184,50,64,0.12)" : "none",
                 }}>
                   {done
                     ? <Check />
-                    : <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700 }}>{String(i + 1).padStart(2, "0")}</span>
+                    : <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700 }}>{String(i + 1).padStart(2, "0")}</span>
                   }
                 </div>
                 <span style={{
@@ -207,7 +228,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
           width: 36, height: 36, borderRadius: 10, flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
           border: "1px solid rgba(184,50,64,0.25)",
-          color: "rgba(184,50,64,0.70)",
+          color: T.copperTx,
         }}>
           <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700 }}>
             {String(cur + 1).padStart(2, "0")}
@@ -215,9 +236,9 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
         </div>
         <div>
           <p style={{
-            fontFamily: MONO, fontSize: 10, letterSpacing: "0.12em",
+            fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em",
             textTransform: "uppercase" as const,
-            color: "rgba(184,50,64,0.60)", margin: "0 0 5px",
+            color: T.copperTx, margin: "0 0 5px",
           }}>
             Passo {cur + 1} · {STEPS[cur].label}
           </p>
@@ -229,6 +250,6 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
           </p>
         </div>
       </div>
-    </div>
+    </Glass>
   )
 }

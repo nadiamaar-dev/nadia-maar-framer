@@ -33,17 +33,17 @@ export default function AuditTrail({ projectId }: { projectId: string }) {
   return (
     <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${T.border}` }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-        <Icon name="lock" size={13} style={{ color: T.copperLt }} />
-        <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.2em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>
+        <Icon name="lock" size={13} style={{ color: T.copperTx }} />
+        <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>
           Audit trail
         </p>
-        <span style={{ fontFamily: DISPLAY, fontSize: 12, color: T.faint }}>· registro legale delle conferme</span>
+        <span style={{ fontFamily: DISPLAY, fontSize: 12, color: T.secondary }}>· registro legale delle conferme</span>
       </div>
 
       {logs === null ? (
-        <p style={{ fontFamily: MONO, fontSize: 10, color: T.ghost, margin: 0 }}>Carico…</p>
+        <p style={{ fontFamily: MONO, fontSize: 11, color: T.tertiary, margin: 0 }}>Carico…</p>
       ) : logs.length === 0 ? (
-        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.faint, margin: 0 }}>
+        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.secondary, margin: 0 }}>
           Nessuna azione registrata ancora. Approvazioni, firme e pagamenti verranno tracciati qui con data, IP e dispositivo.
         </p>
       ) : (
@@ -57,7 +57,7 @@ export default function AuditTrail({ projectId }: { projectId: string }) {
                 padding: "11px 13px", borderRadius: 11,
                 background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`,
               }}>
-                <span style={{ width: 28, height: 28, borderRadius: 8, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(184,50,64,0.10)", border: "1px solid rgba(184,50,64,0.22)", color: T.copperLt }}>
+                <span style={{ width: 28, height: 28, borderRadius: 8, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(184,50,64,0.10)", border: "1px solid rgba(184,50,64,0.22)", color: T.copperTx }}>
                   <Icon name="check" size={13} />
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -69,12 +69,12 @@ export default function AuditTrail({ projectId }: { projectId: string }) {
                       {l.actorRole === "client" ? "cliente" : l.actorRole === "admin" ? "studio" : "sistema"}
                     </Badge>
                   </div>
-                  <p style={{ fontFamily: MONO, fontSize: 9, color: T.faint, margin: "5px 0 0", letterSpacing: "0.03em" }}>
+                  <p style={{ fontFamily: MONO, fontSize: 11, color: T.secondary, margin: "5px 0 0", letterSpacing: "0.03em" }}>
                     {fmtDateTime(l.createdAt)}
                     {l.ip ? `  ·  IP ${l.ip}` : ""}
                   </p>
                   {l.userAgent && (
-                    <p style={{ fontFamily: MONO, fontSize: 8.5, color: T.ghost, margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <p style={{ fontFamily: MONO, fontSize: 11, color: T.tertiary, margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {l.userAgent}
                     </p>
                   )}

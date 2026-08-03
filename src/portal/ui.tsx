@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { relativeDate } from "../lib/api"
 import type {
   ApprovalState, ClientPlan, ClientStatus, ConversationStatus, EventType, InvoiceStatus,
@@ -15,63 +15,100 @@ export const MONO = "'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, mon
 export const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
 export const BODY = "'Plus Jakarta Sans', system-ui, sans-serif"
 
-/* ── Card content (dark glass surfaces) ── */
+/* ── Card content (text sitting ON a surface: `work` matte or scrimmed glass) ──
+   Three real levels. They were all #FFFFFF at one point — a blunt fix for
+   text that was illegible because the card underneath had no floor. The
+   floor is back (see GLASS below), so the hierarchy can be too. */
 export const T = {
-  bg: "#233D4D",
+  bg: "#060C18",                          /* what Background actually paints; the old petrol was never visible */
   bgRaised: "#1E3442",
-  border: "rgba(255,255,255,0.08)",
-  borderHi: "rgba(255,255,255,0.15)",
+  /* Graphite, lifted just off the deep-navy page and far less blue than it
+     (B/R 1.6 vs 4.0), so cards read as a material rather than as more of the
+     same night sky. This is the opaque twin of GLASS.work — used where a
+     small inner card cannot afford a backdrop blur, so the two are tuned to
+     composite to roughly the same colour. Change one, change the other. */
+  surface: "#151922",
+  border: "rgba(255,255,255,0.10)",
+  borderHi: "rgba(255,255,255,0.18)",
+  /* Flattened back to pure white on explicit, repeated request — hierarchy
+     by opacity is gone, whatever separation remains is weight/size only.
+     `disabled` is untouched: it signals an inert control, not prose. */
   text: "#FFFFFF",
-  muted: "#FFFFFF",
-  faint: "#FFFFFF",
-  ghost: "#FFFFFF",
-  copper: "#B83240",
-  copperLt: "#BE3648",
+  secondary: "#FFFFFF",
+  tertiary: "#FFFFFF",
+  disabled: "rgba(255,255,255,0.34)",     //  3.1:1 — inert controls only, never prose
+  copper: "#B83240",                      // fill
+  copperLt: "#BE3648",                    // fill
+  copperTx: "#E4697A",                    // copper for TEXT — 5.7:1, the fill is 3.09:1
   green: "#10B981",
   amber: "#F59E0B",
   red: "#F87171",
   silver: "rgba(255,255,255,0.75)",
 } as const
 
-/* ── Chrome (dark petrol sidebar / header) ── */
+/* ── Chrome / raw animated background — deliberately shallower, because the
+   backdrop luminance there is not deterministic (moving grid + auroras). ── */
 export const TL = {
   text: "#FFFFFF",
-  muted: "#FFFFFF",
-  faint: "#FFFFFF",
-  ghost: "#FFFFFF",
-  border: "rgba(255,255,255,0.08)",
-  borderHi: "rgba(255,255,255,0.15)",
+  secondary: "#FFFFFF",
+  tertiary: "#FFFFFF",
+  border: "rgba(255,255,255,0.10)",
+  borderHi: "rgba(255,255,255,0.18)",
 } as const
 
 export type Tone = "copper" | "green" | "amber" | "red" | "silver" | "steel"
 
-export const TONE: Record<Tone, { fg: string; bg: string; bd: string }> = {
-  copper: { fg: "#B83240", bg: "rgba(184,50,64,0.09)", bd: "rgba(184,50,64,0.20)" },
-  green:  { fg: "#10B981", bg: "rgba(16,185,129,0.15)", bd: "rgba(16,185,129,0.34)" },
-  amber:  { fg: "#F59E0B", bg: "rgba(245,158,11,0.14)", bd: "rgba(245,158,11,0.32)" },
-  red:    { fg: "#F87171", bg: "rgba(248,113,113,0.14)", bd: "rgba(248,113,113,0.32)" },
-  silver: { fg: "#FFFFFF", bg: "rgba(255,255,255,0.09)", bd: "rgba(255,255,255,0.42)" },
-  steel:  { fg: "#FFFFFF", bg: "rgba(255,255,255,0.05)", bd: "rgba(255,255,255,0.11)" },
+/* `fg` paints graphics (rings, bars, rules); `tx` paints text and icons.
+   They differ only for copper, whose fill fails AA at any size on dark. */
+export const TONE: Record<Tone, { fg: string; tx: string; bg: string; bd: string }> = {
+  copper: { fg: "#B83240", tx: "#E4697A", bg: "rgba(184,50,64,0.09)", bd: "rgba(184,50,64,0.20)" },
+  green:  { fg: "#10B981", tx: "#10B981", bg: "rgba(16,185,129,0.15)", bd: "rgba(16,185,129,0.34)" },
+  amber:  { fg: "#F59E0B", tx: "#F59E0B", bg: "rgba(245,158,11,0.14)", bd: "rgba(245,158,11,0.32)" },
+  red:    { fg: "#F87171", tx: "#F87171", bg: "rgba(248,113,113,0.14)", bd: "rgba(248,113,113,0.32)" },
+  /* silver/steel are NOT "muted text" — they are the foreground of every Badge,
+     Note, Row icon and Avatar, on chips of 5–9% white. They stay bright. */
+  silver: { fg: "rgba(255,255,255,0.95)", tx: "rgba(255,255,255,0.95)", bg: "rgba(255,255,255,0.09)", bd: "rgba(255,255,255,0.42)" },
+  steel:  { fg: "rgba(255,255,255,0.84)", tx: "rgba(255,255,255,0.84)", bg: "rgba(255,255,255,0.05)", bd: "rgba(255,255,255,0.11)" },
 }
 
 /* ── Modal overlay backdrop ── */
 const GLASS_BLUR = "blur(32px) brightness(0.92) saturate(1.20)"
 
-/* ── GLASS CARD SYSTEM ─────────────────────────────────────────
-   panel / accent → exact DiagnosiCard 3-layer technique:
-     1. glass bg overlay: rgba(255,255,255,0.008) + blur(6px) brightness(1.03)
-        with mask-image fade black→transparent from 40% to 85%
-     2. gradient border overlay: white (panel) or crimson (accent) top
-        using WebkitMask xor trick, padding:1
-     3. content: position:relative zIndex:3
+/* ── SURFACE SYSTEM ────────────────────────────────────────────
+   work   → frosted matte. For panels carrying data: lists, forms, long
+            scrolls. Translucent enough to stay glass, opaque and blurred
+            enough that text always has a deterministic floor under it.
+   panel  → glass, DiagnosiCard 2-layer technique:
+     1. glass bg overlay + blur — with a REAL dark floor, not a 0.8% film.
+        The mask fade that used to live here dissolved the card's own
+        background over its bottom 60%, which is what forced every text
+        token to pure white. Removed.
+     2. gradient border overlay via WebkitMask xor, padding:1 — the signature.
+     3. content: position:relative zIndex:2
    raised / outline → simple solid surfaces (modals, secondary)
+
+   NOTE: in the simple branch `style` lands on the outer div; in the glass
+   branch it lands on layer 3. So sizing declarations (maxWidth, gridColumn)
+   only take effect on the simple variants.
    ─────────────────────────────────────────────────────────── */
-export const GLASS: Record<"panel" | "raised" | "outline" | "accent", React.CSSProperties> = {
+export const GLASS: Record<"panel" | "work" | "raised" | "outline", React.CSSProperties> = {
   panel: {
-    background: "rgba(255,255,255,0.008)",
-    backdropFilter: "blur(6px) brightness(1.03)",
-    WebkitBackdropFilter: "blur(6px) brightness(1.03)",
+    background: "rgba(28,31,38,0.52)",
+    backdropFilter: "blur(20px) saturate(0.80) brightness(1.02)",
+    WebkitBackdropFilter: "blur(20px) saturate(0.80) brightness(1.02)",
     boxShadow: "0 4px 24px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)",
+  },
+  work: {
+    /* Frosted, not flat: a neutral graphite film over a heavy blur.
+       `saturate(0.80)` is what removes the blue — it desaturates the navy
+       grid showing through, so the card reads graphite instead of navy.
+       The blur is what makes it matte: nothing behind it stays legible, so
+       the surface diffuses rather than reflects. */
+    background: "rgba(28,31,38,0.62)",
+    backdropFilter: "blur(22px) saturate(0.80) brightness(1.02)",
+    WebkitBackdropFilter: "blur(22px) saturate(0.80) brightness(1.02)",
+    border: `1px solid ${T.border}`,
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 4px 18px rgba(0,0,0,0.32)",
   },
   raised: {
     background: "rgba(8,14,24,0.94)",
@@ -85,30 +122,23 @@ export const GLASS: Record<"panel" | "raised" | "outline" | "accent", React.CSSP
     border: "1px solid rgba(255,255,255,0.07)",
     boxShadow: "none",
   },
-  accent: {
-    background: "rgba(255,255,255,0.008)",
-    backdropFilter: "blur(6px) brightness(1.03)",
-    WebkitBackdropFilter: "blur(6px) brightness(1.03)",
-    boxShadow: "0 4px 24px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)",
-  },
 }
 
 export function Glass({
-  variant = "panel", hover = false, className = "", style, children, onClick,
+  variant = "panel", className = "", style, children, onClick,
 }: {
   variant?: keyof typeof GLASS
-  hover?: boolean
   className?: string
   style?: React.CSSProperties
   children: React.ReactNode
   onClick?: () => void
 }) {
-  /* raised / outline — unchanged simple surface */
-  if (variant === "raised" || variant === "outline") {
+  /* work / raised / outline — simple single-layer surface */
+  if (variant !== "panel") {
     return (
       <div
         onClick={onClick}
-        className={`rounded-2xl ${hover ? "portal-glass-hover" : ""} ${className}`}
+        className={`rounded-2xl ${className}`}
         style={{ ...GLASS[variant], ...style }}
       >
         {children}
@@ -116,30 +146,25 @@ export function Glass({
     )
   }
 
-  /* panel / accent — DiagnosiCard 3-layer technique */
-  const v = GLASS[variant]
+  /* panel — glass with gradient hairline */
   return (
     <div
       onClick={onClick}
-      className={`rounded-2xl ${hover ? "portal-glass-hover" : ""} ${className}`}
-      style={{ position: "relative", overflow: "hidden", boxShadow: v.boxShadow }}
+      className={`rounded-2xl ${className}`}
+      style={{ position: "relative", overflow: "hidden", boxShadow: GLASS.panel.boxShadow }}
     >
-      {/* Layer 1 — glass bg + blur + mask fade (black 40% → transparent 85%) */}
+      {/* Layer 1 — glass bg + blur, floored so text contrast is deterministic */}
       <div aria-hidden style={{
         position: "absolute", inset: 0,
-        background: "rgba(255,255,255,0.008)",
-        backdropFilter: "blur(6px) brightness(1.03)",
-        WebkitBackdropFilter: "blur(6px) brightness(1.03)",
-        WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 85%)",
-        maskImage: "linear-gradient(to bottom, black 40%, transparent 85%)",
+        background: GLASS.panel.background,
+        backdropFilter: GLASS.panel.backdropFilter,
+        WebkitBackdropFilter: GLASS.panel.WebkitBackdropFilter,
         pointerEvents: "none",
       }} />
       {/* Layer 2 — gradient border via mask xor, padding:1 */}
       <div aria-hidden style={{
         position: "absolute", inset: 0, borderRadius: "inherit", padding: 1,
-        background: variant === "accent"
-          ? "linear-gradient(to bottom, rgba(184,50,64,0.60) 0%, rgba(255,255,255,0.05) 3px, transparent 50%)"
-          : "linear-gradient(to bottom, rgba(255,255,255,0.53) 0%, transparent 52%)",
+        background: "linear-gradient(to bottom, rgba(255,255,255,0.53) 0%, transparent 52%)",
         WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
         WebkitMaskComposite: "xor",
         maskComposite: "exclude",
@@ -379,11 +404,14 @@ export function Badge({ tone = "steel", children, dot = false }: {
     <span style={{
       display: "inline-flex", alignItems: "center", gap: 6,
       padding: "3px 9px", borderRadius: 99,
-      background: t.bg, border: `1px solid ${t.bd}`, color: t.fg,
-      fontFamily: MONO, fontSize: 10, fontWeight: 600,
+      background: t.bg, border: `1px solid ${t.bd}`, color: t.tx,
+      fontFamily: MONO, fontSize: 11, fontWeight: 600,
       letterSpacing: "0.08em", textTransform: "uppercase", whiteSpace: "nowrap",
+      /* status labels are short, but badges also carry project names — those
+         can be longer than the card, and nowrap alone made them overflow */
+      maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis",
     }}>
-      {dot && <span style={{ width: 5, height: 5, borderRadius: "50%", background: t.fg }} />}
+      {dot && <span style={{ width: 5, height: 5, borderRadius: "50%", background: t.tx }} />}
       {children}
     </span>
   )
@@ -392,8 +420,8 @@ export function Badge({ tone = "steel", children, dot = false }: {
 export function Kicker({ children, tone = "copper" }: { children: React.ReactNode; tone?: Tone }) {
   return (
     <p style={{
-      fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.24em", textTransform: "uppercase",
-      color: TONE[tone].fg, margin: 0,
+      fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase",
+      color: TONE[tone].tx, margin: 0,
     }}>
       {children}
     </p>
@@ -413,9 +441,109 @@ export function SectionTitle({ kicker, title, sub, right }: {
         <h2 style={{ fontFamily: DISPLAY, fontSize: 25, fontWeight: 800, letterSpacing: "-0.02em", color: TL.text, margin: 0, lineHeight: 1.15 }}>
           {title}
         </h2>
-        {sub && <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 15, color: TL.muted, margin: "7px 0 0", lineHeight: 1.5 }}>{sub}</p>}
+        {sub && <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 15, color: TL.secondary, margin: "7px 0 0", lineHeight: 1.5 }}>{sub}</p>}
       </div>
       {right && <div style={{ display: "flex", gap: 8, alignItems: "center" }}>{right}</div>}
+    </div>
+  )
+}
+
+/**
+ * Panel header that folds its own body away, keeping SectionTitle's exact
+ * typography so an expanded panel is indistinguishable from a plain one.
+ *
+ * The open/closed choice is remembered per `storageKey`: a disclosure that
+ * resets on every visit is just a slower way of not having one.
+ */
+export function Collapsible({
+  kicker, title, sub, defaultOpen = false, storageKey, children,
+}: {
+  kicker?: string
+  title: string
+  sub?: string
+  defaultOpen?: boolean
+  storageKey?: string
+  children: React.ReactNode
+}) {
+  const reduce = useReducedMotion()
+  const bodyId = React.useId()
+  const [open, setOpen] = React.useState(() => {
+    if (!storageKey) return defaultOpen
+    try {
+      const v = localStorage.getItem(storageKey)
+      return v === null ? defaultOpen : v === "1"
+    } catch { return defaultOpen }
+  })
+
+  function toggle() {
+    setOpen(prev => {
+      const next = !prev
+      if (storageKey) {
+        try { localStorage.setItem(storageKey, next ? "1" : "0") } catch { /* private mode: this session only */ }
+      }
+      return next
+    })
+  }
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={toggle}
+        aria-expanded={open}
+        aria-controls={bodyId}
+        className="portal-btn"
+        style={{
+          display: "flex", alignItems: "center", gap: 14, width: "100%",
+          background: "none", border: "none", padding: 0, textAlign: "left",
+          cursor: "pointer",
+          /* .portal-btn is nowrap — the title and its count must wrap */
+          whiteSpace: "normal",
+        }}
+      >
+        <span style={{ flex: 1, minWidth: 0 }}>
+          {kicker && <span style={{ display: "block", marginBottom: 8 }}><Kicker>{kicker}</Kicker></span>}
+          <span style={{
+            display: "block", fontFamily: DISPLAY, fontSize: 25, fontWeight: 800,
+            letterSpacing: "-0.02em", color: TL.text, lineHeight: 1.15,
+          }}>
+            {title}
+          </span>
+          {sub && (
+            <span className="pt-body" style={{
+              display: "block", fontFamily: DISPLAY, fontSize: 15,
+              color: TL.secondary, marginTop: 7, lineHeight: 1.5,
+            }}>
+              {sub}
+            </span>
+          )}
+        </span>
+        <span aria-hidden style={{
+          width: 32, height: 32, borderRadius: 9, flexShrink: 0,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          border: `1px solid ${T.border}`, background: "rgba(255,255,255,0.05)", color: T.text,
+          transform: open ? "rotate(180deg)" : "none",
+          transition: reduce ? "none" : "transform 0.22s cubic-bezier(0.16,1,0.3,1)",
+        }}>
+          <Icon name="chevronD" size={15} />
+        </span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="body"
+            id={bodyId}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: reduce ? 0 : 0.26, ease: [0.16, 1, 0.3, 1] }}
+            style={{ overflow: "hidden" }}
+          >
+            <div style={{ paddingTop: 14 }}>{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
@@ -425,13 +553,13 @@ export function Field({ label, hint, children }: { label: string; hint?: string;
     <label style={{ display: "block" }}>
       <span style={{
         display: "block", marginBottom: 8,
-        fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.16em", textTransform: "uppercase",
-        color: T.faint,
+        fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase",
+        color: T.secondary,
       }}>
         {label}
       </span>
       {children}
-      {hint && <span style={{ display: "block", marginTop: 7, fontFamily: DISPLAY, fontSize: 13, color: T.ghost, lineHeight: 1.5 }}>{hint}</span>}
+      {hint && <span style={{ display: "block", marginTop: 7, fontFamily: DISPLAY, fontSize: 13, color: T.tertiary, lineHeight: 1.5 }}>{hint}</span>}
     </label>
   )
 }
@@ -472,7 +600,7 @@ export function Tabs<Id extends string>({ items, value, onChange }: {
               background: active ? "rgba(255,255,255,0.14)" : "transparent",
               borderColor: active ? "rgba(255,255,255,0.42)" : "transparent",
               boxShadow: active ? "inset 0 1px 0 rgba(255,255,255,0.58), 0 1px 3px rgba(0,0,0,0.18)" : "none",
-              color: active ? TL.text : TL.faint,
+              color: active ? TL.text : TL.secondary,
               fontFamily: DISPLAY, fontSize: 14, fontWeight: active ? 700 : 500, whiteSpace: "nowrap",
             }}
           >
@@ -482,7 +610,7 @@ export function Tabs<Id extends string>({ items, value, onChange }: {
                 minWidth: 16, height: 16, padding: "0 4px", borderRadius: 99,
                 display: "inline-flex", alignItems: "center", justifyContent: "center",
                 background: "rgba(174,83,80,0.85)", color: "#fff",
-                fontFamily: MONO, fontSize: 9, fontWeight: 700,
+                fontFamily: MONO, fontSize: 11, fontWeight: 700,
               }}>
                 {it.badge}
               </span>
@@ -535,9 +663,9 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
               display: "flex", flexDirection: "column",
               borderRadius: 20, overflow: "hidden",
               position: "relative",
-              background: "rgba(255,255,255,0.008)",
-              backdropFilter: "blur(6px) brightness(1.03)",
-              WebkitBackdropFilter: "blur(6px) brightness(1.03)",
+              background: "rgba(28,31,38,0.74)",
+              backdropFilter: "blur(22px) saturate(0.80) brightness(1.02)",
+              WebkitBackdropFilter: "blur(22px) saturate(0.80) brightness(1.02)",
               boxShadow: "0 4px 24px rgba(0,0,0,0.55), 0 40px 100px rgba(0,0,0,0.60)",
             }}
           >
@@ -559,8 +687,8 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
             }}>
               <div>
                 {kicker && (
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
-                    <span style={{ color: "rgba(184,50,64,0.50)" }}>//</span>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 8, fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
+                    <span style={{ color: T.copperTx }}>//</span>
                     <span>[ {kicker} ]</span>
                   </div>
                 )}
@@ -573,11 +701,11 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
                 className="portal-btn portal-btn-ghost"
                 style={{
                   width: 34, height: 34, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.17)", color: TL.muted,
+                  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.17)", color: TL.secondary,
                   flexShrink: 0, transition: "background 0.18s, border-color 0.18s, color 0.18s",
                 }}
                 onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(184,50,64,0.14)"; el.style.borderColor = "rgba(184,50,64,0.45)"; el.style.color = "#fff" }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.10)"; el.style.color = TL.muted }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.10)"; el.style.color = TL.secondary }}
               >
                 <Icon name="x" size={14} />
               </button>
@@ -601,6 +729,47 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
         </motion.div>
       )}
     </AnimatePresence>
+  )
+}
+
+/**
+ * Confirmation before something that cannot be undone — signing, deleting,
+ * cancelling. Several of these actions used to fire on a single click with
+ * no way back, which for a signature is not a detail.
+ */
+export function ConfirmDialog({
+  open, onClose, onConfirm, kicker, title, body, confirmLabel,
+  confirmVariant = "danger", confirmIcon = "check", busy = false,
+}: {
+  open: boolean
+  onClose: () => void
+  onConfirm: () => void
+  kicker?: string
+  title: string
+  body?: React.ReactNode
+  confirmLabel: string
+  confirmVariant?: "primary" | "danger" | "copper"
+  confirmIcon?: IconName
+  busy?: boolean
+}) {
+  return (
+    <Modal
+      open={open}
+      onClose={() => { if (!busy) onClose() }}
+      kicker={kicker}
+      title={title}
+      width={440}
+      footer={
+        <>
+          <Btn variant="ghost" onClick={onClose} disabled={busy}>Annulla</Btn>
+          <Btn variant={confirmVariant} icon={confirmIcon} onClick={onConfirm} busy={busy}>{confirmLabel}</Btn>
+        </>
+      }
+    >
+      {typeof body === "string"
+        ? <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 14.5, lineHeight: 1.6, color: T.secondary, margin: 0 }}>{body}</p>
+        : body}
+    </Modal>
   )
 }
 
@@ -640,7 +809,7 @@ export function Ring({ value, size = 46, stroke = 4, tone = "copper" }: {
       </svg>
       <span style={{
         position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
-        fontFamily: MONO, fontSize: size >= 44 ? 10 : 8.5, fontWeight: 600, color: T.muted,
+        fontFamily: MONO, fontSize: size >= 44 ? 11 : 10, fontWeight: 700, color: T.text,
       }}>
         {Math.round(pct)}%
       </span>
@@ -663,7 +832,7 @@ export function Stat({ label, value, hint, icon, tone = "silver" }: {
       borderTop: `2px solid ${t.fg}`,
     }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-        <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.20em", textTransform: "uppercase", color: T.faint }}>
+        <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: T.secondary }}>
           {label}
         </span>
         {icon && (
@@ -678,7 +847,7 @@ export function Stat({ label, value, hint, icon, tone = "silver" }: {
       <div style={{ fontFamily: DISPLAY, fontSize: 34, fontWeight: 800, letterSpacing: "-0.03em", color: T.text, lineHeight: 1 }}>
         {value}
       </div>
-      {hint && <div style={{ fontFamily: DISPLAY, fontSize: 12.5, color: t.fg }}>{hint}</div>}
+      {hint && <div style={{ fontFamily: DISPLAY, fontSize: 12.5, color: t.tx }}>{hint}</div>}
     </Glass>
   )
 }
@@ -698,18 +867,25 @@ export function Empty({ icon = "sparkle", title, hint, action }: {
       <div style={{
         width: 46, height: 46, borderRadius: 14, marginBottom: 8,
         display: "flex", alignItems: "center", justifyContent: "center",
-        background: "rgba(255,255,255,0.06)", border: `1px solid ${T.border}`, color: T.faint,
+        background: "rgba(255,255,255,0.06)", border: `1px solid ${T.border}`, color: T.secondary,
       }}>
         <Icon name={icon} size={20} strokeWidth={1.5} />
       </div>
-      <p style={{ fontFamily: DISPLAY, fontSize: 17, fontWeight: 700, color: T.muted, margin: 0 }}>{title}</p>
-      {hint && <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 14, color: T.faint, margin: "4px 0 0", maxWidth: 380, lineHeight: 1.6 }}>{hint}</p>}
+      <p style={{ fontFamily: DISPLAY, fontSize: 17, fontWeight: 700, color: T.text, margin: 0 }}>{title}</p>
+      {hint && <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 14, color: T.secondary, margin: "4px 0 0", maxWidth: 380, lineHeight: 1.6 }}>{hint}</p>}
       {action && <div style={{ marginTop: 16 }}>{action}</div>}
     </div>
   )
 }
 
-export function Avatar({ name, size = 30, tone = "copper" }: { name: string; size?: number; tone?: Tone }) {
+export function Avatar({ name, size = 30, tone = "copper", textColor }: {
+  name: string
+  size?: number
+  tone?: Tone
+  /** Overrides the tone's own text colour — e.g. pure white on a card whose
+   *  other text is already pure white, so the initials don't read dimmer. */
+  textColor?: string
+}) {
   const t = TONE[tone]
   const initials = name
     .split(/[\s@._-]+/).filter(Boolean).slice(0, 2).map(w => w[0]?.toUpperCase()).join("") || "?"
@@ -717,7 +893,7 @@ export function Avatar({ name, size = 30, tone = "copper" }: { name: string; siz
     <span style={{
       width: size, height: size, borderRadius: "50%", flexShrink: 0,
       display: "inline-flex", alignItems: "center", justifyContent: "center",
-      background: t.bg, border: `1px solid ${t.bd}`, color: t.fg,
+      background: t.bg, border: `1px solid ${t.bd}`, color: textColor ?? t.tx,
       fontFamily: MONO, fontSize: size * 0.34, fontWeight: 700, letterSpacing: "0.02em",
     }}>
       {initials}
@@ -739,7 +915,7 @@ export function Loading({ label = "Caricamento" }: { label?: string }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 13, padding: "64px 0" }}>
       <Spinner />
-      <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.22em", textTransform: "uppercase", color: TL.ghost }}>
+      <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: TL.secondary }}>
         {label}…
       </span>
     </div>
@@ -753,7 +929,7 @@ export function Note({ tone = "silver", children }: { tone?: Tone; children: Rea
       display: "flex", gap: 9, alignItems: "flex-start",
       padding: "12px 15px", borderRadius: 11,
       background: t.bg, border: `1px solid ${t.bd}`,
-      fontFamily: DISPLAY, fontSize: 14, lineHeight: 1.55, color: t.fg,
+      fontFamily: DISPLAY, fontSize: 14, lineHeight: 1.55, color: t.tx,
     }} className="pt-body">
       <Icon name={tone === "red" || tone === "amber" ? "warn" : "sparkle"} size={15} style={{ marginTop: 1 }} />
       <span>{children}</span>
@@ -891,8 +1067,10 @@ export function Timeline({ events, showProject = false, showClient = false, limi
                 position: "relative", zIndex: 1,
                 width: 29, height: 29, borderRadius: "50%", flexShrink: 0,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                background: t.bg, border: `1px solid ${t.bd}`, color: t.fg,
-                boxShadow: "0 0 0 4px #1E3442",
+                background: t.bg, border: `1px solid ${t.bd}`, color: t.tx,
+                /* the halo punches a hole in the connector line, so it has to be
+                   the colour of the surface underneath — not a fixed petrol */
+                boxShadow: `0 0 0 4px ${T.surface}`,
               }}>
                 <Icon name={meta.icon} size={12.5} />
               </span>
@@ -900,11 +1078,11 @@ export function Timeline({ events, showProject = false, showClient = false, limi
                 <p style={{ fontFamily: DISPLAY, fontSize: 14, fontWeight: 600, color: T.text, margin: 0, lineHeight: 1.4 }}>
                   {ev.title}
                 </p>
-                <p style={{ fontFamily: MONO, fontSize: 10, color: T.faint, margin: "3px 0 0", letterSpacing: "0.04em" }}>
+                <p style={{ fontFamily: MONO, fontSize: 11, color: T.tertiary, margin: "3px 0 0", letterSpacing: "0.04em" }}>
                   {relativeDate(ev.createdAt)}{context ? `  ·  ${context}` : ""}
                 </p>
                 {ev.detail && (
-                  <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13.5, color: T.muted, margin: "4px 0 0", lineHeight: 1.5 }}>
+                  <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13.5, color: T.secondary, margin: "4px 0 0", lineHeight: 1.5 }}>
                     {ev.detail}
                   </p>
                 )}
@@ -932,22 +1110,22 @@ export function BriefCard({ brief, description }: { brief?: ProjectBrief; descri
       background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`,
       display: "flex", flexDirection: "column", gap: 14,
     }}>
-      <p style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>
+      <p style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>
         <Icon name="briefcase" size={12} /> Brief del progetto
       </p>
       {fields.length > 0 && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 10 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(150px, 100%), 1fr))", gap: 10 }}>
           {fields.map(f => (
             <div key={f.label} style={{
               display: "flex", alignItems: "center", gap: 10,
               padding: "10px 12px", borderRadius: 11,
               background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`,
             }}>
-              <span style={{ width: 26, height: 26, borderRadius: 7, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", color: TONE.copper.fg }}>
+              <span style={{ width: 26, height: 26, borderRadius: 7, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", color: TONE.copper.tx }}>
                 <Icon name={f.icon} size={14} />
               </span>
               <div style={{ minWidth: 0 }}>
-                <p style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.14em", textTransform: "uppercase", color: T.faint, margin: 0 }}>{f.label}</p>
+                <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: T.tertiary, margin: 0 }}>{f.label}</p>
                 <p style={{ fontFamily: DISPLAY, fontSize: 13, fontWeight: 700, color: T.text, margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis" }}>{f.value}</p>
               </div>
             </div>
@@ -956,14 +1134,14 @@ export function BriefCard({ brief, description }: { brief?: ProjectBrief; descri
       )}
       {description && (
         <div>
-          <p style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.14em", textTransform: "uppercase", color: T.faint, margin: "0 0 5px" }}>Obiettivi</p>
-          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>{description}</p>
+          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: T.tertiary, margin: "0 0 5px" }}>Obiettivi</p>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.secondary, margin: 0, whiteSpace: "pre-wrap" }}>{description}</p>
         </div>
       )}
       {hasRefs && (
         <div>
-          <p style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.14em", textTransform: "uppercase", color: T.faint, margin: "0 0 5px" }}>Riferimenti</p>
-          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>{brief!.references}</p>
+          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: T.tertiary, margin: "0 0 5px" }}>Riferimenti</p>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.secondary, margin: 0, whiteSpace: "pre-wrap" }}>{brief!.references}</p>
         </div>
       )}
     </div>
@@ -983,7 +1161,7 @@ export function Row({ icon, iconTone = "steel", title, sub, right, onClick }: {
   return (
     <div
       onClick={onClick}
-      className={onClick ? "portal-row" : undefined}
+      className={`pt-row ${onClick ? "portal-row" : ""}`}
       style={{
         display: "flex", alignItems: "center", gap: 14,
         padding: "12px 4px",
@@ -996,28 +1174,28 @@ export function Row({ icon, iconTone = "steel", title, sub, right, onClick }: {
         <span style={{
           width: 34, height: 34, borderRadius: 9, flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
-          color: t.fg,
+          color: t.tx,
         }}>
           <Icon name={icon} size={16} />
         </span>
       )}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{
+      <div className="pt-row-main" style={{ flex: 1, minWidth: 0 }}>
+        <div className="pt-row-title" style={{
           fontFamily: DISPLAY, fontSize: 15.5, fontWeight: 700, color: T.text,
           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
         }}>
           {title}
         </div>
         {sub && (
-          <div style={{
-            fontFamily: DISPLAY, fontSize: 14, color: T.faint, marginTop: 3,
+          <div className="pt-row-title" style={{
+            fontFamily: DISPLAY, fontSize: 14, color: T.secondary, marginTop: 3,
             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
           }}>
             {sub}
           </div>
         )}
       </div>
-      {right && <div style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 8 }}>{right}</div>}
+      {right && <div className="pt-row-right" style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 8 }}>{right}</div>}
     </div>
   )
 }

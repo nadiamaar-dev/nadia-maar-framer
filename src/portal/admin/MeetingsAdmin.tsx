@@ -18,6 +18,7 @@ export default function MeetingsAdmin({ home, clients, reload }: {
   const [open, setOpen] = useState(false)
   const [slot, setSlot] = useState<string | null>(null)
   const [clientId, setClientId] = useState("")
+  const [projectId, setProjectId] = useState("")
   const [note, setNote] = useState("")
   const [busy, setBusy] = useState(false)
   const [actingId, setActingId] = useState<string | null>(null)
@@ -50,13 +51,22 @@ export default function MeetingsAdmin({ home, clients, reload }: {
     }
   }
 
+  const clientProjects = home.projects.filter(p => p.clientId === clientId)
+
   async function submit() {
     if (!slot || !clientId || busy) return
     setBusy(true)
     try {
-      await proposeMeeting({ clientId, proposedBy: "admin", datetime: slot, note: note.trim() || undefined })
+      /* projectId matters: trg_meeting_events returns early without it, so a
+         meeting proposed from here used to leave no trace in the project
+         journal and never appeared in the dossier's Riunioni tab. */
+      await proposeMeeting({
+        clientId, proposedBy: "admin", datetime: slot,
+        note: note.trim() || undefined,
+        projectId: projectId || undefined,
+      })
       setOpen(false)
-      setSlot(null); setClientId(""); setNote("")
+      setSlot(null); setClientId(""); setProjectId(""); setNote("")
       setRefreshKey(k => k + 1)
       toast.success("Proposta inviata al cliente")
       reload()
@@ -144,11 +154,19 @@ export default function MeetingsAdmin({ home, clients, reload }: {
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <Field label="Cliente">
-            <Select value={clientId} onChange={e => setClientId(e.target.value)}>
+            <Select value={clientId} onChange={e => { setClientId(e.target.value); setProjectId("") }}>
               <option value="">Seleziona cliente…</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.company}</option>)}
             </Select>
           </Field>
+          {clientProjects.length > 0 && (
+            <Field label="Progetto (opzionale)" hint="Collegando un progetto la riunione entra nel suo diario e nella scheda del dossier.">
+              <Select value={projectId} onChange={e => setProjectId(e.target.value)}>
+                <option value="">Nessun progetto specifico</option>
+                {clientProjects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </Select>
+            </Field>
+          )}
           <Scheduler value={slot} onChange={setSlot} refreshKey={refreshKey} />
           <Field label="Nota (opzionale)">
             <Textarea value={note} onChange={e => setNote(e.target.value)} rows={2} placeholder="Ordine del giorno…" style={{ resize: "vertical" }} />

@@ -27,7 +27,7 @@ function ProgressBar({ value, tone }: { value: number; tone: "copper" | "green" 
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
-        <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "#FFFFFF" }}>
+        <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: "#FFFFFF" }}>
           Avanzamento
         </span>
         <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 700, color: label }}>
@@ -67,8 +67,11 @@ function StageRow({ stage, index, isLast, renderAction }: {
   /* ── Connector line ── */
   const lineColor = "rgba(255,255,255,0.07)"
 
-  /* ── Content card (only active + done) ── */
-  const cardBg     = "rgba(255,255,255,0.008)"
+  /* ── Content card (only active + done) ──
+     Matte, like every other data surface in the cabinet: this card carries
+     the deliverable note and the approve/reject buttons, and used to be a
+     0.8% film over the animated background. */
+  const cardBg     = T.surface
   const cardBorder = isActive ? "rgba(184,50,64,0.18)" : "rgba(255,255,255,0.08)"
   const descColor  = "#FFFFFF"
 
@@ -122,7 +125,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
         }}>
           {/* Fase label */}
           <span style={{
-            fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em", textTransform: "uppercase",
+            fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase",
             color: circle.color, flexShrink: 0,
           }}>
             FASE {numLabel}
@@ -147,7 +150,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
                 display: "inline-flex", alignItems: "center", gap: 5,
                 padding: "3px 10px", borderRadius: 99,
                 background: "transparent", border: "1px solid rgba(16,185,129,0.22)",
-                fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.06em",
+                fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em",
                 color: "#10B981",
               }}>
                 <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#10B981", opacity: 0.7 }} />
@@ -159,7 +162,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
                 display: "inline-flex", alignItems: "center", gap: 5,
                 padding: "3px 10px", borderRadius: 99,
                 background: "transparent", border: "1px solid rgba(184,50,64,0.25)",
-                fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.06em",
+                fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em",
                 color: "#B8384A",
               }}>
                 <span className="stage-dot-pulse" style={{ width: 5, height: 5, borderRadius: "50%", background: "#B8384A" }} />
@@ -171,7 +174,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
                 display: "inline-flex", alignItems: "center", gap: 5,
                 padding: "2px 9px", borderRadius: 99,
                 background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.14)",
-                fontFamily: MONO, fontSize: 9, letterSpacing: "0.06em",
+                fontFamily: MONO, fontSize: 11, letterSpacing: "0.06em",
                 color: "#FFFFFF",
               }}>
                 In attesa
@@ -198,9 +201,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
             background: cardBg,
             border: `1px solid ${cardBorder}`,
             borderLeft: isActive ? "3px solid rgba(184,50,64,0.50)" : `1px solid ${cardBorder}`,
-            backdropFilter: "blur(6px) brightness(1.03)",
-            WebkitBackdropFilter: "blur(6px) brightness(1.03)",
-            boxShadow: "0 4px 24px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.09)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 10px rgba(0,0,0,0.30)",
             display: "flex", flexDirection: "column", gap: 14,
           }}>
             {/* Description */}
@@ -227,7 +228,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
                 className="portal-link"
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 6,
-                  fontFamily: MONO, fontSize: 11, color: T.copperLt, textDecoration: "none",
+                  fontFamily: MONO, fontSize: 11, color: T.copperTx, textDecoration: "none",
                 }}
               >
                 <Icon name="external" size={12} /> Apri deliverable
@@ -240,7 +241,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
             {/* Dates */}
             {(stage.startedAt || stage.completedAt) && (
               <p style={{
-                fontFamily: MONO, fontSize: 9.5, color: "#FFFFFF",
+                fontFamily: MONO, fontSize: 11, color: "#FFFFFF",
                 margin: 0, letterSpacing: "0.04em",
               }}>
                 {stage.startedAt ? `Avviata ${fmtDate(stage.startedAt)}` : ""}

@@ -4,7 +4,9 @@ import { useBlueprint } from "../../context/BlueprintContext"
 import type { AdminHome, ClientRecord, PortalAction } from "../../lib/api"
 import type { FoundryLead } from "../../lib/api"
 import { fetchAdminHome, fetchClients, fetchLeads, subscribe, supabase } from "../../lib/api"
+import ErrorBoundary from "../ErrorBoundary"
 import Shell, { type ShellNavItem } from "../Shell"
+import { useHashRoute } from "../useHashRoute"
 import { Btn, DISPLAY, Glass, Icon, Loading, MONO, T } from "../ui"
 import Billing from "./Billing"
 import Clients from "./Clients"
@@ -27,9 +29,14 @@ const SECTIONS: Omit<ShellNavItem, "badge">[] = [
   { id: "richieste", label: "Richieste", icon: "bolt" },
 ]
 
+const SECTION_IDS = SECTIONS.map(s => s.id)
+
 const WATCHED_TABLES = [
   "profiles", "client_projects", "project_stages", "project_events",
   "conversations", "meetings", "client_invoices", "support_tickets", "foundry_leads",
+  /* client-driven tables: without these, a client upload or a signature
+     lands silently and the admin only sees it after a manual reload */
+  "client_assets", "client_documents",
 ]
 
 export default function AdminApp() {
@@ -38,8 +45,9 @@ export default function AdminApp() {
   const [clients, setClients] = useState<ClientRecord[]>([])
   const [leads, setLeads] = useState<FoundryLead[]>([])
   const [failed, setFailed] = useState(false)
-  const [section, setSection] = useState("panoramica")
-  const [projectId, setProjectId] = useState<string | null>(null)
+  /* same reason as the cabinet: F5 and Back used to dump you on the
+     overview, and a project could not be linked to */
+  const { section, id: projectId, go } = useHashRoute("panoramica", SECTION_IDS)
   const debounceRef = useRef<ReturnType<typeof setTimeout>>()
 
   const reload = useCallback(async () => {
@@ -75,13 +83,11 @@ export default function AdminApp() {
   }, [reload])
 
   function handleAction(a: PortalAction) {
-    setSection(a.section)
-    setProjectId(a.section === "progetti" ? a.projectId ?? null : null)
+    go(a.section, a.section === "progetti" ? a.projectId ?? null : null)
   }
 
   function handleSelect(id: string) {
-    setSection(id)
-    if (id !== "progetti") setProjectId(null)
+    go(id, id === "progetti" ? projectId : null)
   }
 
   if (failed) {
@@ -90,7 +96,7 @@ export default function AdminApp() {
         <Background />
         <Glass variant="panel" style={{ padding: 28, maxWidth: 400, textAlign: "center", position: "relative", zIndex: 1 }}>
           <p style={{ fontFamily: DISPLAY, fontSize: 14, fontWeight: 800, color: T.text, margin: 0 }}>Caricamento non riuscito</p>
-          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.faint, margin: "8px 0 18px" }}>Controlla la connessione e riprova.</p>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.secondary, margin: "8px 0 18px" }}>Controlla la connessione e riprova.</p>
           <Btn variant="primary" onClick={reload}>Riprova</Btn>
         </Glass>
       </div>
@@ -123,16 +129,17 @@ export default function AdminApp() {
       onSelect={handleSelect}
       email={user.email ?? undefined}
       roleLabel="Amministratore"
+      areaLabel="Studio"
       onSignOut={() => { supabase.auth.signOut().then(() => window.location.replace("/")) }}
-      topRight={home.actions.length > 0 ? (
+      topRight={home.actions.length > 0 && section !== "panoramica" ? (
         <button
-          onClick={() => setSection("panoramica")}
+          onClick={() => go("panoramica")}
           className="portal-nav-item"
           style={{
             display: "inline-flex", alignItems: "center", gap: 7,
             padding: "7px 14px", borderRadius: 99, cursor: "pointer",
             background: "rgba(184,50,64,0.14)", border: "1px solid rgba(184,50,64,0.32)",
-            fontFamily: MONO, fontSize: 10, fontWeight: 700, color: T.copperLt,
+            fontFamily: MONO, fontSize: 11, fontWeight: 700, color: T.copperTx,
           }}
         >
           <Icon name="bell" size={11} />
@@ -140,26 +147,28 @@ export default function AdminApp() {
         </button>
       ) : undefined}
     >
-      {section === "panoramica" && <Overview home={home} onAction={handleAction} />}
-      {section === "richieste" && <LeadsAdmin leads={leads} reload={reload} />}
-      {section === "clienti" && (
-        <Clients
-          clients={clients}
-          home={home}
-          adminId={user.id}
-          reload={reload}
-          onOpenProject={id => { setSection("progetti"); setProjectId(id) }}
-        />
-      )}
-      {section === "progetti" && (
-        projectId
-          ? <DossierAdmin projectId={projectId} home={home} adminId={user.id} onBack={() => setProjectId(null)} reload={reload} />
-          : <ProjectsBoard home={home} onOpenProject={setProjectId} />
-      )}
-      {section === "riunioni" && <MeetingsAdmin home={home} clients={clients} reload={reload} />}
-      {section === "fatturazione" && <Billing home={home} clients={clients} reload={reload} />}
-      {section === "messaggi" && <MessagesAdmin home={home} adminId={user.id} reload={reload} />}
-      {section === "supporto" && <SupportAdmin home={home} reload={reload} />}
+      <ErrorBoundary resetKey={`${section}:${projectId ?? ""}`}>
+        {section === "panoramica" && <Overview home={home} onAction={handleAction} />}
+        {section === "richieste" && <LeadsAdmin leads={leads} reload={reload} />}
+        {section === "clienti" && (
+          <Clients
+            clients={clients}
+            home={home}
+            adminId={user.id}
+            reload={reload}
+            onOpenProject={id => go("progetti", id)}
+          />
+        )}
+        {section === "progetti" && (
+          projectId
+            ? <DossierAdmin projectId={projectId} home={home} adminId={user.id} onBack={() => go("progetti")} reload={reload} />
+            : <ProjectsBoard home={home} onOpenProject={id => go("progetti", id)} />
+        )}
+        {section === "riunioni" && <MeetingsAdmin home={home} clients={clients} reload={reload} />}
+        {section === "fatturazione" && <Billing home={home} clients={clients} reload={reload} />}
+        {section === "messaggi" && <MessagesAdmin home={home} adminId={user.id} reload={reload} />}
+        {section === "supporto" && <SupportAdmin home={home} adminId={user.id} reload={reload} />}
+      </ErrorBoundary>
     </Shell>
   )
 }

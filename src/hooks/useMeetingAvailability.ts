@@ -57,6 +57,9 @@ export interface UseMeetingAvailability {
   loading: boolean
   /** Call to manually refresh (e.g. after a new booking). */
   refetch: () => void
+  /** True when the confirmed-slot fetch failed: every slot then looks free,
+   *  so the UI must say the calendar is not authoritative. */
+  failed: boolean
   /** True if the slot is confirmed for ANY client (globally blocked). */
   isBlocked: (date: string, time: string) => boolean
   /** True if day has at least one non-blocked, non-past slot. */
@@ -68,12 +71,19 @@ export interface UseMeetingAvailability {
 export function useMeetingAvailability(refreshKey = 0): UseMeetingAvailability {
   const [blocked,  setBlocked]  = useState<Set<string>>(new Set())
   const [loading,  setLoading]  = useState(true)
+  const [failed,   setFailed]   = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
     try {
       const slots = await fetchConfirmedSlots()
       setBlocked(slots)
+      setFailed(false)
+    } catch {
+      /* the rejection used to go unhandled: `blocked` stayed empty and every
+         already-booked slot silently offered itself as free */
+      setBlocked(new Set())
+      setFailed(true)
     } finally {
       setLoading(false)
     }
@@ -101,5 +111,5 @@ export function useMeetingAvailability(refreshKey = 0): UseMeetingAvailability {
     [availableSlotsForDay],
   )
 
-  return { loading, refetch: load, isBlocked, hasAvailableSlots, availableSlotsForDay }
+  return { loading, failed, refetch: load, isBlocked, hasAvailableSlots, availableSlotsForDay }
 }

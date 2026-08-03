@@ -5,6 +5,7 @@ import { fmtDateTime, fmtEur } from "./format"
 import { fetchAllMeetings, fetchClientMeetings } from "./meetings"
 import {
   fetchAllProjects, fetchClientEvents, fetchProjectsByClient, fetchProjectStages, fetchRecentEvents,
+  fetchStagesAwaitingRevision,
 } from "./projects"
 import { fetchClientTickets, fetchTickets } from "./tickets"
 import type {
@@ -42,7 +43,7 @@ export interface AdminHome {
 }
 
 export async function fetchClientHome(clientId: string): Promise<ClientHome> {
-  const [projects, invoices, documents, meetings, threads, tickets, events] = await Promise.all([
+  const [projects, allInvoices, documents, meetings, threads, tickets, events] = await Promise.all([
     fetchProjectsByClient(clientId),
     fetchInvoices(clientId),
     fetchDocuments(clientId),
@@ -51,6 +52,12 @@ export async function fetchClientHome(clientId: string): Promise<ClientHome> {
     fetchClientTickets(clientId),
     fetchClientEvents(clientId),
   ])
+
+  /* A draft is an invoice the studio has not issued yet. RLS lets the client
+     read it, so without this filter it shows up in their list as "Bozza" —
+     a bill they were never sent. Hidden here rather than in the view so the
+     KPI totals and the action center stop counting it too. */
+  const invoices = allInvoices.filter(i => i.status !== "draft")
 
   const running = projects.filter(p => p.status === "active")
   const stagePairs = await Promise.all(running.map(async p => [p.id, await fetchProjectStages(p.id)] as const))
@@ -139,7 +146,7 @@ export async function fetchClientHome(clientId: string): Promise<ClientHome> {
 }
 
 export async function fetchAdminHome(): Promise<AdminHome> {
-  const [kpi, projects, invoices, meetings, threads, tickets, events] = await Promise.all([
+  const [kpi, projects, invoices, meetings, threads, tickets, events, revisions] = await Promise.all([
     fetchKpi(),
     fetchAllProjects(),
     fetchInvoices(),
@@ -147,6 +154,7 @@ export async function fetchAdminHome(): Promise<AdminHome> {
     fetchThreads(),
     fetchTickets(),
     fetchRecentEvents(),
+    fetchStagesAwaitingRevision(),
   ])
 
   const actions: PortalAction[] = []
@@ -162,6 +170,20 @@ export async function fetchAdminHome(): Promise<AdminHome> {
         projectId: p.id,
       })
     }
+  }
+
+  /* The client bounced a deliverable back. This is the loudest thing a client
+     can do and it used to surface nowhere outside the dossier tab badge. */
+  for (const s of revisions) {
+    const p = projects.find(pr => pr.id === s.projectId)
+    actions.push({
+      id: `revise_stage:${s.id}`,
+      kind: "revise_stage",
+      label: `Modifiche richieste su «${s.title}»`,
+      sublabel: [p?.clientName, s.revisionNote?.replace(/\s+/g, " ").slice(0, 70)].filter(Boolean).join(" — "),
+      section: "progetti",
+      projectId: s.projectId,
+    })
   }
 
   for (const m of meetings) {
@@ -183,6 +205,17 @@ export async function fetchAdminHome(): Promise<AdminHome> {
         kind: "reply_ticket",
         label: `Ticket: ${t.subject}`,
         sublabel: t.clientName,
+        section: "supporto",
+      })
+    }
+    /* Quote accepted — commercially the most important thing a client does,
+       and it wrote its audit row with project_id null, so nothing surfaced it. */
+    if (t.estimateAcceptedAt && t.status !== "resolved") {
+      actions.push({
+        id: `estimate_accepted:${t.id}`,
+        kind: "estimate_accepted",
+        label: `Preventivo approvato: ${t.subject}`,
+        sublabel: [t.clientName, t.estimateAmount != null ? fmtEur(t.estimateAmount) : null].filter(Boolean).join(" · "),
         section: "supporto",
       })
     }
@@ -221,7 +254,10 @@ export async function fetchAdminHome(): Promise<AdminHome> {
     }
   }
 
-  const order: PortalAction["kind"][] = ["review_project", "confirm_payment", "confirm_meeting", "reply_ticket", "answer_chat", "overdue_invoice"]
+  const order: PortalAction["kind"][] = [
+    "revise_stage", "estimate_accepted", "review_project", "confirm_payment",
+    "confirm_meeting", "reply_ticket", "answer_chat", "overdue_invoice",
+  ]
   actions.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind))
 
   return { kpi, projects, invoices, meetings, threads, tickets, events, actions }

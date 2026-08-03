@@ -16,7 +16,7 @@ export default function Scheduler({ value, onChange, refreshKey = 0 }: {
   onChange: (v: string | null) => void
   refreshKey?: number
 }) {
-  const { loading, hasAvailableSlots, availableSlotsForDay } = useMeetingAvailability(refreshKey)
+  const { loading, failed, hasAvailableSlots, availableSlotsForDay } = useMeetingAvailability(refreshKey)
   const today = new Date()
   const [cursor, setCursor] = useState({ y: today.getFullYear(), m: today.getMonth() })
   const selDate = value ? value.slice(0, 10) : null
@@ -56,7 +56,7 @@ export default function Scheduler({ value, onChange, refreshKey = 0 }: {
           style={{
             width: 28, height: 28, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center",
             border: `1px solid ${T.border}`, background: "rgba(255,255,255,0.03)",
-            color: atCurrentMonth ? T.ghost : T.faint, cursor: atCurrentMonth ? "default" : "pointer",
+            color: atCurrentMonth ? T.tertiary : T.secondary, cursor: atCurrentMonth ? "default" : "pointer",
             opacity: atCurrentMonth ? 0.4 : 1,
           }}
         >
@@ -74,17 +74,29 @@ export default function Scheduler({ value, onChange, refreshKey = 0 }: {
           onClick={() => nav(1)}
           style={{
             width: 28, height: 28, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center",
-            border: `1px solid ${T.border}`, background: "rgba(255,255,255,0.03)", color: T.faint, cursor: "pointer",
+            border: `1px solid ${T.border}`, background: "rgba(255,255,255,0.03)", color: T.secondary, cursor: "pointer",
           }}
         >
           <Icon name="arrowR" size={13} />
         </button>
       </div>
 
+      {/* Without the confirmed slots every hour looks free, which would let
+          the client pick a time that is already taken. Say so. */}
+      {failed && (
+        <div style={{
+          marginBottom: 10, padding: "9px 12px", borderRadius: 10,
+          background: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.30)",
+          fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.5, color: "#FFFFFF",
+        }}>
+          Non siamo riusciti a leggere gli orari già occupati: potresti proporre uno slot non disponibile. Lo studio ti risponderà comunque.
+        </div>
+      )}
+
       {/* Weekday header */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4, marginBottom: 4 }}>
         {WEEKDAYS.map(d => (
-          <div key={d} style={{ textAlign: "center", fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.12em", textTransform: "uppercase", color: T.ghost, padding: "2px 0" }}>
+          <div key={d} style={{ textAlign: "center", fontFamily: MONO, fontSize: 11, letterSpacing: "0.10em", textTransform: "uppercase", color: T.tertiary, padding: "2px 0" }}>
             {d}
           </div>
         ))}
@@ -113,7 +125,7 @@ export default function Scheduler({ value, onChange, refreshKey = 0 }: {
                   : isOpen ? "rgba(255,255,255,0.09)" : "rgba(255,255,255,0.025)",
                 border: `1px solid ${isSelDay ? "rgba(184,50,64,0.55)" : isOpen ? T.borderHi : T.border}`,
                 boxShadow: isSelDay || isOpen ? "inset 0 1px 0 rgba(255,255,255,0.16)" : "none",
-                color: disabled ? T.ghost : isSelDay ? T.copperLt : T.muted,
+                color: disabled ? T.tertiary : isSelDay ? T.copperLt : T.secondary,
                 fontFamily: MONO, fontSize: 11.5, fontWeight: isSelDay ? 700 : 500,
                 cursor: disabled ? "default" : "pointer",
                 opacity: disabled ? 0.35 : 1,
@@ -131,11 +143,11 @@ export default function Scheduler({ value, onChange, refreshKey = 0 }: {
       {/* Time chips for the open day */}
       {openDay && (
         <div style={{ marginTop: 14, paddingTop: 12, borderTop: `1px solid ${T.border}` }}>
-          <p style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: T.ghost, margin: "0 0 9px" }}>
+          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.tertiary, margin: "0 0 9px" }}>
             Orari · {new Date(`${openDay}T12:00`).toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" })}
           </p>
           {dayTimes.length === 0 ? (
-            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12, color: T.faint, margin: 0 }}>Nessun orario disponibile.</p>
+            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12, color: T.secondary, margin: 0 }}>Nessun orario disponibile.</p>
           ) : (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {dayTimes.map(t => {

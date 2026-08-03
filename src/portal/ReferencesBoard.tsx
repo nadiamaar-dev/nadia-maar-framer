@@ -4,7 +4,7 @@ import type { ProjectReference, ReferenceKind } from "../lib/api"
 import {
   createReference, createReferences, deleteReference, fetchReferences, subscribe, titleFromUrl,
 } from "../lib/api"
-import { Badge, Btn, DISPLAY, Empty, Icon, Input, Loading, MONO, Note, T } from "./ui"
+import { Badge, Btn, ConfirmDialog, DISPLAY, Empty, Icon, Input, Loading, MONO, Note, T } from "./ui"
 
 type FoundryItem = { id: string; title: string; description?: string; category?: string }
 
@@ -29,9 +29,18 @@ export default function ReferencesBoard({ projectId, clientId, role, foundryItem
   const [note, setNote] = useState("")
   const [busy, setBusy] = useState(false)
   const [removing, setRemoving] = useState<string | null>(null)
+  const [toDelete, setToDelete] = useState<ProjectReference | null>(null)
+  /* a failed fetch used to render as an empty board */
+  const [failed, setFailed] = useState(false)
 
   const load = useCallback(async () => {
-    try { setRefs(await fetchReferences(projectId)) } catch { setRefs([]) }
+    try {
+      setRefs(await fetchReferences(projectId))
+      setFailed(false)
+    } catch {
+      setRefs([])
+      setFailed(true)
+    }
   }, [projectId])
 
   useEffect(() => {
@@ -88,10 +97,11 @@ export default function ReferencesBoard({ projectId, clientId, role, foundryItem
     }
   }
 
-  async function remove(r: ProjectReference) {
-    if (removing) return
+  async function remove() {
+    const r = toDelete
+    if (!r || removing) return
     setRemoving(r.id)
-    try { await deleteReference(r.id); await load() }
+    try { await deleteReference(r.id); setToDelete(null); await load() }
     catch { toast.error("Eliminazione non riuscita.") }
     finally { setRemoving(null) }
   }
@@ -116,7 +126,7 @@ export default function ReferencesBoard({ projectId, clientId, role, foundryItem
           <button
             onClick={importFoundry}
             className="portal-nav-item"
-            style={{ alignSelf: "flex-start", display: "inline-flex", alignItems: "center", gap: 7, padding: "7px 12px", borderRadius: 9, background: "rgba(184,50,64,0.10)", border: "1px solid rgba(184,50,64,0.24)", color: T.copperLt, fontFamily: DISPLAY, fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}
+            style={{ alignSelf: "flex-start", display: "inline-flex", alignItems: "center", gap: 7, padding: "7px 12px", borderRadius: 9, background: "rgba(184,50,64,0.10)", border: "1px solid rgba(184,50,64,0.24)", color: T.copperTx, fontFamily: DISPLAY, fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}
           >
             <Icon name="sparkle" size={13} /> Importa {foundryItems.length} element{foundryItems.length === 1 ? "o" : "i"} dal Foundry
           </button>
@@ -126,10 +136,15 @@ export default function ReferencesBoard({ projectId, clientId, role, foundryItem
       {/* Board */}
       {refs === null ? (
         <Loading label="Carico i riferimenti" />
+      ) : failed ? (
+        <Note tone="amber">
+          Non siamo riusciti a caricare i riferimenti — non significa che non ce ne siano.{" "}
+          <button onClick={load} style={{ background: "none", border: "none", padding: 0, color: "inherit", textDecoration: "underline", cursor: "pointer", font: "inherit" }}>Riprova</button>.
+        </Note>
       ) : refs.length === 0 ? (
         <Empty icon="sparkle" title="Nessun riferimento" hint="Incolla il link di un sito che ti ispira o carica un'immagine di esempio." />
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(220px, 100%), 1fr))", gap: 12 }}>
           {refs.map(r => (
             <div key={r.id} style={{ display: "flex", flexDirection: "column", borderRadius: 13, overflow: "hidden", background: "rgba(255,255,255,0.05)", border: `1px solid ${T.border}` }}>
               {r.kind === "image" && (r.imageUrl || r.url) && (
@@ -139,24 +154,26 @@ export default function ReferencesBoard({ projectId, clientId, role, foundryItem
               )}
               <div style={{ padding: "12px 13px", display: "flex", flexDirection: "column", gap: 7, flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                  <Icon name={r.kind === "foundry" ? "sparkle" : r.kind === "image" ? "layers" : r.kind === "note" ? "doc" : "external"} size={13} style={{ color: T.copperLt, flexShrink: 0 }} />
+                  <Icon name={r.kind === "foundry" ? "sparkle" : r.kind === "image" ? "layers" : r.kind === "note" ? "doc" : "external"} size={13} style={{ color: T.copperTx, flexShrink: 0 }} />
                   <span style={{ flex: 1, minWidth: 0, fontFamily: DISPLAY, fontSize: 13, fontWeight: 700, color: T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {r.title}
                   </span>
                   {canDelete(r) && (
-                    <button onClick={() => remove(r)} disabled={removing === r.id} title="Elimina" style={{ background: "none", border: "none", cursor: "pointer", color: T.ghost, display: "inline-flex", padding: 2 }}>
+                    <button onClick={() => setToDelete(r)} disabled={removing === r.id} title="Elimina"
+                      className="portal-icon-btn"
+                      style={{ background: "none", border: "none", cursor: "pointer", color: T.secondary, display: "inline-flex", alignItems: "center", justifyContent: "center", padding: 2 }}>
                       <Icon name="trash" size={13} />
                     </button>
                   )}
                 </div>
-                {r.note && <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12, lineHeight: 1.5, color: T.muted, margin: 0 }}>{r.note}</p>}
+                {r.note && <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12, lineHeight: 1.5, color: T.secondary, margin: 0 }}>{r.note}</p>}
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: "auto", flexWrap: "wrap" }}>
                   {r.url && (
-                    <a href={r.url} target="_blank" rel="noreferrer" className="portal-link" style={{ fontFamily: MONO, fontSize: 9.5, color: T.copperLt, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "100%" }}>
+                    <a href={r.url} target="_blank" rel="noreferrer" className="portal-link" style={{ fontFamily: MONO, fontSize: 11, color: T.copperTx, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "100%" }}>
                       <Icon name="external" size={10} /> {titleFromUrl(r.url)}
                     </a>
                   )}
-                  {r.source && <span style={{ fontFamily: MONO, fontSize: 8.5, color: T.faint }}>{r.source}</span>}
+                  {r.source && <span style={{ fontFamily: MONO, fontSize: 11, color: T.secondary }}>{r.source}</span>}
                   <span style={{ flex: 1 }} />
                   <Badge tone={r.addedBy === "admin" ? "silver" : "copper"}>{r.addedBy === "admin" ? "studio" : "tu"}</Badge>
                 </div>
@@ -165,6 +182,18 @@ export default function ReferencesBoard({ projectId, clientId, role, foundryItem
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={toDelete !== null}
+        onClose={() => setToDelete(null)}
+        onConfirm={remove}
+        kicker="Blueprint"
+        title="Rimuovere il riferimento?"
+        confirmLabel="Rimuovi"
+        confirmIcon="trash"
+        busy={!!removing}
+        body={`«${toDelete?.title ?? ""}» sparisce dal blueprint per entrambi.`}
+      />
     </div>
   )
 }

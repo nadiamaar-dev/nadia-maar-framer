@@ -142,16 +142,17 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
                   width: 30, height: 30, borderRadius: 9,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   background: "rgba(184,50,64,0.16)", border: "1px solid rgba(184,50,64,0.28)",
-                  color: T.copperLt,
+                  color: T.copperTx,
                 }}>
                   <Icon name={step.icon} size={13} />
                 </span>
-                <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.10em", textTransform: "uppercase", color: T.faint }}>
+                <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.10em", textTransform: "uppercase", color: T.secondary }}>
                   {step.label}
                 </span>
               </div>
+              {/* decorative connector — 0.35 alpha crimson was invisible */}
               {i < 2 && (
-                <div style={{ display: "flex", alignItems: "center", paddingBottom: 20, color: "rgba(184,50,64,0.35)", fontSize: 14, flexShrink: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", paddingBottom: 20, color: "rgba(228,105,122,0.55)", fontSize: 14, flexShrink: 0 }}>
                   →
                 </div>
               )}
@@ -163,7 +164,7 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
           <Input value={name} onChange={e => setName(e.target.value)} placeholder="Es. Sito vetrina + area riservata" autoFocus />
         </Field>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(160px, 100%), 1fr))", gap: 12 }}>
           <Field label="Tipo di progetto">
             <Select value={projectType} onChange={e => setProjectType(e.target.value)}>
               <option value="">Seleziona…</option>
@@ -193,7 +194,7 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
 
         {/* Blueprint — reference sites/layouts */}
         <div style={{ padding: "13px 15px", borderRadius: 12, background: "rgba(184,50,64,0.06)", border: "1px solid rgba(184,50,64,0.20)", display: "flex", flexDirection: "column", gap: 10 }}>
-          <p style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>
+          <p style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>
             <Icon name="sparkle" size={12} /> Blueprint · siti e layout di riferimento
           </p>
           <div style={{ display: "flex", gap: 8 }}>
@@ -204,9 +205,9 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
           {refUrls.length > 0 && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {refUrls.map(u => (
-                <span key={u} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 99, background: "rgba(255,255,255,0.06)", border: `1px solid ${T.border}`, fontFamily: MONO, fontSize: 10, color: T.muted }}>
+                <span key={u} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 99, background: "rgba(255,255,255,0.06)", border: `1px solid ${T.border}`, fontFamily: MONO, fontSize: 11, color: T.secondary }}>
                   {titleFromUrl(u)}
-                  <button onClick={() => setRefUrls(prev => prev.filter(x => x !== u))} style={{ background: "none", border: "none", cursor: "pointer", color: T.faint, display: "inline-flex", padding: 0 }}>
+                  <button onClick={() => setRefUrls(prev => prev.filter(x => x !== u))} style={{ background: "none", border: "none", cursor: "pointer", color: T.secondary, display: "inline-flex", padding: 0 }}>
                     <Icon name="x" size={11} />
                   </button>
                 </span>
@@ -214,13 +215,13 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
             </div>
           )}
           {items.length > 0 && (
-            <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 12.5, color: T.muted }}>
+            <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 12.5, color: T.secondary }}>
               <input type="checkbox" checked={includeFoundry} onChange={e => setIncludeFoundry(e.target.checked)} style={{ accentColor: "#B83240", width: 15, height: 15 }} />
               Includi i miei {items.length} element{items.length === 1 ? "o" : "i"} dal Foundry
               <Badge tone="copper">Blueprint</Badge>
             </label>
           )}
-          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 11.5, lineHeight: 1.5, color: T.faint, margin: 0 }}>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 11.5, lineHeight: 1.5, color: T.secondary, margin: 0 }}>
             Potrai aggiungerne altri in qualsiasi momento dalla scheda «Riferimenti» del progetto.
           </p>
         </div>
@@ -232,7 +233,7 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
           padding: "10px 14px", borderRadius: 11,
           background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.16)",
         }}>
-          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.faint, margin: 0 }}>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.secondary, margin: 0 }}>
             Il progetto entra <span style={{ color: T.text, fontWeight: 600 }}>in valutazione</span>: definiamo insieme le fasi e ricevi una notifica appena è attivo.
           </p>
         </div>

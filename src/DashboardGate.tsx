@@ -23,7 +23,9 @@ export default function DashboardGate() {
       return
     }
 
-    if (!SUPABASE_READY) { setRole("client"); setReady(true); return }
+    /* Without Supabase there is no role to read, so nothing can be
+       authorised — this used to fall through and render the admin panel. */
+    if (!SUPABASE_READY) { setRole(null); setReady(true); return }
 
     supabase
       .from("profiles")
@@ -68,6 +70,30 @@ export default function DashboardGate() {
     )
   }
 
-  /* Admin panel */
+  /* Admin panel — only when the profile actually said so. The role was
+     fetched but never read here, so this returned AdminApp unconditionally.
+     RLS still gated the data, but the shell should not render at all. */
+  if (role !== "admin") {
+    return (
+      <div style={{
+        minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
+        background: "#060C18", position: "relative", padding: 24, textAlign: "center",
+      }}>
+        <Background />
+        <div style={{ position: "relative", zIndex: 1, maxWidth: 360 }}>
+          <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", color: "#E4697A", textTransform: "uppercase", margin: 0 }}>
+            Accesso negato
+          </p>
+          <p style={{ fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", fontSize: 15, lineHeight: 1.6, color: "rgba(255,255,255,0.82)", margin: "12px 0 20px" }}>
+            Questa pagina è riservata allo studio. La tua area è in /cabinet.
+          </p>
+          <a href="/cabinet" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#FFFFFF" }}>
+            [ Vai alla tua area ]
+          </a>
+        </div>
+      </div>
+    )
+  }
+
   return <AdminApp />
 }

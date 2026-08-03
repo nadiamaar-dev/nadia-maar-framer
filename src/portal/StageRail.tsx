@@ -34,7 +34,7 @@ function ProgressBar({ value, tone }: { value: number; tone: "copper" | "green" 
       <div style={{ flex: 1, height: 4, borderRadius: 99, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
         <div style={{ width: `${pct}%`, height: "100%", borderRadius: 99, background: fill, boxShadow: `0 0 8px ${glow}`, transition: "width 0.5s cubic-bezier(0.16,1,0.3,1)" }} />
       </div>
-      <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: label, minWidth: 30, textAlign: "right" }}>
+      <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, color: label, minWidth: 30, textAlign: "right" }}>
         {pct}%
       </span>
     </div>
@@ -92,7 +92,7 @@ export default function StageRail({ stages, renderAction }: {
             <div style={{ flex: 1, minWidth: 0, paddingBottom: last ? 0 : 20 }}>
               {/* Title row */}
               <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap", minHeight: 32 }}>
-                <span style={{ fontFamily: MONO, fontSize: 9, color: node.fg, letterSpacing: "0.14em" }}>
+                <span style={{ fontFamily: MONO, fontSize: 11, color: node.fg, letterSpacing: "0.14em" }}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h4 style={{
@@ -110,7 +110,7 @@ export default function StageRail({ stages, renderAction }: {
 
               {/* Dates */}
               {(s.startedAt || s.completedAt) && (
-                <p style={{ fontFamily: MONO, fontSize: 9, color: "#FFFFFF", margin: "4px 0 0", letterSpacing: "0.04em" }}>
+                <p style={{ fontFamily: MONO, fontSize: 11, color: "#FFFFFF", margin: "4px 0 0", letterSpacing: "0.04em" }}>
                   {s.startedAt ? `Avviata ${fmtDate(s.startedAt)}` : ""}
                   {s.startedAt && s.completedAt ? "  ·  " : ""}
                   {s.completedAt ? `Chiusa ${fmtDate(s.completedAt)}` : ""}
@@ -133,7 +133,7 @@ export default function StageRail({ stages, renderAction }: {
                   borderLeft: isActive ? "2px solid rgba(184,50,64,0.55)" : undefined,
                 }}>
                   {s.deliverableNote && (
-                    <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6, color: T.muted, margin: 0, whiteSpace: "pre-wrap" }}>
+                    <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6, color: T.secondary, margin: 0, whiteSpace: "pre-wrap" }}>
                       {s.deliverableNote}
                     </p>
                   )}
@@ -145,7 +145,7 @@ export default function StageRail({ stages, renderAction }: {
                       style={{
                         display: "inline-flex", alignItems: "center", gap: 6,
                         marginTop: s.deliverableNote ? 7 : 0,
-                        fontFamily: MONO, fontSize: 10.5, color: T.copperLt, textDecoration: "none",
+                        fontFamily: MONO, fontSize: 11, color: T.copperTx, textDecoration: "none",
                       }}
                     >
                       <Icon name="external" size={11} />

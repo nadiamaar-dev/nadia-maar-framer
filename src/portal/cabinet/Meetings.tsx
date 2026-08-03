@@ -4,9 +4,10 @@ import type { ClientHome, Meeting } from "../../lib/api"
 import { fmtDateTime, proposeMeeting, updateMeetingStatus } from "../../lib/api"
 import Scheduler from "../Scheduler"
 import {
-  Badge, Btn, DISPLAY, Empty, Field, Glass, MEETING_STATUS, Modal, Note, Row,
+  Btn, DISPLAY, Empty, Field, Glass, Modal, Note,
   SectionTitle, Select, T, Tabs, Textarea,
 } from "../ui"
+import { MeetingRow } from "./rows"
 
 export default function Meetings({ home, userId, reload }: {
   home: ClientHome
@@ -22,6 +23,9 @@ export default function Meetings({ home, userId, reload }: {
   const [busy, setBusy] = useState(false)
   const [actingId, setActingId] = useState<string | null>(null)
   const [refreshKey, setRefreshKey] = useState(0)
+  /* set when the client is cancelling; when `reschedule` is on, the propose
+     modal opens straight after so "sposta" is one gesture, not two */
+  const [cancelling, setCancelling] = useState<{ m: Meeting; reschedule: boolean } | null>(null)
 
   const nowKey = useMemo(() => {
     const d = new Date()
@@ -44,6 +48,31 @@ export default function Meetings({ home, userId, reload }: {
     try {
       await updateMeetingStatus(m.id, status)
       toast.success(status === "confirmed" ? "Riunione confermata" : "Riunione rifiutata")
+      reload()
+    } catch {
+      toast.error("Operazione non riuscita. Riprova.")
+    } finally {
+      setActingId(null)
+    }
+  }
+
+  async function confirmCancel() {
+    const target = cancelling
+    if (!target || actingId) return
+    setActingId(target.m.id)
+    try {
+      await updateMeetingStatus(target.m.id, "cancelled")
+      setCancelling(null)
+      if (target.reschedule) {
+        setProjectId(target.m.projectId ?? "")
+        setNote(target.m.clientNote ?? "")
+        setSlot(null)
+        setRefreshKey(k => k + 1)
+        setOpen(true)
+        toast.info("Slot liberato — scegline uno nuovo")
+      } else {
+        toast.success("Riunione annullata")
+      }
       reload()
     } catch {
       toast.error("Operazione non riuscita. Riprova.")
@@ -95,7 +124,7 @@ export default function Meetings({ home, userId, reload }: {
         onChange={setTab}
       />
 
-      <Glass variant="panel" style={{ padding: 20 }}>
+      <Glass variant="work" style={{ padding: 20 }}>
         {list.length === 0 ? (
           <Empty
             icon="calendar"
@@ -105,37 +134,18 @@ export default function Meetings({ home, userId, reload }: {
           />
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-            {list.map(m => {
-              const ms = MEETING_STATUS[m.status]
-              const needsMyConfirm = m.status === "pending" && m.proposedBy === "admin" && tab === "prossime"
-              const pname = projectName(m.projectId)
-              return (
-                <Row
-                  key={m.id}
-                  icon="calendar"
-                  iconTone={ms.tone}
-                  title={fmtDateTime(m.datetime)}
-                  sub={[
-                    `${m.durationMin} min`,
-                    m.proposedBy === "admin" ? "proposta dallo studio" : "proposta da te",
-                    pname ? `progetto: ${pname}` : null,
-                    m.adminNote || m.clientNote || null,
-                  ].filter(Boolean).join(" · ")}
-                  right={
-                    needsMyConfirm ? (
-                      <span style={{ display: "inline-flex", gap: 7 }} onClick={e => e.stopPropagation()}>
-                        <Btn size="sm" variant="ghost" onClick={() => act(m, "cancelled")} busy={actingId === m.id}>Rifiuta</Btn>
-                        <Btn size="sm" variant="primary" icon="check" onClick={() => act(m, "confirmed")} busy={actingId === m.id}>Conferma</Btn>
-                      </span>
-                    ) : m.status === "pending" && m.proposedBy === "client" ? (
-                      <Badge tone="amber" dot>In attesa di conferma</Badge>
-                    ) : (
-                      <Badge tone={ms.tone} dot>{ms.label}</Badge>
-                    )
-                  }
-                />
-              )
-            })}
+            {list.map(m => (
+              <MeetingRow
+                key={m.id}
+                meeting={m}
+                projectName={projectName(m.projectId)}
+                actionable={tab === "prossime"}
+                busy={actingId === m.id}
+                onAct={act}
+                onCancel={x => setCancelling({ m: x, reschedule: false })}
+                onReschedule={x => setCancelling({ m: x, reschedule: true })}
+              />
+            ))}
           </div>
         )}
       </Glass>
@@ -170,7 +180,41 @@ export default function Meetings({ home, userId, reload }: {
             <Textarea value={note} onChange={e => setNote(e.target.value)} rows={2} placeholder="Di cosa vuoi parlare?" style={{ resize: "vertical" }} />
           </Field>
           <Note tone="silver">
-            La riunione resta <strong style={{ color: T.muted, fontFamily: DISPLAY }}>in attesa</strong> finché lo studio non conferma lo slot.
+            La riunione resta <strong style={{ color: T.text, fontFamily: DISPLAY }}>in attesa</strong> finché lo studio non conferma lo slot.
+          </Note>
+        </div>
+      </Modal>
+
+      {/* Cancel / reschedule confirmation */}
+      <Modal
+        open={cancelling !== null}
+        onClose={() => !actingId && setCancelling(null)}
+        kicker={cancelling?.reschedule ? "Sposta" : "Annulla"}
+        title={cancelling?.reschedule ? "Spostare la riunione?" : "Annullare la riunione?"}
+        width={460}
+        footer={
+          <>
+            <Btn variant="ghost" onClick={() => setCancelling(null)} disabled={!!actingId}>Indietro</Btn>
+            <Btn
+              variant={cancelling?.reschedule ? "primary" : "danger"}
+              icon={cancelling?.reschedule ? "clock" : "x"}
+              onClick={confirmCancel}
+              busy={!!actingId}
+            >
+              {cancelling?.reschedule ? "Libera lo slot" : "Annulla la riunione"}
+            </Btn>
+          </>
+        }
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 14.5, lineHeight: 1.6, color: T.text, margin: 0 }}>
+            {cancelling ? fmtDateTime(cancelling.m.datetime) : ""}
+            {cancelling?.m.durationMin ? ` · ${cancelling.m.durationMin} min` : ""}
+          </p>
+          <Note tone={cancelling?.reschedule ? "silver" : "amber"}>
+            {cancelling?.reschedule
+              ? "Lo slot torna libero e ti chiediamo subito il nuovo orario. Lo studio riceve la modifica."
+              : "Lo studio viene avvisato. Per rimettere in agenda dovrai proporre un nuovo orario."}
           </Note>
         </div>
       </Modal>

@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { useToast } from "../../context/ToastContext"
 import type { ClientDocument, ClientHome } from "../../lib/api"
 import { fmtDate, getDocumentDownloadUrl, signDocument } from "../../lib/api"
-import { Badge, Btn, DISPLAY, DOC_TYPE, Empty, Glass, Icon, MONO, SectionTitle, Stat, T } from "../ui"
+import { Badge, Btn, ConfirmDialog, DISPLAY, DOC_TYPE, Empty, Glass, Icon, MONO, Note, SectionTitle, Stat, T } from "../ui"
 
 function fmtBytes(n: number): string {
   if (!n) return "—"
@@ -14,14 +14,19 @@ function fmtBytes(n: number): string {
 export default function Documenti({ home, reload }: { home: ClientHome; userId: string; reload: () => void }) {
   const toast = useToast()
   const [signing, setSigning] = useState<string | null>(null)
+  /* signing is legally meaningful and used to happen on a single click,
+     with no confirmation and no way back */
+  const [toConfirm, setToConfirm] = useState<ClientDocument | null>(null)
   const docs = home.documents
   const toSign = docs.filter(d => d.requiresSignature && !d.signedAt)
 
-  async function sign(d: ClientDocument) {
-    if (signing) return
+  async function sign() {
+    const d = toConfirm
+    if (!d || signing) return
     setSigning(d.id)
     try {
       await signDocument(d.id)
+      setToConfirm(null)
       toast.success("Documento firmato")
       reload()
     } catch {
@@ -35,12 +40,12 @@ export default function Documenti({ home, reload }: { home: ClientHome; userId: 
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <SectionTitle kicker="Documenti" title="Contratti & documenti" sub="Contratti, preventivi e materiali di consegna condivisi dallo studio." />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))", gap: 12 }}>
         <Stat label="Totale" value={String(docs.length)} icon="doc" tone="silver" />
         <Stat label="Da firmare" value={String(toSign.length)} icon="edit" tone={toSign.length > 0 ? "amber" : "green"} hint={toSign.length > 0 ? "richiedono la tua firma" : "tutto firmato"} />
       </div>
 
-      <Glass variant="panel" style={{ padding: 20 }}>
+      <Glass variant="work" style={{ padding: 20 }}>
         {docs.length === 0 ? (
           <Empty icon="doc" title="Nessun documento" hint="Contratti e documenti condivisi dallo studio appariranno qui." />
         ) : (
@@ -49,7 +54,7 @@ export default function Documenti({ home, reload }: { home: ClientHome; userId: 
               const meta = DOC_TYPE[d.type]
               const pending = d.requiresSignature && !d.signedAt
               return (
-                <div key={d.id} style={{
+                <div key={d.id} className="pt-row" style={{
                   display: "flex", alignItems: "center", gap: 14,
                   padding: "14px 16px", borderRadius: 13,
                   background: pending ? "rgba(252,211,77,0.06)" : "rgba(255,255,255,0.05)",
@@ -59,29 +64,29 @@ export default function Documenti({ home, reload }: { home: ClientHome; userId: 
                   <span style={{
                     width: 38, height: 38, borderRadius: 11, flexShrink: 0,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    background: `rgba(184,50,64,0.12)`, border: `1px solid rgba(184,50,64,0.28)`, color: T.copperLt,
+                    background: `rgba(184,50,64,0.12)`, border: `1px solid rgba(184,50,64,0.28)`, color: T.copperTx,
                   }}>
                     <Icon name={meta.icon} size={17} />
                   </span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontFamily: DISPLAY, fontSize: 14.5, fontWeight: 700, color: T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <div className="pt-row-main" style={{ flex: 1, minWidth: 0 }}>
+                    <div className="pt-row-title" style={{ fontFamily: DISPLAY, fontSize: 14.5, fontWeight: 700, color: T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {d.name}
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4, flexWrap: "wrap" }}>
                       <Badge tone={meta.tone}>{meta.label}</Badge>
-                      <span style={{ fontFamily: MONO, fontSize: 9, color: T.faint }}>
+                      <span style={{ fontFamily: MONO, fontSize: 11, color: T.secondary }}>
                         {fmtDate(d.uploadedAt)} · {fmtBytes(d.sizeBytes)}
                       </span>
                       {d.signedAt && (
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: MONO, fontSize: 9, color: T.green }}>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: MONO, fontSize: 11, color: T.green }}>
                           <Icon name="checkCircle" size={11} /> Firmato {fmtDate(d.signedAt)}
                         </span>
                       )}
                     </div>
                   </div>
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                  <span className="pt-row-right" style={{ display: "inline-flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
                     {pending && (
-                      <Btn size="sm" variant="primary" icon="check" busy={signing === d.id} onClick={() => sign(d)}>
+                      <Btn size="sm" variant="primary" icon="check" busy={signing === d.id} onClick={() => setToConfirm(d)}>
                         Firma
                       </Btn>
                     )}
@@ -97,6 +102,32 @@ export default function Documenti({ home, reload }: { home: ClientHome; userId: 
           </div>
         )}
       </Glass>
+
+      <ConfirmDialog
+        open={toConfirm !== null}
+        onClose={() => setToConfirm(null)}
+        onConfirm={sign}
+        kicker="Firma"
+        title="Firmare il documento?"
+        confirmLabel="Firma"
+        confirmVariant="primary"
+        busy={!!signing}
+        body={
+          <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
+            <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 14.5, fontWeight: 700, lineHeight: 1.5, color: T.text, margin: 0 }}>
+              {toConfirm?.name}
+            </p>
+            <Note tone="amber">
+              La firma viene registrata con data e ora e non è revocabile. Se non hai ancora letto il documento, scaricalo prima.
+            </Note>
+            {toConfirm?.storagePath && (
+              <a href={toConfirm ? getDocumentDownloadUrl(toConfirm) : "#"} target="_blank" rel="noreferrer" style={{ textDecoration: "none", display: "inline-flex" }}>
+                <Btn size="sm" variant="ghost" icon="download">Scarica e leggi</Btn>
+              </a>
+            )}
+          </div>
+        }
+      />
     </div>
   )
 }

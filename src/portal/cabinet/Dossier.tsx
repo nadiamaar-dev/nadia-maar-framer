@@ -3,18 +3,19 @@ import { useBlueprint } from "../../context/BlueprintContext"
 import { useToast } from "../../context/ToastContext"
 import type { ClientHome, Conversation, Invoice, Meeting, ProjectCredential, ProjectEvent, ProjectStage } from "../../lib/api"
 import {
-  approveStage, fetchCredentialsByProject, fetchInvoicesByProject, fetchMeetingsByProject, fetchProjectEvents,
-  fetchProjectStages, fmtDate, fmtDateTime, fmtEur, getOrCreateStageConversation,
-  isUnreadFor, requestStageChanges, subscribe,
+  approveStage, declareInvoicePaid, fetchCredentialsByProject, fetchInvoicesByProject,
+  fetchMeetingsByProject, fetchProjectEvents, fetchProjectStages, fmtDate, getOrCreateStageConversation,
+  isUnreadFor, requestStageChanges, subscribe, updateMeetingStatus,
 } from "../../lib/api"
 import ChatThread from "../ChatThread"
 import HandoverPanel from "./HandoverPanel"
 import ReferencesBoard from "../ReferencesBoard"
 import StageGrid from "../StageGrid"
 import { stageProgress } from "../StageRail"
+import { InvoiceRow, MeetingRow } from "./rows"
 import {
-  Badge, BriefCard, Btn, DISPLAY, Empty, Field, Glass, Icon, INVOICE_STATUS, Loading, MEETING_STATUS,
-  Modal, MONO, Note, PROJECT_STATUS, Ring, Row, T, TL, Tabs, Textarea, Timeline, TONE,
+  Badge, BriefCard, Btn, DISPLAY, Empty, Field, Glass, Icon, Loading,
+  Modal, MONO, Note, PROJECT_STATUS, Ring, T, TL, Tabs, Textarea, Timeline, TONE,
 } from "../ui"
 
 type TabId = "fasi" | "diario" | "riferimenti" | "fatture" | "riunioni" | "consegna"
@@ -54,7 +55,7 @@ function ProjectSwitcher({ projects, currentId, onSwitch, onNew }: {
                   background: active ? "rgba(255,255,255,0.14)" : "transparent",
                   borderColor: active ? "rgba(255,255,255,0.42)" : "transparent",
                   boxShadow: active ? "inset 0 1px 0 rgba(255,255,255,0.58), 0 1px 3px rgba(0,0,0,0.18)" : "none",
-                  color: active ? TL.text : TL.muted,
+                  color: active ? TL.text : TL.secondary,
                   fontFamily: DISPLAY, fontSize: 14, fontWeight: active ? 700 : 500, whiteSpace: "nowrap", maxWidth: 240,
                 }}
               >
@@ -65,7 +66,7 @@ function ProjectSwitcher({ projects, currentId, onSwitch, onNew }: {
           })}
         </div>
       ) : (
-        <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.2em", textTransform: "uppercase", color: TL.ghost }}>
+        <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: TL.tertiary }}>
           Dossier progetto
         </span>
       )}
@@ -93,6 +94,15 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
   const [meetings, setMeetings] = useState<Meeting[]>([])
   const [creds, setCreds] = useState<ProjectCredential[]>([])
   const [loading, setLoading] = useState(true)
+  /* a thrown fetch used to leave every list empty, so the client was shown
+     "no stages / no invoices" when the network had simply failed */
+  const [failed, setFailed] = useState(false)
+  const [acting, setActing] = useState<string | null>(null)
+
+  const nowKey = React.useMemo(() => {
+    const d = new Date()
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}T${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`
+  }, [])
 
   const [approving, setApproving] = useState<ProjectStage | null>(null)
   const [approveBusy, setApproveBusy] = useState(false)
@@ -114,10 +124,43 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
         fetchCredentialsByProject(projectId),
       ])
       setStages(s); setEvents(e); setInvoices(i); setMeetings(m); setCreds(c)
+      setFailed(false)
+    } catch {
+      setFailed(true)
     } finally {
       setLoading(false)
     }
   }, [projectId])
+
+  async function declareInvoice(i: Invoice) {
+    if (acting) return
+    setActing(i.id)
+    try {
+      await declareInvoicePaid(i.id)
+      toast.success("Grazie! Confermiamo la ricezione a breve.")
+      await load()
+      reload()
+    } catch {
+      toast.error("Operazione non riuscita.")
+    } finally {
+      setActing(null)
+    }
+  }
+
+  async function actOnMeeting(m: Meeting, status: "confirmed" | "cancelled") {
+    if (acting) return
+    setActing(m.id)
+    try {
+      await updateMeetingStatus(m.id, status)
+      toast.success(status === "confirmed" ? "Riunione confermata" : "Riunione annullata")
+      await load()
+      reload()
+    } catch {
+      toast.error("Operazione non riuscita.")
+    } finally {
+      setActing(null)
+    }
+  }
 
   useEffect(() => {
     setLoading(true)
@@ -203,7 +246,7 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
       />
 
       {/* Header */}
-      <Glass variant="panel" style={{ padding: 24 }}>
+      <Glass variant="work" style={{ padding: 24 }}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
           <div style={{ minWidth: 0, flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
@@ -213,11 +256,11 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
               <Badge tone={st.tone} dot>{st.label}</Badge>
             </div>
             {project.description && (
-              <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 14.5, lineHeight: 1.65, color: T.faint, margin: "10px 0 0", maxWidth: 640, whiteSpace: "pre-wrap" }}>
+              <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 14.5, lineHeight: 1.65, color: T.secondary, margin: "10px 0 0", maxWidth: 640, whiteSpace: "pre-wrap" }}>
                 {project.description}
               </p>
             )}
-            <p style={{ fontFamily: MONO, fontSize: 10.5, color: T.ghost, margin: "12px 0 0", letterSpacing: "0.05em" }}>
+            <p style={{ fontFamily: MONO, fontSize: 11, color: T.tertiary, margin: "12px 0 0", letterSpacing: "0.05em" }}>
               Avviato {fmtDate(project.createdAt)}
             </p>
           </div>
@@ -227,7 +270,7 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
               <p style={{ fontFamily: DISPLAY, fontSize: 13, fontWeight: 800, color: T.text, margin: 0 }}>
                 {stages.filter(s => s.status === "done").length}/{stages.length} fasi
               </p>
-              <p style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: T.ghost, margin: "3px 0 0" }}>
+              <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: T.tertiary, margin: "3px 0 0" }}>
                 completate
               </p>
             </div>
@@ -266,11 +309,19 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
 
       {loading ? (
         <Glass variant="panel" style={{ padding: 20 }}><Loading label="Apro il dossier" /></Glass>
+      ) : failed ? (
+        <Glass variant="panel" style={{ padding: 28, textAlign: "center" }}>
+          <p style={{ fontFamily: DISPLAY, fontSize: 15, fontWeight: 800, color: T.text, margin: 0 }}>Dossier non caricato</p>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13.5, color: T.secondary, margin: "8px 0 18px" }}>
+            Non siamo riusciti a leggere fasi, fatture e riunioni di questo progetto. Riprova tra un momento.
+          </p>
+          <Btn variant="primary" onClick={() => { setLoading(true); load() }}>Riprova</Btn>
+        </Glass>
       ) : (
         <>
           {tab === "fasi" && (
             stages.length === 0 ? (
-              <Glass variant="panel" style={{ padding: 22 }}>
+              <Glass variant="work" style={{ padding: 22 }}>
                 <Empty icon="layers" title="Fasi in definizione" hint="Il piano di lavoro apparirà qui appena il progetto è attivo." />
               </Glass>
             ) : (
@@ -315,7 +366,7 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
             )}
 
           {tab === "diario" && (
-            <Glass variant="panel" style={{ padding: 22 }}>
+            <Glass variant="work" style={{ padding: 22 }}>
               {events.length === 0
                 ? <Empty icon="sparkle" title="Diario vuoto" hint="Ogni avanzamento del progetto viene registrato qui." />
                 : <Timeline events={events} />}
@@ -323,66 +374,57 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
           )}
 
           {tab === "riferimenti" && (
-            <Glass variant="panel" style={{ padding: 22 }}>
+            <Glass variant="work" style={{ padding: 22 }}>
               <ReferencesBoard projectId={projectId} clientId={userId} role="client" foundryItems={foundryItems} />
             </Glass>
           )}
 
+          {/* Both tabs used to carry a badge counting what needed doing, and
+              then offer no way to do it — you had to leave the dossier. Same
+              rows as the Fatture and Riunioni sections, actions included. */}
           {tab === "fatture" && (
-            <Glass variant="panel" style={{ padding: 22 }}>
+            <Glass variant="work" style={{ padding: 22 }}>
               {invoices.length === 0 ? (
                 <Empty icon="invoice" title="Nessuna fattura" hint="Le fatture legate a questo progetto appariranno qui." />
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                  {invoices.map(i => {
-                    const is = INVOICE_STATUS[i.status]
-                    return (
-                      <Row
-                        key={i.id}
-                        icon="invoice"
-                        iconTone={is.tone}
-                        title={`${i.number} — ${i.description}`}
-                        sub={`Emessa ${fmtDate(i.issuedAt)}${i.dueDate ? ` · scade ${fmtDate(i.dueDate)}` : ""}`}
-                        right={
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 9 }}>
-                            <span style={{ fontFamily: MONO, fontSize: 12.5, fontWeight: 700, color: T.text }}>{fmtEur(i.amount)}</span>
-                            <Badge tone={is.tone} dot>{is.label}</Badge>
-                          </span>
-                        }
-                      />
-                    )
-                  })}
+                  {invoices.map(i => (
+                    <InvoiceRow
+                      key={i.id}
+                      invoice={i}
+                      onDeclare={declareInvoice}
+                      busy={acting === i.id}
+                    />
+                  ))}
                 </div>
               )}
             </Glass>
           )}
 
           {tab === "riunioni" && (
-            <Glass variant="panel" style={{ padding: 22 }}>
+            <Glass variant="work" style={{ padding: 22 }}>
               {meetings.length === 0 ? (
                 <Empty icon="calendar" title="Nessuna riunione" hint="Proponi una riunione dalla sezione Riunioni." />
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                  {meetings.map(m => {
-                    const ms = MEETING_STATUS[m.status]
-                    return (
-                      <Row
-                        key={m.id}
-                        icon="calendar"
-                        iconTone={ms.tone}
-                        title={fmtDateTime(m.datetime)}
-                        sub={`${m.durationMin} min · propost${m.proposedBy === "admin" ? "a dallo studio" : "a da te"}${m.adminNote ? ` · ${m.adminNote}` : ""}`}
-                        right={<Badge tone={ms.tone} dot>{ms.label}</Badge>}
-                      />
-                    )
-                  })}
+                  {meetings.map(m => (
+                    <MeetingRow
+                      key={m.id}
+                      meeting={m}
+                      actionable={m.datetime >= nowKey}
+                      busy={acting === m.id}
+                      onAct={actOnMeeting}
+                      onCancel={x => actOnMeeting(x, "cancelled")}
+                      onReschedule={() => toast.info("Sposta la riunione dalla sezione Riunioni.")}
+                    />
+                  ))}
                 </div>
               )}
             </Glass>
           )}
 
           {tab === "consegna" && (
-            <Glass variant="panel" style={{ padding: 22 }}>
+            <Glass variant="work" style={{ padding: 22 }}>
               <HandoverPanel credentials={creds} completed={project.status === "completed"} />
             </Glass>
           )}
@@ -402,7 +444,7 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
           </>
         }
       >
-        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: 0 }}>
+        <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.secondary, margin: 0 }}>
           Confermando dai il via libera su questa fase: verrà chiusa e il lavoro passa alla successiva.
           Se hai dubbi, usa prima la discussione della fase.
         </p>

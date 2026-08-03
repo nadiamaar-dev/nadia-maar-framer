@@ -5,7 +5,9 @@ import {
   fetchClientHome, fetchOwnProfile, subscribe, supabase, SUPABASE_READY,
 } from "../../lib/api"
 import Background from "../../components/Background"
+import ErrorBoundary from "../ErrorBoundary"
 import Shell, { type ShellNavItem } from "../Shell"
+import { useHashRoute } from "../useHashRoute"
 import { Btn, DISPLAY, Glass, Icon, Loading, MONO, PortalLogo, T } from "../ui"
 import Documenti from "./Documenti"
 import Dossier from "./Dossier"
@@ -30,6 +32,8 @@ const SECTIONS: Omit<ShellNavItem, "badge">[] = [
   { id: "supporto", label: "Supporto", icon: "ticket" },
 ]
 
+const SECTION_IDS = SECTIONS.map(s => s.id)
+
 function FullScreen({ children }: { children: React.ReactNode }) {
   return (
     <div className="portal-root" style={{
@@ -49,8 +53,9 @@ export default function CabinetApp() {
   const [home, setHome] = useState<ClientHome | null>(null)
   const [profile, setProfile] = useState<OwnProfile | null>(null)
   const [failed, setFailed] = useState(false)
-  const [section, setSection] = useState("panoramica")
-  const [projectId, setProjectId] = useState<string | null>(null)
+  /* section + open project live in the URL hash, so reload, Back and a
+     pasted link all land where the client expects */
+  const { section, id: projectId, go } = useHashRoute("panoramica", SECTION_IDS)
   const [wizardOpen, setWizardOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout>>()
@@ -76,6 +81,12 @@ export default function CabinetApp() {
     if (userId) reload()
   }, [userId, reload])
 
+  /* project_stages has no client_id, so this cannot use the `mine` filter.
+     It used to subscribe unfiltered — every stage change in the database,
+     for any client, re-fetched this client's entire payload. One channel
+     per own project instead. */
+  const projectIds = home?.projects.map(p => p.id).join(",") ?? ""
+
   // Realtime: any change in my rows re-hydrates the whole home payload (debounced).
   useEffect(() => {
     if (!userId) return
@@ -86,7 +97,8 @@ export default function CabinetApp() {
     const mine = `client_id=eq.${userId}`
     const unsubs = [
       subscribe("cab-projects", { table: "client_projects", filter: mine }, bump),
-      subscribe("cab-stages", { table: "project_stages" }, bump),
+      ...projectIds.split(",").filter(Boolean).map(pid =>
+        subscribe(`cab-stages-${pid}`, { table: "project_stages", filter: `project_id=eq.${pid}` }, bump)),
       subscribe("cab-events", { table: "project_events", filter: mine }, bump),
       subscribe("cab-convos", { table: "conversations", filter: mine }, bump),
       subscribe("cab-meetings", { table: "meetings", filter: mine }, bump),
@@ -100,7 +112,7 @@ export default function CabinetApp() {
       clearTimeout(debounceRef.current)
       unsubs.forEach(u => u())
     }
-  }, [userId, reload])
+  }, [userId, reload, projectIds])
 
   // Default project when entering Progetti: the active one, else the most recent.
   const defaultProjectId = home
@@ -112,15 +124,11 @@ export default function CabinetApp() {
       setWizardOpen(true)
       return
     }
-    setSection(a.section)
-    if (a.section === "progetti") setProjectId(a.projectId ?? defaultProjectId)
-    else setProjectId(null)
+    go(a.section, a.section === "progetti" ? (a.projectId ?? defaultProjectId) : null)
   }
 
   function handleSelect(id: string) {
-    setSection(id)
-    if (id === "progetti") setProjectId(prev => prev ?? defaultProjectId)
-    else setProjectId(null)
+    go(id, id === "progetti" ? (projectId ?? defaultProjectId) : null)
   }
 
   /* ── Gates ─────────────────────────────────────────────── */
@@ -128,8 +136,8 @@ export default function CabinetApp() {
     return (
       <FullScreen>
         <Glass variant="panel" style={{ padding: 28, maxWidth: 420, textAlign: "center" }}>
-          <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: T.copperLt, margin: 0 }}>Configurazione</p>
-          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: "10px 0 0" }}>
+          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>Configurazione</p>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.secondary, margin: "10px 0 0" }}>
             Supabase non è configurato: aggiungi VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.
           </p>
         </Glass>
@@ -151,7 +159,7 @@ export default function CabinetApp() {
           <h1 style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 800, color: T.text, margin: 0, letterSpacing: "-0.025em", lineHeight: 1.2 }}>
             Area Clienti
           </h1>
-          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 14, lineHeight: 1.65, color: T.muted, margin: "11px 0 0" }}>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 14, lineHeight: 1.65, color: T.secondary, margin: "11px 0 0" }}>
             Segui i tuoi progetti in tempo reale — fasi, riunioni, fatture e chat con lo studio, tutto in un unico posto.
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 28 }}>
@@ -162,7 +170,7 @@ export default function CabinetApp() {
               display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
               padding: "10px 16px", borderRadius: 10,
               border: `1px solid ${T.border}`, background: "rgba(255,255,255,0.05)",
-              fontFamily: DISPLAY, fontSize: 13, fontWeight: 500, color: T.faint, textDecoration: "none",
+              fontFamily: DISPLAY, fontSize: 13, fontWeight: 500, color: T.secondary, textDecoration: "none",
             }}>
               <Icon name="arrowL" size={13} /> Torna al sito
             </a>
@@ -177,11 +185,11 @@ export default function CabinetApp() {
                 <span style={{
                   width: 36, height: 36, borderRadius: 10,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(184,50,64,0.08)", border: "1px solid rgba(184,50,64,0.20)", color: T.copper,
+                  background: "rgba(184,50,64,0.08)", border: "1px solid rgba(184,50,64,0.20)", color: T.copperTx,
                 }}>
                   <Icon name={item.icon} size={16} />
                 </span>
-                <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: T.faint }}>
+                <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: T.secondary }}>
                   {item.label}
                 </span>
               </div>
@@ -197,7 +205,7 @@ export default function CabinetApp() {
       <FullScreen>
         <Glass variant="panel" style={{ padding: 28, maxWidth: 400, textAlign: "center" }}>
           <p style={{ fontFamily: DISPLAY, fontSize: 14, fontWeight: 800, color: T.text, margin: 0 }}>Caricamento non riuscito</p>
-          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.faint, margin: "8px 0 18px" }}>Controlla la connessione e riprova.</p>
+          <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, color: T.secondary, margin: "8px 0 18px" }}>Controlla la connessione e riprova.</p>
           <Btn variant="primary" onClick={reload}>Riprova</Btn>
         </Glass>
       </FullScreen>
@@ -222,17 +230,19 @@ export default function CabinetApp() {
       onSelect={handleSelect}
       email={profile?.email ?? user.email ?? undefined}
       roleLabel={profile?.companyName ?? profile?.contactName ?? "Cliente"}
+      areaLabel="Area Clienti"
+      showLogo={false}
       onSignOut={() => { supabase.auth.signOut() }}
       onEditProfile={() => setProfileOpen(true)}
-      topRight={home.actions.length > 0 ? (
+      topRight={home.actions.length > 0 && section !== "panoramica" ? (
         <button
-          onClick={() => setSection("panoramica")}
+          onClick={() => go("panoramica")}
           className="portal-nav-item"
           style={{
             display: "inline-flex", alignItems: "center", gap: 7,
             padding: "7px 12px", borderRadius: 99, cursor: "pointer",
             background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.40)",
-            fontFamily: MONO, fontSize: 10, fontWeight: 700, color: "#FFFFFF",
+            fontFamily: MONO, fontSize: 11, fontWeight: 700, color: "#FFFFFF",
           }}
         >
           <Icon name="bolt" size={11} />
@@ -240,32 +250,35 @@ export default function CabinetApp() {
         </button>
       ) : undefined}
     >
-      {section === "panoramica" && (
-        <Overview
-          home={home}
-          onAction={handleAction}
-          onOpenProject={id => { setSection("progetti"); setProjectId(id) }}
-          userName={profile?.contactName ?? profile?.email?.split("@")[0]}
-        />
-      )}
-      {section === "progetti" && (
-        home.projects.length === 0
-          ? <Projects onNewProject={() => setWizardOpen(true)} />
-          : <Dossier
-              projectId={projectId ?? defaultProjectId!}
-              home={home}
-              userId={user.id}
-              onSwitchProject={setProjectId}
-              onNewProject={() => setWizardOpen(true)}
-              reload={reload}
-            />
-      )}
-      {section === "documenti" && <Documenti home={home} userId={user.id} reload={reload} />}
-      {section === "materiali" && <Materiali userId={user.id} projects={home.projects} />}
-      {section === "riunioni" && <Meetings home={home} userId={user.id} reload={reload} />}
-      {section === "fatture" && <Invoices home={home} reload={reload} />}
-      {section === "messaggi" && <Messages home={home} userId={user.id} reload={reload} />}
-      {section === "supporto" && <Support home={home} userId={user.id} reload={reload} />}
+      {/* Scoped per section: a throw in one view no longer blanks the shell. */}
+      <ErrorBoundary resetKey={`${section}:${projectId ?? ""}`}>
+        {section === "panoramica" && (
+          <Overview
+            home={home}
+            onAction={handleAction}
+            onOpenProject={id => go("progetti", id)}
+            userName={profile?.contactName ?? profile?.email?.split("@")[0]}
+          />
+        )}
+        {section === "progetti" && (
+          home.projects.length === 0
+            ? <Projects onNewProject={() => setWizardOpen(true)} />
+            : <Dossier
+                projectId={projectId ?? defaultProjectId!}
+                home={home}
+                userId={user.id}
+                onSwitchProject={id => go("progetti", id)}
+                onNewProject={() => setWizardOpen(true)}
+                reload={reload}
+              />
+        )}
+        {section === "documenti" && <Documenti home={home} userId={user.id} reload={reload} />}
+        {section === "materiali" && <Materiali userId={user.id} projects={home.projects} />}
+        {section === "riunioni" && <Meetings home={home} userId={user.id} reload={reload} />}
+        {section === "fatture" && <Invoices home={home} reload={reload} />}
+        {section === "messaggi" && <Messages home={home} userId={user.id} reload={reload} />}
+        {section === "supporto" && <Support home={home} userId={user.id} reload={reload} />}
+      </ErrorBoundary>
 
       <NewProjectModal
         open={wizardOpen}

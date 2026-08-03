@@ -81,14 +81,14 @@ export default function DossierDocsAdmin({ projectId, clientId }: { projectId: s
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       {/* Upload bar */}
       <Glass variant="panel" style={{ padding: 18 }}>
-        <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: T.copperLt, margin: "0 0 12px" }}>
+        <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.copperTx, margin: "0 0 12px" }}>
           Condividi un documento
         </p>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
           <Select value={type} onChange={e => setType(e.target.value as DocType)} style={{ maxWidth: 180 }}>
             {UPLOAD_TYPES.map(t => <option key={t} value={t}>{DOC_TYPE[t].label}</option>)}
           </Select>
-          <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 13, color: T.muted }}>
+          <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 13, color: T.secondary }}>
             <input type="checkbox" checked={requiresSig} onChange={e => setRequiresSig(e.target.checked)} style={{ accentColor: "#B83240", width: 16, height: 16 }} />
             Richiede firma del cliente
           </label>
@@ -98,7 +98,7 @@ export default function DossierDocsAdmin({ projectId, clientId }: { projectId: s
 
       {/* Shared documents */}
       <Glass variant="panel" style={{ padding: 20 }}>
-        <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: T.faint, margin: "0 0 12px" }}>
+        <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.secondary, margin: "0 0 12px" }}>
           Documenti condivisi
         </p>
         {docs.length === 0 ? (
@@ -112,14 +112,14 @@ export default function DossierDocsAdmin({ projectId, clientId }: { projectId: s
                   display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12,
                   background: "rgba(255,255,255,0.05)", border: `1px solid ${T.border}`,
                 }}>
-                  <span style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(184,50,64,0.12)", border: "1px solid rgba(184,50,64,0.26)", color: T.copperLt }}>
+                  <span style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(184,50,64,0.12)", border: "1px solid rgba(184,50,64,0.26)", color: T.copperTx }}>
                     <Icon name={meta.icon} size={15} />
                   </span>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 700, color: T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.name}</div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 3, flexWrap: "wrap" }}>
                       <Badge tone={meta.tone}>{meta.label}</Badge>
-                      <span style={{ fontFamily: MONO, fontSize: 8.5, color: T.faint }}>{fmtDate(d.uploadedAt)} · {fmtBytes(d.sizeBytes)}</span>
+                      <span style={{ fontFamily: MONO, fontSize: 11, color: T.secondary }}>{fmtDate(d.uploadedAt)} · {fmtBytes(d.sizeBytes)}</span>
                       {d.requiresSignature && (
                         d.signedAt
                           ? <Badge tone="green" dot>Firmato</Badge>
@@ -144,7 +144,7 @@ export default function DossierDocsAdmin({ projectId, clientId }: { projectId: s
 
       {/* Client-supplied assets */}
       <Glass variant="panel" style={{ padding: 20 }}>
-        <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: T.faint, margin: "0 0 12px" }}>
+        <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.secondary, margin: "0 0 12px" }}>
           Materiali dal cliente
         </p>
         {assets.length === 0 ? (
@@ -156,12 +156,12 @@ export default function DossierDocsAdmin({ projectId, clientId }: { projectId: s
                 display: "flex", alignItems: "center", gap: 12, padding: "11px 14px", borderRadius: 12,
                 background: "rgba(255,255,255,0.05)", border: `1px solid ${T.border}`,
               }}>
-                <span style={{ width: 32, height: 32, borderRadius: 9, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.06)", border: `1px solid ${T.border}`, color: T.faint }}>
+                <span style={{ width: 32, height: 32, borderRadius: 9, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.06)", border: `1px solid ${T.border}`, color: T.secondary }}>
                   <Icon name="doc" size={15} />
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontFamily: DISPLAY, fontSize: 13, fontWeight: 700, color: T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.name}</div>
-                  <span style={{ fontFamily: MONO, fontSize: 8.5, color: T.faint }}>{fmtDate(a.createdAt)} · {fmtBytes(a.sizeBytes)}{a.uploadedBy === "admin" ? " · dallo studio" : ""}</span>
+                  <span style={{ fontFamily: MONO, fontSize: 11, color: T.secondary }}>{fmtDate(a.createdAt)} · {fmtBytes(a.sizeBytes)}{a.uploadedBy === "admin" ? " · dallo studio" : ""}</span>
                 </div>
                 <Btn size="sm" variant="ghost" icon="download" onClick={() => openAsset(a)}>Apri</Btn>
               </div>

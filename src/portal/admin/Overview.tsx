@@ -7,6 +7,8 @@ import {
 } from "../ui"
 
 const ACTION_META: Record<string, { icon: IconName; tone: Tone }> = {
+  revise_stage: { icon: "edit", tone: "red" },
+  estimate_accepted: { icon: "checkCircle", tone: "green" },
   review_project: { icon: "folder", tone: "amber" },
   confirm_payment: { icon: "euro", tone: "copper" },
   confirm_meeting: { icon: "calendar", tone: "copper" },
@@ -23,7 +25,7 @@ export default function Overview({ home, onAction }: {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))", gap: 12 }}>
         <Stat label="Clienti attivi" value={String(kpi.activeClients)} icon="users" tone="silver" />
         <Stat label="Progetti in corso" value={String(kpi.projectsInProgress)} icon="layers" tone="copper" />
         <Stat label="Da incassare" value={fmtEur(kpi.invoicesPendingTotal)} icon="euro" tone={kpi.invoicesPendingCount > 0 ? "amber" : "green"}
@@ -31,7 +33,7 @@ export default function Overview({ home, onAction }: {
         <Stat label="Ticket aperti" value={String(kpi.ticketsOpen)} icon="ticket" tone={kpi.ticketsOpen > 0 ? "red" : "green"} />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16, alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: 16, alignItems: "start" }}>
         <Glass variant="panel" style={{ padding: 20 }}>
           <SectionTitle kicker="Coda operativa" title="Richiede la tua attenzione" sub={home.actions.length === 0 ? undefined : `${home.actions.length} elementi in coda`} />
           {home.actions.length === 0 ? (

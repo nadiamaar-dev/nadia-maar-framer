@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { useToast } from "../../context/ToastContext"
 import type {
-  AdminHome, ClientDocument, ClientPlan, ClientRecord, ClientStatus, Conversation,
+  AdminHome, ClientAsset, ClientDocument, ClientPlan, ClientRecord, ClientStatus, Conversation,
   DocType, InvoiceStatus,
 } from "../../lib/api"
 import {
-  createConversation, createInvoice, deleteDocument, fetchDocuments, fmtBytes, fmtDate,
-  fmtEur, getDocumentDownloadUrl, isUnreadFor, nextInvoiceNumber, relativeDate,
+  createConversation, createInvoice, deleteDocument, fetchAssets, fetchDocuments, fmtBytes, fmtDate,
+  fmtEur, getAssetSignedUrl, getDocumentDownloadUrl, isUnreadFor, nextInvoiceNumber, relativeDate,
   updateClientProfile, updateInvoiceStatus, uploadDocument,
 } from "../../lib/api"
 import ChatThread from "../ChatThread"
@@ -16,7 +16,7 @@ import {
   Select, T, Tabs, Textarea,
 } from "../ui"
 
-type TabId = "progetti" | "fatture" | "documenti" | "messaggi"
+type TabId = "progetti" | "fatture" | "documenti" | "materiali" | "messaggi"
 
 const DOC_TYPES: Record<DocType, string> = {
   report: "Report", contract: "Contratto", invoice: "Fattura", handover: "Consegna", other: "Altro",
@@ -112,9 +112,15 @@ export default function ClientWorkspace({ client, home, adminId, onBack, reload,
     }
   }
 
-  /* ── Documents ── */
+  /* ── Documents ──
+     A document uploaded here used to go out with project_id null and
+     requires_signature false, which meant the journal trigger skipped it and
+     the client got no action item — a contract just appeared in their list.
+     Both are now choices the admin makes at upload time. */
   const [docs, setDocs] = useState<ClientDocument[] | null>(null)
   const [docType, setDocType] = useState<DocType>("report")
+  const [docProjectId, setDocProjectId] = useState("")
+  const [docRequiresSig, setDocRequiresSig] = useState(false)
   const [uploading, setUploading] = useState(false)
 
   const loadDocs = useCallback(async () => {
@@ -127,14 +133,38 @@ export default function ClientWorkspace({ client, home, adminId, onBack, reload,
     if (!files.length) return
     setUploading(true)
     try {
-      for (const f of files) await uploadDocument(client.id, f, docType)
-      toast.success("Documento caricato")
+      for (const f of files) {
+        await uploadDocument(client.id, f, docType, {
+          projectId: docProjectId || undefined,
+          requiresSignature: docRequiresSig,
+        })
+      }
+      toast.success(docRequiresSig ? "Documento inviato — il cliente deve firmarlo" : "Documento caricato")
+      setDocRequiresSig(false)
       loadDocs()
     } catch {
       toast.error("Caricamento non riuscito.")
     } finally {
       setUploading(false)
     }
+  }
+
+  /* ── Client-supplied materials ──
+     The only other reader is fetchAssetsByProject, so anything the client
+     uploaded without picking a project was unreachable from every admin
+     screen. This tab is that missing reader. */
+  const [assets, setAssets] = useState<ClientAsset[] | null>(null)
+
+  const loadAssets = useCallback(async () => {
+    try { setAssets(await fetchAssets(client.id)) } catch { setAssets([]) }
+  }, [client.id])
+
+  useEffect(() => { if (tab === "materiali" && assets === null) loadAssets() }, [tab, assets, loadAssets])
+
+  async function openAsset(a: ClientAsset) {
+    const url = await getAssetSignedUrl(a)
+    if (url) window.open(url, "_blank", "noopener")
+    else toast.error("Link non disponibile.")
   }
 
   async function removeDoc(d: ClientDocument) {
@@ -187,8 +217,8 @@ export default function ClientWorkspace({ client, home, adminId, onBack, reload,
           className="portal-link"
           style={{
             display: "inline-flex", alignItems: "center", gap: 6, background: "none", border: "none",
-            padding: 0, marginBottom: 12, fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em",
-            textTransform: "uppercase", color: T.ghost, cursor: "pointer",
+            padding: 0, marginBottom: 12, fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em",
+            textTransform: "uppercase", color: T.tertiary, cursor: "pointer",
           }}
         >
           <Icon name="arrowL" size={11} /> Clienti
@@ -203,7 +233,7 @@ export default function ClientWorkspace({ client, home, adminId, onBack, reload,
               <Badge tone={cs.tone} dot>{cs.label}</Badge>
               <Badge tone={cp.tone}>{cp.label}</Badge>
             </div>
-            <p style={{ fontFamily: MONO, fontSize: 10.5, color: T.faint, margin: "6px 0 0" }}>
+            <p style={{ fontFamily: MONO, fontSize: 11, color: T.secondary, margin: "6px 0 0" }}>
               {client.contact} · {client.email}{client.phone ? ` · ${client.phone}` : ""}
               {client.joinedAt ? ` · cliente dal ${fmtDate(client.joinedAt)}` : ""}
             </p>
@@ -217,6 +247,7 @@ export default function ClientWorkspace({ client, home, adminId, onBack, reload,
           { id: "progetti", label: "Progetti", badge: projects.filter(p => p.status === "pending_approval").length || undefined },
           { id: "fatture", label: "Fatture", badge: dueCount || undefined },
           { id: "documenti", label: "Documenti" },
+          { id: "materiali", label: "Materiali" },
           { id: "messaggi", label: "Messaggi", badge: unreadCount || undefined },
         ]}
         value={tab}
@@ -289,6 +320,17 @@ export default function ClientWorkspace({ client, home, adminId, onBack, reload,
             <Select value={docType} onChange={e => setDocType(e.target.value as DocType)} style={{ width: 150 }}>
               {(Object.keys(DOC_TYPES) as DocType[]).map(t => <option key={t} value={t}>{DOC_TYPES[t]}</option>)}
             </Select>
+            {projects.length > 0 && (
+              <Select value={docProjectId} onChange={e => setDocProjectId(e.target.value)} style={{ width: 190 }}
+                title="Collega il documento a un progetto: senza, non finisce nel diario del cliente">
+                <option value="">Nessun progetto</option>
+                {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </Select>
+            )}
+            <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 13, color: T.secondary }}>
+              <input type="checkbox" checked={docRequiresSig} onChange={e => setDocRequiresSig(e.target.checked)} style={{ accentColor: "#B83240", width: 16, height: 16 }} />
+              Richiede firma
+            </label>
             <FileBtn variant="primary" icon="plus" busy={uploading} onFiles={handleUpload}>Carica</FileBtn>
           </div>
           {docs === null ? (
@@ -305,7 +347,10 @@ export default function ClientWorkspace({ client, home, adminId, onBack, reload,
                   title={d.name}
                   sub={`${DOC_TYPES[d.type]} · ${fmtBytes(d.sizeBytes)} · ${fmtDate(d.uploadedAt)}`}
                   right={
-                    <span style={{ display: "inline-flex", gap: 7 }}>
+                    <span style={{ display: "inline-flex", gap: 7, alignItems: "center" }}>
+                      {d.requiresSignature && (
+                        d.signedAt ? <Badge tone="green" dot>Firmato</Badge> : <Badge tone="amber" dot>Attesa firma</Badge>
+                      )}
                       <a href={getDocumentDownloadUrl(d)} target="_blank" rel="noreferrer" style={{ textDecoration: "none", display: "inline-flex" }} onClick={e => e.stopPropagation()}>
                         <Btn size="sm" variant="ghost" icon="download">Apri</Btn>
                       </a>
@@ -319,8 +364,37 @@ export default function ClientWorkspace({ client, home, adminId, onBack, reload,
         </Glass>
       )}
 
+      {tab === "materiali" && (
+        <Glass variant="panel" style={{ padding: 20 }}>
+          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: T.tertiary, margin: "0 0 12px" }}>
+            Caricati dal cliente
+          </p>
+          {assets === null ? (
+            <Loading label="Carico i materiali" />
+          ) : assets.length === 0 ? (
+            <Empty icon="folder" title="Nessun materiale" hint="Loghi, testi e immagini che il cliente carica compaiono qui." />
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+              {assets.map(a => {
+                const pname = projects.find(p => p.id === a.projectId)?.name
+                return (
+                  <Row
+                    key={a.id}
+                    icon="doc"
+                    iconTone="silver"
+                    title={a.name}
+                    sub={[fmtBytes(a.sizeBytes), fmtDate(a.createdAt), pname ?? "nessun progetto"].join(" · ")}
+                    right={<Btn size="sm" variant="ghost" icon="download" onClick={() => openAsset(a)}>Apri</Btn>}
+                  />
+                )
+              })}
+            </div>
+          )}
+        </Glass>
+      )}
+
       {tab === "messaggi" && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))", gap: 16, alignItems: "start" }}>
           <Glass variant="panel" style={{ padding: 12, maxWidth: 380 }}>
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
               <Btn size="sm" variant="copper" icon="plus" onClick={() => setConvOpen(true)}>Nuova</Btn>
@@ -347,10 +421,10 @@ export default function ClientWorkspace({ client, home, adminId, onBack, reload,
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 8, width: "100%" }}>
                         {unread && <span style={{ width: 7, height: 7, borderRadius: 99, background: T.copperLt, flexShrink: 0, boxShadow: "0 0 8px rgba(212,105,90,0.8)" }} />}
-                        <span style={{ flex: 1, minWidth: 0, fontFamily: DISPLAY, fontSize: 12.5, fontWeight: unread ? 800 : 600, color: c.status === "closed" ? T.faint : T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <span style={{ flex: 1, minWidth: 0, fontFamily: DISPLAY, fontSize: 12.5, fontWeight: unread ? 800 : 600, color: c.status === "closed" ? T.secondary : T.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {c.subject}
                         </span>
-                        <span style={{ fontFamily: MONO, fontSize: 8.5, color: T.ghost, flexShrink: 0 }}>{relativeDate(c.lastMessageAt)}</span>
+                        <span style={{ fontFamily: MONO, fontSize: 11, color: T.tertiary, flexShrink: 0 }}>{relativeDate(c.lastMessageAt)}</span>
                       </div>
                       <Badge tone={cvs.tone} dot>{cvs.label}</Badge>
                     </button>

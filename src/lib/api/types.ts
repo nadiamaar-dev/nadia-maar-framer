@@ -136,6 +136,8 @@ export interface Conversation {
   clientName?: string
   projectId?: string
   stageId?: string
+  /** set when this thread is the discussion attached to a support ticket */
+  ticketId?: string
   subject: string
   status: ConversationStatus
   lastMessageAt: string
@@ -294,6 +296,7 @@ export interface AuditLog {
 export type ActionKind =
   | "start_project" | "approve_stage" | "pay_invoice" | "confirm_meeting" | "unread_chat" | "sign_document"
   | "review_project" | "reply_ticket" | "answer_chat" | "overdue_invoice" | "confirm_payment"
+  | "revise_stage" | "estimate_accepted"
 
 export interface PortalAction {
   id: string

@@ -58,6 +58,20 @@ export default function Messages({ home, userId, reload }: {
     }
   }
 
+  /* Closing used to be one-way: the composer locked and the only way back was
+     to open a new thread. RLS already lets a client write has_questions, so
+     reopening needs no privilege change — just a button. */
+  async function reopenConvo() {
+    if (!selected) return
+    try {
+      await updateConversationStatus(selected.id, "has_questions")
+      toast.success("Conversazione riaperta")
+      reload()
+    } catch {
+      toast.error("Operazione non riuscita.")
+    }
+  }
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <SectionTitle
@@ -67,9 +81,9 @@ export default function Messages({ home, userId, reload }: {
         right={<Btn variant="primary" icon="plus" onClick={() => setOpen(true)}>Nuova conversazione</Btn>}
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16, alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))", gap: 16, alignItems: "start" }}>
         {/* Thread list */}
-        <Glass variant="panel" style={{ padding: 12, maxWidth: 420 }}>
+        <Glass variant="work" style={{ padding: 12, maxWidth: 420 }}>
           {inbox.length === 0 ? (
             <Empty icon="chat" title="Nessuna conversazione" hint="Apri un tema: rispondiamo il prima possibile." />
           ) : (
@@ -94,14 +108,17 @@ export default function Messages({ home, userId, reload }: {
                       {unread && <span style={{ width: 7, height: 7, borderRadius: 99, background: T.copperLt, flexShrink: 0, boxShadow: "0 0 8px rgba(184,50,64,0.85)" }} />}
                       <span style={{
                         flex: 1, minWidth: 0, fontFamily: DISPLAY, fontSize: 12.5, fontWeight: unread ? 800 : 600,
-                        color: c.status === "closed" ? T.faint : T.text,
+                        color: c.status === "closed" ? T.secondary : T.text,
                         overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                       }}>
                         {c.subject}
                       </span>
-                      <span style={{ fontFamily: MONO, fontSize: 8.5, color: T.ghost, flexShrink: 0 }}>{relativeDate(c.lastMessageAt)}</span>
+                      <span style={{ fontFamily: MONO, fontSize: 11, color: T.tertiary, flexShrink: 0 }}>{relativeDate(c.lastMessageAt)}</span>
                     </div>
-                    <Badge tone={cs.tone} dot>{cs.label}</Badge>
+                    <span style={{ display: "inline-flex", gap: 6, flexWrap: "wrap" }}>
+                      <Badge tone={cs.tone} dot>{cs.label}</Badge>
+                      {c.ticketId && <Badge tone="steel">Ticket</Badge>}
+                    </span>
                   </button>
                 )
               })}
@@ -110,7 +127,9 @@ export default function Messages({ home, userId, reload }: {
         </Glass>
 
         {/* Thread pane */}
-        <Glass variant="panel" style={{ padding: 18, gridColumn: "span 1 / -1" }}>
+        {/* the old `gridColumn: span 1 / -1` never applied (it sat on an inner
+            div, not the grid item) and does not mean anything useful here */}
+        <Glass variant="work" style={{ padding: 18 }}>
           {selected ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, paddingBottom: 12, borderBottom: `1px solid ${T.border}` }}>
@@ -122,7 +141,9 @@ export default function Messages({ home, userId, reload }: {
                     <Badge tone={CONVO_STATUS[selected.status].tone} dot>{CONVO_STATUS[selected.status].label}</Badge>
                   </div>
                 </div>
-                {selected.status !== "closed" && (
+                {selected.status === "closed" ? (
+                  <Btn size="sm" variant="outline" icon="play" onClick={reopenConvo}>Riapri</Btn>
+                ) : (
                   <Btn size="sm" variant="outline" icon="check" onClick={closeConvo}>Chiudi</Btn>
                 )}
               </div>

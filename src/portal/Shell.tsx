@@ -67,13 +67,19 @@ function MaarGhost({ direction = "vertical" }: { direction?: "vertical" | "horiz
 
 export default function Shell({
   items, active, onSelect,
-  email, roleLabel, onSignOut, onEditProfile, topRight, children,
+  email, roleLabel, areaLabel, showLogo = true, onSignOut, onEditProfile, topRight, children,
 }: {
   items: ShellNavItem[]
   active: string
   onSelect: (id: string) => void
   email?: string
   roleLabel: string
+  /** Constant context shown in the header eyebrow. Without it the eyebrow
+   *  would repeat the section title sitting right underneath it. */
+  areaLabel?: string
+  /** Sidebar branding block. Off in the client cabinet: the client is inside
+   *  their own workspace, not on a marketing page. */
+  showLogo?: boolean
   onSignOut: () => void
   onEditProfile?: () => void
   topRight?: React.ReactNode
@@ -85,35 +91,26 @@ export default function Shell({
   /* ── Sidebar content ────────────────────────────────────────────────── */
   const sidebarContent = (
     <>
-      {/* Logo strip — matches site Header logo row */}
-      <div style={{
-        padding: "22px 20px 16px",
-        borderBottom: `1px solid ${SIDE_BORDER}`,
-        flexShrink: 0,
-      }}>
-        <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 11, textDecoration: "none" }}>
-          <PortalLogo size={28} id="nm-shell-logo" />
-          <span aria-hidden style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
-          <span style={{
-            fontFamily: MONO, fontWeight: 600, fontSize: 11,
-            letterSpacing: "0.22em", textTransform: "uppercase" as const,
-            color: "#fff", whiteSpace: "nowrap" as const,
-          }}>
-            Nadia Maar
-          </span>
-        </a>
-        {/* // [ Area Clienti ] eyebrow */}
+      {showLogo && (
+        /* Logo strip — matches site Header logo row */
         <div style={{
-          display: "inline-flex", alignItems: "center", gap: 8, marginTop: 12,
-          fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em",
-          textTransform: "uppercase" as const, color: "#FFFFFF",
-          border: "1px solid rgba(255,255,255,0.28)", borderRadius: 6,
-          padding: "4px 9px", background: "rgba(255,255,255,0.04)",
+          padding: "22px 20px 16px",
+          borderBottom: `1px solid ${SIDE_BORDER}`,
+          flexShrink: 0,
         }}>
-          <span style={{ color: "rgba(184,50,64,0.80)" }}>//</span>
-          <span>[ Area Clienti ]</span>
+          <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 11, textDecoration: "none" }}>
+            <PortalLogo size={28} id="nm-shell-logo" />
+            <span aria-hidden style={{ width: 1, height: 14, background: "rgba(255,255,255,0.16)", flexShrink: 0 }} />
+            <span style={{
+              fontFamily: MONO, fontWeight: 600, fontSize: 11,
+              letterSpacing: "0.22em", textTransform: "uppercase" as const,
+              color: "#fff", whiteSpace: "nowrap" as const,
+            }}>
+              Nadia Maar
+            </span>
+          </a>
         </div>
-      </div>
+      )}
 
       {/* Client profile card */}
       <div style={{ padding: "12px 14px", borderBottom: `1px solid ${SIDE_BORDER}`, flexShrink: 0 }}>
@@ -124,39 +121,44 @@ export default function Shell({
           title={onEditProfile ? "Modifica il tuo profilo" : undefined}
           style={{
             display: "flex", alignItems: "center", gap: 11, width: "100%", textAlign: "left",
-            background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.32)",
-            borderRadius: 11, padding: "9px 11px",
+            background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.34)",
+            borderRadius: 11, padding: "10px 12px",
             cursor: onEditProfile ? "pointer" : "default",
             transition: "background 0.18s, border-color 0.18s",
           }}
+          /* the leave handler used to reset the border to 0.22 — a value it
+             never had — so one hover permanently dimmed the card */
           onMouseEnter={onEditProfile ? e => {
             const el = e.currentTarget as HTMLElement
-            el.style.background = "rgba(255,255,255,0.07)"
-            el.style.borderColor = "rgba(255,255,255,0.36)"
+            el.style.background = "rgba(255,255,255,0.14)"
+            el.style.borderColor = "rgba(255,255,255,0.46)"
           } : undefined}
           onMouseLeave={onEditProfile ? e => {
             const el = e.currentTarget as HTMLElement
-            el.style.background = "rgba(255,255,255,0.04)"
-            el.style.borderColor = "rgba(255,255,255,0.22)"
+            el.style.background = "rgba(255,255,255,0.09)"
+            el.style.borderColor = "rgba(255,255,255,0.34)"
           } : undefined}
         >
-          <Avatar name={email ?? "?"} size={38} />
+          {/* silver, not copper: the initials are identity, not an accent.
+              textColor pins them to pure white — the tone's own 0.95 alpha
+              read as a shade darker than the name and email beside it. */}
+          <Avatar name={email ?? "?"} size={38} tone="silver" textColor="#FFFFFF" />
           <div style={{ minWidth: 0, flex: 1 }}>
             <p style={{
-              fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 700,
-              color: TL.text, margin: 0, lineHeight: 1.25,
+              fontFamily: DISPLAY, fontSize: 14, fontWeight: 800,
+              color: "#FFFFFF", margin: 0, lineHeight: 1.25,
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>
               {roleLabel}
             </p>
             <p style={{
-              fontFamily: MONO, fontSize: 9.5, color: "#FFFFFF",
-              margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+              fontFamily: MONO, fontSize: 11, color: "#FFFFFF",
+              margin: "4px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>
               {email ?? "—"}
             </p>
           </div>
-          {onEditProfile && <Icon name="edit" size={12} style={{ color: "#FFFFFF", flexShrink: 0 }} />}
+          {onEditProfile && <Icon name="edit" size={13} style={{ color: "#FFFFFF", flexShrink: 0 }} />}
         </button>
       </div>
 
@@ -183,7 +185,7 @@ export default function Shell({
             >
               {/* [01] index — matches Header menu [01] style */}
               <span style={{
-                fontFamily: MONO, fontSize: 9, letterSpacing: "0.08em", flexShrink: 0, width: 22,
+                fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", flexShrink: 0, width: 22,
                 color: isActive ? "rgba(184,50,64,0.55)" : "#FFFFFF",
               }}>
                 [{num}]
@@ -197,7 +199,7 @@ export default function Shell({
                   minWidth: 18, height: 18, padding: "0 5px", borderRadius: 99,
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
                   background: "rgba(184,50,64,0.55)",
-                  color: "#FFF", fontFamily: MONO, fontSize: 9.5, fontWeight: 700,
+                  color: "#FFF", fontFamily: MONO, fontSize: 11, fontWeight: 700,
                 }}>
                   {item.badge}
                 </span>
@@ -223,7 +225,7 @@ export default function Shell({
               flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
               padding: "9px 10px", borderRadius: 9, textDecoration: "none",
               border: "1px solid rgba(255,255,255,0.42)", background: "rgba(255,255,255,0.05)",
-              fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.10em",
+              fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.10em",
               textTransform: "uppercase" as const, color: "#FFFFFF",
               transition: "all 0.18s",
             }}
@@ -248,7 +250,7 @@ export default function Shell({
             flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
             padding: "9px 10px", borderRadius: 9,
             border: "1px solid rgba(255,255,255,0.42)", background: "rgba(255,255,255,0.05)",
-            fontFamily: MONO, fontSize: 9.5, fontWeight: 600, letterSpacing: "0.10em",
+            fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.10em",
             textTransform: "uppercase" as const, color: "#FFFFFF",
             cursor: "pointer", transition: "all 0.18s",
           }}
@@ -289,7 +291,7 @@ export default function Shell({
 
       {/* ── Desktop sidebar — transparent = identical to Background ── */}
       <aside
-        className="hidden lg:flex"
+        className="hidden md:flex"
         style={{
           position: "relative", zIndex: 2, width: 268, flexShrink: 0,
           flexDirection: "column",
@@ -320,7 +322,7 @@ export default function Shell({
 
       {/* ── Mobile drawer ── */}
       {drawer && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 40, pointerEvents: "none" }} className="lg:hidden">
+        <div style={{ position: "fixed", inset: 0, zIndex: 40, pointerEvents: "none" }} className="md:hidden">
           {/* invisible tap-to-close zone */}
           <div onClick={() => setDrawer(false)} style={{ position: "absolute", inset: 0, pointerEvents: "auto" }} />
           <aside style={{
@@ -356,11 +358,14 @@ export default function Shell({
         </div>
       )}
 
-      {/* ── Main column ── */}
-      <div style={{ position: "relative", zIndex: 1, flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      {/* ── Main column ──
+          minWidth:0 is load-bearing: without it a single wide descendant
+          pushes this flex child past the viewport and the whole page
+          scrolls sideways, because the aside next to it is flexShrink:0. */}
+      <div style={{ position: "relative", zIndex: 1, flex: 1, minWidth: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
 
         {/* Top header — site header-scrolled glass */}
-        <header style={{
+        <header className="pt-header" style={{
           flexShrink: 0, height: 64,
           display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
           padding: "0 28px",
@@ -369,14 +374,19 @@ export default function Shell({
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
             {/* Hamburger — matches site header close button style */}
+            {/* `md:hidden` never took effect here: an inline `display:flex`
+                beats a utility class, so the burger stayed visible on desktop
+                and opened a drawer duplicating the sidebar already on screen.
+                Display is now owned by .pt-burger in admin.css. */}
             <button
-              className="portal-nav-item lg:hidden"
+              className="portal-nav-item pt-burger"
               onClick={() => setDrawer(true)}
+              aria-label="Apri il menu"
               style={{
                 width: 36, height: 36, borderRadius: 9, flexShrink: 0,
-                display: "flex", alignItems: "center", justifyContent: "center",
+                alignItems: "center", justifyContent: "center",
                 border: "1px solid rgba(255,255,255,0.17)", background: "rgba(255,255,255,0.04)",
-                color: TL.muted, cursor: "pointer",
+                color: TL.secondary, cursor: "pointer",
                 transition: "background 0.18s, border-color 0.18s, color 0.18s",
               }}
               onMouseEnter={e => {
@@ -389,27 +399,30 @@ export default function Shell({
                 const el = e.currentTarget as HTMLElement
                 el.style.background = "rgba(255,255,255,0.04)"
                 el.style.borderColor = "rgba(255,255,255,0.10)"
-                el.style.color = TL.muted
+                el.style.color = TL.secondary
               }}
             >
               <Icon name="menu" size={16} />
             </button>
 
-            <div style={{ minWidth: 0 }}>
-              {/* // [ Section ] eyebrow */}
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 6,
-                fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em",
+            {/* One line: the eyebrow used to print the section name and the
+                <h1> below repeated it verbatim. The eyebrow now carries the
+                constant context and sits beside the title, not above it. */}
+            <div style={{ minWidth: 0, display: "flex", alignItems: "center", gap: 12 }}>
+              <span style={{
+                display: "inline-flex", alignItems: "center", gap: 7, flexShrink: 0,
+                fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em",
                 textTransform: "uppercase" as const, color: "#FFFFFF",
                 border: "1px solid rgba(255,255,255,0.28)", borderRadius: 6,
                 padding: "4px 9px", background: "rgba(255,255,255,0.04)",
               }}>
-                <span style={{ color: "rgba(184,50,64,0.80)" }}>//</span>
-                <span>[ {current?.label ?? ""} ]</span>
-              </div>
+                <span>//</span>
+                <span>[ {areaLabel ?? "Area Riservata"} ]</span>
+              </span>
               <h1 style={{
                 fontFamily: DISPLAY, fontSize: 19, fontWeight: 800,
                 color: TL.text, margin: 0, letterSpacing: "-0.02em", lineHeight: 1.15,
+                minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
               }}>
                 {current?.label ?? ""}
               </h1>
@@ -423,7 +436,7 @@ export default function Shell({
           )}
         </header>
 
-        <main style={{ flex: 1, overflowY: "auto", padding: "28px 26px 52px" }}>
+        <main className="pt-main" style={{ flex: 1, overflowY: "auto", padding: "28px 26px 52px" }}>
           <div style={{ maxWidth: 1180, margin: "0 auto" }}>
             {children}
           </div>

@@ -1,9 +1,13 @@
 import React, { useState } from "react"
 import { useToast } from "../../context/ToastContext"
-import type { ClientHome, TicketPriority } from "../../lib/api"
-import { acceptTicketEstimate, createTicket, fmtDateTime, fmtEur, relativeDate } from "../../lib/api"
+import type { ClientHome, Conversation, SupportTicket, TicketPriority } from "../../lib/api"
 import {
-  Badge, Btn, DISPLAY, Empty, Field, Glass, Icon, Input, Kicker, MONO,
+  acceptTicketEstimate, createTicket, fmtDateTime, fmtEur,
+  getOrCreateTicketConversation, isUnreadFor, relativeDate,
+} from "../../lib/api"
+import ChatThread from "../ChatThread"
+import {
+  Badge, Btn, DISPLAY, Empty, Field, Glass, Icon, Input, Kicker, Loading, Modal, MONO,
   SectionTitle, Select, T, Textarea, TICKET_PRIORITY, TICKET_STATUS,
 } from "../ui"
 
@@ -19,8 +23,31 @@ export default function Support({ home, userId, reload }: {
   const [message, setMessage] = useState("")
   const [busy, setBusy] = useState(false)
   const [accepting, setAccepting] = useState<string | null>(null)
+  const [chatTicket, setChatTicket] = useState<SupportTicket | null>(null)
+  const [chatConvo, setChatConvo] = useState<Conversation | null>(null)
 
   const projectName = (id?: string) => home.projects.find(p => p.id === id)?.name
+  const threadFor = (ticketId: string) => home.threads.find(t => t.ticketId === ticketId)
+
+  /* A ticket carries one admin_note that each reply overwrites, so the
+     conversation has to live in the chat — which already does history,
+     attachments, unread markers and notifying the studio. */
+  async function openTicketChat(t: SupportTicket) {
+    setChatTicket(t)
+    setChatConvo(null)
+    try {
+      const convo = await getOrCreateTicketConversation({
+        ticketId: t.id,
+        clientId: userId,
+        projectId: t.projectId,
+        subject: `Ticket — ${t.subject}`,
+      })
+      setChatConvo(convo)
+    } catch {
+      setChatTicket(null)
+      toast.error("Impossibile aprire la discussione.")
+    }
+  }
 
   async function submit() {
     if (!subject.trim() || !message.trim() || busy) return
@@ -55,9 +82,9 @@ export default function Support({ home, userId, reload }: {
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <SectionTitle kicker="Supporto" title="Assistenza tecnica" sub="Segnala un problema: priorità alta e critica hanno precedenza." />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16, alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))", gap: 16, alignItems: "start" }}>
         {/* New ticket */}
-        <Glass variant="panel" style={{ padding: 20, maxWidth: 460 }}>
+        <Glass variant="work" style={{ padding: 20, maxWidth: 460 }}>
           <Kicker>Nuovo ticket</Kicker>
           <div style={{ display: "flex", flexDirection: "column", gap: 13, marginTop: 14 }}>
             <Field label="Oggetto">
@@ -88,7 +115,7 @@ export default function Support({ home, userId, reload }: {
         </Glass>
 
         {/* Ticket history */}
-        <Glass variant="panel" style={{ padding: 20 }}>
+        <Glass variant="work" style={{ padding: 20 }}>
           <Kicker>I tuoi ticket</Kicker>
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 14 }}>
             {home.tickets.length === 0 ? (
@@ -104,27 +131,29 @@ export default function Support({ home, userId, reload }: {
                     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
                   }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <h4 style={{ flex: 1, minWidth: 140, fontFamily: DISPLAY, fontSize: 14, fontWeight: 700, color: T.text, margin: 0 }}>
+                      <h4 style={{ flex: "1 1 100%", fontFamily: DISPLAY, fontSize: 14, fontWeight: 700, color: T.text, margin: 0, wordBreak: "break-word" }}>
                         {t.subject}
                       </h4>
                       <Badge tone={tp.tone}>{tp.label}</Badge>
                       <Badge tone={ts.tone} dot>{ts.label}</Badge>
                       {t.projectId && <Badge tone="silver">{projectName(t.projectId) ?? "Progetto"}</Badge>}
                     </div>
-                    <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.muted, margin: "9px 0 0", whiteSpace: "pre-wrap" }}>
+                    <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.secondary, margin: "9px 0 0", whiteSpace: "pre-wrap" }}>
                       {t.message}
                     </p>
-                    <p style={{ fontFamily: MONO, fontSize: 9, color: T.faint, margin: "9px 0 0", letterSpacing: "0.05em" }}>
+                    <p style={{ fontFamily: MONO, fontSize: 11, color: T.secondary, margin: "9px 0 0", letterSpacing: "0.05em" }}>
                       {relativeDate(t.createdAt)}
                     </p>
+                    {/* four items in one non-wrapping row overflowed a phone-width card */}
                     {(t.estimateAmount != null || t.estimateHours != null) && (
                       <div style={{
                         display: "flex", alignItems: "center", gap: 10, marginTop: 12, padding: "10px 14px", borderRadius: 11,
+                        flexWrap: "wrap", rowGap: 8,
                         background: "rgba(184,50,64,0.08)", border: "1px solid rgba(184,50,64,0.24)",
                       }}>
-                        <Icon name="euro" size={15} style={{ color: T.copperLt }} />
-                        <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: T.copperLt }}>Preventivo</span>
-                        <span style={{ flex: 1 }} />
+                        <Icon name="euro" size={15} style={{ color: T.copperTx, flexShrink: 0 }} />
+                        <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: T.copperTx }}>Preventivo</span>
+                        <span style={{ flex: "1 0 0" }} />
                         <span style={{ fontFamily: DISPLAY, fontSize: 14, fontWeight: 800, color: T.text }}>
                           {[t.estimateAmount != null ? fmtEur(t.estimateAmount) : null, t.estimateHours != null ? `${t.estimateHours} h` : null].filter(Boolean).join(" · ")}
                         </span>
@@ -139,17 +168,31 @@ export default function Support({ home, userId, reload }: {
                         background: "rgba(184,50,64,0.10)", border: "1px solid rgba(184,50,64,0.26)",
                         borderLeft: "3px solid #B83240",
                       }}>
-                        <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: T.copper, margin: 0 }}>
+                        <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>
                           <Icon name="sparkle" size={10} /> Risposta dello studio
                         </p>
                         <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.text, margin: "7px 0 0", whiteSpace: "pre-wrap" }}>
                           {t.adminNote}
                         </p>
                         {t.respondedAt && (
-                          <p style={{ fontFamily: MONO, fontSize: 9, color: T.faint, margin: "7px 0 0" }}>{fmtDateTime(t.respondedAt)}</p>
+                          <p style={{ fontFamily: MONO, fontSize: 11, color: T.tertiary, margin: "7px 0 0" }}>{fmtDateTime(t.respondedAt)}</p>
                         )}
                       </div>
                     )}
+
+                    {/* The reply above is a single field the studio overwrites.
+                        Everything that follows it belongs in a real thread. */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 9, marginTop: 12, flexWrap: "wrap" }}>
+                      <Btn size="sm" variant="outline" icon="chat" onClick={() => openTicketChat(t)}>
+                        {threadFor(t.id) ? "Apri la discussione" : "Continua in chat"}
+                      </Btn>
+                      {(() => {
+                        const th = threadFor(t.id)
+                        return th && isUnreadFor(th, "client")
+                          ? <Badge tone="copper" dot>Nuova risposta</Badge>
+                          : null
+                      })()}
+                    </div>
                   </div>
                 )
               })
@@ -157,6 +200,19 @@ export default function Support({ home, userId, reload }: {
           </div>
         </Glass>
       </div>
+
+      {/* Ticket discussion */}
+      <Modal
+        open={!!chatTicket}
+        onClose={() => { setChatTicket(null); setChatConvo(null) }}
+        kicker="Discussione ticket"
+        title={chatTicket?.subject ?? ""}
+        width={680}
+      >
+        {chatConvo
+          ? <ChatThread conversation={chatConvo} role="client" authorId={userId} height={440} onChanged={reload} />
+          : <Loading label="Apro la discussione" />}
+      </Modal>
     </div>
   )
 }
