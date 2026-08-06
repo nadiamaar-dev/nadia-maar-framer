@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { CONTACT, mailLink, telLink, waLink } from "../lib/contact"
 
 const MONO = "'JetBrains Mono','SF Mono',ui-monospace,monospace"
 
@@ -68,12 +69,10 @@ function FloatingActionBtn({ href, icon, label, external }: {
    FLOATING CONTACT WIDGET
 ══════════════════════════════════════════════════════════════════════════ */
 export default function FloatingContact() {
-  const name      = "Nadia Maar"
-  const email     = "nadiamaar.dev@gmail.com"
-  const phone     = "+39 000 000 0000"
-  const whatsapp  = "+390000000000"
-  const location  = "Remote · Europa"
-  const initials  = "NM"
+  /* Erano costanti locali, e telefono e WhatsApp erano rimasti segnaposto:
+     ogni «Chiama» e «WhatsApp» del sito portava a un numero inesistente.
+     Ora vengono da src/lib/contact.ts, insieme al resto del sito. */
+  const { name, email, telDisplay, location, initials } = CONTACT
 
   const [open,     setOpen]     = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -190,6 +189,13 @@ export default function FloatingContact() {
                 onMouseLeave={e => (e.currentTarget.style.color = T.muted)}>
                 <MailIcon size={11} /><span style={{ wordBreak: "break-all" }}>{email}</span>
               </a>
+              {/* il numero era solo dentro il pulsante: su desktop, dove tel:
+                  spesso non apre nulla, non c'era modo di leggerlo o copiarlo */}
+              <a href={telLink()} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: T.muted, textDecoration: "none", transition: "color 0.16s" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "#FFFFFF")}
+                onMouseLeave={e => (e.currentTarget.style.color = T.muted)}>
+                <PhoneIcon size={11} /><span>{telDisplay}</span>
+              </a>
               <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: T.muted }}>
                 <MapPinIcon size={11} /><span>{location}</span>
               </div>
@@ -197,9 +203,9 @@ export default function FloatingContact() {
 
             {/* action buttons */}
             <div style={{ padding: "9px 12px 14px", borderTop: "1px solid rgba(120,20,30,0.18)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
-              <FloatingActionBtn href={`mailto:${email}`}                                                        icon={<MailIcon size={13} />}    label="Email"     />
-              <FloatingActionBtn href={`tel:${phone.replace(/\s/g, "")}`}                                        icon={<PhoneIcon size={13} />}   label="Chiama"    />
-              <FloatingActionBtn href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}?text=Ciao%20Nadia!`}   icon={<WhatsAppIcon />}          label="WhatsApp"  external />
+              <FloatingActionBtn href={mailLink()}  icon={<MailIcon size={13} />}  label="Email"    />
+              <FloatingActionBtn href={telLink()}   icon={<PhoneIcon size={13} />} label="Chiama"   />
+              <FloatingActionBtn href={waLink()}    icon={<WhatsAppIcon />}        label="WhatsApp" external />
             </div>
           </motion.div>
         )}

@@ -270,7 +270,7 @@ export default function Dossier({ projectId, home, userId, onSwitchProject, onNe
               <p style={{ fontFamily: DISPLAY, fontSize: 13, fontWeight: 800, color: T.text, margin: 0 }}>
                 {stages.filter(s => s.status === "done").length}/{stages.length} fasi
               </p>
-              <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: T.tertiary, margin: "3px 0 0" }}>
+              <p style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.tertiary, margin: "3px 0 0" }}>
                 completate
               </p>
             </div>

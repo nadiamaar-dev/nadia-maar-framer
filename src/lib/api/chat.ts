@@ -1,5 +1,6 @@
 import { safeStorageName, supabase } from "./core"
-import type { Attachment, Conversation, ConversationStatus, Message } from "./types"
+import { createTicket } from "./tickets"
+import type { Attachment, Conversation, ConversationStatus, Message, TicketPriority } from "./types"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -145,6 +146,60 @@ export async function getOrCreateTicketConversation(payload: {
     .single()
   if (error) throw error
   return mapConversation(data)
+}
+
+/**
+ * One entry point for "the client writes to the studio".
+ *
+ * Messaggi and Supporto used to be two sections with two different forms, and
+ * the client had to guess which one their message belonged to — a split that
+ * mirrored our data model, not their intent. Now there is one composer: tick
+ * "richiesta di lavoro" and it additionally opens a ticket, which is what
+ * carries priority, a resolution status and the quote.
+ *
+ * The opening text is deliberately stored twice — as the ticket's `message`
+ * (so the request has a body of its own) and as the first chat message (so the
+ * thread does not start empty). They are the same words on purpose.
+ */
+export async function createRequest(payload: {
+  clientId: string
+  subject: string
+  message: string
+  asTicket: boolean
+  priority?: TicketPriority
+  projectId?: string
+}): Promise<Conversation> {
+  const subject = payload.subject.trim()
+  const message = payload.message.trim()
+
+  let convo: Conversation
+  if (payload.asTicket) {
+    const ticket = await createTicket({
+      clientId: payload.clientId,
+      subject,
+      message,
+      priority: payload.priority ?? "medium",
+      projectId: payload.projectId,
+    })
+    convo = await getOrCreateTicketConversation({
+      ticketId: ticket.id,
+      clientId: payload.clientId,
+      projectId: payload.projectId,
+      subject,
+    })
+  } else {
+    convo = await createConversation({ clientId: payload.clientId, subject })
+  }
+
+  if (message) {
+    await sendMessage({
+      conversationId: convo.id,
+      authorId: payload.clientId,
+      authorRole: "client",
+      content: message,
+    })
+  }
+  return convo
 }
 
 export async function updateConversationStatus(id: string, status: ConversationStatus): Promise<void> {

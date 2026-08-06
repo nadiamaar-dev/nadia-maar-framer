@@ -14,12 +14,11 @@ import Dossier from "./Dossier"
 import Invoices from "./Invoices"
 import Materiali from "./Materiali"
 import Meetings from "./Meetings"
-import Messages from "./Messages"
 import NewProjectModal from "./NewProjectModal"
 import Overview from "./Overview"
 import ProfileModal from "./ProfileModal"
 import Projects from "./Projects"
-import Support from "./Support"
+import Richieste from "./Richieste"
 
 const SECTIONS: Omit<ShellNavItem, "badge">[] = [
   { id: "panoramica", label: "Panoramica", icon: "home" },
@@ -28,8 +27,7 @@ const SECTIONS: Omit<ShellNavItem, "badge">[] = [
   { id: "fatture", label: "Fatture", icon: "invoice" },
   { id: "materiali", label: "Materiali", icon: "folder" },
   { id: "riunioni", label: "Riunioni", icon: "calendar" },
-  { id: "messaggi", label: "Messaggi", icon: "chat" },
-  { id: "supporto", label: "Supporto", icon: "ticket" },
+  { id: "richieste", label: "Richieste", icon: "chat" },
 ]
 
 const SECTION_IDS = SECTIONS.map(s => s.id)
@@ -189,7 +187,7 @@ export default function CabinetApp() {
                 }}>
                   <Icon name={item.icon} size={16} />
                 </span>
-                <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: T.secondary }}>
+                <span style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.secondary }}>
                   {item.label}
                 </span>
               </div>
@@ -232,6 +230,14 @@ export default function CabinetApp() {
       roleLabel={profile?.companyName ?? profile?.contactName ?? "Cliente"}
       areaLabel="Area Clienti"
       showLogo={false}
+      showQuickContact
+      /* the open project if there is one, else the company: either way the
+         studio sees what the message is about before opening it */
+      contactContext={
+        (projectId ? home.projects.find(p => p.id === projectId)?.name : undefined)
+        ?? profile?.companyName
+        ?? undefined
+      }
       onSignOut={() => { supabase.auth.signOut() }}
       onEditProfile={() => setProfileOpen(true)}
       topRight={home.actions.length > 0 && section !== "panoramica" ? (
@@ -275,9 +281,17 @@ export default function CabinetApp() {
         {section === "documenti" && <Documenti home={home} userId={user.id} reload={reload} />}
         {section === "materiali" && <Materiali userId={user.id} projects={home.projects} />}
         {section === "riunioni" && <Meetings home={home} userId={user.id} reload={reload} />}
-        {section === "fatture" && <Invoices home={home} reload={reload} />}
-        {section === "messaggi" && <Messages home={home} userId={user.id} reload={reload} />}
-        {section === "supporto" && <Support home={home} userId={user.id} reload={reload} />}
+        {section === "fatture" && (
+          <Invoices
+            home={home}
+            client={{
+              name: profile?.companyName ?? profile?.contactName ?? user.email ?? "Cliente",
+              email: profile?.email ?? user.email ?? undefined,
+            }}
+            reload={reload}
+          />
+        )}
+        {section === "richieste" && <Richieste home={home} userId={user.id} reload={reload} />}
       </ErrorBoundary>
 
       <NewProjectModal

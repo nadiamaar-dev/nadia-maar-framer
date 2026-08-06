@@ -12,6 +12,7 @@
 
 import React, { useEffect } from "react"
 import { motion } from "framer-motion"
+import { CONTACT, mailLink } from "../lib/contact"
 
 /* ── design tokens (self-contained so the component has no peer deps) ── */
 const T = {
@@ -227,11 +228,11 @@ export default function Footer({ onContact }: FooterProps) {
               Contatti
             </div>
 
-            <a href="mailto:nadiamaar.dev@gmail.com"
+            <a href={mailLink()}
               style={{ fontFamily: MONO, fontSize: 11.5, color: T.faint, textDecoration: "none", letterSpacing: "0.04em", transition: "color 0.2s" }}
               onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
               onMouseLeave={e => (e.currentTarget.style.color = T.faint)}
-            >nadiamaar.dev@gmail.com</a>
+            >{CONTACT.email}</a>
 
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ width: 5, height: 5, borderRadius: "50%", background: "rgba(184,50,64,0.60)", flexShrink: 0 }} />

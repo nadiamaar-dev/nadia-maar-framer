@@ -170,7 +170,7 @@ export default function Materiali({ userId, projects }: { userId: string; projec
                         {a.name}
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 3, flexWrap: "wrap" }}>
-                        <span style={{ fontFamily: MONO, fontSize: 11, color: T.secondary }}>{fmtDate(a.createdAt)} · {fmtBytes(a.sizeBytes)}</span>
+                        <span style={{ fontFamily: MONO, fontSize: 12, color: T.secondary }}>{fmtDate(a.createdAt)} · {fmtBytes(a.sizeBytes)}</span>
                         {a.projectId && <Badge tone="copper">{projectName(a.projectId) ?? "Progetto"}</Badge>}
                         {a.uploadedBy === "admin" && <Badge tone="silver">dallo studio</Badge>}
                       </div>

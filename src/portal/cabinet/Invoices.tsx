@@ -3,9 +3,15 @@ import { useToast } from "../../context/ToastContext"
 import type { ClientHome, Invoice } from "../../lib/api"
 import { declareInvoicePaid, fmtEur } from "../../lib/api"
 import { Empty, Glass, SectionTitle, Stat } from "../ui"
+import type { InvoiceParty } from "../../lib/pdf/invoice"
 import { InvoiceRow } from "./rows"
 
-export default function Invoices({ home, reload }: { home: ClientHome; reload: () => void }) {
+export default function Invoices({ home, client, reload }: {
+  home: ClientHome
+  /** intestatario dell'avviso di pagamento */
+  client?: InvoiceParty
+  reload: () => void
+}) {
   const toast = useToast()
   const [paying, setPaying] = useState<string | null>(null)
   const invoices = home.invoices
@@ -47,6 +53,7 @@ export default function Invoices({ home, reload }: { home: ClientHome; reload: (
                 key={i.id}
                 invoice={i}
                 projectName={projectName(i.projectId)}
+                client={client}
                 onDeclare={declare}
                 busy={paying === i.id}
               />

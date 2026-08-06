@@ -15,6 +15,7 @@
 
 import React, { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { CONTACT, mailLink } from "../lib/contact"
 import Background from "./Background"
 
 const T = {
@@ -179,7 +180,7 @@ export default function SiteGate({ children }: { children: React.ReactNode }) {
 
           <div style={{ marginTop: 34, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.09)", display: "flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: 10, letterSpacing: "0.12em", color: "rgba(255,255,255,0.5)" }}>
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.green, flexShrink: 0 }} />
-            <a href="mailto:nadiamaar.dev@gmail.com" style={{ color: "inherit", textDecoration: "none" }}>nadiamaar.dev@gmail.com</a>
+            <a href={mailLink()} style={{ color: "inherit", textDecoration: "none" }}>{CONTACT.email}</a>
           </div>
         </motion.div>
       </div>

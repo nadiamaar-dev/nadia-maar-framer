@@ -14,7 +14,7 @@ function SecretRow({ label, value, secret = false }: { label: string; value: str
   }
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-      <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: T.secondary, width: 70, flexShrink: 0 }}>
+      <span style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.secondary, width: 70, flexShrink: 0 }}>
         {label}
       </span>
       {/* a truncated password is a password you cannot use: once revealed the
@@ -116,13 +116,13 @@ export default function HandoverPanel({ credentials, completed }: { credentials:
       <Note tone="copper">Questi accessi sono riservati: conservali in un luogo sicuro e non condividerli.</Note>
       {access.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.secondary, margin: 0 }}>Accessi & credenziali</p>
+          <p style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.secondary, margin: 0 }}>Accessi & credenziali</p>
           {access.map(c => <CredCard key={c.id} c={c} />)}
         </div>
       )}
       {resources.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.secondary, margin: 0 }}>Guide & risorse</p>
+          <p style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.secondary, margin: 0 }}>Guide & risorse</p>
           {resources.map(c => <CredCard key={c.id} c={c} />)}
         </div>
       )}

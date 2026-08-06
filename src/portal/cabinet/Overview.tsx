@@ -23,7 +23,7 @@ function Greeting({ name }: { name?: string }) {
   const firstName = name?.split(" ")[0] ?? name?.split("@")[0]
   return (
     <div style={{ paddingBottom: 4 }}>
-      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 10, fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: T.secondary }}>
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 10, fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.secondary }}>
         <span style={{ color: T.copperTx }}>//</span>
         <span>{now.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" })}</span>
       </div>
@@ -141,7 +141,7 @@ export default function Overview({ home, onAction, onOpenProject, userName }: {
                   title={p.name}
                   sub={stages.length > 0 ? `${done}/${stages.length} fasi completate` : st.label}
                   right={
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: DISPLAY, fontSize: 11, color: T.secondary }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: DISPLAY, fontSize: 12, color: T.secondary }}>
                       {st.label}
                       <Icon name="chevronR" size={13} />
                     </span>

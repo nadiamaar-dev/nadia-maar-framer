@@ -1,6 +1,8 @@
 import React from "react"
 import type { Invoice, Meeting } from "../../lib/api"
 import { fmtDate, fmtDateTime, fmtEur, getInvoicePdfUrl } from "../../lib/api"
+import type { InvoiceParty } from "../../lib/pdf/invoice"
+import { STUDIO_READY } from "../../lib/studio"
 import { Badge, Btn, INVOICE_STATUS, MEETING_STATUS, MONO, Row, T } from "../ui"
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -12,16 +14,32 @@ import { Badge, Btn, INVOICE_STATUS, MEETING_STATUS, MONO, Row, T } from "../ui"
    same actions, both places.
 ══════════════════════════════════════════════════════════════════════════ */
 
-export function InvoiceRow({ invoice: i, projectName, onDeclare, busy }: {
+export function InvoiceRow({ invoice: i, projectName, onDeclare, busy, client }: {
   invoice: Invoice
   projectName?: string
   onDeclare: (i: Invoice) => void
   busy?: boolean
+  /** intestatario dell'avviso; senza, il pulsante non compare */
+  client?: InvoiceParty
 }) {
   const is = INVOICE_STATUS[i.status]
   const payable = i.status === "sent" || i.status === "overdue"
   const declared = !!i.clientMarkedPaidAt
   const pdfUrl = getInvoicePdfUrl(i)
+  const [pdfBusy, setPdfBusy] = React.useState(false)
+
+  /* L'avviso si compone al volo dai dati della riga: non c'è niente da
+     archiviare e non può disallinearsi dal totale che sta lì accanto. */
+  async function avviso() {
+    if (!client || pdfBusy) return
+    setPdfBusy(true)
+    try {
+      const { downloadInvoicePdf } = await import("../../lib/pdf/invoice")
+      await downloadInvoicePdf(i, client)
+    } finally {
+      setPdfBusy(false)
+    }
+  }
 
   return (
     <Row
@@ -44,9 +62,14 @@ export function InvoiceRow({ invoice: i, projectName, onDeclare, busy }: {
               Ho pagato
             </Btn>
           )}
+          {/* due documenti diversi, chiamati con il loro nome: l'avviso è la
+              richiesta di pagamento, la fattura è quella elettronica */}
+          {STUDIO_READY && client && (
+            <Btn size="sm" variant="ghost" icon="download" busy={pdfBusy} onClick={avviso}>Avviso</Btn>
+          )}
           {pdfUrl && (
             <a href={pdfUrl} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()} style={{ textDecoration: "none", display: "inline-flex" }}>
-              <Btn size="sm" variant="ghost" icon="download">PDF</Btn>
+              <Btn size="sm" variant="ghost" icon="download">Fattura</Btn>
             </a>
           )}
         </span>

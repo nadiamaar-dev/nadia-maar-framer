@@ -1,5 +1,6 @@
 import type { Blueprint } from "./modules"
 import { PROCESSO } from "../../data/process"
+import { A4, COL_W, MG, downloadPdf, safe, slug, wrap as wrapText } from "../../lib/pdf/core"
 
 /* ══════════════════════════════════════════════════════════════════════════
    ROADMAP — il documento che il visitatore porta via
@@ -141,36 +142,8 @@ export function printRoadmap(bp: Blueprint, dateLabel: string): void {
    scarica mai, quindi il peso della pagina non cambia.
 ══════════════════════════════════════════════════════════════════════════ */
 
-const A4 = { w: 595.28, h: 841.89 }          // punti tipografici
-const MG  = { top: 56, bottom: 62, x: 46 }   // il fondo lascia posto al piè di pagina
-const COL_W = A4.w - MG.x * 2
-
-/* Le Standard Font del PDF parlano WinAnsi. Un carattere fuori tabella non
-   degrada: fa fallire l'intera generazione. Qui i pochi segni plausibili
-   vengono sostituiti e il resto scartato, così il file esce comunque. */
-const WIN_EXTRA = new Set([..."€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ"])
-const SUBS: Record<string, string> = {
-  "→": "->", "←": "<-", "↔": "<->", "✓": "-", "✗": "x", " ": " ", "−": "-",
-}
-
-function safe(s: string): string {
-  let out = ""
-  for (const ch of s) {
-    if (SUBS[ch] !== undefined) { out += SUBS[ch]; continue }
-    const c = ch.codePointAt(0)!
-    if (c === 9 || c === 10 || c === 13) { out += " "; continue }
-    if (c < 32 || c === 127) continue
-    if (c >= 128 && c <= 159) continue      // controlli C1: non esistono in WinAnsi
-    if (c <= 255 || WIN_EXTRA.has(ch)) out += ch
-  }
-  return out
-}
-
-function slug(s: string): string {
-  const base = s.normalize("NFD").replace(/[̀-ͯ]/g, "")
-    .replace(/[^A-Za-z0-9]+/g, "-").replace(/^-+|-+$/g, "").toLowerCase()
-  return base || "roadmap"
-}
+/* A4, margini, safe(), slug() e wrap() vivono in src/lib/pdf/core.ts: da
+   quando esiste anche l'avviso di pagamento servono a due documenti. */
 
 /** Compone il documento e restituisce i byte. Separata dallo scaricamento
     perché non tocca il DOM: si può generare e ispezionare fuori dal browser. */
@@ -201,27 +174,7 @@ export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise
     y = A4.h - MG.top
   }
 
-  function wrap(text: string, font: Font, size: number, max: number): string[] {
-    const out: string[] = []
-    let line = ""
-    for (const word of safe(text).split(/\s+/).filter(Boolean)) {
-      const next = line ? `${line} ${word}` : word
-      if (font.widthOfTextAtSize(next, size) <= max) { line = next; continue }
-      if (line) out.push(line)
-      /* una parola più larga della colonna (URL, codice) va spezzata a forza,
-         altrimenti uscirebbe dal margine destro */
-      if (font.widthOfTextAtSize(word, size) > max) {
-        let chunk = ""
-        for (const ch of word) {
-          if (font.widthOfTextAtSize(chunk + ch, size) > max) { out.push(chunk); chunk = ch }
-          else chunk += ch
-        }
-        line = chunk
-      } else line = word
-    }
-    if (line) out.push(line)
-    return out
-  }
+  const wrap = (text: string, font: Font, size: number, max: number) => wrapText(text, font, size, max)
 
   /* pdf-lib non espone la spaziatura fra lettere: i micro-titoli in
      monospaziato la usano, quindi si disegnano carattere per carattere. */
@@ -382,14 +335,5 @@ export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise
 /** Genera il file e lo consegna al browser come download. */
 export async function downloadRoadmapPdf(bp: Blueprint, dateLabel: string): Promise<void> {
   const bytes = await buildRoadmapPdf(bp, dateLabel)
-  const blob = new Blob([bytes as unknown as BlobPart], { type: "application/pdf" })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement("a")
-  a.href = url
-  a.download = `roadmap-${slug(bp.vector.node)}.pdf`
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  /* revoca differita: Safari legge il blob dopo il click, non durante */
-  setTimeout(() => URL.revokeObjectURL(url), 5000)
+  downloadPdf(bytes, `roadmap-${slug(bp.vector.node, "roadmap")}.pdf`)
 }

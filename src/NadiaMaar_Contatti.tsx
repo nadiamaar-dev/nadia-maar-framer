@@ -25,6 +25,7 @@ import Footer from "./components/Footer"
 import Header from "./components/Header"
 import FoundryConfigurator from "./components/foundry/FoundryConfigurator"
 import { sendContact } from "./lib/sendContact"
+import { CONTACT } from "./lib/contact"
 
 const T = {
   bg: "#060C18", text: "#FFFFFF", muted: "#FFFFFF",
@@ -38,11 +39,13 @@ const ease: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
 const WRAP: React.CSSProperties = { maxWidth: 1120, margin: "0 auto", padding: "0 32px" }
 
-/* ── Dati di contatto — un solo posto da aggiornare ─────────────────────── */
-const EMAIL = "nadiamaar.dev@gmail.com"
-const TEL_DISPLAY = "+39 3456 977 475"
-const TEL_HREF = "+393456977475"
-const TELEGRAM = "https://t.me/Nadiamaar_bot"
+/* ── Dati di contatto ────────────────────────────────────────────────────
+   Il posto unico è src/lib/contact.ts: qui restano solo gli alias, perché
+   questa pagina li usa in una quindicina di punti. */
+const EMAIL = CONTACT.email
+const TEL_DISPLAY = CONTACT.telDisplay
+const TEL_HREF = CONTACT.telHref
+const TELEGRAM = CONTACT.telegram
 
 /* PLACEHOLDER — dati amministrativi da sostituire con quelli reali.
    Finché contengono "—" il blocco non viene mostrato: meglio niente che

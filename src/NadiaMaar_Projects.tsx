@@ -11,6 +11,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { motion, useScroll, useSpring, useTransform } from "framer-motion"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
+import { CONTACT, mailLink } from "./lib/contact"
 import Background from "./components/Background"
 import FloatingContact from "./components/FloatingContact"
 
@@ -633,7 +634,7 @@ function FinalCTA() {
                   </span>
                 </motion.a>
 
-                <motion.a href="mailto:nadiamaar.dev@gmail.com" whileHover={{ y: -2, background: "rgba(255,255,255,0.09)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                <motion.a href={mailLink()} whileHover={{ y: -2, background: "rgba(255,255,255,0.09)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
                   style={{ minHeight: 54, padding: "0 22px", borderRadius: 12, fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, display: "inline-flex", alignItems: "center", textDecoration: "none", border: "1px solid rgba(255,255,255,0.28)", background: "rgba(255,255,255,0.04)", color: T.text }}>
                   Scrivimi via Email
                 </motion.a>

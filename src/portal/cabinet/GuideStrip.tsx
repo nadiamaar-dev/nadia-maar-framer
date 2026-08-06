@@ -8,7 +8,7 @@ const STEPS: Step[] = [
   { key: "brief",       label: "Brief",                  hint: "Raccontaci il progetto: obiettivi, budget e tempi." },
   { key: "valutazione", label: "Valutazione & Contratto", hint: "Valutiamo il brief, firmi il contratto in «Documenti» e saldi l'acconto in «Fatture»." },
   { key: "design",      label: "Design",                  hint: "Rivedi le proposte nel progetto e premi «Approva fase» per procedere." },
-  { key: "sviluppo",    label: "Sviluppo",                hint: "Segui i progressi delle fasi; segnala eventuali problemi in «Supporto»." },
+  { key: "sviluppo",    label: "Sviluppo",                hint: "Segui i progressi delle fasi; segnala eventuali problemi in «Richieste»." },
   { key: "consegna",    label: "Consegna",                hint: "Ricevi accessi e materiali finali nella scheda «Consegna» del progetto." },
 ]
 
@@ -69,7 +69,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
       }}>
         <div style={{
           display: "inline-flex", alignItems: "center", gap: 7,
-          fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em",
+          fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em",
           textTransform: "uppercase" as const,
           color: "#FFFFFF",
         }}>
@@ -236,7 +236,7 @@ export default function GuideStrip({ home }: { home: ClientHome }) {
         </div>
         <div>
           <p style={{
-            fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em",
+            fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em",
             textTransform: "uppercase" as const,
             color: T.copperTx, margin: "0 0 5px",
           }}>

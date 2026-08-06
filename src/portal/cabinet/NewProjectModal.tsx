@@ -194,7 +194,7 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
 
         {/* Blueprint — reference sites/layouts */}
         <div style={{ padding: "13px 15px", borderRadius: 12, background: "rgba(184,50,64,0.06)", border: "1px solid rgba(184,50,64,0.20)", display: "flex", flexDirection: "column", gap: 10 }}>
-          <p style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>
+          <p style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>
             <Icon name="sparkle" size={12} /> Blueprint · siti e layout di riferimento
           </p>
           <div style={{ display: "flex", gap: 8 }}>
@@ -205,7 +205,7 @@ export default function NewProjectModal({ open, onClose, userId, profile, reload
           {refUrls.length > 0 && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {refUrls.map(u => (
-                <span key={u} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 99, background: "rgba(255,255,255,0.06)", border: `1px solid ${T.border}`, fontFamily: MONO, fontSize: 11, color: T.secondary }}>
+                <span key={u} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 99, background: "rgba(255,255,255,0.06)", border: `1px solid ${T.border}`, fontFamily: MONO, fontSize: 12, color: T.secondary }}>
                   {titleFromUrl(u)}
                   <button onClick={() => setRefUrls(prev => prev.filter(x => x !== u))} style={{ background: "none", border: "none", cursor: "pointer", color: T.secondary, display: "inline-flex", padding: 0 }}>
                     <Icon name="x" size={11} />

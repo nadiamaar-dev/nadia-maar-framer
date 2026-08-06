@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "framer-motion"
 import Footer from "./components/Footer"
+import { CONTACT, mailLink } from "./lib/contact"
 import FloatingContact from "./components/FloatingContact"
 import Header from "./components/Header"
 import Background from "./components/Background"
@@ -175,7 +176,7 @@ function ContactModal({onClose}:{onClose:()=>void}) {
                 onFocus={e=>(e.target.style.borderColor="rgba(184,50,64,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               {failed && (
                 <p role="alert" style={{fontFamily:MONO,fontSize:10.5,letterSpacing:"0.06em",lineHeight:1.6,color:"rgba(255,120,120,0.95)",margin:0}}>
-                  Invio non riuscito. Riprova, oppure scrivici a nadiamaar.dev@gmail.com
+                  Invio non riuscito. Riprova, oppure scrivici a {CONTACT.email}
                 </p>
               )}
               <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} disabled={busy}
@@ -1146,7 +1147,7 @@ function ServicePage({data}:{data:ServiceData}) {
                         {data.cta.btn} <ArrowRightIcon size={11} />
                       </span>
                     </motion.button>
-                    <motion.a href="mailto:nadiamaar.dev@gmail.com" whileHover={{scale:1.02}} whileTap={{scale:0.97}}
+                    <motion.a href={mailLink()} whileHover={{scale:1.02}} whileTap={{scale:0.97}}
                       style={{display:"inline-flex",alignItems:"center",gap:8,padding:"14px 22px",borderRadius:12,border:`1px solid ${T.border}`,background:"rgba(255,255,255,0.04)",fontFamily:MONO,fontSize:11,letterSpacing:"0.14em",textTransform:"uppercase" as const,color:T.faint,textDecoration:"none",transition:"all 0.2s"}}
                       onMouseEnter={e=>{const el=e.currentTarget as HTMLElement;el.style.color="#fff";el.style.borderColor="rgba(255,255,255,0.28)"}}
                       onMouseLeave={e=>{const el=e.currentTarget as HTMLElement;el.style.color=T.faint;el.style.borderColor=T.border}}>

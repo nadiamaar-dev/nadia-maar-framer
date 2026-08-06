@@ -11,6 +11,7 @@
 
 import React, { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { CONTACT, mailLink } from "../lib/contact"
 import { useBlueprint } from "../context/BlueprintContext"
 
 /* ── tokens ── */
@@ -374,11 +375,11 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
       transition={{ delay: 0.42, duration: 0.4, ease }}
       style={{ paddingBottom: 32, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.07)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" as const }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-        <a href="mailto:nadiamaar.dev@gmail.com"
+        <a href={mailLink()}
           style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em", color: "#FFFFFF", textDecoration: "none", transition: "color 0.18s" }}
           onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
           onMouseLeave={e => (e.currentTarget.style.color = "#FFFFFF")}>
-          nadiamaar.dev@gmail.com
+
         </a>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
           <PingDot color={T.green} size={5} />

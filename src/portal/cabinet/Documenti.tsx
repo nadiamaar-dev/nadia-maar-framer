@@ -74,11 +74,11 @@ export default function Documenti({ home, reload }: { home: ClientHome; userId: 
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4, flexWrap: "wrap" }}>
                       <Badge tone={meta.tone}>{meta.label}</Badge>
-                      <span style={{ fontFamily: MONO, fontSize: 11, color: T.secondary }}>
+                      <span style={{ fontFamily: MONO, fontSize: 12, color: T.secondary }}>
                         {fmtDate(d.uploadedAt)} · {fmtBytes(d.sizeBytes)}
                       </span>
                       {d.signedAt && (
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: MONO, fontSize: 11, color: T.green }}>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: MONO, fontSize: 12, color: T.green }}>
                           <Icon name="checkCircle" size={11} /> Firmato {fmtDate(d.signedAt)}
                         </span>
                       )}
