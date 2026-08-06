@@ -4,5 +4,27 @@
   "buildCommand": "vite build",
   "outputDirectory": "dist",
   "installCommand": "npm install",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/robots.txt", "destination": "/api/robots" },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/llms.txt", "destination": "/api/llms" },
+    {
+      "source": "/((?!api/|assets/|favicon).*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*([Bb]ot|[Cc]rawler|[Ss]pider|[Ss]lurp|facebookexternalhit|[Ww]hats[Aa]pp|[Tt]elegram|[Dd]iscord|[Ee]mbedly|[Qq]uora|[Pp]interest|[Aa]pplebot|[Aa]nthropic|[Pp]erplexity|[Bb]ytespider).*"
+        }
+      ],
+      "destination": "/api/prerender"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(robots.txt|sitemap.xml|llms.txt)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    }
+  ]
 }

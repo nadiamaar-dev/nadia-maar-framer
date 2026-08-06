@@ -10,13 +10,14 @@ import { useHashRoute } from "../useHashRoute"
 import { Btn, DISPLAY, Glass, Icon, Loading, MONO, T } from "../ui"
 import Billing from "./Billing"
 import Clients from "./Clients"
+import ClientWorkspace from "./ClientWorkspace"
 import LeadsAdmin from "./LeadsAdmin"
 import DossierAdmin from "./DossierAdmin"
 import MeetingsAdmin from "./MeetingsAdmin"
-import MessagesAdmin from "./MessagesAdmin"
+import InboxAdmin from "./InboxAdmin"
 import Overview from "./Overview"
+import SettingsAdmin from "./SettingsAdmin"
 import ProjectsBoard from "./ProjectsBoard"
-import SupportAdmin from "./SupportAdmin"
 
 const SECTIONS: Omit<ShellNavItem, "badge">[] = [
   { id: "panoramica", label: "Panoramica", icon: "home" },
@@ -24,9 +25,9 @@ const SECTIONS: Omit<ShellNavItem, "badge">[] = [
   { id: "progetti", label: "Progetti", icon: "layers" },
   { id: "riunioni", label: "Riunioni", icon: "calendar" },
   { id: "fatturazione", label: "Fatturazione", icon: "invoice" },
-  { id: "messaggi", label: "Messaggi", icon: "chat" },
-  { id: "supporto", label: "Supporto", icon: "ticket" },
-  { id: "richieste", label: "Richieste", icon: "bolt" },
+  { id: "inbox", label: "Inbox", icon: "chat" },
+  { id: "lead", label: "Lead", icon: "bolt" },
+  { id: "impostazioni", label: "Impostazioni", icon: "lock" },
 ]
 
 const SECTION_IDS = SECTIONS.map(s => s.id)
@@ -46,8 +47,14 @@ export default function AdminApp() {
   const [leads, setLeads] = useState<FoundryLead[]>([])
   const [failed, setFailed] = useState(false)
   /* same reason as the cabinet: F5 and Back used to dump you on the
-     overview, and a project could not be linked to */
-  const { section, id: projectId, go } = useHashRoute("panoramica", SECTION_IDS)
+     overview, and a project could not be linked to.
+     Under `clienti` the first segment is the client and the second, when
+     present, is one of their projects: `#clienti/<cliente>/<progetto>`. The
+     dossier then opens *inside* the client instead of throwing you into the
+     global project list, where nothing says whose project you are editing. */
+  const { section, id: routeId, sub, go } = useHashRoute("panoramica", SECTION_IDS)
+  const projectId = section === "clienti" ? sub : routeId
+  const clientId = section === "clienti" ? routeId : null
   const debounceRef = useRef<ReturnType<typeof setTimeout>>()
 
   const reload = useCallback(async () => {
@@ -83,11 +90,15 @@ export default function AdminApp() {
   }, [reload])
 
   function handleAction(a: PortalAction) {
-    go(a.section, a.section === "progetti" ? a.projectId ?? null : null)
+    go(a.section, a.section === "progetti" ? a.projectId ?? null : a.focusId ?? null)
   }
 
+  /* Cambiare sezione dal menù azzera il record aperto. Prima «Progetti» dal
+     menù riapriva il dossier in cui si era già, cioè non faceva niente;
+     adesso riporta all'elenco, che è l'unica cosa che quel comando può
+     ragionevolmente voler dire. */
   function handleSelect(id: string) {
-    go(id, id === "progetti" ? projectId : null)
+    go(id, null)
   }
 
   if (failed) {
@@ -114,9 +125,14 @@ export default function AdminApp() {
     )
   }
 
+  /* Cercato per id e non tenuto in stato: dopo un reload i dati sono nuovi e
+     una copia in stato sarebbe quella vecchia — badge e conteggi della scheda
+     resterebbero fermi mentre il resto della pagina si aggiorna. */
+  const selectedClient = clientId ? clients.find(c => c.id === clientId) : undefined
+
   const newLeads = leads.filter(l => l.status === "new").length
   const badgeFor = (id: string) =>
-    id === "richieste" ? newLeads || undefined : home.actions.filter(a => a.section === id).length || undefined
+    id === "lead" ? newLeads || undefined : home.actions.filter(a => a.section === id).length || undefined
   const items: ShellNavItem[] = SECTIONS.map(s => ({
     ...s,
     badge: s.id === "panoramica" ? undefined : badgeFor(s.id),
@@ -147,17 +163,33 @@ export default function AdminApp() {
         </button>
       ) : undefined}
     >
-      <ErrorBoundary resetKey={`${section}:${projectId ?? ""}`}>
-        {section === "panoramica" && <Overview home={home} onAction={handleAction} />}
-        {section === "richieste" && <LeadsAdmin leads={leads} reload={reload} />}
+      <ErrorBoundary resetKey={`${section}:${clientId ?? ""}:${projectId ?? ""}`}>
+        {section === "panoramica" && <Overview home={home} onAction={handleAction} onGo={s => go(s, null)} />}
+        {section === "lead" && <LeadsAdmin leads={leads} reload={reload} />}
         {section === "clienti" && (
-          <Clients
-            clients={clients}
-            home={home}
-            adminId={user.id}
-            reload={reload}
-            onOpenProject={id => go("progetti", id)}
-          />
+          selectedClient ? (
+            projectId ? (
+              <DossierAdmin
+                projectId={projectId}
+                home={home}
+                adminId={user.id}
+                backLabel={selectedClient.company}
+                onBack={() => go("clienti", selectedClient.id)}
+                reload={reload}
+              />
+            ) : (
+              <ClientWorkspace
+                client={selectedClient}
+                home={home}
+                adminId={user.id}
+                onBack={() => go("clienti", null)}
+                reload={reload}
+                onOpenProject={id => go("clienti", selectedClient.id, id)}
+              />
+            )
+          ) : (
+            <Clients clients={clients} home={home} onOpen={id => go("clienti", id)} />
+          )
         )}
         {section === "progetti" && (
           projectId
@@ -166,8 +198,8 @@ export default function AdminApp() {
         )}
         {section === "riunioni" && <MeetingsAdmin home={home} clients={clients} reload={reload} />}
         {section === "fatturazione" && <Billing home={home} clients={clients} reload={reload} />}
-        {section === "messaggi" && <MessagesAdmin home={home} adminId={user.id} reload={reload} />}
-        {section === "supporto" && <SupportAdmin home={home} adminId={user.id} reload={reload} />}
+        {section === "impostazioni" && <SettingsAdmin />}
+        {section === "inbox" && <InboxAdmin home={home} adminId={user.id} reload={reload} focusId={section === "inbox" ? routeId : null} />}
       </ErrorBoundary>
     </Shell>
   )

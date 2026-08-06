@@ -1,5 +1,8 @@
-import React, { Suspense, lazy } from "react"
+import React, { Suspense, lazy, useEffect } from "react"
 import NadiaMaar from "./NadiaMaar_Lab" // landing: eager, protects the homepage LCP
+import SEOHead from "./components/SEOHead"
+import { FoundryGate, MaintenanceGate } from "./components/RouteGate"
+import { initMeasurement } from "./lib/measure"
 
 /* Every non-home route is a separate chunk, fetched only when visited.
    This keeps the portal (Supabase + cabinet/admin UI) and the service
@@ -21,8 +24,16 @@ function RouteFallback() {
   return <div style={{ minHeight: "100vh", background: "#121418" }} aria-hidden />
 }
 
+/** Le rotte riservate: niente metadati pubblici, niente manutenzione, niente
+ *  conteggio delle visite. Sono strumenti, non pagine. */
+const PRIVATE = new Set(["/cabinet", "/dashboard"])
+
 export default function App() {
   const path = window.location.pathname
+
+  /* Una volta per caricamento: registra la visita e, se configurato, accende
+     GA4 e la meta di verifica Search Console. */
+  useEffect(() => { initMeasurement() }, [])
 
   let el: React.ReactNode = null
   switch (path) {
@@ -34,11 +45,24 @@ export default function App() {
     case "/web-app":   el = <WebAppPage />; break
     case "/seo":       el = <SeoPage />; break
     case "/ai":        el = <AiPage />; break
-    case "/foundry":   el = <DigitalFoundry />; break
+    case "/foundry":   el = <FoundryGate><DigitalFoundry /></FoundryGate>; break
     case "/cabinet":   el = <CabinetApp />; break
     case "/dashboard": el = <DashboardGate />; break
-    default:           return <NadiaMaar />
+    default:           el = <NadiaMaar />; break
   }
 
-  return <Suspense fallback={<RouteFallback />}>{el}</Suspense>
+  if (PRIVATE.has(path)) {
+    return <Suspense fallback={<RouteFallback />}>{el}</Suspense>
+  }
+
+  /* Lo slug SEO è la rotta stessa; una rotta sconosciuta ricade sulla home,
+     e la sua scheda è quella della home. */
+  const slug = path === "/" || el === null ? "/" : path
+
+  return (
+    <MaintenanceGate>
+      <SEOHead slug={slug} />
+      <Suspense fallback={<RouteFallback />}>{el}</Suspense>
+    </MaintenanceGate>
+  )
 }

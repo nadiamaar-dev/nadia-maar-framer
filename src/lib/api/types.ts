@@ -1,6 +1,9 @@
 /* ── Clients (CRM) ─────────────────────────────────────────── */
 export type ClientPlan = "starter" | "pro" | "enterprise"
-export type ClientStatus = "active" | "onboarding" | "paused"
+/** `archived` chiude il rapporto senza cancellare nulla: fatture, documenti e
+ *  diario restano, la scheda esce dagli elenchi di lavoro. `paused` invece
+ *  promette una ripresa — sono due cose diverse e vanno dette diversamente. */
+export type ClientStatus = "active" | "onboarding" | "paused" | "archived"
 
 export interface ClientRecord {
   id: string
@@ -11,6 +14,9 @@ export interface ClientRecord {
   plan: ClientPlan
   status: ClientStatus
   projectsActive: number
+  /** tutti i progetti, chiusi compresi: per un archiviato è l'unico numero
+   *  che racconta qualcosa, perché quelli attivi sono zero per definizione */
+  projectsTotal: number
   invoicesPending: number
   invoicePendingAmount: number
   ticketsOpen: number
@@ -306,4 +312,62 @@ export interface PortalAction {
   /** Nav section the action links to */
   section: string
   projectId?: string
+  /** Record to open once there — the conversation for a chat or a ticket.
+   *  Without it "Rispondi: X" landed on an unfiltered inbox and left you to
+   *  find X yourself, which is most of the work the queue was meant to save. */
+  focusId?: string
+}
+
+/* ── Site settings, SEO, internal analytics (Fase 18) ──────── */
+
+export interface SiteSettings {
+  id: string
+  foundryEnabled: boolean
+  maintenanceMode: boolean
+  maintenanceMessage?: string
+  siteName: string
+  defaultMetaTitle?: string
+  defaultMetaDescription?: string
+  defaultOgImageUrl?: string
+  googleAnalyticsId?: string
+  gscVerificationTag?: string
+  /** Mai inviata al sito pubblico: sta fuori da `public_site_settings`. */
+  pagespeedApiKey?: string
+  updatedAt: string
+}
+
+export interface PageSeoConfig {
+  id: string
+  pageSlug: string
+  metaTitle?: string
+  metaDescription?: string
+  ogImageUrl?: string
+  keywords: string[]
+  canonicalUrl?: string
+  isNoindex: boolean
+  jsonLdSchema?: Record<string, unknown>
+  updatedAt: string
+}
+
+export type DeviceType = "mobile" | "tablet" | "desktop" | "bot"
+
+export interface VisitorStats {
+  pageviews: number
+  uniques: number
+  topPages: { path: string; views: number; uniques: number }[]
+  devices: { device: DeviceType; views: number }[]
+  referrers: { source: string; views: number }[]
+  byHour: { bucket: string; views: number }[]
+}
+
+/** Punteggi 0-100 di una singola strategia (mobile o desktop). */
+export interface PageSpeedRun {
+  strategy: "mobile" | "desktop"
+  performance: number | null
+  accessibility: number | null
+  bestPractices: number | null
+  seo: number | null
+  /** Core Web Vitals, già formattati come li mostra Google. */
+  vitals: { key: string; label: string; display: string; score: number | null }[]
+  fetchedAt: string
 }
