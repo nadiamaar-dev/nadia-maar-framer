@@ -1,113 +1,97 @@
 import React, { useMemo, useState } from "react"
 import type { AdminHome, ClientRecord } from "../../lib/api"
-import { fmtDate, fmtEur } from "../../lib/api"
-import {
-  Avatar, Badge, CLIENT_PLAN, CLIENT_STATUS, DISPLAY, Empty, Glass, Icon, Input,
-  MONO, SectionTitle, T,
-} from "../ui"
-import ClientWorkspace from "./ClientWorkspace"
+import { clientLens } from "./clientLens"
+import { CardGrid, ClientCard } from "./cards"
+import { Empty, Glass, Icon, Input, SectionTitle, T, Tabs } from "../ui"
 
-export default function Clients({ clients, home, adminId, reload, onOpenProject }: {
+/* ══════════════════════════════════════════════════════════════════════════
+   ELENCO CLIENTI.
+
+   Quattro cose che prima non c'erano e che sono il motivo per cui ci si
+   perdeva fra un cliente e l'altro:
+
+   · una scheda per cliente, non righe in un pannello unico. Separate solo
+     dall'hover, le righe si leggevano come un blocco solo;
+   · gli archiviati non stanno con i clienti vivi. Chiuso un rapporto la
+     scheda resta — fatture e documenti vanno conservati — ma esce dal
+     lavoro di oggi;
+   · l'ordine non è alfabetico ma «chi aspetta una mia mossa». Per cercare
+     un nome c'è il campo di ricerca, che è più veloce di scorrere;
+   · su ogni scheda si vede *cosa* aspetta, non solo che qualcosa aspetta.
+══════════════════════════════════════════════════════════════════════════ */
+
+type Filter = "operativi" | "archiviati" | "tutti"
+
+export default function Clients({ clients, home, onOpen }: {
   clients: ClientRecord[]
   home: AdminHome
-  adminId: string
-  reload: () => void
-  onOpenProject: (id: string) => void
+  onOpen: (id: string) => void
 }) {
   const [query, setQuery] = useState("")
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [filter, setFilter] = useState<Filter>("operativi")
 
-  const filtered = useMemo(() => {
+  const archivedCount = clients.filter(c => c.status === "archived").length
+
+  const rows = useMemo(() => {
     const q = query.trim().toLowerCase()
-    if (!q) return clients
-    return clients.filter(c =>
-      c.company.toLowerCase().includes(q) ||
-      c.contact.toLowerCase().includes(q) ||
-      c.email.toLowerCase().includes(q))
-  }, [clients, query])
+    return clients
+      .filter(c => filter === "tutti" ? true : filter === "archiviati" ? c.status === "archived" : c.status !== "archived")
+      .filter(c => !q ||
+        c.company.toLowerCase().includes(q) ||
+        c.contact.toLowerCase().includes(q) ||
+        c.email.toLowerCase().includes(q) ||
+        (c.phone ?? "").includes(q))
+      .map(c => ({ c, lens: clientLens(home, c.id) }))
+      .sort((a, b) => b.lens.todo - a.lens.todo || a.c.company.localeCompare(b.c.company, "it"))
+  }, [clients, home, query, filter])
 
-  const selected = clients.find(c => c.id === selectedId)
-  if (selected) {
-    return (
-      <ClientWorkspace
-        client={selected}
-        home={home}
-        adminId={adminId}
-        onBack={() => setSelectedId(null)}
-        reload={reload}
-        onOpenProject={onOpenProject}
-      />
-    )
-  }
+  const waiting = rows.filter(r => r.lens.todo > 0).length
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <SectionTitle
         kicker="CRM"
         title="Clienti"
-        sub={`${clients.length} client${clients.length === 1 ? "e" : "i"} registrat${clients.length === 1 ? "o" : "i"}`}
+        sub={waiting > 0
+          ? `${waiting} client${waiting === 1 ? "e aspetta" : "i aspettano"} una tua mossa`
+          : `${rows.length} client${rows.length === 1 ? "e" : "i"} · niente in sospeso`}
         right={
-          <div style={{ position: "relative", width: 240 }}>
+          <div style={{ position: "relative", width: 240, maxWidth: "100%" }}>
             <span style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: T.tertiary, display: "flex" }}>
               <Icon name="search" size={13} />
             </span>
-            <Input value={query} onChange={e => setQuery(e.target.value)} placeholder="Cerca cliente…" style={{ paddingLeft: 32 }} />
+            <Input value={query} onChange={e => setQuery(e.target.value)} placeholder="Nome, email, telefono…" style={{ paddingLeft: 32 }} />
           </div>
         }
       />
 
-      <Glass variant="panel" style={{ padding: 12 }}>
-        {filtered.length === 0 ? (
-          <Empty icon="users" title={query ? "Nessun risultato" : "Nessun cliente"} hint={query ? "Prova con un altro termine." : "I clienti registrati appariranno qui."} />
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            {filtered.map(c => {
-              const cs = CLIENT_STATUS[c.status]
-              const cp = CLIENT_PLAN[c.plan]
-              return (
-                <button
-                  key={c.id}
-                  className="portal-row"
-                  onClick={() => setSelectedId(c.id)}
-                  style={{
-                    display: "flex", alignItems: "center", gap: 13, width: "100%", textAlign: "left",
-                    padding: "12px 14px", borderRadius: 12, cursor: "pointer",
-                    background: "transparent", border: "1px solid transparent",
-                  }}
-                >
-                  <Avatar name={c.company} size={34} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <span style={{ fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 800, color: T.text }}>{c.company}</span>
-                      <Badge tone={cs.tone} dot>{cs.label}</Badge>
-                      <Badge tone={cp.tone}>{cp.label}</Badge>
-                    </div>
-                    <p style={{ fontFamily: MONO, fontSize: 11, color: T.secondary, margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {c.contact} · {c.email}{c.phone ? ` · ${c.phone}` : ""}
-                    </p>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 18, flexShrink: 0 }}>
-                    <MiniStat label="progetti" value={String(c.projectsActive)} />
-                    <MiniStat label="da incassare" value={c.invoicePendingAmount > 0 ? fmtEur(c.invoicePendingAmount) : "—"} warn={c.invoicePendingAmount > 0} />
-                    <MiniStat label="ticket" value={String(c.ticketsOpen)} warn={c.ticketsOpen > 0} />
-                    <span style={{ fontFamily: MONO, fontSize: 11, color: T.tertiary }}>{c.joinedAt ? fmtDate(c.joinedAt) : ""}</span>
-                    <Icon name="chevronR" size={14} />
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-        )}
-      </Glass>
-    </div>
-  )
-}
+      <Tabs<Filter>
+        value={filter}
+        onChange={setFilter}
+        items={[
+          { id: "operativi", label: "In corso", badge: filter === "operativi" && waiting ? waiting : undefined },
+          { id: "archiviati", label: "Archivio", badge: archivedCount || undefined },
+          { id: "tutti", label: "Tutti" },
+        ]}
+      />
 
-function MiniStat({ label, value, warn = false }: { label: string; value: string; warn?: boolean }) {
-  return (
-    <div style={{ textAlign: "right", minWidth: 60 }}>
-      <p style={{ fontFamily: MONO, fontSize: 11.5, fontWeight: 700, color: warn ? T.amber : T.secondary, margin: 0 }}>{value}</p>
-      <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: T.tertiary, margin: "2px 0 0" }}>{label}</p>
+      {rows.length === 0 ? (
+        <Glass variant="panel" style={{ padding: 12 }}>
+          <Empty
+            icon="users"
+            title={query ? "Nessun risultato" : filter === "archiviati" ? "Archivio vuoto" : "Nessun cliente"}
+            hint={query ? "Prova con un altro termine." : filter === "archiviati"
+              ? "I rapporti che chiudi finiscono qui, con tutto il loro storico."
+              : "I clienti registrati appariranno qui."}
+          />
+        </Glass>
+      ) : (
+        <CardGrid>
+          {rows.map(({ c, lens }) => (
+            <ClientCard key={c.id} c={c} lens={lens} onOpen={() => onOpen(c.id)} />
+          ))}
+        </CardGrid>
+      )}
     </div>
   )
 }

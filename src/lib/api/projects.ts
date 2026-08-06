@@ -89,23 +89,34 @@ export async function fetchAllProjects(): Promise<AdminProject[]> {
   }))
 }
 
+/**
+ * Apre un progetto. Il cliente non passa `status` (la RLS gli consente solo
+ * 'pending_approval': sta chiedendo), lo studio sì — quando è lo studio ad
+ * aprirlo la valutazione l'ha già fatta, e farlo passare da «in valutazione»
+ * significherebbe chiedere a se stessi il permesso.
+ */
 export async function createProject(payload: {
   clientId: string
   name: string
   description: string
   brief?: ProjectBrief
+  status?: ProjectStatus
+  adminNote?: string
 }): Promise<ClientProject> {
   const brief = payload.brief
     ? Object.fromEntries(Object.entries(payload.brief).map(([k, v]) => [k, typeof v === "string" ? v.trim() : v]).filter(([, v]) => v))
     : {}
+  const row: Record<string, unknown> = {
+    client_id: payload.clientId,
+    name: payload.name.trim(),
+    description: payload.description.trim(),
+    brief,
+  }
+  if (payload.status) row.status = payload.status
+  if (payload.adminNote?.trim()) row.admin_note = payload.adminNote.trim()
   const { data, error } = await supabase
     .from("client_projects")
-    .insert({
-      client_id: payload.clientId,
-      name: payload.name.trim(),
-      description: payload.description.trim(),
-      brief,
-    })
+    .insert(row)
     .select()
     .single()
   if (error) throw error

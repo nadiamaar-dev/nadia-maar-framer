@@ -123,7 +123,7 @@ export async function fetchClientHome(clientId: string): Promise<ClientHome> {
         id: `unread_chat:${t.id}`,
         kind: "unread_chat",
         label: `Nuova risposta: ${t.subject}`,
-        section: t.stageId ? "progetti" : "messaggi",
+        section: t.stageId ? "progetti" : "richieste",
         projectId: t.projectId,
       })
     }
@@ -198,6 +198,10 @@ export async function fetchAdminHome(): Promise<AdminHome> {
     }
   }
 
+  /* Il filo di una richiesta si crea pigramente alla prima apertura, quindi
+     può non esistere ancora: in quel caso l'inbox si apre e basta. */
+  const threadOfTicket = (ticketId: string) => threads.find(c => c.ticketId === ticketId)?.id
+
   for (const t of tickets) {
     if (t.status === "new") {
       actions.push({
@@ -205,7 +209,8 @@ export async function fetchAdminHome(): Promise<AdminHome> {
         kind: "reply_ticket",
         label: `Ticket: ${t.subject}`,
         sublabel: t.clientName,
-        section: "supporto",
+        section: "inbox",
+        focusId: threadOfTicket(t.id),
       })
     }
     /* Quote accepted — commercially the most important thing a client does,
@@ -216,7 +221,8 @@ export async function fetchAdminHome(): Promise<AdminHome> {
         kind: "estimate_accepted",
         label: `Preventivo approvato: ${t.subject}`,
         sublabel: [t.clientName, t.estimateAmount != null ? fmtEur(t.estimateAmount) : null].filter(Boolean).join(" · "),
-        section: "supporto",
+        section: "inbox",
+        focusId: threadOfTicket(t.id),
       })
     }
   }
@@ -228,8 +234,9 @@ export async function fetchAdminHome(): Promise<AdminHome> {
         kind: "answer_chat",
         label: `Rispondi: ${t.subject}`,
         sublabel: t.clientName,
-        section: t.stageId ? "progetti" : "messaggi",
+        section: t.stageId ? "progetti" : "inbox",
         projectId: t.projectId,
+        focusId: t.stageId ? undefined : t.id,
       })
     }
   }

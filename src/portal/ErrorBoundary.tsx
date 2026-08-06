@@ -34,7 +34,7 @@ export default class ErrorBoundary extends React.Component<
     if (!this.state.error) return this.props.children
     return (
       <Glass variant="panel" style={{ padding: 30, textAlign: "center" }}>
-        <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>
+        <p style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>
           Errore
         </p>
         <p style={{ fontFamily: DISPLAY, fontSize: 17, fontWeight: 800, color: T.text, margin: "10px 0 0" }}>

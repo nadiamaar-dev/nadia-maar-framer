@@ -222,6 +222,7 @@ const P: Record<string, React.ReactNode> = {
   mail: <><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 7l-10 6L2 7" /></>,
   briefcase: <><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" /></>,
   sparkle: <path d="M12 3l1.9 5.7L19.5 10l-5.6 1.3L12 17l-1.9-5.7L4.5 10l5.6-1.3L12 3z" />,
+  archive: <><rect x="2" y="3" width="20" height="5" rx="1" /><path d="M4 8v11a2 2 0 002 2h12a2 2 0 002-2V8M10 12h4" /></>,
 } as const
 
 export type IconName = keyof typeof P
@@ -405,8 +406,11 @@ export function Badge({ tone = "steel", children, dot = false }: {
       display: "inline-flex", alignItems: "center", gap: 6,
       padding: "3px 9px", borderRadius: 99,
       background: t.bg, border: `1px solid ${t.bd}`, color: t.tx,
-      fontFamily: MONO, fontSize: 11, fontWeight: 600,
-      letterSpacing: "0.08em", textTransform: "uppercase", whiteSpace: "nowrap",
+      /* 11px uppercase mono with letterspacing was legible only if you already
+         knew what it said. The colour was maxed out at white long ago, so the
+         only lever left on readability is size. */
+      fontFamily: MONO, fontSize: 11.5, fontWeight: 600,
+      letterSpacing: "0.06em", textTransform: "uppercase", whiteSpace: "nowrap",
       /* status labels are short, but badges also carry project names — those
          can be longer than the card, and nowrap alone made them overflow */
       maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis",
@@ -420,7 +424,7 @@ export function Badge({ tone = "steel", children, dot = false }: {
 export function Kicker({ children, tone = "copper" }: { children: React.ReactNode; tone?: Tone }) {
   return (
     <p style={{
-      fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase",
+      fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase",
       color: TONE[tone].tx, margin: 0,
     }}>
       {children}
@@ -553,7 +557,7 @@ export function Field({ label, hint, children }: { label: string; hint?: string;
     <label style={{ display: "block" }}>
       <span style={{
         display: "block", marginBottom: 8,
-        fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase",
+        fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase",
         color: T.secondary,
       }}>
         {label}
@@ -687,7 +691,7 @@ export function Modal({ open, onClose, title, kicker, width = 520, children, foo
             }}>
               <div>
                 {kicker && (
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 8, fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 8, fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
                     <span style={{ color: T.copperTx }}>//</span>
                     <span>[ {kicker} ]</span>
                   </div>
@@ -817,37 +821,62 @@ export function Ring({ value, size = 46, stroke = 4, tone = "copper" }: {
   )
 }
 
-export function Stat({ label, value, hint, icon, tone = "silver" }: {
+/**
+ * KPI tile. With `onClick` it becomes the way into the section it summarises:
+ * a number that says "2 fatture aperte" and cannot be opened just makes you
+ * go find them yourself. The affordance is explicit — pointer, chevron and a
+ * real <button>, so the keyboard reaches it too.
+ */
+export function Stat({ label, value, hint, icon, tone = "silver", onClick, title }: {
   label: string
   value: React.ReactNode
   hint?: string
   icon?: IconName
   tone?: Tone
+  onClick?: () => void
+  title?: string
 }) {
   const t = TONE[tone]
-  return (
-    <Glass variant="panel" style={{
-      padding: "18px 20px 16px",
-      display: "flex", flexDirection: "column", gap: 11,
-      borderTop: `2px solid ${t.fg}`,
-    }}>
+  const body = (
+    <>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-        <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: T.secondary }}>
+        <span style={{ fontFamily: MONO, fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: T.secondary }}>
           {label}
         </span>
-        {icon && (
-          <span style={{
-            width: 28, height: 28, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center",
-            color: t.fg,
-          }}>
-            <Icon name={icon} size={15} />
-          </span>
-        )}
+        <span style={{ display: "flex", alignItems: "center", gap: 4, color: t.fg }}>
+          {icon && <Icon name={icon} size={15} />}
+          {onClick && <span style={{ color: T.secondary, display: "flex" }}><Icon name="chevronR" size={13} /></span>}
+        </span>
       </div>
       <div style={{ fontFamily: DISPLAY, fontSize: 34, fontWeight: 800, letterSpacing: "-0.03em", color: T.text, lineHeight: 1 }}>
         {value}
       </div>
-      {hint && <div style={{ fontFamily: DISPLAY, fontSize: 12.5, color: t.tx }}>{hint}</div>}
+      {hint && <div style={{ fontFamily: DISPLAY, fontSize: 13.5, color: t.tx }}>{hint}</div>}
+    </>
+  )
+
+  const box: React.CSSProperties = {
+    padding: "18px 20px 16px",
+    display: "flex", flexDirection: "column", gap: 11,
+    borderTop: `2px solid ${t.fg}`,
+  }
+
+  if (!onClick) return <Glass variant="panel" style={box}>{body}</Glass>
+
+  return (
+    <Glass variant="panel" style={{ ...box, padding: 0 }}>
+      <button
+        type="button"
+        onClick={onClick}
+        title={title}
+        className="portal-stat"
+        style={{
+          ...box, borderTop: "none", width: "100%", textAlign: "left",
+          background: "none", border: "none", borderRadius: 14, cursor: "pointer", font: "inherit",
+        }}
+      >
+        {body}
+      </button>
     </Glass>
   )
 }
@@ -915,7 +944,7 @@ export function Loading({ label = "Caricamento" }: { label?: string }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 13, padding: "64px 0" }}>
       <Spinner />
-      <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: TL.secondary }}>
+      <span style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: TL.secondary }}>
         {label}…
       </span>
     </div>
@@ -999,6 +1028,7 @@ export const CLIENT_STATUS: Record<ClientStatus, { label: string; tone: Tone }> 
   active: { label: "Attivo", tone: "green" },
   onboarding: { label: "Onboarding", tone: "amber" },
   paused: { label: "In pausa", tone: "steel" },
+  archived: { label: "Archiviato", tone: "steel" },
 }
 
 export const CLIENT_PLAN: Record<ClientPlan, { label: string; tone: Tone }> = {
@@ -1110,7 +1140,7 @@ export function BriefCard({ brief, description }: { brief?: ProjectBrief; descri
       background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`,
       display: "flex", flexDirection: "column", gap: 14,
     }}>
-      <p style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>
+      <p style={{ display: "flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.copperTx, margin: 0 }}>
         <Icon name="briefcase" size={12} /> Brief del progetto
       </p>
       {fields.length > 0 && (
@@ -1125,7 +1155,7 @@ export function BriefCard({ brief, description }: { brief?: ProjectBrief; descri
                 <Icon name={f.icon} size={14} />
               </span>
               <div style={{ minWidth: 0 }}>
-                <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: T.tertiary, margin: 0 }}>{f.label}</p>
+                <p style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.tertiary, margin: 0 }}>{f.label}</p>
                 <p style={{ fontFamily: DISPLAY, fontSize: 13, fontWeight: 700, color: T.text, margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis" }}>{f.value}</p>
               </div>
             </div>
@@ -1134,13 +1164,13 @@ export function BriefCard({ brief, description }: { brief?: ProjectBrief; descri
       )}
       {description && (
         <div>
-          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: T.tertiary, margin: "0 0 5px" }}>Obiettivi</p>
+          <p style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.tertiary, margin: "0 0 5px" }}>Obiettivi</p>
           <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.secondary, margin: 0, whiteSpace: "pre-wrap" }}>{description}</p>
         </div>
       )}
       {hasRefs && (
         <div>
-          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: T.tertiary, margin: "0 0 5px" }}>Riferimenti</p>
+          <p style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.tertiary, margin: "0 0 5px" }}>Riferimenti</p>
           <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13, lineHeight: 1.6, color: T.secondary, margin: 0, whiteSpace: "pre-wrap" }}>{brief!.references}</p>
         </div>
       )}

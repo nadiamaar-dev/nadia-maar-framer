@@ -24,10 +24,11 @@ export async function fetchClients(): Promise<ClientRecord[]> {
       .select("id, company_name, contact_name, full_name, email, phone, plan, status, joined_at, tags, updated_at")
       .eq("role", "client")
       .order("company_name"),
+    /* tutti gli stati, non solo quelli in corso: la scheda di un cliente
+       archiviato deve poter dire «4 progetti conclusi» invece di «0» */
     supabase
       .from("client_projects")
-      .select("client_id, status")
-      .in("status", ["active", "pending_approval", "paused"]),
+      .select("client_id, status"),
     supabase
       .from("client_invoices")
       .select("client_id, amount, status")
@@ -43,8 +44,11 @@ export async function fetchClients(): Promise<ClientRecord[]> {
   const invoices = invoicesRes.data ?? []
   const tickets = ticketsRes.data ?? []
 
+  const RUNNING = ["active", "pending_approval", "paused"]
+
   return (profilesRes.data ?? []).map(p => {
     const pi = invoices.filter(i => i.client_id === p.id)
+    const pp = projects.filter(pr => pr.client_id === p.id)
     return {
       id: p.id,
       company: p.company_name || p.email || "—",
@@ -53,7 +57,8 @@ export async function fetchClients(): Promise<ClientRecord[]> {
       phone: p.phone ?? undefined,
       plan: (p.plan ?? "starter") as ClientPlan,
       status: (p.status ?? "active") as ClientStatus,
-      projectsActive: projects.filter(pr => pr.client_id === p.id).length,
+      projectsActive: pp.filter(pr => RUNNING.includes(pr.status)).length,
+      projectsTotal: pp.length,
       invoicesPending: pi.length,
       invoicePendingAmount: pi.reduce((s, i) => s + (i.amount ?? 0), 0),
       ticketsOpen: tickets.filter(t => t.client_id === p.id).length,
@@ -77,6 +82,19 @@ export async function updateClientProfile(
   if (patch.tags !== undefined) db.tags = patch.tags
   const { error } = await supabase.from("profiles").update(db).eq("id", clientId)
   if (error) throw error
+}
+
+/**
+ * Chiude o riapre il rapporto. Non tocca né dati né accessi: il cliente
+ * continua a vedere il suo portale e i suoi documenti, che è il motivo per
+ * cui questo esiste al posto della cancellazione.
+ *
+ * Riattivando si torna sempre ad 'active': l'alternativa sarebbe ricordare
+ * lo stato precedente, e uno stato «archiviato ma prima era in pausa» non
+ * significa niente per nessuno.
+ */
+export async function setClientArchived(clientId: string, archived: boolean): Promise<void> {
+  await updateClientProfile(clientId, { status: archived ? "archived" : "active" })
 }
 
 /** Client updates their own phone (collected during project intake). */

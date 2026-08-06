@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react"
 import { useToast } from "../../context/ToastContext"
 import type { AdminHome, ClientDocument, ClientRecord, DocType, Invoice, InvoiceStatus } from "../../lib/api"
+import { STUDIO_READY } from "../../lib/studio"
 import {
   attachInvoicePdf, createInvoice, deleteDocument, fetchDocuments, fmtBytes, fmtDate, fmtEur,
   getDocumentDownloadUrl, getInvoicePdfUrl, nextInvoiceNumber, updateInvoiceStatus, uploadDocument,
@@ -66,7 +67,27 @@ export default function Billing({ home, clients, reload }: {
      Nothing ever wrote pdf_path, so the download the client is offered
      never existed. The admin attaches it here. */
   const [pdfFor, setPdfFor] = useState<string | null>(null)
+  const [avvisoFor, setAvvisoFor] = useState<string | null>(null)
   const pdfUrlOf = (i: Invoice) => getInvoicePdfUrl(i)
+
+  /* Composto al volo dai dati della riga: niente da archiviare e nessun
+     rischio che il PDF e il totale a schermo divergano. */
+  async function avviso(invoice: Invoice) {
+    if (avvisoFor) return
+    setAvvisoFor(invoice.id)
+    try {
+      const c = clients.find(x => x.id === invoice.clientId)
+      const { downloadInvoicePdf } = await import("../../lib/pdf/invoice")
+      await downloadInvoicePdf(invoice, {
+        name: c?.company || c?.contact || "Cliente",
+        email: c?.email,
+      })
+    } catch {
+      toast.error("Generazione non riuscita.")
+    } finally {
+      setAvvisoFor(null)
+    }
+  }
 
   async function attachPdf(invoice: Invoice, files: File[]) {
     const file = files[0]
@@ -202,8 +223,10 @@ export default function Billing({ home, clients, reload }: {
                     title={`${i.number} — ${i.description}`}
                     sub={`${clientName(i.clientId)} · emessa ${fmtDate(i.issuedAt)}${i.dueDate ? ` · scade ${fmtDate(i.dueDate)}` : ""}${declared ? ` · cliente ha dichiarato il pagamento` : ""}`}
                     right={
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: 9 }} onClick={e => e.stopPropagation()}>
-                        <span style={{ fontFamily: MONO, fontSize: 12.5, fontWeight: 700, color: T.text }}>{fmtEur(i.amount)}</span>
+                      /* Fino a cinque comandi per riga: senza wrap uscivano
+                         dal pannello su qualsiasi schermo sotto i 900px. */
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 9, flexWrap: "wrap", justifyContent: "flex-end", maxWidth: "100%" }} onClick={e => e.stopPropagation()}>
+                        <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: T.text }}>{fmtEur(i.amount)}</span>
                         {declared ? <Badge tone="copper" dot>Da confermare</Badge> : <Badge tone={is.tone} dot>{is.label}</Badge>}
                         {i.status === "draft" && (
                           <Btn size="sm" variant="copper" icon="send" busy={actingId === i.id} onClick={() => setStatus(i.id, "sent", "Fattura inviata")}>Invia</Btn>
@@ -216,16 +239,24 @@ export default function Billing({ home, clients, reload }: {
                         {i.status === "sent" && !declared && (
                           <Btn size="sm" variant="danger" icon="warn" busy={actingId === i.id} onClick={() => setStatus(i.id, "overdue", "Segnata come scaduta")} title="Segna scaduta" />
                         )}
-                        {/* pdf_path had no writer at all, so the client's "PDF"
-                            button could never resolve to anything */}
+                        {/* Due documenti distinti. L'avviso di pagamento lo
+                            componiamo noi al volo; la fattura elettronica la
+                            emette il commercialista via SdI e qui se ne
+                            allega la copia di cortesia. */}
+                        {STUDIO_READY && (
+                          <Btn size="sm" variant="ghost" icon="download" busy={avvisoFor === i.id}
+                            onClick={() => avviso(i)} title="Genera l'avviso di pagamento">
+                            Avviso
+                          </Btn>
+                        )}
                         {pdfUrlOf(i) ? (
                           <a href={pdfUrlOf(i)!} target="_blank" rel="noreferrer" style={{ textDecoration: "none", display: "inline-flex" }}>
-                            <Btn size="sm" variant="ghost" icon="download" title="Apri il PDF">PDF</Btn>
+                            <Btn size="sm" variant="ghost" icon="download" title="Apri la fattura allegata">Fattura</Btn>
                           </a>
                         ) : (
                           <FileBtn size="sm" variant="ghost" icon="paperclip" accept="application/pdf"
-                            busy={pdfFor === i.id} onFiles={f => attachPdf(i, f)} title="Allega il PDF della fattura">
-                            PDF
+                            busy={pdfFor === i.id} onFiles={f => attachPdf(i, f)} title="Allega la fattura elettronica (copia di cortesia)">
+                            Fattura
                           </FileBtn>
                         )}
                       </span>
@@ -257,7 +288,7 @@ export default function Billing({ home, clients, reload }: {
                     {docClientProjects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </Select>
                 )}
-                <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 13, color: T.secondary }}>
+                <label style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer", fontFamily: DISPLAY, fontSize: 14, color: T.secondary }}>
                   <input type="checkbox" checked={docRequiresSig} onChange={e => setDocRequiresSig(e.target.checked)} style={{ accentColor: "#B83240", width: 16, height: 16 }} />
                   Richiede firma
                 </label>

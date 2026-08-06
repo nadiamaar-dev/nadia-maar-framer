@@ -24,6 +24,7 @@ import {
   useInView,
 } from "framer-motion"
 import Footer from "./components/Footer"
+import { CONTACT, mailLink } from "./lib/contact"
 import FloatingContact from "./components/FloatingContact"
 import Header from "./components/Header"
 import { sendContact, withExtras } from "./lib/sendContact"
@@ -476,7 +477,7 @@ function HeroSection() {
 
             <motion.div className="abt-hero-actions" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.70, delay: 0.40, ease }}
               style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
-              <PillCTA label="Lavoriamo insieme" href="mailto:nadiamaar.dev@gmail.com" />
+              <PillCTA label="Lavoriamo insieme" href={mailLink()} />
             </motion.div>
           </div>
 
@@ -1208,7 +1209,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               <GlassTextarea label="Messaggio" placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={set("msg")} />
               {failed && (
                 <p role="alert" style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.06em", lineHeight: 1.6, color: "rgba(255,120,120,0.95)", margin: 0 }}>
-                  Invio non riuscito. Riprova, oppure scrivici a nadiamaar.dev@gmail.com
+                  Invio non riuscito. Riprova, oppure scrivici a {CONTACT.email}
                 </p>
               )}
               <motion.button type="submit" disabled={busy} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 380, damping: 18 }}

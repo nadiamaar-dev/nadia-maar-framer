@@ -94,6 +94,19 @@ input.portal-input[type="date"]::-webkit-calendar-picker-indicator { filter: inv
 .portal-link { transition: color 0.15s ease; cursor: pointer; }
 .portal-link:hover { color: #BE3648 !important; }
 
+/* KPI tile that navigates. Lifts like a card rather than tinting like a row:
+   it is a panel, and a panel that changed colour on hover would read as
+   selected instead of clickable. */
+/* Schede cliente / progetto: si sollevano invece di tingersi, perché una
+   scheda che cambia colore al passaggio del mouse sembra selezionata. */
+.pt-card { transition: transform 0.16s ease, background 0.16s ease; }
+.pt-card:hover { background: rgba(255,255,255,0.05) !important; transform: translateY(-3px); }
+.pt-card:focus-visible { outline: 2px solid rgba(190,54,72,0.85); outline-offset: 2px; }
+
+.portal-stat { transition: transform 0.16s ease, background 0.16s ease; }
+.portal-stat:hover { background: rgba(255,255,255,0.045) !important; transform: translateY(-2px); }
+.portal-stat:focus-visible { outline: 2px solid rgba(190,54,72,0.85); outline-offset: 2px; }
+
 /* Project switcher / segmented pills — hover feedback on inactive segments */
 .portal-pill:not(.is-active):hover { background: rgba(255,255,255,0.09) !important; color: #FFFFFF !important; }
 

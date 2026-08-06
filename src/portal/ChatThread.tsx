@@ -204,10 +204,10 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                             const body = (
                               <>
                                 <Icon name="paperclip" size={11} />
-                                <span style={{ fontFamily: MONO, fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 220 }}>
+                                <span style={{ fontFamily: MONO, fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 220 }}>
                                   {a.name}
                                 </span>
-                                <span style={{ fontFamily: MONO, fontSize: 11, color: "rgba(255,255,255,0.62)", flexShrink: 0 }}>
+                                <span style={{ fontFamily: MONO, fontSize: 12, color: "rgba(255,255,255,0.62)", flexShrink: 0 }}>
                                   {a.publicUrl ? fmtBytes(a.size) : "non disponibile"}
                                 </span>
                               </>
@@ -278,7 +278,7 @@ export default function ChatThread({ conversation, role, authorId, height = 420,
                   display: "inline-flex", alignItems: "center", gap: 6,
                   padding: "4px 10px", borderRadius: 8,
                   background: "rgba(184,50,64,0.12)", border: "1px solid rgba(184,50,64,0.28)",
-                  fontFamily: MONO, fontSize: 11, color: T.copperTx,
+                  fontFamily: MONO, fontSize: 12, color: T.copperTx,
                 }}>
                   <Icon name="paperclip" size={10} />
                   {a.name}

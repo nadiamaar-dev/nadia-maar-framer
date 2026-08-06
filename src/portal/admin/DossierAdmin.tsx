@@ -24,12 +24,15 @@ import {
 
 type TabId = "fasi" | "diario" | "riferimenti" | "documenti" | "consegna" | "fatture" | "riunioni"
 
-export default function DossierAdmin({ projectId, home, adminId, onBack, reload }: {
+export default function DossierAdmin({ projectId, home, adminId, onBack, reload, backLabel = "Progetti" }: {
   projectId: string
   home: AdminHome
   adminId: string
   onBack: () => void
   reload: () => void
+  /** Dove si torna. Aperto dalla scheda cliente si torna al cliente, e il
+   *  link lo dice col suo nome: «← Progetti» da lì sarebbe una bugia. */
+  backLabel?: string
 }) {
   const toast = useToast()
   const project = home.projects.find(p => p.id === projectId)
@@ -156,7 +159,7 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
   if (!project) {
     return (
       <Glass variant="panel" style={{ padding: 20 }}>
-        <Empty icon="folder" title="Progetto non trovato" action={<Btn variant="ghost" icon="arrowL" onClick={onBack}>Torna ai progetti</Btn>} />
+        <Empty icon="folder" title="Progetto non trovato" action={<Btn variant="ghost" icon="arrowL" onClick={onBack}>Torna a {backLabel}</Btn>} />
       </Glass>
     )
   }
@@ -177,11 +180,11 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
           className="portal-link"
           style={{
             display: "inline-flex", alignItems: "center", gap: 6, background: "none", border: "none",
-            padding: 0, marginBottom: 10, fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em",
-            textTransform: "uppercase", color: T.tertiary, cursor: "pointer",
+            padding: 0, marginBottom: 10, fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em",
+            textTransform: "uppercase", color: T.secondary, cursor: "pointer",
           }}
         >
-          <Icon name="arrowL" size={11} /> Progetti
+          <Icon name="arrowL" size={11} /> {backLabel}
         </button>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
           <div style={{ minWidth: 0, flex: 1 }}>
@@ -191,11 +194,11 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
               </h2>
               <Badge tone={st.tone} dot>{st.label}</Badge>
             </div>
-            <p style={{ fontFamily: MONO, fontSize: 11, color: T.secondary, margin: "7px 0 0" }}>
+            <p style={{ fontFamily: DISPLAY, fontSize: 13.5, color: T.secondary, margin: "7px 0 0" }}>
               {project.clientName} · {project.clientEmail} · avviato {fmtDate(project.createdAt)}
             </p>
             {project.description && (
-              <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.6, color: T.secondary, margin: "10px 0 0", maxWidth: 640, whiteSpace: "pre-wrap" }}>
+              <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 14, lineHeight: 1.6, color: T.secondary, margin: "10px 0 0", maxWidth: 640, whiteSpace: "pre-wrap" }}>
                 {project.description}
               </p>
             )}
@@ -211,7 +214,7 @@ export default function DossierAdmin({ projectId, home, adminId, onBack, reload 
               <p style={{ fontFamily: DISPLAY, fontSize: 13, fontWeight: 800, color: T.text, margin: 0 }}>
                 {stages.filter(s => s.status === "done").length}/{stages.length} fasi
               </p>
-              <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: T.tertiary, margin: "3px 0 0" }}>
+              <p style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.tertiary, margin: "3px 0 0" }}>
                 completate
               </p>
             </div>

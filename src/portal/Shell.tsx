@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import Background from "../components/Background"
+import { CONTACT, mailLink, telLink, waLink } from "../lib/contact"
 import { Avatar, DISPLAY, Icon, MONO, PortalLogo, T, TL, type IconName } from "./ui"
 
 export interface ShellNavItem {
@@ -67,13 +68,20 @@ function MaarGhost({ direction = "vertical" }: { direction?: "vertical" | "horiz
 
 export default function Shell({
   items, active, onSelect,
-  email, roleLabel, areaLabel, showLogo = true, onSignOut, onEditProfile, topRight, children,
+  email, roleLabel, areaLabel, showLogo = true, showQuickContact = false, contactContext,
+  onSignOut, onEditProfile, topRight, children,
 }: {
   items: ShellNavItem[]
   active: string
   onSelect: (id: string) => void
   email?: string
   roleLabel: string
+  /** Direct channels to the studio. Client-side only — the admin is the studio. */
+  showQuickContact?: boolean
+  /** What the client is writing about — a project or company NAME, not a
+   *  sentence. Each channel phrases it itself: a greeting suits WhatsApp,
+   *  an email wants a subject line. */
+  contactContext?: string
   /** Constant context shown in the header eyebrow. Without it the eyebrow
    *  would repeat the section title sitting right underneath it. */
   areaLabel?: string
@@ -152,7 +160,7 @@ export default function Shell({
               {roleLabel}
             </p>
             <p style={{
-              fontFamily: MONO, fontSize: 11, color: "#FFFFFF",
+              fontFamily: MONO, fontSize: 12, color: "#FFFFFF",
               margin: "4px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>
               {email ?? "—"}
@@ -208,6 +216,50 @@ export default function Shell({
           )
         })}
       </nav>
+
+      {/* Contatto diretto — solo lato cliente.
+          La chat interna non manda notifiche a nessuno: senza questi canali
+          l'unico modo di raggiungere lo studio in fretta era uscire dal
+          portale e cercare i recapiti sul sito. Il testo di WhatsApp arriva
+          già compilato col progetto aperto, così non si parte da «Salve». */}
+      {showQuickContact && (
+        <div style={{ padding: "12px 14px", borderTop: `1px solid ${SIDE_BORDER}`, flexShrink: 0 }}>
+          <p style={{
+            fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase" as const,
+            color: "#FFFFFF", margin: "0 0 9px", opacity: 0.9,
+          }}>
+            Contatto diretto
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+            {[
+              { label: "WhatsApp", icon: "chat" as IconName, ext: true,
+                href: waLink(contactContext ? `Ciao! Scrivo per «${contactContext}».` : undefined) },
+              { label: "Chiama", icon: "phone" as IconName, href: telLink(), ext: false },
+              { label: "Telegram", icon: "send" as IconName, href: CONTACT.telegram, ext: true },
+              { label: "Email", icon: "mail" as IconName, ext: false,
+                href: mailLink(contactContext ? `Area Clienti — ${contactContext}` : "Area Clienti") },
+            ].map(({ label, icon, href, ext }) => (
+              <a
+                key={label}
+                href={href}
+                title={label === "Chiama" ? CONTACT.telDisplay : label}
+                {...(ext ? { target: "_blank", rel: "noreferrer" } : {})}
+                className="portal-nav-item"
+                style={{
+                  display: "flex", alignItems: "center", gap: 7,
+                  padding: "8px 9px", borderRadius: 9, textDecoration: "none",
+                  border: "1px solid rgba(255,255,255,0.20)", background: "rgba(255,255,255,0.05)",
+                  fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.04em",
+                  color: "#FFFFFF", minHeight: 38,
+                }}
+              >
+                <Icon name={icon} size={13} />
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Footer — Sito + Esci in site mono style */}
       <div style={{
@@ -411,7 +463,7 @@ export default function Shell({
             <div style={{ minWidth: 0, display: "flex", alignItems: "center", gap: 12 }}>
               <span style={{
                 display: "inline-flex", alignItems: "center", gap: 7, flexShrink: 0,
-                fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em",
+                fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em",
                 textTransform: "uppercase" as const, color: "#FFFFFF",
                 border: "1px solid rgba(255,255,255,0.28)", borderRadius: 6,
                 padding: "4px 9px", background: "rgba(255,255,255,0.04)",

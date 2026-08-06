@@ -16,6 +16,7 @@ import {
 } from "framer-motion"
 import Background from "./components/Background"
 import Footer from "./components/Footer"
+import { CONTACT, mailLink } from "./lib/contact"
 import FloatingContact from "./components/FloatingContact"
 import Header from "./components/Header"
 import { sendContact, withExtras } from "./lib/sendContact"
@@ -1969,7 +1970,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
 
               {failed && (
                 <p role="alert" style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.06em", lineHeight: 1.6, color: "rgba(255,120,120,0.95)", margin: 0 }}>
-                  Invio non riuscito. Riprova, oppure scrivici a nadiamaar.dev@gmail.com
+                  Invio non riuscito. Riprova, oppure scrivici a {CONTACT.email}
                 </p>
               )}
               <button type="submit" disabled={busy}

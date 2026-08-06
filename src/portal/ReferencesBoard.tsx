@@ -169,11 +169,11 @@ export default function ReferencesBoard({ projectId, clientId, role, foundryItem
                 {r.note && <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 12, lineHeight: 1.5, color: T.secondary, margin: 0 }}>{r.note}</p>}
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: "auto", flexWrap: "wrap" }}>
                   {r.url && (
-                    <a href={r.url} target="_blank" rel="noreferrer" className="portal-link" style={{ fontFamily: MONO, fontSize: 11, color: T.copperTx, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "100%" }}>
+                    <a href={r.url} target="_blank" rel="noreferrer" className="portal-link" style={{ fontFamily: MONO, fontSize: 12, color: T.copperTx, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "100%" }}>
                       <Icon name="external" size={10} /> {titleFromUrl(r.url)}
                     </a>
                   )}
-                  {r.source && <span style={{ fontFamily: MONO, fontSize: 11, color: T.secondary }}>{r.source}</span>}
+                  {r.source && <span style={{ fontFamily: MONO, fontSize: 12, color: T.secondary }}>{r.source}</span>}
                   <span style={{ flex: 1 }} />
                   <Badge tone={r.addedBy === "admin" ? "silver" : "copper"}>{r.addedBy === "admin" ? "studio" : "tu"}</Badge>
                 </div>

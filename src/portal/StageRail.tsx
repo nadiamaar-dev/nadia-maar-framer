@@ -145,7 +145,7 @@ export default function StageRail({ stages, renderAction }: {
                       style={{
                         display: "inline-flex", alignItems: "center", gap: 6,
                         marginTop: s.deliverableNote ? 7 : 0,
-                        fontFamily: MONO, fontSize: 11, color: T.copperTx, textDecoration: "none",
+                        fontFamily: MONO, fontSize: 12, color: T.copperTx, textDecoration: "none",
                       }}
                     >
                       <Icon name="external" size={11} />

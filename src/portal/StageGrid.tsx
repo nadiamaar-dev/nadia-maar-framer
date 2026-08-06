@@ -27,7 +27,7 @@ function ProgressBar({ value, tone }: { value: number; tone: "copper" | "green" 
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
-        <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: "#FFFFFF" }}>
+        <span style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: "#FFFFFF" }}>
           Avanzamento
         </span>
         <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 700, color: label }}>
@@ -125,7 +125,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
         }}>
           {/* Fase label */}
           <span style={{
-            fontFamily: MONO, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase",
+            fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase",
             color: circle.color, flexShrink: 0,
           }}>
             FASE {numLabel}
@@ -228,7 +228,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
                 className="portal-link"
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 6,
-                  fontFamily: MONO, fontSize: 11, color: T.copperTx, textDecoration: "none",
+                  fontFamily: MONO, fontSize: 12, color: T.copperTx, textDecoration: "none",
                 }}
               >
                 <Icon name="external" size={12} /> Apri deliverable
@@ -241,7 +241,7 @@ function StageRow({ stage, index, isLast, renderAction }: {
             {/* Dates */}
             {(stage.startedAt || stage.completedAt) && (
               <p style={{
-                fontFamily: MONO, fontSize: 11, color: "#FFFFFF",
+                fontFamily: MONO, fontSize: 12, color: "#FFFFFF",
                 margin: 0, letterSpacing: "0.04em",
               }}>
                 {stage.startedAt ? `Avviata ${fmtDate(stage.startedAt)}` : ""}

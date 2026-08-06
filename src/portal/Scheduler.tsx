@@ -143,7 +143,7 @@ export default function Scheduler({ value, onChange, refreshKey = 0 }: {
       {/* Time chips for the open day */}
       {openDay && (
         <div style={{ marginTop: 14, paddingTop: 12, borderTop: `1px solid ${T.border}` }}>
-          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.tertiary, margin: "0 0 9px" }}>
+          <p style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.tertiary, margin: "0 0 9px" }}>
             Orari · {new Date(`${openDay}T12:00`).toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" })}
           </p>
           {dayTimes.length === 0 ? (

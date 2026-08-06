@@ -11,15 +11,20 @@ import { useCallback, useEffect, useState } from "react"
  * that switches on `window.location.pathname`, so a pushState to a new path
  * would not resolve on reload.
  *
- * Shape: `#fatture` or `#progetti/<uuid>`.
+ * Shape: `#fatture`, `#progetti/<uuid>`, or `#clienti/<uuid>/<uuid>`.
+ *
+ * The third segment exists so a project dossier can be opened *inside* the
+ * client it belongs to. Without it, clicking a project from a client card
+ * jumped to the global project list and lost track of whose project it was —
+ * the fastest way to end up editing the wrong client's work.
  */
 export function useHashRoute(fallback: string, valid: readonly string[]) {
-  const parse = useCallback((): { section: string; id: string | null } => {
+  const parse = useCallback((): { section: string; id: string | null; sub: string | null } => {
     const raw = window.location.hash.replace(/^#/, "")
-    if (!raw) return { section: fallback, id: null }
-    const [section, id] = raw.split("/")
-    if (!valid.includes(section)) return { section: fallback, id: null }
-    return { section, id: id || null }
+    if (!raw) return { section: fallback, id: null, sub: null }
+    const [section, id, sub] = raw.split("/")
+    if (!valid.includes(section)) return { section: fallback, id: null, sub: null }
+    return { section, id: id || null, sub: sub || null }
   }, [fallback, valid])
 
   const [route, setRoute] = useState(parse)
@@ -32,16 +37,17 @@ export function useHashRoute(fallback: string, valid: readonly string[]) {
 
   /** Navigate. `push` false replaces, so programmatic corrections don't
    *  pile up entries the Back button has to chew through. */
-  const go = useCallback((section: string, id?: string | null, push = true) => {
-    const hash = `#${section}${id ? `/${id}` : ""}`
+  const go = useCallback((section: string, id?: string | null, sub?: string | null, push = true) => {
+    const hash = `#${section}${id ? `/${id}` : ""}${id && sub ? `/${sub}` : ""}`
+    const next = { section, id: id ?? null, sub: (id && sub) || null }
     if (window.location.hash === hash) {
-      setRoute({ section, id: id ?? null })
+      setRoute(next)
       return
     }
     if (push) window.history.pushState(null, "", hash)
     else window.history.replaceState(null, "", hash)
-    setRoute({ section, id: id ?? null })
+    setRoute(next)
   }, [])
 
-  return { section: route.section, id: route.id, go }
+  return { section: route.section, id: route.id, sub: route.sub, go }
 }

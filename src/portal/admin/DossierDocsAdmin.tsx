@@ -81,7 +81,7 @@ export default function DossierDocsAdmin({ projectId, clientId }: { projectId: s
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       {/* Upload bar */}
       <Glass variant="panel" style={{ padding: 18 }}>
-        <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.copperTx, margin: "0 0 12px" }}>
+        <p style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.copperTx, margin: "0 0 12px" }}>
           Condividi un documento
         </p>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
@@ -98,7 +98,7 @@ export default function DossierDocsAdmin({ projectId, clientId }: { projectId: s
 
       {/* Shared documents */}
       <Glass variant="panel" style={{ padding: 20 }}>
-        <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.secondary, margin: "0 0 12px" }}>
+        <p style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.secondary, margin: "0 0 12px" }}>
           Documenti condivisi
         </p>
         {docs.length === 0 ? (
@@ -144,7 +144,7 @@ export default function DossierDocsAdmin({ projectId, clientId }: { projectId: s
 
       {/* Client-supplied assets */}
       <Glass variant="panel" style={{ padding: 20 }}>
-        <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.secondary, margin: "0 0 12px" }}>
+        <p style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.secondary, margin: "0 0 12px" }}>
           Materiali dal cliente
         </p>
         {assets.length === 0 ? (

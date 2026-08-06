@@ -223,7 +223,7 @@ export default function LeadsAdmin({ leads, reload }: { leads: FoundryLead[]; re
 function LeadFact({ k, v }: { k: string; v: React.ReactNode }) {
   return (
     <div>
-      <div style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.secondary, marginBottom: 3 }}>{k}</div>
+      <div style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.secondary, marginBottom: 3 }}>{k}</div>
       <div style={{ fontSize: 13.5, color: T.text }}>{v}</div>
     </div>
   )
@@ -232,7 +232,7 @@ function LeadFact({ k, v }: { k: string; v: React.ReactNode }) {
 function LeadBlock({ k, v }: { k: string; v: string }) {
   return (
     <div>
-      <div style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.13em", textTransform: "uppercase", color: T.secondary, marginBottom: 4 }}>{k}</div>
+      <div style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.11em", textTransform: "uppercase", color: T.secondary, marginBottom: 4 }}>{k}</div>
       <p style={{ fontSize: 13.5, lineHeight: 1.6, color: T.text, margin: 0 }}>{v}</p>
     </div>
   )
