@@ -24,12 +24,22 @@ export interface PublicSiteSettings {
   defaultOgImageUrl?: string
   googleAnalyticsId?: string
   gscVerificationTag?: string
+  gtmContainerId?: string
+  metaPixelId?: string
+  cookieConsentEnabled: boolean
+  promoBarActive: boolean
+  promoBarText?: string
+  promoBarLink?: string
+  /** Dati strutturati dell'organizzazione, iniettati su ogni pagina. */
+  organizationSchema?: Record<string, unknown>
 }
 
 export const DEFAULT_PUBLIC_SETTINGS: PublicSiteSettings = {
   foundryEnabled: true,
   maintenanceMode: false,
   siteName: "Nadia Maar",
+  cookieConsentEnabled: false,
+  promoBarActive: false,
 }
 
 const URL_ = (import.meta.env.VITE_SUPABASE_URL as string | undefined) ?? ""
@@ -73,6 +83,13 @@ export function getSiteSettings(): Promise<PublicSiteSettings> {
         defaultOgImageUrl: (r.default_og_image_url as string) || undefined,
         googleAnalyticsId: (r.google_analytics_id as string) || undefined,
         gscVerificationTag: (r.gsc_verification_tag as string) || undefined,
+        gtmContainerId: (r.gtm_container_id as string) || undefined,
+        metaPixelId: (r.meta_pixel_id as string) || undefined,
+        cookieConsentEnabled: r.cookie_consent_enabled === true,
+        promoBarActive: r.promo_bar_active === true,
+        promoBarText: (r.promo_bar_text as string) || undefined,
+        promoBarLink: (r.promo_bar_link as string) || undefined,
+        organizationSchema: (r.organization_schema as Record<string, unknown>) || undefined,
       }
       try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(s)) } catch { /* modalità privata */ }
       return s

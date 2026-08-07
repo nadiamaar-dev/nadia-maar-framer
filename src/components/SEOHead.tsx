@@ -89,7 +89,10 @@ export default function SEOHead({ slug, fallbackTitle, fallbackDescription }: {
 
         const title = row?.meta_title || fallbackTitle || site.defaultMetaTitle
         const desc = row?.meta_description || fallbackDescription || site.defaultMetaDescription
+        /* Senza immagine propria si usa quella generata da /api/og: la
+           stessa che riceve un crawler, così l'anteprima è una sola. */
         const image = row?.og_image_url || site.defaultOgImageUrl
+          || `${window.location.origin}/api/og?slug=${encodeURIComponent(slug)}`
         const canonical = row?.canonical_url || `${window.location.origin}${slug === "/" ? "/" : slug}`
 
         if (title) document.title = title
@@ -108,7 +111,7 @@ export default function SEOHead({ slug, fallbackTitle, fallbackDescription }: {
         if (desc) meta("property", "og:description", desc)
         if (image) meta("property", "og:image", image)
 
-        meta("name", "twitter:card", image ? "summary_large_image" : "summary")
+        meta("name", "twitter:card", "summary_large_image")
         if (title) meta("name", "twitter:title", title)
         if (desc) meta("name", "twitter:description", desc)
         if (image) meta("name", "twitter:image", image)

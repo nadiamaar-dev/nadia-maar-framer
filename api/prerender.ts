@@ -91,7 +91,11 @@ export default async function handler(req: EdgeReq, res: EdgeRes) {
 
   const title = cfg?.meta_title || s?.default_meta_title || "Nadia Maar — Architetture Digitali ad Alte Prestazioni"
   const desc = cfg?.meta_description || s?.default_meta_description || ""
-  const image = cfg?.og_image_url || s?.default_og_image_url || ""
+  /* Se la pagina non ha una sua immagine social e nemmeno il sito ne ha una
+     predefinita, se ne genera una: un link nudo accanto a link altrui che
+     hanno un'anteprima parte già perdente. */
+  const image = cfg?.og_image_url || s?.default_og_image_url
+    || `${origin}/api/og?slug=${encodeURIComponent(path)}`
   const canonical = cfg?.canonical_url || `${origin}${path}`
   const siteName = s?.site_name || "Nadia Maar"
 
@@ -109,14 +113,14 @@ export default async function handler(req: EdgeReq, res: EdgeRes) {
     `<meta property="og:title" content="${escXml(title)}">`,
     `<meta property="og:description" content="${escXml(desc)}">`,
     `<meta property="og:url" content="${escXml(canonical)}">`,
-    `<meta name="twitter:card" content="${image ? "summary_large_image" : "summary"}">`,
+    `<meta name="twitter:card" content="summary_large_image">`,
     `<meta name="twitter:title" content="${escXml(title)}">`,
     `<meta name="twitter:description" content="${escXml(desc)}">`,
   ]
-  if (image) {
-    head.push(`<meta property="og:image" content="${escXml(image)}">`)
-    head.push(`<meta name="twitter:image" content="${escXml(image)}">`)
-  }
+  head.push(`<meta property="og:image" content="${escXml(image)}">`)
+  head.push(`<meta property="og:image:width" content="1200">`)
+  head.push(`<meta property="og:image:height" content="630">`)
+  head.push(`<meta name="twitter:image" content="${escXml(image)}">`)
   if (cfg?.keywords?.length) head.push(`<meta name="keywords" content="${escXml(cfg.keywords.join(", "))}">`)
   if (noindex) head.push(`<meta name="robots" content="noindex, nofollow">`)
   if (cfg?.json_ld_schema) {

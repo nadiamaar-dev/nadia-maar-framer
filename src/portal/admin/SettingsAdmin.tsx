@@ -7,9 +7,12 @@ import {
 import { invalidateSiteSettings } from "../../lib/siteSettings"
 import DeveloperIntegrations from "./settings/DeveloperIntegrations"
 import { Card, FlagRow, SaveBar } from "./settings/FeatureFlagsCard"
+import IndexingPanel from "./settings/IndexingPanel"
 import InternalAnalytics from "./settings/InternalAnalytics"
+import NotFoundLog from "./settings/NotFoundLog"
 import PageSeoEditor from "./settings/PageSeoEditor"
 import PageSpeedWidget from "./settings/PageSpeedWidget"
+import RedirectsManager from "./settings/RedirectsManager"
 import {
   Btn, DISPLAY, Empty, Field, Glass, Icon, Input, Loading, MONO, Note, SectionTitle, T, Tabs, Textarea,
 } from "../ui"
@@ -95,7 +98,8 @@ export default function SettingsAdmin() {
 
   /* Gli interruttori si salvano da soli: un toggle che richiede anche un
      «Salva» fa credere di aver già fatto la cosa e non averla fatta. */
-  async function toggle(k: "foundryEnabled" | "maintenanceMode", v: boolean) {
+  type FlagKey = "foundryEnabled" | "maintenanceMode" | "promoBarActive" | "cookieConsentEnabled"
+  async function toggle(k: FlagKey, v: boolean) {
     setDraft(d => { const n = { ...d }; delete n[k]; return n })
     setSettings(s => (s ? { ...s, [k]: v } : s))
     await save({ [k]: v })
@@ -160,6 +164,51 @@ export default function SettingsAdmin() {
             />
           </Card>
 
+          <Card kicker="Comunicazione" title="Barra promozionale"
+            sub="Una riga in cima al sito. Si chiude e resta chiusa per la sessione: se torna a ogni pagina diventa un fastidio, non un annuncio.">
+            <FlagRow
+              icon="sparkle"
+              tone="copper"
+              title="Barra in cima al sito"
+              description="Compare sopra ogni pagina pubblica, con un testo e un link facoltativo."
+              effect="Nessuna barra: il sito parte dal contenuto."
+              checked={!!value("promoBarActive")}
+              onChange={v => toggle("promoBarActive", v)}
+              busy={busy}
+            />
+            <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 16 }}>
+              <Field label="Testo" hint="Corto: è una riga, non un paragrafo. Su telefono va a capo.">
+                <Input value={String(value("promoBarText") ?? "")} onChange={e => set("promoBarText", e.target.value)}
+                  placeholder="Agenda aperta per settembre — due slot disponibili" />
+              </Field>
+              <Field label="Link (facoltativo)" hint="Vuoto = nessun pulsante, solo il testo.">
+                <Input value={String(value("promoBarLink") ?? "")} onChange={e => set("promoBarLink", e.target.value)}
+                  placeholder="/contatti" />
+              </Field>
+            </div>
+            <SaveBar dirty={dirty} busy={busy} onSave={() => save()} onReset={() => setDraft({})} />
+          </Card>
+
+          <Card kicker="Privacy" title="Consenso ai cookie"
+            sub="Riguarda solo gli strumenti di terze parti. Il conteggio interno non usa cookie e non ne ha bisogno.">
+            <FlagRow
+              icon="lock"
+              tone="amber"
+              title="Chiedi il consenso"
+              description="Mostra un riquadro discreto in basso a sinistra prima di caricare GA4, Tag Manager e Meta Pixel."
+              effect="Gli strumenti di terze parti partono senza chiedere: da valutare con chi segue gli aspetti legali."
+              checked={!!value("cookieConsentEnabled")}
+              onChange={v => toggle("cookieConsentEnabled", v)}
+              busy={busy}
+            />
+            <div style={{ marginTop: 14 }}>
+              <Note tone="silver">
+                Se il consenso è acceso e l'utente rifiuta, quegli script non vengono caricati affatto.
+                Un banner che carica comunque è peggio di nessun banner: è una dichiarazione falsa.
+              </Note>
+            </div>
+          </Card>
+
           <Card kicker="Identità" title="Metadati predefiniti"
             sub="Valgono per ogni pagina che non ha una sua scheda in «SEO e indicizzazione».">
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -210,6 +259,10 @@ export default function SettingsAdmin() {
             />
           </Card>
 
+          <IndexingPanel origin={origin} isLocal={isLocal} />
+
+          <RedirectsManager />
+
           <Glass variant="work" style={{ padding: "16px 18px" }}>
             <p className="pt-body" style={{ fontFamily: DISPLAY, fontSize: 13.5, lineHeight: 1.65, color: T.secondary, margin: 0 }}>
               <Icon name="sparkle" size={13} style={{ verticalAlign: "-2px", marginRight: 7 }} />
@@ -226,6 +279,8 @@ export default function SettingsAdmin() {
       {tab === "analytics" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <InternalAnalytics />
+
+          <NotFoundLog />
 
           <Card kicker="Google" title="Analytics e Search Console"
             sub="Facoltativi: il conteggio interno qui sopra funziona anche senza.">
@@ -248,6 +303,21 @@ export default function SettingsAdmin() {
                   placeholder='google-site-verification=… oppure <meta name="google-site-verification" content="…">'
                 />
               </Field>
+              <Field label="ID contenitore Tag Manager" hint="GTM-XXXXXXX. Se lo usi, l'ID GA4 qui sopra va lasciato vuoto: lo gestisce lui.">
+                <Input
+                  value={String(value("gtmContainerId") ?? "")}
+                  onChange={e => set("gtmContainerId", e.target.value)}
+                  placeholder="GTM-XXXXXXX"
+                />
+              </Field>
+              <Field label="ID Meta Pixel" hint="Solo cifre. Serve per il remarketing su Facebook e Instagram.">
+                <Input
+                  value={String(value("metaPixelId") ?? "")}
+                  onChange={e => set("metaPixelId", e.target.value)}
+                  placeholder="123456789012345"
+                  inputMode="numeric"
+                />
+              </Field>
               <Field label="Chiave API PageSpeed" hint="Facoltativa: alza la quota. Senza, le misure funzionano comunque.">
                 <Input
                   value={String(value("pagespeedApiKey") ?? "")}
@@ -257,8 +327,9 @@ export default function SettingsAdmin() {
               </Field>
             </div>
             <Note tone="silver">
-              GA4 viene caricato solo quando l'ID è presente. Attenzione: usa cookie e richiede
-              un'informativa, mentre il conteggio interno non ne usa.
+              Questi tre strumenti vengono caricati solo se configurati, e — con il consenso acceso in
+              «Generale» — solo dopo un sì esplicito. Tutti e tre usano cookie e richiedono un'informativa;
+              il conteggio interno qui sopra no.
             </Note>
             <SaveBar dirty={dirty} busy={busy || !gaValid} onSave={() => save()} onReset={() => setDraft({})} />
           </Card>

@@ -331,8 +331,17 @@ export interface SiteSettings {
   defaultOgImageUrl?: string
   googleAnalyticsId?: string
   gscVerificationTag?: string
-  /** Mai inviata al sito pubblico: sta fuori da `public_site_settings`. */
+  gtmContainerId?: string
+  metaPixelId?: string
+  /** Mai inviate al sito pubblico: stanno fuori da `public_site_settings`. */
   pagespeedApiKey?: string
+  indexnowKey?: string
+  cookieConsentEnabled: boolean
+  promoBarActive: boolean
+  promoBarText?: string
+  promoBarLink?: string
+  /** Dati strutturati dell'organizzazione, iniettati su ogni pagina. */
+  organizationSchema?: Record<string, unknown>
   updatedAt: string
 }
 
@@ -370,4 +379,41 @@ export interface PageSpeedRun {
   /** Core Web Vitals, già formattati come li mostra Google. */
   vitals: { key: string; label: string; display: string; score: number | null }[]
   fetchedAt: string
+}
+
+/* ── Redirect e 404 (Fase 19) ──────────────────────────────── */
+
+export interface Redirect {
+  id: string
+  oldPath: string
+  newPath: string
+  /** 301 permanente (trasferisce il posizionamento) o 302 temporaneo. */
+  type: 301 | 302
+  active: boolean
+  hits: number
+  note?: string
+  createdAt: string
+}
+
+export interface NotFoundStats {
+  total: number
+  humans: number
+  paths: {
+    path: string
+    hits: number
+    humanHits: number
+    lastSeen: string
+    topReferrer?: string
+  }[]
+}
+
+export interface IndexNowResult {
+  ok: boolean
+  urls?: number
+  indexnow?: number
+  indexnowOk?: boolean
+  indexnowHint?: string
+  googleSitemapPing?: number | null
+  keyLocation?: string
+  error?: string
 }

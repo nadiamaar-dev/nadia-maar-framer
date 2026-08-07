@@ -1,7 +1,8 @@
 import React, { Suspense, lazy, useEffect } from "react"
 import NadiaMaar from "./NadiaMaar_Lab" // landing: eager, protects the homepage LCP
 import SEOHead from "./components/SEOHead"
-import { FoundryGate, MaintenanceGate } from "./components/RouteGate"
+import { FoundryGate, MaintenanceGate, NotFound } from "./components/RouteGate"
+import SiteChrome from "./components/SiteChrome"
 import { initMeasurement } from "./lib/measure"
 
 /* Every non-home route is a separate chunk, fetched only when visited.
@@ -36,6 +37,7 @@ export default function App() {
   useEffect(() => { initMeasurement() }, [])
 
   let el: React.ReactNode = null
+  let known = true
   switch (path) {
     case "/about":     el = <NadiaMaarAbout />; break
     case "/projects":  el = <NadiaMaarProjects />; break
@@ -48,20 +50,23 @@ export default function App() {
     case "/foundry":   el = <FoundryGate><DigitalFoundry /></FoundryGate>; break
     case "/cabinet":   el = <CabinetApp />; break
     case "/dashboard": el = <DashboardGate />; break
-    default:           el = <NadiaMaar />; break
+    /* Una rotta sconosciuta è un 404, non la home: /api/route risponde già
+       con lo stato giusto e registra il link rotto, qui si disegna. */
+    default:           el = <NotFound />; known = false; break
   }
 
   if (PRIVATE.has(path)) {
     return <Suspense fallback={<RouteFallback />}>{el}</Suspense>
   }
 
-  /* Lo slug SEO è la rotta stessa; una rotta sconosciuta ricade sulla home,
-     e la sua scheda è quella della home. */
-  const slug = path === "/" || el === null ? "/" : path
+  /* Una pagina che non esiste non ha metadati da promuovere e non va
+     indicizzata: niente <SEOHead>, niente barra promo. */
+  if (!known) return el
 
   return (
     <MaintenanceGate>
-      <SEOHead slug={slug} />
+      <SEOHead slug={path === "/" ? "/" : path} />
+      <SiteChrome />
       <Suspense fallback={<RouteFallback />}>{el}</Suspense>
     </MaintenanceGate>
   )

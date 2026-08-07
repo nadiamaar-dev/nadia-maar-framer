@@ -97,6 +97,71 @@ export function FoundryGate({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
 
+/**
+ * Pagina non trovata. Esiste come pagina vera perché prima una rotta
+ * sconosciuta mostrava la home con stato 200: per Google un «soft 404», cioè
+ * un duplicato della home indicizzato sotto un indirizzo che non esiste.
+ * Adesso /api/route risponde davvero 404 e disegna questa.
+ */
+export function NotFound() {
+  const path = typeof window !== "undefined" ? window.location.pathname : ""
+  return (
+    <div style={{
+      minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
+      background: "#121418", position: "relative", padding: 24,
+    }}>
+      <Background />
+      <div style={{
+        position: "relative", zIndex: 1, maxWidth: 480, textAlign: "center",
+        padding: "34px 30px", borderRadius: 20,
+        background: "rgba(28,31,38,0.62)", border: "1px solid rgba(255,255,255,0.10)",
+        backdropFilter: "blur(22px) saturate(0.80)", WebkitBackdropFilter: "blur(22px) saturate(0.80)",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 4px 18px rgba(0,0,0,0.32)",
+      }}>
+        <p style={{
+          fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11.5,
+          letterSpacing: "0.14em", textTransform: "uppercase", color: "#E4697A", margin: 0,
+        }}>
+          Errore 404
+        </p>
+        <h1 style={{
+          fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: 26, fontWeight: 800,
+          color: "#FFFFFF", margin: "14px 0 10px", letterSpacing: "-0.02em", lineHeight: 1.2,
+        }}>
+          Questa pagina non esiste
+        </h1>
+        <p style={{
+          fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: 15,
+          lineHeight: 1.6, color: "#FFFFFF", margin: "0 0 8px",
+        }}>
+          L'indirizzo <code style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 14 }}>{path}</code> non
+          corrisponde a nessuna pagina. Se ci sei arrivato da un link, l'ho già registrato: lo sistemo io.
+        </p>
+        <div style={{ display: "flex", gap: 9, justifyContent: "center", flexWrap: "wrap", marginTop: 22 }}>
+          <a href="/" style={{
+            display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none",
+            padding: "11px 20px", borderRadius: 99,
+            background: "linear-gradient(90deg, rgba(184,50,64,0.34), rgba(184,50,64,0.20))",
+            border: "1px solid rgba(184,50,64,0.80)", color: "#FFFFFF",
+            fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: 14, fontWeight: 700,
+          }}>
+            Torna alla home
+          </a>
+          <a href="/contatti" style={{
+            display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none",
+            padding: "11px 20px", borderRadius: 99,
+            background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.16)",
+            color: "#FFFFFF", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+            fontSize: 14, fontWeight: 600,
+          }}>
+            Contatti
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /** Avvolge il sito pubblico. L'area riservata resta raggiungibile: la
  *  manutenzione riguarda i visitatori, non i clienti che hanno un progetto
  *  in corso e le loro fatture da consultare. */

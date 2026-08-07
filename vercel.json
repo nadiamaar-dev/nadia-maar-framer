@@ -8,6 +8,7 @@
     { "source": "/robots.txt", "destination": "/api/robots" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/llms.txt", "destination": "/api/llms" },
+    { "source": "/:key([a-f0-9]{16,64}).txt", "destination": "/api/indexnow-key?key=:key" },
     {
       "source": "/((?!api/|assets/|favicon).*)",
       "has": [
@@ -19,7 +20,12 @@
       ],
       "destination": "/api/prerender"
     },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/", "destination": "/index.html" },
+    {
+      "source": "/(about|projects|contatti|foundry|ecommerce|corporate|web-app|seo|ai|cabinet|dashboard)",
+      "destination": "/index.html"
+    },
+    { "source": "/(.*)", "destination": "/api/route" }
   ],
   "headers": [
     {
