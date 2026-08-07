@@ -39,6 +39,10 @@ export default function App() {
   let el: React.ReactNode = null
   let known = true
   switch (path) {
+    /* La home ha un `case` suo. Prima veniva servita dal `default`, cioè
+       dallo stesso ramo che oggi disegna il 404: aggiungere la pagina «non
+       trovata» senza aggiungere anche questa riga ha spento la home. */
+    case "/":          el = <NadiaMaar />; break
     case "/about":     el = <NadiaMaarAbout />; break
     case "/projects":  el = <NadiaMaarProjects />; break
     case "/contatti":  el = <NadiaMaarContatti />; break
