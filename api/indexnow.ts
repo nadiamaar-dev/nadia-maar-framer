@@ -19,7 +19,7 @@
    vercel.json su /<chiave>.txt.
 ══════════════════════════════════════════════════════════════════════════ */
 
-import { type EdgeReq, type EdgeRes, env, header, originOf, pgSelect, supabaseEnv } from "../src/lib/edge"
+import { type EdgeReq, type EdgeRes, env, header, originOf, pgSelect, supabaseEnv } from "../src/lib/edge.js"
 
 const ENDPOINT = "https://api.indexnow.org/indexnow"
 

@@ -12,10 +12,11 @@ import { DEFAULT_PUBLIC_SETTINGS, getSiteSettings, type PublicSiteSettings } fro
    differenza pratica: chi ha JavaScript disattivato o legge l'HTML grezzo
    vede il guscio vuoto, non la pagina.
 
-   Per questo lo spegnimento NON si ferma alla facciata: /api/foundry-lead
-   rifiuta le richieste quando l'interruttore è giù. Se il senso di spegnere
-   /foundry è «non voglio ricevere configurazioni», quel senso è rispettato
-   dal server, non dalla schermata.
+   Per la manutenzione questo basta: chi legge l'HTML grezzo vede il guscio
+   vuoto, non il sito. Per /foundry invece no — lì il controllo lo fa anche
+   /api/route, che risponde 404 vero, perché «pagina spenta» deve valere
+   allo stesso modo per una persona, per un crawler e per chi condivide il
+   link.
 ══════════════════════════════════════════════════════════════════════════ */
 
 type State = { phase: "loading" } | { phase: "ready"; settings: PublicSiteSettings }
@@ -81,21 +82,6 @@ function Curtain({ title, body }: { title: string; body: string }) {
 /** Nessuno spinner: la lettura dura pochi millisecondi e un lampo di
  *  «caricamento» prima di ogni pagina costa più di quanto renda. */
 const Blank = () => <div style={{ minHeight: "100vh", background: "#121418" }} aria-hidden />
-
-/** Avvolge /foundry. */
-export function FoundryGate({ children }: { children: React.ReactNode }) {
-  const s = useSiteSettings()
-  if (s.phase === "loading") return <Blank />
-  if (!s.settings.foundryEnabled) {
-    return (
-      <Curtain
-        title="Configuratore non disponibile"
-        body="Il Digital Foundry è temporaneamente chiuso. Per un preventivo scrivimi dalla pagina contatti: rispondo entro 24 ore."
-      />
-    )
-  }
-  return <>{children}</>
-}
 
 /**
  * Pagina non trovata. Esiste come pagina vera perché prima una rotta

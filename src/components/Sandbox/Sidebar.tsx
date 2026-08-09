@@ -28,7 +28,8 @@ const TYPE_OPTIONS = [
   { value: "component", label: "Comp."    },
 ] as const
 
-const STYLE_ID = "nm-sidebar-styles"
+/* Nel JSX, non in un useEffect: la barra è unica, quindi lo <style> si monta
+   nello stesso commit dei pulsanti e il browser non li disegna mai spogli. */
 const CSS = `
 /* ── category button ── */
 .nm-sb-cat {
@@ -116,14 +117,6 @@ interface Props {
 export default function Sidebar({ activeCategory, activeType, onCategoryChange, onTypeChange }: Props) {
   const { items } = useBlueprint()
 
-  useEffect(() => {
-    if (!document.getElementById(STYLE_ID)) {
-      const el = document.createElement("style")
-      el.id = STYLE_ID; el.textContent = CSS
-      document.head.appendChild(el)
-    }
-  }, [])
-
   const typeIndex = TYPE_OPTIONS.findIndex(t => t.value === activeType)
 
   /* ── Blueprint badge — [→] mono glass style ── */
@@ -148,6 +141,8 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
 
   return (
     <>
+      <style>{CSS}</style>
+
       {/* ════════════════════════════════════════
           MOBILE  — unified segmented control
           Shown below 768px via CSS

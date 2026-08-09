@@ -6,6 +6,7 @@
  * it renders identically wherever it is mounted.
  */
 import React, { useState } from "react"
+import { useFoundryEnabled } from "../lib/useSiteSettings"
 import { motion } from "framer-motion"
 
 const T = {
@@ -162,6 +163,11 @@ function FoundryDemoCard({ d, i }: { d: typeof FOUNDRY_DEMOS[number]; i: number 
 }
 
 function FoundryShowcase() {
+  /* Tutta la sezione porta a /foundry: se quella pagina è spenta, questo
+     blocco è un invito a una porta chiusa. */
+  const foundryOn = useFoundryEnabled()
+  if (!foundryOn) return null
+
   return (
     <section id="foundry-showcase" style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">

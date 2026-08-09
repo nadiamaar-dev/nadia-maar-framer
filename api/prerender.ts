@@ -20,7 +20,7 @@
    servire ai crawler una pagina che non si carica.
 ══════════════════════════════════════════════════════════════════════════ */
 
-import { type EdgeReq, type EdgeRes, escXml, header, originOf, pgSelect } from "../src/lib/edge"
+import { type EdgeReq, type EdgeRes, escXml, header, originOf, pgSelect } from "../src/lib/edge.js"
 
 type SeoRow = {
   page_slug: string
@@ -99,11 +99,21 @@ export default async function handler(req: EdgeReq, res: EdgeRes) {
   const canonical = cfg?.canonical_url || `${origin}${path}`
   const siteName = s?.site_name || "Nadia Maar"
 
+  /* /foundry spenta non è da nascondere: è da dichiarare inesistente. Un
+     noindex direbbe «c'è ma non guardarla», un 404 dice la verità e fa
+     togliere l'indirizzo dall'indice. */
+  if (path === "/foundry" && s?.foundry_enabled === false) {
+    res.setHeader("content-type", "text/html; charset=utf-8")
+    res.setHeader("x-robots-tag", "noindex")
+    res.status(404).send(`<!doctype html><html lang="it"><head><meta charset="utf-8">
+<title>Pagina non trovata</title><meta name="robots" content="noindex"></head>
+<body><h1>404</h1><p><a href="${escXml(origin)}">Nadia Maar</a></p></body></html>`)
+    return
+  }
+
   /* Un noindex qui vale davvero: è nell'HTML che il crawler legge, non in un
      tag scritto dopo da JavaScript che lui non esegue. */
-  const noindex = cfg?.is_noindex === true
-    || s?.maintenance_mode === true
-    || (path === "/foundry" && s?.foundry_enabled === false)
+  const noindex = cfg?.is_noindex === true || s?.maintenance_mode === true
 
   const head: string[] = [
     `<meta name="description" content="${escXml(desc)}">`,

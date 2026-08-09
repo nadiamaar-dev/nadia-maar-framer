@@ -1,30 +1,45 @@
-import React, { useState, useMemo, useEffect } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
 import Background from "./components/Background"
 import FloatingContact from "./components/FloatingContact"
 import Sidebar from "./components/Sandbox/Sidebar"
-import ProjectCard from "./components/Sandbox/ProjectCard"
+import ProjectCard, { PROJECT_CARD_CSS } from "./components/Sandbox/ProjectCard"
+import ProjectOverlay from "./components/Sandbox/preview/ProjectOverlay"
 import { SANDBOX_ITEMS, SandboxCategory, SandboxType } from "./data/sandboxData"
 
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const MONO    = "'JetBrains Mono',monospace"
 const BODY: React.CSSProperties = { fontFamily: "'Geist', system-ui, sans-serif", fontSize: "clamp(16px, 1.4vw, 17px)", fontWeight: 400, lineHeight: 1.85, letterSpacing: "0.01em" }
 
-const STYLE_ID = "nm-foundry-styles"
+/* Prima questo blocco veniva iniettato da un useEffect (document.createElement
+   + appendChild), che gira DOPO il primo paint del browser. Al refresh, per
+   un fotogramma la pagina si dipingeva senza .nm-foundry-hero/-content/-layout
+   (niente centratura, niente flex, niente grid: tutto a piena larghezza,
+   incollato a sinistra), poi lo stile arrivava e il layout scattava di colpo
+   nella posizione corretta — il "salto a sinistra" lamentato. Come nelle altre
+   pagine del sito, lo <style> ora vive nel JSX: React lo monta nello stesso
+   commit del resto dell'albero, prima che il browser disegni qualsiasi cosa. */
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+/* Restano tre colonne, ma il contenitore è passato da 1160 a 1440px: ogni
+   scheda guadagna comunque un ~35% di larghezza rispetto a prima — la
+   miniatura sopra il testo si legge come uno screenshot vero, non come un
+   francobollo — senza scendere a due schede per riga. */
 .nm-foundry-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  gap: 20px;
 }
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
   .nm-foundry-grid { grid-template-columns: repeat(2, 1fr); }
 }
-@media (max-width: 640px) {
+/* Stesso punto in cui la barra laterale passa dalla colonna verticale alla
+   fascia orizzontale (Sidebar.tsx, 768px): sotto quella soglia non c'è più
+   una colonna a sinistra da affiancare, la griglia torna a una sola. */
+@media (max-width: 768px) {
   .nm-foundry-grid { grid-template-columns: 1fr; gap: 12px; }
 }
 .nm-foundry-layout {
@@ -35,8 +50,16 @@ const CSS = `
 @media (max-width: 767px) {
   .nm-foundry-layout { flex-direction: column; gap: 0; }
 }
+/* 1160 → 1440: il contenuto usa più della finestra su schermi larghi, e la
+   barra laterale — che prima galleggiava vicino al centro — si sposta con
+   lui verso il bordo sinistro. Le schede, di conseguenza, guadagnano lo
+   spazio in più sulla destra. */
+/* Il testo in alto ha un rientro suo, un po' più largo di quello di sidebar
+   e griglia sotto: la stessa identica misura per hero e contenuto li faceva
+   sembrare incollati allo stesso righello, mentre il titolo — molto più
+   grande — ha bisogno di un filo di respiro in più a sinistra. */
 .nm-foundry-hero {
-  max-width: 1160px; margin: 0 auto; padding: 0 32px 72px;
+  max-width: 1440px; margin: 0 auto; padding: 0 32px 72px 64px;
   position: relative;
 }
 @media (max-width: 767px) {
@@ -47,7 +70,7 @@ const CSS = `
   .nm-foundry-h1 { font-size: clamp(28px, 10vw, 42px) !important; }
 }
 .nm-foundry-content {
-  max-width: 1160px; margin: 0 auto; padding: 0 32px;
+  max-width: 1440px; margin: 0 auto; padding: 0 32px;
 }
 @media (max-width: 767px) {
   .nm-foundry-content { padding: 0 16px; }
@@ -78,14 +101,12 @@ const CSS = `
 export default function DigitalFoundry() {
   const [category, setCategory] = useState<SandboxCategory>("All")
   const [type, setType] = useState<SandboxType | "all">("all")
+  /* indice dentro `filtered`, non id: la carosella sfoglia esattamente ciò
+     che è a schermo, quindi cambiare filtro mentre è aperta non ha senso —
+     infatti il filtro chiude l'anteprima (vedi sotto). */
+  const [preview, setPreview] = useState<number | null>(null)
 
-  useEffect(() => {
-    if (!document.getElementById(STYLE_ID)) {
-      const el = document.createElement("style")
-      el.id = STYLE_ID; el.textContent = CSS
-      document.head.appendChild(el)
-    }
-  }, [])
+  useEffect(() => { setPreview(null) }, [category, type])
 
   const filtered = useMemo(() => {
     return SANDBOX_ITEMS.filter(item => {
@@ -97,6 +118,9 @@ export default function DigitalFoundry() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#060C18", position: "relative" }}>
+      {/* Lo stile delle schede vive qui, montato una sola volta per la griglia
+          intera invece che ripetuto in ognuna delle schede. */}
+      <style>{CSS + PROJECT_CARD_CSS}</style>
       <Background />
       <Header />
       <FloatingContact />
@@ -106,9 +130,14 @@ export default function DigitalFoundry() {
         {/* ── Hero ── */}
         <div className="nm-foundry-hero">
 
-          {/* MAAR watermark */}
+          {/* MAAR watermark — `right: -8` sporgeva di 8px oltre il bordo
+              destro della finestra. Il genitore non taglia, quindi quegli 8px
+              diventavano scorrimento orizzontale dell'intera pagina: la si
+              poteva trascinare di lato, ed è il motivo per cui al
+              caricamento sembrava spostata. Allineato al bordo: la filigrana
+              è identica, la pagina non si muove più. */}
           <div aria-hidden style={{
-            position: "absolute", right: -8, top: 0, bottom: 0,
+            position: "absolute", right: 0, top: 0, bottom: 0,
             display: "flex", alignItems: "center", pointerEvents: "none",
             zIndex: 0, overflow: "hidden",
           }}>
@@ -130,7 +159,8 @@ export default function DigitalFoundry() {
               textTransform: "uppercase", color: "#FFFFFF",
               marginBottom: 22,
             }}>
-              <span style={{ color: "#BE3648" }}>//</span>
+              {/* rame per il testo: #BE3648 è quello dei riempimenti e a 11px dà 3,55:1 */}
+              <span style={{ color: "#E4697A" }}>//</span>
               <span>[ Digital Foundry · Sandbox ]</span>
             </div>
 
@@ -190,8 +220,8 @@ export default function DigitalFoundry() {
                 </div>
               ) : (
                 <div className="nm-foundry-grid">
-                  {filtered.map(item => (
-                    <ProjectCard key={item.id} item={item} />
+                  {filtered.map((item, i) => (
+                    <ProjectCard key={item.id} item={item} onOpen={() => setPreview(i)} />
                   ))}
                 </div>
               )}
@@ -199,6 +229,13 @@ export default function DigitalFoundry() {
           </div>
         </div>
       </main>
+
+      <ProjectOverlay
+        items={filtered}
+        index={preview}
+        onIndex={setPreview}
+        onClose={() => setPreview(null)}
+      />
 
       <div style={{ position: "relative", zIndex: 2 }}>
         <Footer />

@@ -11,7 +11,7 @@
    distribuzione, non furto. Chi volesse invertirla cambia ALLOW_AI qui.
 ══════════════════════════════════════════════════════════════════════════ */
 
-import { type EdgeReq, type EdgeRes, originOf, pgSelect, text } from "../src/lib/edge"
+import { type EdgeReq, type EdgeRes, originOf, pgSelect, text } from "../src/lib/edge.js"
 
 const PRIVATE = ["/cabinet", "/dashboard", "/api/"]
 

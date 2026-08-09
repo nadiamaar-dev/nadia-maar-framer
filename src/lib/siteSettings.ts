@@ -53,6 +53,13 @@ let inflight: Promise<PublicSiteSettings> | null = null
    pannello si vede al reload successivo e non fra un'ora. */
 const CACHE_KEY = "nm-site-settings"
 
+/** Lettura sincrona, per chi deve decidere cosa disegnare al primo render.
+ *  Dalla seconda pagina della sessione evita il lampo di un elemento che
+ *  poi sparisce. */
+export function getCachedSiteSettings(): PublicSiteSettings | null {
+  return readCache()
+}
+
 function readCache(): PublicSiteSettings | null {
   try {
     const raw = sessionStorage.getItem(CACHE_KEY)

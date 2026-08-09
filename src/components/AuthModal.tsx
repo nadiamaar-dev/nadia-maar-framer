@@ -6,7 +6,8 @@ const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const MONO    = "'JetBrains Mono',monospace"
 const ACCENT  = "#B83240"
 
-const STYLE_ID = "nm-auth-modal-styles"
+/* Nel JSX, non in un useEffect: così la finestra si apre già stilizzata
+   invece di comparire spoglia per un fotogramma. */
 const CSS = `
 @keyframes nm-modal-in {
   from { opacity: 0; transform: scale(0.96) translateY(12px); }
@@ -115,11 +116,6 @@ export default function AuthModal() {
   const backdropRef         = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!document.getElementById(STYLE_ID)) {
-      const el = document.createElement("style")
-      el.id = STYLE_ID; el.textContent = CSS
-      document.head.appendChild(el)
-    }
     const prev = document.body.style.overflow
     document.body.style.overflow = "hidden"
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") closeAuthModal() }
@@ -177,6 +173,8 @@ export default function AuthModal() {
         padding: 20,
       }}
     >
+      <style>{CSS}</style>
+
       <div className="nm-auth-card">
 
         {/* Close */}

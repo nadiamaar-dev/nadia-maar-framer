@@ -13,7 +13,7 @@
    e tre i posti, e non può divergere.
 ══════════════════════════════════════════════════════════════════════════ */
 
-import { type EdgeReq, type EdgeRes, originOf, pgSelect, text } from "../src/lib/edge"
+import { type EdgeReq, type EdgeRes, originOf, pgSelect, text } from "../src/lib/edge.js"
 
 type SeoRow = {
   page_slug: string
@@ -56,7 +56,12 @@ export default async function handler(req: EdgeReq, res: EdgeRes) {
   ])
   const s = settingsRows[0]
   const name = s?.site_name || "Nadia Maar"
-  const bySlug = new Map(seo.map(r => [r.page_slug, r]))
+  /* `Map(array.map(...))` senza una tupla esplicita perde la posizione dei
+     due elementi: TS non riesce a dedurre chiave e valore e li tratta come
+     `unknown`. Non si vedeva perché la build locale non passa da qui — `tsc
+     -b` copre solo src/ — ma il type-check isolato di Vercel su ogni
+     funzione lo ha trovato subito. */
+  const bySlug = new Map<string, SeoRow>(seo.map(r => [r.page_slug, r]))
 
   if (s?.maintenance_mode) {
     text(res, `# ${name}\n\n> Sito temporaneamente in manutenzione. Nessun contenuto da indicizzare in questo momento.\n`, 300)

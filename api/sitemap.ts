@@ -12,7 +12,7 @@
    soltanto «ho ricompilato».
 ══════════════════════════════════════════════════════════════════════════ */
 
-import { type EdgeReq, type EdgeRes, escXml, originOf, pgSelect, xml } from "../src/lib/edge"
+import { type EdgeReq, type EdgeRes, escXml, originOf, pgSelect, xml } from "../src/lib/edge.js"
 
 /** Deve restare allineato al `switch` di src/App.tsx (rotte pubbliche). */
 const ROUTES: { path: string; priority: number; changefreq: string }[] = [
@@ -46,7 +46,9 @@ export default async function handler(req: EdgeReq, res: EdgeRes) {
     return
   }
 
-  const bySlug = new Map(seo.map(r => [r.page_slug, r]))
+  /* vedi api/llms.ts: senza tipi espliciti, TS non riconosce la tupla e
+     tratta chiave e valore come `unknown`. */
+  const bySlug = new Map<string, SeoRow>(seo.map(r => [r.page_slug, r]))
 
   /* Le rotte dichiarate più eventuali slug presenti solo nel database: se un
      domani nasce una pagina nuova, basta darle una scheda SEO per vederla in

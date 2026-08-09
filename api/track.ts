@@ -14,7 +14,7 @@
 
 import {
   clientIpOf, deviceOf, type EdgeReq, type EdgeRes, hashIp, header, isBot, pgInsert,
-} from "../src/lib/edge"
+} from "../src/lib/edge.js"
 
 const MAX_PATH = 300
 const MAX_REF = 300

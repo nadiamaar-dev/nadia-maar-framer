@@ -19,7 +19,7 @@
    di verità, Telegram è solo il campanello.
 ══════════════════════════════════════════════════════════════════════════ */
 
-import { clientIp, escTg, insertLead, readEnv, sendTelegram, tgHandle, tooMany } from "../src/lib/leadIntake"
+import { clientIp, escTg, insertLead, readEnv, sendTelegram, tgHandle, tooMany } from "../src/lib/leadIntake.js"
 
 /* req/res tipizzati a mano: la funzione è compilata da Vercel, non dal tsc
    del progetto (tsconfig include solo src/), quindi niente @vercel/node. */

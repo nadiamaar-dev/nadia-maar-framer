@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { SandboxItem } from "../../data/sandboxData"
 import { useBlueprint } from "../../context/BlueprintContext"
 
@@ -6,8 +6,12 @@ const MONO    = "'JetBrains Mono',monospace"
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const BODY    = "'Geist', system-ui, sans-serif"
 
-const STYLE_ID = "nm-project-card-styles"
-const CSS = `
+/* Esportato e montato UNA VOLTA da chi disegna la griglia (DigitalFoundry).
+   Prima ogni scheda se lo iniettava da sola in un useEffect, cioè dopo il
+   primo paint: al refresh le schede comparivano non stilizzate e poi
+   scattavano in posizione. Nel JSX della scheda non può stare, perché si
+   ripeterebbe una volta per scheda. */
+export const PROJECT_CARD_CSS = `
 .nm-card {
   position: relative; overflow: hidden;
   border-radius: 16px;
@@ -47,43 +51,63 @@ const CSS = `
   position: relative; z-index: 3;
   padding: 20px 20px 18px;
   display: flex; flex-direction: column; gap: 12px;
-  height: 100%;
+  /* prima "height:100%": con la miniatura sopra, la colonna deve occupare
+     lo spazio RIMASTO nella scheda, non di nuovo il 100% di essa. */
+  flex: 1; min-height: 0;
 }
 
-.nm-tech-badge {
-  display: inline-flex; align-items: center;
-  padding: 3px 8px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.20);
-  border-radius: 4px;
-  font-family: ${MONO}; font-size: 9.5px;
-  color: #FFFFFF; letter-spacing: 0.06em;
+/* ── miniatura in cima alla scheda ──────────────────────────────────────
+   Sta PRIMA di .nm-card-inner nel flusso, sopra .nm-card-glass/-border
+   (nessun z-index: l'ordine nel DOM basta). Gli angoli superiori si
+   arrotondano da soli grazie all'overflow:hidden di .nm-card — qui non
+   serve un secondo border-radius. */
+.nm-card-thumb {
+  position: relative; z-index: 3; flex-shrink: 0;
+  aspect-ratio: 16 / 10; width: 100%;
+  background: #0B0D12;
+  overflow: hidden;
+}
+.nm-card-thumb img {
+  width: 100%; height: 100%; object-fit: cover; object-position: top;
+  display: block;
+}
+/* segnaposto per le schede senza screenshot: le iniziali del titolo sul
+   colore dell'item, non un rettangolo vuoto. */
+.nm-card-thumb-placeholder {
+  display: flex; align-items: center; justify-content: center;
+}
+.nm-card-thumb-glyph {
+  font-family: ${DISPLAY}; font-weight: 800; font-size: 30px;
+  letter-spacing: -0.02em; opacity: 0.55;
 }
 
-/* Blueprint CTA button — [01] style */
-.nm-card-btn-row {
-  display: flex; gap: 8px; margin-top: auto; padding-top: 4px;
+/* ── azioni: una riga sopra (Anteprima + Full Preview), una in fondo
+   (Blueprint) ──────────────────────────────────────────────────────────
+   La riga sopra segue subito il testo; il Blueprint resta ancorato al
+   fondo della scheda con margin-top:auto, qualunque sia l'altezza di
+   quello che c'è sopra di lui. */
+.nm-card-btn-toprow {
+  display: flex; gap: 8px;
 }
-.nm-card-btn-outline {
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 10px 14px;
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.22);
-  border-radius: 8px; cursor: pointer;
-  font-family: ${MONO}; font-size: 9.5px; font-weight: 500;
-  letter-spacing: 0.12em; text-transform: uppercase;
+.nm-card-btn-primary {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  flex: 1; min-width: 0; padding: 12px 14px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.40);
+  border-radius: 9px; cursor: pointer;
+  font-family: ${MONO}; font-size: 9.5px; font-weight: 600;
+  letter-spacing: 0.10em; text-transform: uppercase;
   color: #FFFFFF; text-decoration: none;
-  transition: all 0.18s ease; flex-shrink: 0;
+  transition: background 0.18s ease, border-color 0.18s ease;
 }
-.nm-card-btn-outline:hover {
-  border-color: rgba(255,255,255,0.37);
-  color: #FFFFFF;
-  background: rgba(255,255,255,0.05);
+.nm-card-btn-primary:hover {
+  background: rgba(255,255,255,0.13);
+  border-color: rgba(255,255,255,0.62);
 }
 
 /* Blueprint button — [01] mono glass style */
 .nm-card-btn-bp {
-  flex: 1;
+  margin-top: auto;
   display: flex; align-items: stretch; overflow: hidden;
   border-radius: 9px; cursor: pointer;
   border: 1px solid rgba(184,50,64,0.50);
@@ -128,19 +152,22 @@ const CSS = `
 }
 `
 
-export default function ProjectCard({ item }: { item: SandboxItem }) {
+/* iniziali del titolo per il segnaposto della miniatura: "CRM Dashboard" → "CD" */
+function initials(title: string): string {
+  return title.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase()
+}
+
+/* ogni demo ha la sua rotta: "Full Preview" ci porta direttamente, in una
+   scheda nuova — l'Anteprima resta il posto dove si guarda senza uscire
+   dalla griglia. */
+const DEMO_HREF: Record<string, string> = {
+  "supplier-portal": "/demo/portale-fornitori",
+}
+
+export default function ProjectCard({ item, onOpen }: { item: SandboxItem; onOpen?: () => void }) {
   const { user, isInBlueprint, addToBlueprint, removeFromBlueprint, openAuthModal } = useBlueprint()
   const inBlueprint = isInBlueprint(item.id)
   const [added, setAdded] = useState(false)
-
-  useEffect(() => {
-    if (!document.getElementById(STYLE_ID)) {
-      const el = document.createElement("style")
-      el.id = STYLE_ID; el.textContent = CSS
-      document.head.appendChild(el)
-    }
-  }, [])
-
   const handleBlueprint = () => {
     if (!user) { openAuthModal(); return }
     if (inBlueprint) {
@@ -153,8 +180,24 @@ export default function ProjectCard({ item }: { item: SandboxItem }) {
     }
   }
 
+  /* Il clic sulla scheda apre l'anteprima — comodo col mouse. La scheda
+     resta però un <div> SENZA role="button" e senza tabIndex: contiene già
+     due link e un pulsante, e un controllo non può contenerne altri (né
+     l'HTML lo permette né uno screen reader saprebbe leggerlo). La via da
+     tastiera è il pulsante "Anteprima" esplicito qui sotto. */
+  const open = (e: React.MouseEvent) => {
+    if (!onOpen) return
+    /* un clic partito da un pulsante o da un link è suo, non della scheda */
+    if ((e.target as HTMLElement).closest("a,button")) return
+    onOpen()
+  }
+
   return (
-    <div className={`nm-card${inBlueprint ? " nm-card-inbp" : ""}`}>
+    <div
+      className={`nm-card${inBlueprint ? " nm-card-inbp" : ""}`}
+      onClick={open}
+      style={onOpen ? { cursor: "pointer" } : undefined}
+    >
 
       {/* Glass bg — bottom fade */}
       <div className="nm-card-glass" />
@@ -167,6 +210,22 @@ export default function ProjectCard({ item }: { item: SandboxItem }) {
         background: `linear-gradient(90deg, transparent, ${item.accent}88, transparent)`,
         opacity: inBlueprint ? 1 : 0,
       }} />
+
+      {/* Miniatura: lo screenshot vero se c'è, altrimenti le iniziali sul
+          colore dell'item — mai un riquadro vuoto sopra il testo. */}
+      <div className="nm-card-thumb">
+        {item.previewUrl
+          ? <img src={item.previewUrl} alt="" loading="lazy" decoding="async" />
+          : (
+            <div className="nm-card-thumb-placeholder" style={{
+              background: `radial-gradient(120% 140% at 30% -10%, ${item.accent}33 0%, rgba(9,11,16,0) 62%)`,
+            }}>
+              <span className="nm-card-thumb-glyph" style={{ color: item.accent }}>
+                {initials(item.title)}
+              </span>
+            </div>
+          )}
+      </div>
 
       <div className="nm-card-inner">
 
@@ -203,17 +262,10 @@ export default function ProjectCard({ item }: { item: SandboxItem }) {
           fontFamily: BODY, fontSize: 14, fontWeight: 400,
           lineHeight: 1.70, letterSpacing: "0.005em",
           color: "#FFFFFF",
-          margin: 0, flexGrow: 1,
+          margin: 0,
         }}>
           {item.description}
         </p>
-
-        {/* Tech stack */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-          {item.tech.map(t => (
-            <span key={t} className="nm-tech-badge">{t}</span>
-          ))}
-        </div>
 
         {/* Divider */}
         <div style={{
@@ -221,29 +273,45 @@ export default function ProjectCard({ item }: { item: SandboxItem }) {
           background: "linear-gradient(90deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04) 60%, transparent)",
         }} />
 
-        {/* Actions */}
-        <div className="nm-card-btn-row">
-          {item.liveUrl && (
-            <a
-              href={item.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="nm-card-btn-outline"
-            >
-              <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-                <path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        {/* Riga sopra: Anteprima apre lo strato senza lasciare la griglia
+            (è anche la via da tastiera, la scheda stessa non è focalizzabile
+            perché contiene già dei controlli); Full Preview porta dritto
+            alla demo vera, in una scheda nuova. Senza demo resta solo
+            Anteprima, a piena larghezza — non c'è una pagina vera da aprire. */}
+        <div className="nm-card-btn-toprow">
+          {onOpen && (
+            <button type="button" className="nm-card-btn-primary" onClick={onOpen}
+              aria-label={`Anteprima di ${item.title}`}>
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor"
+                strokeWidth="1.4" aria-hidden>
+                <rect x="1.2" y="2.2" width="9.6" height="7.6" rx="1.4" />
+                <path d="M1.2 4.6h9.6" />
               </svg>
-              Preview
+              Anteprima
+            </button>
+          )}
+          {item.demo && (
+            <a href={DEMO_HREF[item.demo]} target="_blank" rel="noopener noreferrer"
+              className="nm-card-btn-primary">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor"
+                strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M2 10L10 2M10 2H5.5M10 2v4.5" />
+              </svg>
+              Full Preview
             </a>
           )}
-          <button className="nm-card-btn-bp" onClick={handleBlueprint}>
-            <span className="nm-card-btn-bp-tag">{inBlueprint ? "[−]" : "[+]"}</span>
-            <span className="nm-card-btn-bp-label">
-              {added ? "✓ Aggiunto" : inBlueprint ? "Rimuovi" : "Blueprint"}
-            </span>
-          </button>
         </div>
+
+        {/* Azione sotto: resta ancorata al fondo della scheda (margin-top:auto
+            nel CSS), qualunque sia la lunghezza del testo sopra. */}
+        <button className="nm-card-btn-bp" onClick={handleBlueprint}>
+          <span className="nm-card-btn-bp-tag">{inBlueprint ? "[−]" : "[+]"}</span>
+          <span className="nm-card-btn-bp-label">
+            {added ? "✓ Aggiunto" : inBlueprint ? "Rimuovi" : "Blueprint"}
+          </span>
+        </button>
       </div>
+
     </div>
   )
 }

@@ -27,8 +27,8 @@
    "rewrites" non sarebbe così: quelle hanno la precedenza sul filesystem.)
 ══════════════════════════════════════════════════════════════════════════ */
 
-import { CANVAS_BANDS, ITEMS, VECTORS, complexityOf, buildBlueprint, type VectorId } from "../src/components/foundry/modules"
-import { clientIp, escTg, insertLead, oneLine, readEnv, sendTelegram, tgHandle, tooMany } from "../src/lib/leadIntake"
+import { CANVAS_BANDS, ITEMS, VECTORS, complexityOf, buildBlueprint, type VectorId } from "../src/components/foundry/modules.js"
+import { clientIp, escTg, insertLead, oneLine, readEnv, sendTelegram, tgHandle, tooMany } from "../src/lib/leadIntake.js"
 
 /* req/res tipizzati a mano: la funzione è compilata da Vercel, non dal tsc
    del progetto (tsconfig include solo src/), quindi niente @vercel/node. */
@@ -308,43 +308,10 @@ function telegramText(p: LeadPayload): string {
 }
 
 /* ── Handler ─────────────────────────────────────────────────────────────── */
-/**
- * L'interruttore /foundry vale anche qui, non solo sulla facciata.
- *
- * Il sito è a rendering client: nascondere il configuratore ferma chi lo
- * apre con un browser, non chi conosce già l'indirizzo di questa funzione.
- * Se spegnere /foundry significa «non voglio ricevere configurazioni»,
- * allora deve essere il server a rifiutarle.
- *
- * In caso di dubbio si accetta: un errore di rete verso il database non
- * deve trasformarsi in una richiesta di lavoro persa.
- */
-async function foundryDisabled(): Promise<boolean> {
-  const env = readEnv()
-  const url = env.SUPABASE_URL ?? env.VITE_SUPABASE_URL
-  const key = env.SUPABASE_ANON_KEY ?? env.VITE_SUPABASE_ANON_KEY
-  if (!url || !key) return false
-  try {
-    const r = await fetch(`${url.replace(/\/+$/, "")}/rest/v1/public_site_settings?select=foundry_enabled&limit=1`, {
-      headers: { apikey: key, Authorization: `Bearer ${key}`, Accept: "application/json" },
-    })
-    if (!r.ok) return false
-    const rows = (await r.json()) as { foundry_enabled?: boolean }[]
-    return rows?.[0]?.foundry_enabled === false
-  } catch {
-    return false
-  }
-}
-
 export default async function handler(req: Req, res: Res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST")
     res.status(405).json({ ok: false, error: "method_not_allowed" })
-    return
-  }
-
-  if (await foundryDisabled()) {
-    res.status(503).json({ ok: false, error: "foundry_disabled" })
     return
   }
 

@@ -14,8 +14,13 @@ export interface SandboxItem {
   category: Exclude<SandboxCategory, "All">
   type: SandboxType
   tech: string[]
+  /* screenshot mostrato in cima alla scheda. Senza, la scheda mostra un
+     segnaposto con le iniziali del titolo sul colore `accent`. */
   previewUrl?: string
   liveUrl?: string
+  /* Le schede con una demo interattiva si aprono in anteprima al clic.
+     Il valore è l'id della demo, non un booleano: le prossime avranno la loro. */
+  demo?: "supplier-portal"
   accent: string  // hex for card glow
 }
 
@@ -24,16 +29,18 @@ export const SANDBOX_ITEMS: SandboxItem[] = [
   {
     id: "b2b-supplier-portal",
     title: "Supplier Portal",
-    description: "Portale B2B per la gestione ordini, catalogo riservato e fatturazione integrata. Accessi multi-ruolo e dashboard KPI in tempo reale.",
+    description: "Catalogo, ordini e fatturazione B2B: i prezzi si calcolano da soli dai costi dei fornitori.",
     category: "B2B Portals",
     type: "full-site",
-    tech: ["React", "Node.js", "PostgreSQL", "JWT"],
+    tech: ["React", "Node.js", "PostgreSQL", "BullMQ"],
     accent: "#1E6FAF",
+    demo: "supplier-portal",
+    previewUrl: "/previews/supplier-portal.jpg",
   },
   {
     id: "b2b-crm-dashboard",
     title: "CRM Dashboard",
-    description: "Interfaccia CRM con pipeline visuale, anagrafica clienti avanzata, tracking delle opportunità e report esportabili in PDF.",
+    description: "Pipeline visuale, anagrafica clienti e report esportabili in PDF.",
     category: "B2B Portals",
     type: "full-site",
     tech: ["React", "TypeScript", "Chart.js", "REST API"],
@@ -42,7 +49,7 @@ export const SANDBOX_ITEMS: SandboxItem[] = [
   {
     id: "b2b-distributor-hub",
     title: "Distributor Hub",
-    description: "Hub dedicato per reti distributive: gestione agenti, listini prezzi per area geografica e portale ordini white-label.",
+    description: "Gestione agenti, listini per area geografica e ordini white-label.",
     category: "B2B Portals",
     type: "full-site",
     tech: ["Next.js", "Prisma", "Stripe", "Vercel"],
@@ -53,7 +60,7 @@ export const SANDBOX_ITEMS: SandboxItem[] = [
   {
     id: "shopify-luxury-fashion",
     title: "Luxury Fashion Store",
-    description: "Storefront Shopify premium con configuratore prodotto 3D, lookbook interattivo e checkout ottimizzato per conversioni su mobile.",
+    description: "Storefront Shopify con configuratore 3D e checkout ottimizzato per mobile.",
     category: "E-commerce & Shopify",
     type: "full-site",
     tech: ["Shopify", "Liquid", "Three.js", "Alpine.js"],
@@ -62,7 +69,7 @@ export const SANDBOX_ITEMS: SandboxItem[] = [
   {
     id: "shopify-b2b-wholesale",
     title: "Wholesale B2B Shop",
-    description: "E-commerce wholesale con prezzi per volume, gestione listini multipli, ordini ricorrenti e integrazione ERP via webhook.",
+    description: "Prezzi per volume, listini multipli e ordini ricorrenti, con ERP collegato.",
     category: "E-commerce & Shopify",
     type: "full-site",
     tech: ["Shopify Plus", "Liquid", "Klaviyo", "ERP API"],
@@ -71,7 +78,7 @@ export const SANDBOX_ITEMS: SandboxItem[] = [
   {
     id: "ecommerce-headless",
     title: "Headless Commerce",
-    description: "Architettura headless su Next.js con Shopify Storefront API: performance al limite, SEO nativa, PWA e integrazione CMS.",
+    description: "Headless su Next.js e Shopify: performance al limite e SEO nativa.",
     category: "E-commerce & Shopify",
     type: "full-site",
     tech: ["Next.js", "Shopify Storefront API", "Sanity", "Vercel"],
@@ -82,7 +89,7 @@ export const SANDBOX_ITEMS: SandboxItem[] = [
   {
     id: "landing-saas-launch",
     title: "SaaS Launch Page",
-    description: "Landing page per lancio SaaS con hero animato, sezione pricing interattiva, testimonial e form di pre-registrazione con integrazione CRM.",
+    description: "Hero animato, pricing interattivo e form di pre-registrazione collegato al CRM.",
     category: "Landing Pages",
     type: "full-site",
     tech: ["React", "Framer Motion", "Resend", "Vercel"],
@@ -91,7 +98,7 @@ export const SANDBOX_ITEMS: SandboxItem[] = [
   {
     id: "landing-event-conference",
     title: "Event & Conference",
-    description: "Pagina evento con countdown live, agenda interattiva, sistema di registrazione e integrazione biglietteria. Ottimizzata per conversioni.",
+    description: "Countdown live, agenda interattiva e registrazione biglietti.",
     category: "Landing Pages",
     type: "full-site",
     tech: ["Next.js", "Stripe", "SendGrid", "Supabase"],
@@ -100,7 +107,7 @@ export const SANDBOX_ITEMS: SandboxItem[] = [
   {
     id: "landing-product-reveal",
     title: "Product Reveal",
-    description: "Landing cinematografica per lancio prodotto: scroll storytelling, animazioni parallasse, video background e CTA ad alto impatto.",
+    description: "Scroll storytelling, parallasse e video background per il lancio prodotto.",
     category: "Landing Pages",
     type: "full-site",
     tech: ["React", "GSAP", "Three.js", "Framer Motion"],
@@ -111,7 +118,7 @@ export const SANDBOX_ITEMS: SandboxItem[] = [
   {
     id: "ui-glass-nav",
     title: "Glass Navigation System",
-    description: "Header + menu laterale animato in stile glassmorphism. Supporto multi-lingua, megamenu e indicatore sezione attiva con scroll detection.",
+    description: "Header e menu glassmorphism, con megamenu e sezione attiva sullo scroll.",
     category: "UI Components",
     type: "component",
     tech: ["React", "TypeScript", "Framer Motion"],
@@ -120,7 +127,7 @@ export const SANDBOX_ITEMS: SandboxItem[] = [
   {
     id: "ui-data-table",
     title: "Advanced Data Table",
-    description: "Tabella dati enterprise con ordinamento multi-colonna, filtri avanzati, paginazione, esportazione CSV/Excel e virtualizzazione per grandi dataset.",
+    description: "Tabella enterprise con filtri avanzati, paginazione ed export CSV/Excel.",
     category: "UI Components",
     type: "component",
     tech: ["React", "TypeScript", "TanStack Table"],
@@ -129,7 +136,7 @@ export const SANDBOX_ITEMS: SandboxItem[] = [
   {
     id: "ui-form-wizard",
     title: "Multi-Step Form Wizard",
-    description: "Wizard a step multipli con validazione real-time, salvataggio bozza in localStorage, animazioni di transizione e progress tracking visuale.",
+    description: "Wizard multi-step con validazione in tempo reale e bozza salvata in automatico.",
     category: "UI Components",
     type: "component",
     tech: ["React", "TypeScript", "React Hook Form", "Zod"],
@@ -138,7 +145,7 @@ export const SANDBOX_ITEMS: SandboxItem[] = [
   {
     id: "ui-dashboard-widgets",
     title: "KPI Dashboard Widgets",
-    description: "Set di widget da dashboard: grafici sparkline, metriche con trend, heatmap e card animati. Drag-and-drop per personalizzare il layout.",
+    description: "Widget da dashboard — sparkline, trend, heatmap — riordinabili col drag-and-drop.",
     category: "UI Components",
     type: "component",
     tech: ["React", "Recharts", "DnD Kit", "TypeScript"],

@@ -7,6 +7,26 @@ html, body {
   overscroll-behavior: none;
 }
 
+/* Rete di sicurezza contro lo scorrimento laterale.
+   Il sito è pieno di elementi decorativi che sconfinano di proposito —
+   filigrane, griglie in parallasse, aloni più larghi della finestra. Basta
+   che uno solo di essi sporga a destra senza un genitore che taglia perché
+   l'intera pagina diventi trascinabile di lato: al caricamento sembra
+   spostata, e su telefono si scorre in orizzontale per sbaglio.
+
+   `clip` e non `hidden`: `overflow-x: hidden` su html/body crea un nuovo
+   contenitore di scorrimento e rompe `position: sticky` (l'header). `clip`
+   taglia e basta, senza toccare il comportamento degli elementi appiccicati.
+   Il verticale resta esplicitamente visibile, altrimenti lo eredita. */
+html {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+body {
+  overflow-x: clip;
+  max-width: 100vw;
+}
+
 @theme {
   --color-copper:      #B83240;
   --color-copper-lt:   #BE3648;

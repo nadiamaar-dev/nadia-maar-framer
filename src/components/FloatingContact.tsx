@@ -75,7 +75,14 @@ export default function FloatingContact() {
   const { name, email, telDisplay, location, initials } = CONTACT
 
   const [open,     setOpen]     = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  /* Misurato al primo render, non dopo. Partendo da `false` il pulsante si
+     disegnava in posizione desktop (a metà altezza, a destra) e all'arrivo
+     dell'effetto volava in basso: sul telefono era il singolo salto più
+     grosso della pagina. L'inizializzatore pigro legge la larghezza prima
+     che il browser dipinga, quindi la posizione è giusta da subito. */
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 900,
+  )
   const cardRef = useRef<HTMLDivElement>(null)
   const btnRef  = useRef<HTMLButtonElement>(null)
 

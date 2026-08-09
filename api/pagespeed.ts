@@ -15,7 +15,7 @@
      3. nessuna chiave.
 ══════════════════════════════════════════════════════════════════════════ */
 
-import { env, type EdgeReq, type EdgeRes, header, originOf, supabaseEnv } from "../src/lib/edge"
+import { env, type EdgeReq, type EdgeRes, header, originOf, supabaseEnv } from "../src/lib/edge.js"
 
 const ENDPOINT = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
 const CATEGORIES = ["performance", "accessibility", "best-practices", "seo"]

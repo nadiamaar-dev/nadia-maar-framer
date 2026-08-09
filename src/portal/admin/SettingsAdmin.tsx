@@ -145,9 +145,9 @@ export default function SettingsAdmin() {
             <FlagRow
               icon="bolt"
               tone="copper"
-              title="Digital Foundry"
-              description="Il configuratore su /foundry che compone l'architettura di un progetto e raccoglie il brief."
-              effect="/foundry mostra una schermata di cortesia, esce da sitemap e llms.txt, entra fra i Disallow di robots.txt e l'API rifiuta nuove configurazioni."
+              title="Digital Foundry (pagina Lab)"
+              description="La pagina /foundry con la galleria degli esperimenti. Il configuratore incorporato in home, in Contatti e nelle pagine servizio è un'altra cosa e resta acceso."
+              effect="/foundry risponde 404 come un indirizzo che non esiste, sparisce dal menu e dalla sezione «Entra nella Foundry», ed esce da sitemap, robots.txt e llms.txt."
               checked={!!value("foundryEnabled")}
               onChange={v => toggle("foundryEnabled", v)}
               busy={busy}

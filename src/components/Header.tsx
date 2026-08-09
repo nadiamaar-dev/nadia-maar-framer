@@ -10,6 +10,7 @@
  */
 
 import React, { useState, useEffect, useRef } from "react"
+import { useFoundryEnabled } from "../lib/useSiteSettings"
 import { motion, AnimatePresence } from "framer-motion"
 import { CONTACT, mailLink } from "../lib/contact"
 import { useBlueprint } from "../context/BlueprintContext"
@@ -306,6 +307,11 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
     return () => obs.disconnect()
   }, [isHome])
 
+  /* Quando /foundry è spenta dal pannello, la voce che ci porta non deve
+     restare nel menu: un collegamento verso una pagina che risponde 404 è
+     peggio dell'assenza della voce. */
+  const foundryOn = useFoundryEnabled()
+
   /* smart navigation: smooth scroll on home, href on other pages */
   const nav = (sectionId: string, href: string) => {
     if (isHome && sectionId) {
@@ -334,7 +340,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
        ricaricare la home e scorrere. Ora è una pagina vera, con i canali
        diretti e un modulo che spedisce davvero. */
     { num: "06", label: "Contatti", sectionId: "",   href: "/contatti",  action: () => { window.location.href = "/contatti" } },
-  ]
+  ].filter(item => foundryOn || item.href !== "/foundry")
 
   /* etichette corte: nel menu contano leggibilità e riconoscibilità, non
      il titolo completo della pagina */

@@ -56,12 +56,20 @@ const T = {
   accent:    "#B83240",
   accentGlo: "rgba(184,50,64,0.45)",
   accentLt:  "#BE3648",
+  /* Rame per il TESTO. #BE3648 su fondo scuro misura 3,55:1 e sotto i
+     18px non arriva alla soglia AA di 4,5:1 — è nato per riempimenti e
+     bordi, dove il contrasto non si applica. Stessa distinzione già in
+     uso nel portale (copper / copperTx in portal/ui.tsx). */
+  accentTx:  "#E4697A",
   green:     "#10B981",
 } as const
 
 // warm rgba helpers
 const AM = (a: number) => `rgba(184,50,64,${a})`
 const LT = (a: number) => `rgba(190,54,72,${a})`
+/* Rame per il TESTO: AM e LT nascono per riempimenti e bordi e sotto i 18px
+   non arrivano alla soglia AA. Stessa distinzione del portale. */
+const TX = (a: number) => `rgba(228,105,122,${a})`
 const OR = (a: number) => `rgba(184,50,64,${a})`
 const RD = (a: number) => `rgba(120,20,30,${a})`
 
@@ -273,7 +281,7 @@ function PingDot({ color = T.accentLt, size = 7 }: { color?: string; size?: numb
 function Kicker({ index, text, center = false }: { index: string; text: string; center?: boolean }) {
   return (
     <div style={{ display: "inline-flex", alignItems: "center", gap: 14, marginBottom: 22, justifyContent: center ? "center" : "flex-start" }}>
-      <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", color: T.accentLt }}>§{index}</span>
+      <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", color: T.accentTx }}>§{index}</span>
       <span aria-hidden style={{ width: 30, height: 1, background: `linear-gradient(90deg, ${LT(0.6)}, ${LT(0.1)})` }} />
       <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>{text}</span>
     </div>
@@ -432,7 +440,7 @@ function HeroSection() {
         {/* editorial corner row */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease }}
           style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 40 }}>
-          <span style={{ ...MONO_LABEL, fontSize: 10.5, color: T.accentLt }}>Nadia Maar® — Digital Studio</span>
+          <span style={{ ...MONO_LABEL, fontSize: 10.5, color: T.accentTx }}>Nadia Maar® — Digital Studio</span>
           <span style={{ ...MONO_LABEL, fontSize: 10.5, color: T.faint }}>About / 01</span>
         </motion.div>
 
@@ -495,7 +503,7 @@ function HeroSection() {
               {/* ── Eyebrow ── */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
                 <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: T.faint }}>
-                  <span style={{ color: T.accentLt }}>//</span> [ IDENTITY ]
+                  <span style={{ color: T.accentTx }}>//</span> [ IDENTITY ]
                 </span>
                 <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "4px 10px", borderRadius: 99, background: "rgba(75,211,155,0.08)", border: "1px solid rgba(75,211,155,0.22)" }}>
                   <PingDot color={T.green} size={5} />
@@ -543,13 +551,13 @@ function HeroSection() {
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <div style={{ width: 24, height: 24, borderRadius: 7, background: "rgba(255,255,255,0.05)", border: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ color: T.accentLt }}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ color: T.accentTx }}>
                       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
                     </svg>
                   </div>
                   <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", color: T.faint }}>Italy · Remote Worldwide</span>
                 </div>
-                <span style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.18em", textTransform: "uppercase", color: AM(0.60), padding: "3px 8px", borderRadius: 6, border: `1px solid ${AM(0.22)}`, background: AM(0.08) }}>EU +</span>
+                <span style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.18em", textTransform: "uppercase", color: TX(0.60), padding: "3px 8px", borderRadius: 6, border: `1px solid ${AM(0.22)}`, background: AM(0.08) }}>EU +</span>
               </div>
             </div>
 
@@ -578,7 +586,7 @@ function MarqueeStrip() {
         const n = (i % MARQUEE_ITEMS.length) + 1
         return (
           <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 12, padding: "0 22px" }}>
-            <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 500, letterSpacing: "0.18em", color: T.accentLt }}>
+            <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 500, letterSpacing: "0.18em", color: T.accentTx }}>
               {String(n).padStart(2, "0")}
             </span>
             <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
@@ -658,7 +666,7 @@ function StatCard({ s, i }: { s: typeof STATS[number]; i: number }) {
 
       {/* top row — category + index */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative", zIndex: 1 }}>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em", textTransform: "uppercase", color: hov ? T.accentLt : T.faint, transition: "color .3s" }}>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: 9, letterSpacing: "0.20em", textTransform: "uppercase", color: hov ? T.accentTx : T.faint, transition: "color .3s" }}>
           <span style={{ width: 5, height: 5, borderRadius: "50%", background: AM(hov ? 0.95 : 0.55), boxShadow: hov ? `0 0 8px ${OR(0.7)}` : "none", transition: "all .3s" }} />
           {s.cat}
         </span>
@@ -668,7 +676,7 @@ function StatCard({ s, i }: { s: typeof STATS[number]; i: number }) {
       {/* giant number with red-accent suffix */}
       <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "baseline", gap: 2 }}>
         <span style={{ fontFamily: DISPLAY, fontSize: "clamp(44px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 0.86, letterSpacing: "-0.055em", color: "#FFFFFF", fontVariantNumeric: "tabular-nums" }}>{numStr}</span>
-        <span style={{ fontFamily: DISPLAY, fontSize: "clamp(24px, 2.6vw, 34px)", fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", color: T.accentLt }}>{s.suffix}</span>
+        <span style={{ fontFamily: DISPLAY, fontSize: "clamp(24px, 2.6vw, 34px)", fontWeight: 900, lineHeight: 1, letterSpacing: "-0.04em", color: T.accentTx }}>{s.suffix}</span>
       </div>
 
       {/* red gradient divider + label */}
@@ -712,7 +720,7 @@ function StatBento() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.24, ease }}
             style={{ position: "relative", overflow: "hidden", borderRadius: 14, padding: "18px 22px", minHeight: 150, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 12, border: `1px solid ${LT(0.24)}`, borderTop: `1px solid ${LT(0.4)}`, background: `linear-gradient(135deg, ${AM(0.16)}, ${RD(0.08)} 60%, rgba(255,255,255,0.03))`, boxShadow: `0 8px 32px rgba(0,0,0,0.55), 0 0 40px ${OR(0.12)}, inset 0 1px 0 rgba(255,255,255,0.16)` }}>
-            <span style={{ ...MONO_LABEL, fontSize: 9, color: T.accentLt }}>100% CUSTOM</span>
+            <span style={{ ...MONO_LABEL, fontSize: 9, color: T.accentTx }}>100% CUSTOM</span>
             <p style={{ fontFamily: DISPLAY, fontSize: "clamp(16px, 1.7vw, 20px)", fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.25, color: T.text, margin: 0, maxWidth: 260 }}>
               Ogni progetto è su misura. Zero template, zero scorciatoie.
             </p>
@@ -830,7 +838,7 @@ function ProcessCard({ p, i }: { p: Fase; i: number }) {
 
         {/* metric block */}
         <div style={{ marginBottom: 14 }}>
-          <div style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(28px, 3.6vw, 40px)", letterSpacing: "-0.04em", color: T.accentLt, lineHeight: 1 }}>{p.metric}</div>
+          <div style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(28px, 3.6vw, 40px)", letterSpacing: "-0.04em", color: T.accentTx, lineHeight: 1 }}>{p.metric}</div>
           <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: "#FFFFFF", marginTop: 7 }}>{p.metricLabel}</div>
         </div>
 
@@ -974,7 +982,7 @@ function ToolkitPanel({ data, i }: { data: typeof TOOLKIT[number]; i: number }) 
         <motion.div
           initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.25, delay: 0.1 + i * 0.05 }}
-          style={{ color: hov ? T.accentLt : LT(0.70), fontWeight: 500, marginBottom: 10, transition: "color .3s" }}>
+          style={{ color: hov ? T.accentTx : TX(0.70), fontWeight: 500, marginBottom: 10, transition: "color .3s" }}>
           {data.title}
         </motion.div>
         {/* skills */}
@@ -992,7 +1000,7 @@ function ToolkitPanel({ data, i }: { data: typeof TOOLKIT[number]; i: number }) 
 
       {/* footer */}
       <div style={{ padding: "10px 18px 12px", borderTop: `1px solid rgba(255,255,255,${hov ? 0.08 : 0.04})`, display: "flex", alignItems: "center", justifyContent: "space-between", background: "rgba(255,255,255,0.015)", flexShrink: 0 }}>
-        <span style={{ fontSize: 10, letterSpacing: "0.12em", color: hov ? T.accentLt : LT(0.50), transition: "color .3s" }}>{data.num}</span>
+        <span style={{ fontSize: 10, letterSpacing: "0.12em", color: hov ? T.accentTx : TX(0.50), transition: "color .3s" }}>{data.num}</span>
         <span style={{ fontSize: 10, letterSpacing: "0.12em", color: "#FFFFFF" }}>{data.items.length} capabilities</span>
       </div>
     </motion.div>
@@ -1062,7 +1070,7 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
         <motion.span
           animate={{ rotate: open ? 45 : 0 }}
           transition={{ duration: 0.28, ease }}
-          style={{ flexShrink: 0, marginTop: 4, fontSize: 20, lineHeight: 1, color: open ? T.accentLt : "#FFFFFF", transition: "color .3s" }}>
+          style={{ flexShrink: 0, marginTop: 4, fontSize: 20, lineHeight: 1, color: open ? T.accentTx : "#FFFFFF", transition: "color .3s" }}>
           +
         </motion.span>
       </button>
@@ -1115,7 +1123,7 @@ function GlassInput({ label, placeholder, type = "text", value, onChange }: {
   const [f, setF] = useState(false)
   return (
     <div>
-      <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
+      <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentTx : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
       <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
         onFocus={() => setF(true)} onBlur={() => setF(false)} required
         style={{ width: "100%", padding: "13px 16px", background: f ? AM(0.08) : "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? LT(0.55) : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", boxShadow: f ? `0 0 0 3px ${AM(0.12)}, inset 0 1px 0 rgba(255,255,255,0.06)` : "inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
@@ -1129,7 +1137,7 @@ function GlassTextarea({ label, placeholder, value, onChange }: {
   const [f, setF] = useState(false)
   return (
     <div>
-      <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
+      <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentTx : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
       <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={4}
         onFocus={() => setF(true)} onBlur={() => setF(false)} required
         style={{ width: "100%", padding: "13px 16px", background: f ? AM(0.08) : "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? LT(0.55) : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: T.text, fontSize: 14, outline: "none", resize: "none" as const, fontFamily: "inherit", boxSizing: "border-box" as const, boxShadow: f ? `0 0 0 3px ${AM(0.12)}, inset 0 1px 0 rgba(255,255,255,0.06)` : "inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }} />
@@ -1142,7 +1150,7 @@ function GlassSelect({ label, value, onChange }: { label: string; value: string;
   const options = ["E-commerce ad Alta Conversione", "Siti Corporate & Lead Generation", "Applicazioni Web & Automazione Custom", "SEO Strategico & Performance Marketing", "Integrazione AI & Sistemi Intelligenti"]
   return (
     <div>
-      <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentLt : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
+      <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentTx : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
       <select value={value} onChange={e => onChange(e.target.value)} onFocus={() => setF(true)} onBlur={() => setF(false)} required
         style={{ width: "100%", padding: "13px 16px", background: f ? AM(0.08) : "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? LT(0.55) : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: value ? T.text : T.faint, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", appearance: "none" as const, cursor: "pointer", boxShadow: f ? `0 0 0 3px ${AM(0.12)}, inset 0 1px 0 rgba(255,255,255,0.06)` : "inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }}>
         <option value="" disabled style={{ background: "#141010", color: T.muted }}>Seleziona un'area...</option>
@@ -1179,7 +1187,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
                 <PingDot color={T.accentLt} size={6} />
-                <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: T.accentLt }}>RICHIESTA CONSULENZA</span>
+                <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: T.accentTx }}>RICHIESTA CONSULENZA</span>
               </div>
               <h3 style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.025em", color: T.text, margin: 0, lineHeight: 1.22 }}>Raccontami il tuo progetto</h3>
             </div>

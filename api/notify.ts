@@ -21,7 +21,7 @@
    chiunque conosca l'URL.
 ══════════════════════════════════════════════════════════════════════════ */
 
-import { escTg, readEnv, sendTelegram } from "../src/lib/leadIntake"
+import { escTg, readEnv, sendTelegram } from "../src/lib/leadIntake.js"
 
 type Req = { method?: string; body?: unknown; headers: Record<string, string | string[] | undefined> }
 type Res = { status: (code: number) => Res; json: (body: unknown) => void; setHeader: (k: string, v: string) => void }

@@ -13,7 +13,7 @@ import type { VectorId } from "./components/foundry/modules"
 const T = {
   bg: "#060C18", text: "#FFFFFF", muted: "#FFFFFF",
   faint: "#FFFFFF", border: "rgba(255,255,255,0.11)",
-  accent: "#B83240", accentLt: "#BE3648", green: "#10B981",
+  accent: "#B83240", accentLt: "#BE3648", accentTx: "#E4697A", green: "#10B981",
   surface: "rgba(255,255,255,0.055)", surfaceHi: "rgba(255,255,255,0.10)",
 } as const
 const SANS = "'Geist','Space Grotesk',system-ui,sans-serif"
@@ -159,7 +159,7 @@ function ContactModal({onClose}:{onClose:()=>void}) {
           </div>
         ) : (
           <>
-            <div style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:T.accentLt,marginBottom:8}}>// [ Richiesta Consulenza ]</div>
+            <div style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:T.accentTx,marginBottom:8}}>// [ Richiesta Consulenza ]</div>
             <h3 style={{fontFamily:DISPLAY,fontSize:22,fontWeight:700,color:"#fff",marginBottom:6}}>Iniziamo a parlarne</h3>
             <p style={{fontFamily:MONO,fontSize:12,color:T.faint,lineHeight:1.7,marginBottom:24}}>Descrivi il tuo progetto. Rispondo entro 24h.</p>
             <div style={{display:"flex",flexDirection:"column",gap:12}}>
@@ -1198,7 +1198,7 @@ function OtherServices({ current }: { current: string }) {
           @media(max-width:560px){ .svc-others{grid-template-columns:1fr!important;} }
         `}</style>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 18 }}>
-          <span style={{ color: T.accentLt }}>//</span><span>[ Altri Servizi ]</span>
+          <span style={{ color: T.accentTx }}>//</span><span>[ Altri Servizi ]</span>
         </div>
         <div className="svc-others">
           {others.map(s => (
@@ -1214,7 +1214,7 @@ function OtherServices({ current }: { current: string }) {
               onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.03)"; el.style.borderColor = "rgba(255,255,255,0.26)"; el.style.transform = "translateY(-2px)" }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.012)"; el.style.borderColor = "rgba(255,255,255,0.13)"; el.style.transform = "none" }}
             >
-              <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: ".18em", color: T.accentLt }}>[ {s.num} ]</span>
+              <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: ".18em", color: T.accentTx }}>[ {s.num} ]</span>
               <span style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 700, lineHeight: 1.28, letterSpacing: "-0.015em", color: "#FFFFFF" }}>{s.title}</span>
               <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: ".1em", textTransform: "uppercase" as const, color: "#FFFFFF", opacity: 0.72 }}>{s.eyebrow}</span>
             </a>

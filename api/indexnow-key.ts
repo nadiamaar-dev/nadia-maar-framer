@@ -12,7 +12,7 @@
    caso, e con la chiave in mano potrebbe annunciare a nome nostro.
 ══════════════════════════════════════════════════════════════════════════ */
 
-import { type EdgeReq, type EdgeRes, env, header, supabaseEnv, text } from "../src/lib/edge"
+import { type EdgeReq, type EdgeRes, env, header, supabaseEnv, text } from "../src/lib/edge.js"
 
 async function readKey(): Promise<string> {
   const service = env("SUPABASE_SERVICE_ROLE_KEY")

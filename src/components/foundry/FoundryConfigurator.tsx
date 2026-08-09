@@ -1031,7 +1031,10 @@ const CSS = `
     font-family:${MONO}; font-size:10px; font-weight:700; color:#FFFFFF;
     background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.18);
   }
-  .fc-step.is-on .fc-step-n   { background:rgba(255,60,92,0.80); border-color:rgba(255,60,92,0.9); }
+    /* Il rosso chiaro dietro un numero bianco di 10px dava 3,47:1, sotto la
+     soglia AA di 4,5:1. Il rame profondo porta lo stesso numero a 5,9:1
+     restando lo stesso colore della famiglia. */
+  .fc-step.is-on .fc-step-n   { background:#B83240; border-color:rgba(255,60,92,0.9); }
   .fc-step.is-done .fc-step-n { background:rgba(16,185,129,0.22); border-color:rgba(16,185,129,0.55); }
   .fc-step-l { font-family:${MONO}; font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:#FFFFFF; }
 

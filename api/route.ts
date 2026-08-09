@@ -24,7 +24,7 @@
 import {
   clientIpOf, type EdgeReq, type EdgeRes, hashIp, header, isBot, originOf,
   pgInsert, pgSelect, supabaseEnv,
-} from "../src/lib/edge"
+} from "../src/lib/edge.js"
 
 type Redirect = { id: string; old_path: string; new_path: string; type: number }
 
