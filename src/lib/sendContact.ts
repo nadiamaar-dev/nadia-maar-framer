@@ -8,6 +8,8 @@
    contattato lo studio. Qui la richiesta parte davvero.
 ══════════════════════════════════════════════════════════════════════════ */
 
+import { firstTouch, sessionId, trackEvent } from "./measure"
+
 export type ContactPayload = {
   name: string
   email: string
@@ -38,6 +40,10 @@ export async function sendContact(p: ContactPayload): Promise<boolean> {
   const body = JSON.stringify({
     ...p,
     page: typeof location !== "undefined" ? location.pathname : "/",
+    /* attribuzione del primo tocco + sessione: vedi measure.ts. L'endpoint
+       li valida e li scrive nelle colonne dedicate del lead. */
+    session: sessionId(),
+    touch: firstTouch(),
   })
 
   let r: Response
@@ -55,7 +61,10 @@ export async function sendContact(p: ContactPayload): Promise<boolean> {
     return false
   }
 
-  if (r.ok) return true
+  if (r.ok) {
+    trackEvent("lead_submit", { source: "contatti" })
+    return true
+  }
   if (import.meta.env.DEV && r.status === 404) {
     console.info("[contatti] DEV — endpoint assente, invio simulato:", p)
     return true

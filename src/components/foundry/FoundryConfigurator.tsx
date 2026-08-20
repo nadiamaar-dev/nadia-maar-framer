@@ -9,6 +9,7 @@ import {
 import { downloadRoadmapPdf, printRoadmap } from "./roadmap"
 import { useFoundryStore, type Step } from "./store"
 import { useLocale } from "../../lib/i18n/LocaleContext"
+import { firstTouch, sessionId, trackEvent } from "../../lib/measure"
 import { DATE_TAG, useT } from "../../lib/i18n/t"
 import { CONFIGURATOR_STR } from "../../lib/i18n/strings/configurator"
 
@@ -321,6 +322,7 @@ function useRoadmapPdf(bp: Blueprint | null) {
     const date = new Date().toLocaleDateString(DATE_TAG[locale], { day: "2-digit", month: "long", year: "numeric" })
     try {
       await downloadRoadmapPdf(bp, date, locale)
+      trackEvent("blueprint_pdf", { vector: bp.vector.id })
     } catch (err) {
       console.error("[foundry] PDF non generato, ripiego sulla stampa:", err)
       printRoadmap(bp, date, locale)
@@ -818,7 +820,17 @@ function LeadModal() {
       complexity: bp ? { label: bp.complexity.label, weeks: bp.complexity.weeks, level: bp.complexity.level } : null,
       modules: items.map(({ id, node, tech, group, label }) => ({ id, node, tech, group, label })),
       blueprint: bp ? { obiettivo: bp.obiettivo, architettura: bp.architettura, scaffali: bp.scaffali } : null,
-      meta: { page: typeof location !== "undefined" ? location.pathname : "/", locale, ts: new Date().toISOString() },
+      /* Il primo tocco della sessione (utm/referrer) viaggia col lead: è
+         l'attribuzione — senza, non si sa mai quale canale ha portato la
+         richiesta. La sessione lega il lead agli eventi della stessa
+         visita in funnel_events. */
+      meta: {
+        page: typeof location !== "undefined" ? location.pathname : "/",
+        locale,
+        ts: new Date().toISOString(),
+        session: sessionId(),
+        touch: firstTouch(),
+      },
     }
 
     /* In `vite dev` le funzioni Vercel non vengono servite: l'endpoint
@@ -846,6 +858,7 @@ function LeadModal() {
          (posta non configurata o invio fallito): non prometterla. */
       const body = await r.json().catch(() => null) as { clientCopy?: boolean } | null
       setCopySent(body?.clientCopy === true)
+      trackEvent("lead_submit", { source: "configuratore", vector: bp?.vector.id ?? null })
       settle("sent")
     }
     else if (import.meta.env.DEV && r.status === 404) await simulate()

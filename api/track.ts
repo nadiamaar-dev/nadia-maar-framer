@@ -1,5 +1,13 @@
 /* ══════════════════════════════════════════════════════════════════════════
-   /api/track — una riga per pagina vista.
+   /api/track — una riga per pagina vista, o un evento della voronka.
+
+   Due forme di corpo, stessa porta:
+     { path, referrer }                     → visitor_logs (pagina vista)
+     { event, path, session_id?, props? }   → funnel_events (passo della voronka)
+
+   Un endpoint solo e non due: il client usa sendBeacon, che non aspetta
+   risposta — la distinzione la fa il campo `event`, e tenere insieme la
+   validazione è metà del motivo per cui il database ha i CHECK che ha.
 
    Perché non basta GA4: circa un visitatore su tre lo blocca, e i suoi dati
    arrivano comunque con ore di ritardo. Questo conta tutti e risponde subito.
@@ -18,6 +26,11 @@ import {
 
 const MAX_PATH = 300
 const MAX_REF = 300
+const MAX_SESSION = 64
+const MAX_PROPS = 1000
+/* Stessa forma del CHECK in tabella: la validazione doppia non è sfiducia
+   nel database, è un rifiuto silenzioso invece di un 400 di PostgREST. */
+const EVENT_RE = /^[a-z][a-z0-9_]{1,49}$/
 
 /** Le rotte riservate non sono traffico del sito: sono due persone al lavoro. */
 const PRIVATE = ["/cabinet", "/dashboard"]
@@ -51,7 +64,7 @@ export default async function handler(req: EdgeReq, res: EdgeRes) {
     return
   }
 
-  let body: { path?: unknown; referrer?: unknown } = {}
+  let body: { path?: unknown; referrer?: unknown; event?: unknown; session_id?: unknown; props?: unknown } = {}
   try {
     body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body as typeof body) ?? {}
   } catch {
@@ -63,6 +76,33 @@ export default async function handler(req: EdgeReq, res: EdgeRes) {
     : null
 
   if (!path || PRIVATE.some(p => path.startsWith(p))) {
+    res.status(204).end()
+    return
+  }
+
+  /* ── Evento della voronka ─────────────────────────────────────────── */
+  if (typeof body.event === "string") {
+    if (!EVENT_RE.test(body.event)) { res.status(204).end(); return }
+
+    const sessionId = typeof body.session_id === "string" && body.session_id.length <= MAX_SESSION
+      ? body.session_id
+      : null
+
+    /* props si accetta solo come oggetto piatto e piccolo: è un dettaglio
+       dell'evento, non un posto dove salvare pagine intere. */
+    let props: Record<string, unknown> = {}
+    if (body.props && typeof body.props === "object" && !Array.isArray(body.props)) {
+      const raw = body.props as Record<string, unknown>
+      const json = JSON.stringify(raw)
+      if (json.length <= MAX_PROPS) props = raw
+    }
+
+    await pgInsert("funnel_events", {
+      event: body.event,
+      session_id: sessionId,
+      page_path: path,
+      props,
+    })
     res.status(204).end()
     return
   }

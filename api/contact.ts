@@ -32,6 +32,9 @@ type Payload = {
   company: string | null
   message: string
   page: string | null
+  /** sessione del browser e primo tocco: attribuzione, vedi measure.ts */
+  session: string | null
+  touch: { utm_source: string | null; utm_medium: string | null; utm_campaign: string | null; referrer: string | null } | null
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
@@ -54,10 +57,42 @@ function validate(p: unknown): { ok: true; value: Payload } | { ok: false } {
      non è utile a nessuno e la si scarta invece di archiviare un vuoto */
   if (message.length < 10 || message.length > MAX.message) return { ok: false }
 
+  /* attribuzione: input del browser, quindi ogni campo si valida da sé */
+  const tRaw = q.touch && typeof q.touch === "object" ? q.touch as Record<string, unknown> : null
+  const campo = (v: unknown, max: number) => {
+    const t = str(v).slice(0, max)
+    return t || null
+  }
+  const touch = tRaw ? {
+    utm_source: campo(tRaw.utm_source, 120),
+    utm_medium: campo(tRaw.utm_medium, 120),
+    utm_campaign: campo(tRaw.utm_campaign, 120),
+    referrer: campo(tRaw.referrer, 200),
+  } : null
+
   return {
     ok: true,
-    value: { name, email, company: company || null, message, page: str(q.page).slice(0, MAX.page) || null },
+    value: {
+      name, email, company: company || null, message,
+      page: str(q.page).slice(0, MAX.page) || null,
+      session: campo(q.session, 64),
+      touch: touch && (touch.utm_source || touch.utm_medium || touch.utm_campaign || touch.referrer) ? touch : null,
+    },
   }
+}
+
+/* ── Punteggio di priorità ──────────────────────────────────────────────────
+   Il modulo contatti rivela molto meno del configuratore: non c'è né
+   complessità né selezione di moduli. Si parte quindi più in basso e si
+   premiano i due segnali disponibili — l'azienda dichiarata e un messaggio
+   articolato. La scala resta la stessa dei lead del configuratore, così in
+   coda si ordinano insieme. */
+function scoreOf(p: Payload): number {
+  let s = 20
+  if (p.company) s += 15
+  if (p.message.length >= 300) s += 15
+  else if (p.message.length >= 120) s += 8
+  return Math.min(100, s)
 }
 
 function telegramText(p: Payload): string {
@@ -130,6 +165,12 @@ export default async function handler(req: Req, res: Res) {
       message: p.message,
       page: p.page,
       source: "contatti",
+      score: scoreOf(p),
+      session_id: p.session,
+      utm_source: p.touch?.utm_source ?? null,
+      utm_medium: p.touch?.utm_medium ?? null,
+      utm_campaign: p.touch?.utm_campaign ?? null,
+      first_referrer: p.touch?.referrer ?? null,
     })
   } catch (err) {
     console.error("[contact] salvataggio su Supabase fallito:", err)

@@ -144,6 +144,37 @@ test.describe("resilienza", () => {
   })
 })
 
+test.describe("voronka", () => {
+  test("l'apertura di una demo e l'avanzamento del configuratore emettono eventi", async ({ page }) => {
+    /* Si intercetta /api/track: il test verifica che gli eventi PARTANO con
+       la forma giusta, non che il database li riceva — quello è compito
+       della migrazione e delle policy, non del browser. */
+    const eventi: { event?: string; props?: Record<string, unknown> }[] = []
+    await page.route("**/api/track", async route => {
+      const post = route.request().postData()
+      if (post) {
+        try {
+          const body = JSON.parse(post) as { event?: string; props?: Record<string, unknown> }
+          if (body.event) eventi.push(body)
+        } catch { /* pageview senza evento: non interessa qui */ }
+      }
+      await route.fulfill({ status: 204, body: "" })
+    })
+
+    await page.goto("/")
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 })
+
+    /* passo 1 → 2 del configuratore: deve partire config_step */
+    const configuratore = page.locator("#s7")
+    await configuratore.scrollIntoViewIfNeeded()
+    await configuratore.locator(".fc-card").first().click()
+
+    await expect.poll(() => eventi.some(e => e.event === "config_step")).toBeTruthy()
+    const passo = eventi.find(e => e.event === "config_step")
+    expect(passo?.props?.step).toBe(2)
+  })
+})
+
 test.describe("regressioni sulle prestazioni", () => {
   test("nessun carattere viene chiesto a Google", async ({ page }) => {
     /* I caratteri erano importati da fonts.googleapis.com dentro uno <style>

@@ -25,6 +25,7 @@ import { processo } from "./data/process"
 import { useLocale } from "./lib/i18n/LocaleContext"
 import { useT } from "./lib/i18n/t"
 import { HOME_STR } from "./lib/i18n/strings/home"
+import { trackEvent } from "./lib/measure"
 import { usePointerGlow } from "./hooks/usePointerGlow"
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -531,6 +532,55 @@ function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
   )
 }
 
+/* ── Le demo in hero ─────────────────────────────────────────────────────
+   Le due applicazioni dimostrative esistevano già su rotte proprie, ma
+   dalla home non c'era NESSUN percorso per raggiungerle: l'asset più
+   convincente del sito era raggiungibile solo digitando l'indirizzo.
+   Due carte sobrie sotto i CTA: chi vuole vedere il lavoro lo apre al
+   secondo clic, senza registrarsi. Colore e rotta stanno qui, il testo nel
+   dizionario (accoppiati per posizione). */
+const DEMO_ART = [
+  { id: "b2b-supplier-portal", href: "/demo/portale-fornitori", accent: "#1E6FAF" },
+  { id: "b2b-crm-dashboard",   href: "/demo/crm-vendite",       accent: "#C6F24E" },
+]
+
+function HeroDemos() {
+  const t = useT(HOME_STR).hero
+  const { href: L } = useLocale()
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: 0.44, ease }}
+      style={{ marginTop: 18, maxWidth: 440 }}
+    >
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.55)", marginBottom: 10 }}>
+        <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.green, flexShrink: 0 }} />
+        {t.demosKicker}
+      </div>
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" as const }}>
+        {DEMO_ART.map((art, i) => (
+          <a key={art.id} href={L(art.href)}
+            onClick={() => trackEvent("demo_open", { demo: art.id, via: "hero" })}
+            style={{
+              flex: "1 1 190px", minWidth: 0, padding: "12px 14px", borderRadius: 11,
+              textDecoration: "none",
+              background: "rgba(255,255,255,0.028)", border: "1px solid rgba(255,255,255,0.14)",
+              borderLeft: `2px solid ${art.accent}`,
+              transition: "background .2s, border-color .2s, transform .2s",
+            }}
+            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.06)"; el.style.transform = "translateY(-2px)" }}
+            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.028)"; el.style.transform = "none" }}
+          >
+            <span style={{ display: "block", fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 700, color: "#FFFFFF", marginBottom: 3 }}>{t.demos[i].title}</span>
+            <span style={{ display: "block", fontFamily: SANS, fontSize: 11.5, lineHeight: 1.5, color: "rgba(255,255,255,0.62)", marginBottom: 6 }}>{t.demos[i].desc}</span>
+            <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: art.accent }}>{t.demoCta} →</span>
+          </a>
+        ))}
+      </div>
+    </motion.div>
+  )
+}
+
 function Hero() {
   const t = useT(HOME_STR).hero
   const { href: L } = useLocale()
@@ -751,6 +801,8 @@ function Hero() {
                 {t.ctaSecondary} <span style={{ fontSize: 15 }}>→</span>
               </motion.a>
             </motion.div>
+
+            <HeroDemos />
 
             {/* mobile-only: social row below CTAs */}
             <div className="hp-hero-social-below">

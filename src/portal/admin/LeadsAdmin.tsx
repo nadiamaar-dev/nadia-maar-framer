@@ -14,10 +14,19 @@ import {
    schermate operative dell'area admin.
 ══════════════════════════════════════════════════════════════════════════ */
 
+/* Gli stadi nell'ordine della trattativa: il <Select> li mostra così, e
+   l'ordine racconta il percorso. `contacted` resta leggibile per le righe
+   scritte prima della migrazione 22, ma non è più la meta: dopo il primo
+   contatto si decide — qualificata o no. */
 const STATUS: Record<LeadStatus, { label: string; tone: Tone }> = {
-  new:       { label: "Nuova",      tone: "copper" },
-  contacted: { label: "Contattato", tone: "green" },
-  archived:  { label: "Archiviata", tone: "steel" },
+  new:            { label: "Nuova",          tone: "copper" },
+  contacted:      { label: "Contattato",     tone: "steel"  },
+  qualified:      { label: "Qualificata",    tone: "copper" },
+  call_scheduled: { label: "Call fissata",   tone: "green"  },
+  proposal:       { label: "Proposta",       tone: "green"  },
+  won:            { label: "Vinta",          tone: "green"  },
+  lost:           { label: "Persa",          tone: "steel"  },
+  archived:       { label: "Archiviata",     tone: "steel"  },
 }
 
 const GROUP_LABEL: Record<string, string> = {
@@ -119,6 +128,15 @@ export default function LeadsAdmin({ leads, reload }: { leads: FoundryLead[]; re
                     <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 4 }}>
                       <span style={{ fontFamily: DISPLAY, fontSize: 15, fontWeight: 700, color: T.text }}>{l.name}</span>
                       <Badge tone={st.tone} dot={l.status === "new"}>{st.label}</Badge>
+                      {typeof l.score === "number" && (
+                        /* la priorità calcolata alla nascita: ordina la coda
+                           a colpo d'occhio, la decisione resta umana */
+                        <span title="Priorità calcolata (complessità, moduli, canali)"
+                          style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.08em",
+                                   color: l.score >= 60 ? "#7CC4A0" : l.score >= 35 ? "#C9A052" : "rgba(255,255,255,0.45)" }}>
+                          {l.score}/100
+                        </span>
+                      )}
                       <Badge tone={l.source === "contatti" ? "steel" : "copper"}>
                         {l.source === "contatti" ? "Modulo contatti" : "Configuratore"}
                       </Badge>

@@ -1,8 +1,9 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import type { AdminHome, PortalAction } from "../../lib/api"
 import { fmtEur } from "../../lib/api"
+import { fetchFunnelStats, type FunnelWeek } from "../../lib/api/analytics"
 import {
-  Collapsible, Empty, Glass, Icon, Row, SectionTitle, Stat, Timeline,
+  Collapsible, Empty, Glass, Icon, MONO, Row, SectionTitle, Stat, Timeline,
   type IconName, type Tone,
 } from "../ui"
 
@@ -15,6 +16,78 @@ const ACTION_META: Record<string, { icon: IconName; tone: Tone }> = {
   reply_ticket: { icon: "ticket", tone: "red" },
   answer_chat: { icon: "chat", tone: "silver" },
   overdue_invoice: { icon: "euro", tone: "red" },
+}
+
+/* ── La voronka in prima pagina ──────────────────────────────────────────
+   Prima il traffico viveva in Impostazioni e i lead nella loro sezione:
+   nessun posto mostrava il PERCORSO — sessioni che diventano demo aperte,
+   demo che diventano configurazioni, configurazioni che diventano
+   richieste. La carta legge la RPC funnel_stats: quattro settimane, una
+   riga per settimana, e la settimana corrente in testa. */
+function FunnelCard() {
+  const [rows, setRows] = useState<FunnelWeek[] | null>(null)
+  const [failed, setFailed] = useState(false)
+
+  useEffect(() => {
+    let alive = true
+    fetchFunnelStats(4)
+      .then(r => { if (alive) setRows(r.slice().reverse()) })
+      .catch(() => { if (alive) setFailed(true) })
+    return () => { alive = false }
+  }, [])
+
+  const COLS: { key: keyof FunnelWeek; label: string }[] = [
+    { key: "sessions",  label: "Sessioni" },
+    { key: "demo",      label: "Demo" },
+    { key: "config",    label: "Config." },
+    { key: "blueprint", label: "Blueprint" },
+    { key: "leads",     label: "Richieste" },
+    { key: "advanced",  label: "Avanzate" },
+    { key: "won",       label: "Vinte" },
+  ]
+
+  return (
+    <Glass variant="panel" style={{ padding: 20 }}>
+      <SectionTitle kicker="Voronka" title="Dal visitatore alla richiesta"
+        sub="Ultime 4 settimane · sessioni uniche per passo" />
+      {failed ? (
+        <Empty icon="alert" title="La voronka non risponde"
+          hint="Serve la migrazione 22 (funnel_stats): finché non è applicata, questa carta resta vuota." />
+      ) : !rows ? (
+        <Empty title="Carico…" />
+      ) : rows.every(r => r.sessions === 0 && r.leads === 0) ? (
+        <Empty title="Ancora nessun dato"
+          hint="Gli eventi si accumulano dal primo deploy con la migrazione applicata." />
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: MONO, fontSize: 11.5 }}>
+            <thead>
+              <tr>
+                <th style={{ textAlign: "left", padding: "6px 10px 8px 0", fontSize: 9.5, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", fontWeight: 600 }}>Settimana</th>
+                {COLS.map(c => (
+                  <th key={c.key} style={{ textAlign: "right", padding: "6px 10px 8px", fontSize: 9.5, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", fontWeight: 600 }}>{c.label}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r, i) => (
+                <tr key={r.week} style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+                  <td style={{ padding: "8px 10px 8px 0", color: i === 0 ? "#FFFFFF" : "rgba(255,255,255,0.55)", whiteSpace: "nowrap" }}>
+                    {r.week}{i === 0 ? " ·" : ""}
+                  </td>
+                  {COLS.map(c => (
+                    <td key={c.key} style={{ textAlign: "right", padding: "8px 10px", color: i === 0 ? "#FFFFFF" : "rgba(255,255,255,0.60)", fontVariantNumeric: "tabular-nums" }}>
+                      {String(r[c.key])}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </Glass>
+  )
 }
 
 export default function Overview({ home, onAction, onGo }: {
@@ -44,6 +117,8 @@ export default function Overview({ home, onAction, onGo }: {
           tone={kpi.ticketsOpen > 0 ? "red" : "green"}
           onClick={() => onGo("inbox")} title="Apri l'inbox" />
       </div>
+
+      <FunnelCard />
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: 16, alignItems: "start" }}>
         <Glass variant="panel" style={{ padding: 20 }}>

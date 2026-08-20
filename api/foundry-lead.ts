@@ -45,7 +45,13 @@ type LeadPayload = {
   complexity: { label: string; weeks: string; level: number } | null
   modules: LeadModule[]
   blueprint: { obiettivo: string; architettura: string; scaffali: Shelf[] } | null
-  meta?: { page?: string; locale?: string; ts?: string }
+  meta?: {
+    page?: string; locale?: string; ts?: string
+    /** id di sessione del browser: lega il lead agli eventi in funnel_events */
+    session?: string | null
+    /** primo tocco della sessione: utm e referrer del primo caricamento */
+    touch?: { utm_source?: string | null; utm_medium?: string | null; utm_campaign?: string | null; referrer?: string | null } | null
+  }
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
@@ -123,9 +129,59 @@ function validate(p: unknown): { ok: true; value: LeadPayload } | { ok: false } 
       complexity: cx ? { label: cx.label, weeks: cx.weeks, level: cx.level } : null,
       modules,
       blueprint: bp ? { obiettivo: bp.obiettivo, architettura: bp.architettura, scaffali: bp.scaffali } : null,
-      meta: { page: "/", locale, ts: new Date().toISOString() },
+      meta: {
+        /* Il percorso arriva dal client e si valida come tale: deve essere
+           un path del sito, non un URL. Prima qui c'era la costante "/" e
+           ogni lead risultava nato in home — l'attribuzione per pagina era
+           impossibile per costruzione. */
+        page: isStr(metaRaw?.page, 300) && (metaRaw!.page as string).startsWith("/")
+          ? (metaRaw!.page as string)
+          : "/",
+        locale,
+        ts: new Date().toISOString(),
+        session: isStr(metaRaw?.session, 64) ? (metaRaw!.session as string) : null,
+        touch: leggiTouch(metaRaw?.touch),
+      },
     },
   }
+}
+
+/** utm e referrer del primo tocco, ognuno validato per lunghezza: valori
+ *  che arrivano dal browser, quindi da trattare come input ostile. */
+function leggiTouch(raw: unknown): NonNullable<LeadPayload["meta"]>["touch"] {
+  if (!raw || typeof raw !== "object") return null
+  const t = raw as Record<string, unknown>
+  const campo = (v: unknown, max: number) => (isStr(v, max) && (v as string).trim() ? (v as string).trim() : null)
+  const touch = {
+    utm_source: campo(t.utm_source, 120),
+    utm_medium: campo(t.utm_medium, 120),
+    utm_campaign: campo(t.utm_campaign, 120),
+    referrer: campo(t.referrer, 200),
+  }
+  return (touch.utm_source || touch.utm_medium || touch.utm_campaign || touch.referrer) ? touch : null
+}
+
+/* ── Punteggio di priorità ───────────────────────────────────────────────────
+   Ordina la coda in pannello e dà il tono al brief Telegram: NON decide
+   niente da solo. Per scelta esplicita del proprietario il sito non chiede
+   budget, quindi il punteggio usa solo ciò che la configurazione rivela:
+
+     · complessità (level 1–4)  → 15–60: un sistema esteso vale più lavoro
+     · moduli scelti            → fino a 24: selezione ricca = intento studiato
+     · messenger lasciato       → 8: un canale diretto in più è un segnale
+
+   NB: `company` qui è il honeypot (vedi il modale), NON un dato aziendale:
+   nei lead veri è sempre vuoto e chi lo riempie viene scartato prima di
+   arrivare al punteggio. Non entra nel conto.
+
+   Scala 0–100 per leggibilità, non per precisione: serve a mettere in alto
+   la richiesta giusta, non a fingere che il commerciale sia un algoritmo. */
+function scoreOf(p: LeadPayload): number {
+  const livello = p.complexity?.level ?? 0
+  let s = livello * 15
+  s += Math.min(p.modules.length * 4, 24)
+  if (p.contact.messenger) s += 8
+  return Math.max(0, Math.min(100, s))
 }
 
 /* ── Brief per il proprietario ───────────────────────────────────────────── */
@@ -313,6 +369,11 @@ function telegramText(p: LeadPayload): string {
   L.push("")
   if (p.vector) L.push(`Nucleo · <b>${escTg(p.vector.node)}</b>`)
   if (p.complexity) L.push(`Complessità · <b>${escTg(p.complexity.label)}</b> (${escTg(p.complexity.weeks)})`)
+  /* il punteggio nel brief: dal telefono si decide in tre secondi a quale
+     richiesta rispondere per prima */
+  L.push(`Priorità · <b>${scoreOf(p)}/100</b>`)
+  if (p.meta?.touch?.utm_source) L.push(`Sorgente · ${escTg(p.meta.touch.utm_source)}`)
+  else if (p.meta?.touch?.referrer) L.push(`Sorgente · ${escTg(p.meta.touch.referrer)}`)
 
   if (p.modules.length) {
     L.push("", `<b>Moduli (${p.modules.length})</b>`)
@@ -435,6 +496,12 @@ export default async function handler(req: Req, res: Res) {
       page: p.meta?.page ?? null,
       email_sent: clientCopy,
       source: "configuratore",
+      score: scoreOf(p),
+      session_id: p.meta?.session ?? null,
+      utm_source: p.meta?.touch?.utm_source ?? null,
+      utm_medium: p.meta?.touch?.utm_medium ?? null,
+      utm_campaign: p.meta?.touch?.utm_campaign ?? null,
+      first_referrer: p.meta?.touch?.referrer ?? null,
     })
   } catch (err) {
     console.error("[foundry-lead] salvataggio su Supabase fallito:", err)

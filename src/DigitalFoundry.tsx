@@ -10,6 +10,7 @@ import { sandboxItems, SandboxCategory, SandboxType } from "./data/sandboxData"
 import { useLocale } from "./lib/i18n/LocaleContext"
 import { useT } from "./lib/i18n/t"
 import { LAB_STR } from "./lib/i18n/strings/lab"
+import { trackEvent } from "./lib/measure"
 
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const MONO    = "'JetBrains Mono',monospace"
@@ -222,7 +223,13 @@ export default function DigitalFoundry() {
               ) : (
                 <div className="nm-foundry-grid">
                   {filtered.map((item, i) => (
-                    <ProjectCard key={item.id} item={item} onOpen={() => setPreview(i)} />
+                    <ProjectCard key={item.id} item={item} onOpen={() => {
+                      /* «demo aperta» = il momento in cui il visitatore entra
+                         nell'anteprima interattiva: è il primo passo misurabile
+                         della voronka dopo il pageview. */
+                      trackEvent("demo_open", { demo: item.id, via: "overlay" })
+                      setPreview(i)
+                    }} />
                   ))}
                 </div>
               )}

@@ -36,6 +36,15 @@ const it = {
     specStudioKey: "Studio",
     specStudioValue: "NM 2026",
     socialProof: "Tecnologie enterprise e brand che scalano con me:",
+    /* Le due demo aperte, senza registrazione: la prova si tocca, non si
+       racconta. `demos` si accoppia per posizione con DEMO_ART nel
+       componente (id, colore, rotta). */
+    demosKicker: "Prova, non promesse",
+    demos: [
+      { title: "Portale fornitori B2B", desc: "Ordini, fido, listini e fatture SdI — funzionante" },
+      { title: "CRM di vendita", desc: "Pipeline, clienti e report PDF — funzionante" },
+    ],
+    demoCta: "Apri la demo",
     credit: "Studio © 2026",
   },
 
@@ -248,6 +257,12 @@ const en: typeof it = {
     specStudioKey: "Studio",
     specStudioValue: "NM 2026",
     socialProof: "Enterprise technologies and brands that scale with me:",
+    demosKicker: "Proof, not promises",
+    demos: [
+      { title: "B2B supplier portal", desc: "Orders, credit limits, price lists and invoices — working" },
+      { title: "Sales CRM", desc: "Pipeline, customers and PDF reports — working" },
+    ],
+    demoCta: "Open the demo",
     credit: "Studio © 2026",
   },
 

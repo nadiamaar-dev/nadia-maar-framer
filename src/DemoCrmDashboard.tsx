@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { Q_CSS } from "./components/Sandbox/preview/quadrante/style"
 import QuadranteApp, { type Capability } from "./components/Sandbox/preview/quadrante/QuadranteApp"
+import { trackEvent } from "./lib/measure"
 
 /* ══════════════════════════════════════════════════════════════════════════
    DEMO — Quadrante CRM, a schermo intero
@@ -26,6 +27,10 @@ const CAPS: { id: Capability; label: string }[] = [
 ]
 
 export default function DemoCrmDashboard() {
+  /* La rotta diretta è raggiungibile da link condivisi e dalla home: si
+     conta come apertura della demo esattamente come l'anteprima nel Lab. */
+  useEffect(() => { trackEvent("demo_open", { demo: "b2b-crm-dashboard", via: "page" }) }, [])
+
   const [touched, setTouched] = useState<Capability[]>([])
   const [open, setOpen] = useState(false)
   const handleCaps = useCallback((l: Capability[]) => setTouched(l), [])

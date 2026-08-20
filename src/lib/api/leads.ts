@@ -2,7 +2,12 @@ import { supabase } from "./core"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export type LeadStatus = "new" | "contacted" | "archived"
+/* Gli stadi della trattativa (migrazione 22). `contacted` resta per le righe
+   storiche; la voronka canonica passa per qualified → call_scheduled →
+   proposal → won | lost. */
+export type LeadStatus =
+  | "new" | "contacted" | "qualified" | "call_scheduled"
+  | "proposal" | "won" | "lost" | "archived"
 
 export type FoundryLeadModule = { node: string; tech: string; group: string; label: string }
 
@@ -30,6 +35,10 @@ export type FoundryLead = {
   modules: FoundryLeadModule[]
   blueprint?: FoundryLeadBlueprint
   status: LeadStatus
+  /** priorità 0–100 calcolata dal server alla nascita: ordina, non decide */
+  score?: number
+  utmSource?: string
+  firstReferrer?: string
   adminNote?: string
   page?: string
   emailSent: boolean
@@ -55,6 +64,9 @@ function mapLead(r: any): FoundryLead {
     modules: Array.isArray(r.modules) ? r.modules : [],
     blueprint: r.blueprint ?? undefined,
     status: (r.status as LeadStatus) ?? "new",
+    score: typeof r.score === "number" ? r.score : undefined,
+    utmSource: r.utm_source ?? undefined,
+    firstReferrer: r.first_referrer ?? undefined,
     adminNote: r.admin_note ?? undefined,
     page: r.page ?? undefined,
     emailSent: Boolean(r.email_sent),

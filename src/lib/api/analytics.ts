@@ -30,6 +30,37 @@ export async function fetchVisitorStats(hours: number): Promise<VisitorStats> {
   }
 }
 
+/* ── La voronka, per settimana ─────────────────────────────────────────────
+   L'aggregazione la fa la RPC `funnel_stats` (migrazione 22): il pannello
+   riceve numeri già allineati e non scarica mai gli eventi grezzi. Ogni
+   colonna è un passo: chi entra, chi tocca una demo, chi avanza nel
+   configuratore, chi porta via il blueprint, chi lascia una richiesta —
+   e delle richieste, quante avanzano e quante si chiudono. */
+
+export type FunnelWeek = {
+  week: string
+  sessions: number
+  demo: number
+  config: number
+  blueprint: number
+  leads: number
+  advanced: number
+  won: number
+}
+
+export async function fetchFunnelStats(weeks = 4): Promise<FunnelWeek[]> {
+  const { data, error } = await supabase.rpc("funnel_stats", { p_weeks: weeks })
+  if (error) throw error
+  return Array.isArray(data) ? (data as FunnelWeek[]) : []
+}
+
+/** Sfoltisce lo storico degli eventi voronka. Ritorna quante righe sono sparite. */
+export async function pruneFunnelEvents(days: number): Promise<number> {
+  const { data, error } = await supabase.rpc("prune_funnel_events", { p_days: days })
+  if (error) throw error
+  return Number(data ?? 0)
+}
+
 /** Sfoltisce lo storico. Ritorna quante righe sono sparite. */
 export async function pruneVisitorLogs(days: number): Promise<number> {
   const { data, error } = await supabase.rpc("prune_visitor_logs", { p_days: days })

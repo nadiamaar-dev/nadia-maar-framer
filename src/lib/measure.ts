@@ -139,20 +139,96 @@ function injectOrgSchema(schema: Record<string, unknown>) {
   document.head.appendChild(s)
 }
 
+/* ── Sessione e primo tocco ────────────────────────────────────────────────
+   La sessione è un UUID in sessionStorage: lega i passi di UNA visita e
+   muore con la scheda. Non identifica la persona — non è un cookie, non
+   sopravvive, non viaggia fra siti — quindi non cambia il discorso sul
+   consenso fatto qui sopra.
+
+   Il «primo tocco» (utm_* e referrer del primo caricamento) si scrive una
+   volta e non si aggiorna: la domanda a cui risponde è «da dove è arrivato»,
+   e la risposta non cambia navigando. Alla nascita di un lead questi valori
+   finiscono nelle colonne di attribuzione — senza, ogni discussione su
+   quale canale ripagare è un'opinione. */
+
+const SESSION_KEY = "nm-session"
+const TOUCH_KEY = "nm-first-touch"
+
+export type FirstTouch = {
+  utm_source: string | null
+  utm_medium: string | null
+  utm_campaign: string | null
+  referrer: string | null
+}
+
+export function sessionId(): string | null {
+  try {
+    let id = sessionStorage.getItem(SESSION_KEY)
+    if (!id) {
+      id = crypto.randomUUID()
+      sessionStorage.setItem(SESSION_KEY, id)
+    }
+    return id
+  } catch { return null }   /* modalità privata: si vive senza sessione */
+}
+
+function captureFirstTouch(): void {
+  try {
+    if (sessionStorage.getItem(TOUCH_KEY)) return
+    const q = new URLSearchParams(window.location.search)
+    const cut = (v: string | null) => (v ? v.slice(0, 120) : null)
+    const touch: FirstTouch = {
+      utm_source: cut(q.get("utm_source")),
+      utm_medium: cut(q.get("utm_medium")),
+      utm_campaign: cut(q.get("utm_campaign")),
+      referrer: document.referrer ? document.referrer.slice(0, 200) : null,
+    }
+    sessionStorage.setItem(TOUCH_KEY, JSON.stringify(touch))
+  } catch { /* modalità privata */ }
+}
+
+export function firstTouch(): FirstTouch {
+  try {
+    const raw = sessionStorage.getItem(TOUCH_KEY)
+    if (raw) return JSON.parse(raw) as FirstTouch
+  } catch { /* modalità privata */ }
+  return { utm_source: null, utm_medium: null, utm_campaign: null, referrer: null }
+}
+
 /* ── Conteggio interno ─────────────────────────────────────────────────── */
+
+function beacon(body: string) {
+  /* sendBeacon sopravvive alla chiusura della scheda; fetch keepalive è il
+     ripiego dove non c'è. L'errore si ignora: una misura persa non deve
+     rompere la pagina che stava misurando. */
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon("/api/track", new Blob([body], { type: "application/json" }))
+  } else {
+    fetch("/api/track", { method: "POST", body, keepalive: true, headers: { "content-type": "application/json" } })
+      .catch(() => {})
+  }
+}
+
+/**
+ * Un passo della voronka: demo aperta, avanzamento del configuratore,
+ * blueprint scaricato, lead inviato. Il nome è un identificatore stabile
+ * (`demo_open`, `config_step`…), i dettagli vanno in `props`.
+ *
+ * Parte sempre, come il conteggio delle pagine: stessa natura (nessun
+ * cookie, nessun identificatore persistente), stessa regola.
+ */
+export function trackEvent(event: string, props: Record<string, unknown> = {}): void {
+  if (typeof window === "undefined") return
+  const path = window.location.pathname
+  if (PRIVATE.some(p => path.startsWith(p))) return
+  try {
+    beacon(JSON.stringify({ event, path, session_id: sessionId(), props }))
+  } catch { /* ignorato di proposito */ }
+}
 
 function logVisit(path: string) {
   try {
-    const body = JSON.stringify({ path, referrer: document.referrer || null })
-    /* sendBeacon sopravvive alla chiusura della scheda; fetch keepalive è il
-       ripiego dove non c'è. L'errore si ignora: una visita non contata non
-       deve rompere la pagina che stava contando. */
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon("/api/track", new Blob([body], { type: "application/json" }))
-    } else {
-      fetch("/api/track", { method: "POST", body, keepalive: true, headers: { "content-type": "application/json" } })
-        .catch(() => {})
-    }
+    beacon(JSON.stringify({ path, referrer: document.referrer || null }))
   } catch { /* ignorato di proposito */ }
 }
 
@@ -164,6 +240,7 @@ export function initMeasurement(): void {
      interni non sono traffico del sito. */
   if (PRIVATE.some(p => path.startsWith(p))) return
 
+  captureFirstTouch()
   logVisit(path)
 
   getSiteSettings().then(s => {
