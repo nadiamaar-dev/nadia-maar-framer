@@ -8,6 +8,9 @@
 import React, { useState } from "react"
 import { useFoundryEnabled } from "../lib/useSiteSettings"
 import { motion } from "framer-motion"
+import { useLocale } from "../lib/i18n/LocaleContext"
+import { useT } from "../lib/i18n/t"
+import { STUDIO_STR } from "../lib/i18n/strings/studio"
 
 const T = {
   border: "rgba(70,90,108,0.22)",
@@ -116,18 +119,18 @@ function MockHub() {
   )
 }
 
-const FOUNDRY_DEMOS = [
-  { tag: "B2B PORTAL", title: "Supplier Portal", desc: "Onboarding fornitori, listini e ordini sincronizzati in tempo reale.", Visual: MockPortal },
-  { tag: "CRM", title: "CRM Dashboard", desc: "Pipeline, clienti e metriche di vendita in un'unica dashboard.", Visual: MockCRM },
-  { tag: "DISTRIBUTION", title: "Distributor Hub", desc: "Rete distributori, stock multi-sede e logistica automatizzata.", Visual: MockHub },
-]
+/* Solo il disegno animato: tag, titolo e descrizione arrivano dal dizionario. */
+const FOUNDRY_VISUALS = [MockPortal, MockCRM, MockHub]
 
-function FoundryDemoCard({ d, i }: { d: typeof FOUNDRY_DEMOS[number]; i: number }) {
+type FoundryDemo = { tag: string; title: string; desc: string; Visual: React.ComponentType }
+
+function FoundryDemoCard({ d, i }: { d: FoundryDemo; i: number }) {
   const [h, setH] = useState(false)
+  const { href: L } = useLocale()
   const { Visual } = d
   return (
     <motion.a
-      href="/foundry"
+      href={L("/foundry")}
       initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.55, delay: i * 0.09, ease }}
       onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}
@@ -163,6 +166,8 @@ function FoundryDemoCard({ d, i }: { d: typeof FOUNDRY_DEMOS[number]; i: number 
 }
 
 function FoundryShowcase() {
+  const t = useT(STUDIO_STR).showcase
+  const { href: L } = useLocale()
   /* Tutta la sezione porta a /foundry: se quella pagina è spenta, questo
      blocco è un invito a una porta chiusa. */
   const foundryOn = useFoundryEnabled()
@@ -184,32 +189,34 @@ function FoundryShowcase() {
             <div>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
                 <span style={{ color: T.green }}>//</span>
-                <span>[ Digital Foundry ]</span>
+                <span>{t.kicker}</span>
               </div>
               <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(28px,3.6vw,46px)", fontWeight: 800, lineHeight: 1.08, letterSpacing: "-0.035em", margin: "0 0 18px", maxWidth: 760, color: T.text }}>
-                Digital Foundry:<br />
-                <span style={{ color: "#FFFFFF" }}>Costruisci la tua architettura</span>
+                {t.titleOver}<br />
+                <span style={{ color: "#FFFFFF" }}>{t.title}</span>
               </h2>
               <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 620, margin: 0 }}>
-                Non comprare a scatola chiusa. Esplora la nostra libreria di soluzioni reali (CRM, Portali B2B, E-commerce), testa le demo e costruisci il tuo Blueprint per un preventivo istantaneo.
+                {t.lead}
               </p>
             </div>
 
             {/* right — CTA button, top-right at title level */}
             <motion.a
-              href="/foundry" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
+              href={L("/foundry")} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
               style={{ flexShrink: 0, minHeight: 52, borderRadius: 12, cursor: "pointer", textDecoration: "none", border: "1px solid rgba(16,185,129,0.28)", background: "rgba(16,185,129,0.08)", backdropFilter: "blur(20px) brightness(1.08) saturate(1.3)", WebkitBackdropFilter: "blur(20px) brightness(1.08) saturate(1.3)", boxShadow: "0 0 12px rgba(16,185,129,0.10), inset 0 1px 0 rgba(190,245,220,0.10)", display: "inline-flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
             >
               <span style={{ padding: "0 14px", borderRight: "1px solid rgba(16,185,129,0.20)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "rgba(190,245,220,0.70)" }}>[→]</span>
               <span style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 22px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "rgba(190,245,220,0.92)" }}>
-                Entra nella Foundry <span style={{ fontSize: 14 }}>→</span>
+                {t.cta} <span style={{ fontSize: 14 }}>→</span>
               </span>
             </motion.a>
           </div>
         </Reveal>
 
         <div className="foundry-grid">
-          {FOUNDRY_DEMOS.map((d, i) => <FoundryDemoCard key={d.title} d={d} i={i} />)}
+          {t.items.map((item, i) => (
+            <FoundryDemoCard key={item.title} d={{ ...item, Visual: FOUNDRY_VISUALS[i] }} i={i} />
+          ))}
         </div>
       </div>
     </section>

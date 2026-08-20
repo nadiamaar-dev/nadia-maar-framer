@@ -12,8 +12,12 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
 import { CONTACT, mailLink } from "./lib/contact"
+import { useLocale } from "./lib/i18n/LocaleContext"
+import { useT } from "./lib/i18n/t"
+import { PROJECTS_STR } from "./lib/i18n/strings/projects"
 import Background from "./components/Background"
 import FloatingContact from "./components/FloatingContact"
+import { usePointerGlow } from "./hooks/usePointerGlow"
 
 /* ── tokens ── */
 const T = {
@@ -48,10 +52,6 @@ const GLASS_SOLID: React.CSSProperties = {
 }
 
 const PROJECTS_CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; scroll-behavior: smooth; overflow-x: hidden; }
   body { overflow-x: clip; font-family: 'Space Grotesk', system-ui, sans-serif; }
@@ -193,10 +193,11 @@ function VisualEcommerce() {
 }
 
 function VisualMiddleware() {
+  const v = useT(PROJECTS_STR).visuals
   const nodes = [
-    { x: 20, y: 74, label: "Fornitore", sub: "B2B / ERP" },
-    { x: 128, y: 62, label: "Middleware", sub: "Dual-Write" },
-    { x: 236, y: 74, label: "Store", sub: "Shopify" },
+    { x: 20, y: 74, label: v.supplier, sub: "B2B / ERP" },
+    { x: 128, y: 62, label: v.middleware, sub: "Dual-Write" },
+    { x: 236, y: 74, label: v.store, sub: "Shopify" },
   ]
   return (
     <svg viewBox="0 0 320 190" width="100%" height="100%">
@@ -232,11 +233,12 @@ function VisualMiddleware() {
 }
 
 function VisualCivic() {
+  const v = useT(PROJECTS_STR).visuals
   // role hierarchy on the left
   const roles = [
-    { y: 26, label: "Super Admin", sub: "controllo totale", accent: true },
-    { y: 74, label: "131 Sub-Admin", sub: "gestione territoriale", accent: false },
-    { y: 122, label: "Cabinet Cliente", sub: "area riservata", accent: false },
+    { y: 26, label: v.superAdmin, sub: v.superAdminSub, accent: true },
+    { y: 74, label: v.subAdmin, sub: v.subAdminSub, accent: false },
+    { y: 122, label: v.cabinet, sub: v.cabinetSub, accent: false },
   ]
   // region outline only — no city markers
   const region = "M110,44 L176,38 L214,66 L228,112 L198,150 L150,158 L112,132 L96,88 Z"
@@ -266,7 +268,7 @@ function VisualCivic() {
           initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.9, type: "spring", stiffness: 240 }} style={{ transformOrigin: "162px 100px" }} />
       </g>
       <motion.text x={228} y={150} textAnchor="middle" fontSize={8} fontWeight="500" fill="rgba(255,255,255,0.5)" fontFamily="Inter,sans-serif"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>Regione Basilicata</motion.text>
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>{v.region}</motion.text>
 
       {/* ── Supabase badge ── */}
       <motion.g initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.5 }}>
@@ -289,57 +291,20 @@ type CaseStudy = {
   Visual: React.ComponentType;
 }
 
-const CASES: CaseStudy[] = [
-  {
-    n: "01",
-    category: "Civic Tech · Open-Gov · SaaS",
-    title: "Piattaforma Civica Regionale",
-    subtitle: "Piattaforma istituzionale full-stack per la Regione Basilicata. Democrazia partecipativa, raccolta fondi e bandi per startup, orchestrati da un'architettura multi-ruolo sicura su Supabase.",
-    obiettivo: "Un ecosistema digitale istituzionale di nuova generazione, pensato per avvicinare cittadini e pubblica amministrazione. Un unico spazio dove convergono raccolta fondi, bandi per giovani startup e gestione operativa del territorio — con più trasparenza e partecipazione reale.",
-    sfida: "Al centro, un'architettura multi-tenant con una gerarchia di ruoli articolata: un Super Admin dal controllo totale, 131 Sub-Admin con permessi territoriali circoscritti e i Cabinet Cliente ad accesso riservato. La sfida: isolare i dati di ogni ruolo con row-level security, gestire donazioni e candidature in tempo reale e mantenere un'estetica premium senza mai sacrificare le prestazioni.",
-    soluzioni: [
-      { t: "Backend & Autenticazione su Supabase", d: "Infrastruttura su Supabase — PostgreSQL, Auth, Storage e Realtime — con Row-Level Security a livello di database: ogni ruolo vede solo i dati di sua competenza, sempre." },
-      { t: "Architettura Multi-Ruolo", d: "Super Admin per il controllo totale, 131 Sub-Admin per la gestione territoriale decentralizzata e un Cabinet Cliente dedicato. Ognuno con dashboard, permessi e flussi su misura." },
-      { t: "Donazioni & Bandi per Startup", d: "Un sistema integrato per creare e monitorare progetti di donazione e pubblicare bandi rivolti alle giovani startup, con gestione delle candidature end-to-end." },
-      { t: "Mappa Regionale & UI d'Avanguardia", d: "Cartografia vettoriale della regione integrata nel codice — glassmorphism, accenti metallici e transizioni fluide — alleggerita su mobile per una UX impeccabile." },
-    ],
-    stack: ["Next.js / React", "Supabase", "PostgreSQL · RLS", "Tailwind CSS", "Framer Motion", "Vercel"],
-    metrics: [{ v: "131", l: "Sub-Admin territoriali" }, { v: "RLS", l: "Sicurezza Supabase" }, { v: "3", l: "Livelli di ruolo" }],
-    Visual: VisualCivic,
-  },
-  {
-    n: "02",
-    category: "E-Commerce · Shopify Plus",
-    title: "E-Commerce Enterprise",
-    subtitle: "Un e-commerce enterprise costruito per scalare sul mercato europeo, con un catalogo di oltre 32.000 SKU sempre veloce e reattivo.",
-    obiettivo: "Un e-commerce di livello enterprise pensato per l'espansione in tutta l'Unione Europea. L'obiettivo: reggere un catalogo massivo offrendo, in ogni mercato, un'esperienza fluida, localizzata e orientata alla conversione.",
-    sfida: "Gestire oltre 32.000 prodotti attivi impone un'architettura dati impeccabile, priva di colli di bottiglia. La sfida vera è stata ottimizzare i Core Web Vitals (LCP, FID, CLS) su mobile — con filtri complessi e varianti dinamiche — senza perdere un millisecondo di velocità.",
-    soluzioni: [
-      { t: "Performance Optimization", d: "Refactoring profondo del codice Liquid e taglio degli script di terze parti: tempo di interattività portato sotto 1,4 secondi." },
-      { t: "Architettura Multi-Country", d: "Mercati internazionali nativi, con valute locali, regimi fiscali europei (OSS) e traduzioni dinamiche del catalogo gestite in automatico." },
-      { t: "Filtrazione Avanzata", d: "Una faceted navigation che lascia filtrare migliaia di prodotti all'istante, senza mai ricaricare la pagina." },
-    ],
-    stack: ["Shopify Plus", "Liquid", "Tailwind CSS", "GraphQL Admin API"],
-    metrics: [{ v: "32K+", l: "SKU attivi" }, { v: "<1.4s", l: "Time to Interactive" }, { v: "EU", l: "Multi-country OSS" }],
-    Visual: VisualEcommerce,
-  },
-  {
-    n: "03",
-    category: "Middleware · Automazione B2B",
-    title: "Middleware di Automazione Logistica",
-    subtitle: "Un middleware software per sincronizzare lo stock in tempo reale e automatizzare l'intera catena di approvvigionamento in dropshipping.",
-    obiettivo: "Un middleware proprietario per azzerare i processi manuali tra fornitori all'ingrosso (B2B) e store online: ordini, tracciamenti spedizioni e disponibilità prodotti, tutto automatizzato end-to-end.",
-    sfida: "In un business ad alto volume, il disallineamento dello stock — vendere articoli a inventario zero — è un rischio critico. Il sistema doveva reggere transazioni concorrenti massive e restare fault-tolerant anche con timeout delle API fornitore o picchi di traffico imprevisti.",
-    soluzioni: [
-      { t: "Architettura ad Alta Affidabilità", d: "Persistenza a doppia scrittura (Dual-Write): la velocità di un database relazionale SQLite, con un mirror in JSON come backup d'emergenza." },
-      { t: "Integrità dei Dati & Autocommit", d: "Conflitti di concorrenza risolti con una gestione avanzata dei batch: ogni ordine elaborato entro 3 secondi dall'evento webhook." },
-      { t: "Gestione dei Processi", d: "Monitoraggio continuo con PM2 per un uptime del servizio del 99,9%." },
-    ],
-    stack: ["Node.js", "SQLite", "REST / Webhook", "PM2", "GitHub CI/CD", "Linux VPS"],
-    metrics: [{ v: "99.9%", l: "Uptime servizio" }, { v: "<3s", l: "Order processing" }, { v: "0", l: "Over-selling" }],
-    Visual: VisualMiddleware,
-  },
+/* Numero, stack e disegno animato: la parte che non si traduce. Il racconto
+   di ogni caso sta in src/lib/i18n/strings/projects.ts e si accoppia per
+   posizione con questo elenco. */
+const CASES_ART = [
+  { n: "01", stack: ["Next.js / React", "Supabase", "PostgreSQL · RLS", "Tailwind CSS", "Framer Motion", "Vercel"], Visual: VisualCivic },
+  { n: "02", stack: ["Shopify Plus", "Liquid", "Tailwind CSS", "GraphQL Admin API"], Visual: VisualEcommerce },
+  { n: "03", stack: ["Node.js", "SQLite", "REST / Webhook", "PM2", "GitHub CI/CD", "Linux VPS"], Visual: VisualMiddleware },
 ]
+
+/** I tre casi studio, già nella lingua che si sta leggendo. */
+function useCases(): CaseStudy[] {
+  const t = useT(PROJECTS_STR)
+  return CASES_ART.map((art, i) => ({ ...art, ...t.cases[i] }))
+}
 
 /* ══════════════════════════════════════════════════════════════════════════
    Hero
@@ -364,6 +329,8 @@ function BlueprintRail() {
 }
 
 function Hero() {
+  const t = useT(PROJECTS_STR)
+  const CASES = useCases()
   return (
     <section style={{ padding: "132px 0 84px", position: "relative", overflow: "hidden" }}>
       {/* ghost MAAR — identical to the /lab hero wordmark */}
@@ -377,20 +344,20 @@ function Hero() {
           <div style={{ display: "inline-flex", alignItems: "center", gap: 14, marginBottom: 22 }}>
             <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", color: T.accentTx }}>§00</span>
             <span aria-hidden style={{ width: 30, height: 1, background: "linear-gradient(90deg, rgba(190,54,72,0.6), rgba(190,54,72,0.1))" }} />
-            <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>Case Studies</span>
+            <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: "0.24em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>{t.hero.kicker}</span>
           </div>
         </Reveal>
 
         {/* headline — §04 typographic composition (outlined + solid white) */}
         <div style={{ position: "relative" }}>
-          <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.26em", color: "#FFFFFF", marginBottom: 10, textTransform: "uppercase" as const }}>Il mio</div>
+          <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.26em", color: "#FFFFFF", marginBottom: 10, textTransform: "uppercase" as const }}>{t.hero.over}</div>
 
           <motion.h1
             className="pr-hero-h1"
             initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.08, ease }}
             style={{ margin: 0, fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(48px,9vw,120px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.58)", userSelect: "none" }}>
-            SELECTED
+            {t.hero.lineOutlined}
           </motion.h1>
 
           <motion.div
@@ -398,21 +365,20 @@ function Hero() {
             initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.18, ease }}
             style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(48px,9vw,120px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "#FFFFFF", userSelect: "none" }}>
-            WORKS
+            {t.hero.lineSolid}
           </motion.div>
         </div>
 
         <Reveal delay={0.16}>
           <p style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: "clamp(18px,2.4vw,28px)", lineHeight: 1.28, letterSpacing: "-0.02em", color: "#FFFFFF", margin: "22px 0 0", maxWidth: 720 }}>
-            Ingegneria e scaling di{" "}
-            <span style={{ color: "#FFFFFF", fontWeight: 300 }}>prodotti digitali complessi.</span>
+            {t.hero.subBefore}{" "}
+            <span style={{ color: "#FFFFFF", fontWeight: 300 }}>{t.hero.subHighlight}</span>
           </p>
         </Reveal>
 
         <Reveal delay={0.24}>
           <p style={{ ...BODY, color: T.muted, maxWidth: 600, margin: "24px 0 0" }}>
-            Tre case study reali — dall'e-commerce enterprise all'automazione B2B fino alle piattaforme civiche.
-            Ogni progetto è raccontato secondo la struttura Obiettivo · Sfida · Soluzione · Impatto.
+            {t.hero.lead}
           </p>
         </Reveal>
 
@@ -489,6 +455,7 @@ function SolutionCard({ s, i }: { s: { t: string; d: string }; i: number }) {
    Case study section
 ══════════════════════════════════════════════════════════════════════════ */
 function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
+  const t = useT(PROJECTS_STR)
   const { Visual } = c
   return (
     <section id={`case-${c.n}`} style={{ position: "relative", padding: "76px 0", borderTop: first ? "none" : `1px solid ${T.border}`, minHeight: "92vh" }}>
@@ -564,7 +531,7 @@ function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
             {/* stack */}
             <Reveal delay={0.22}>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-                <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "#FFFFFF", alignSelf: "center", marginRight: 4 }}>Stack —</span>
+                <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "#FFFFFF", alignSelf: "center", marginRight: 4 }}>{t.labels.stack}</span>
                 {c.stack.map(s => <Chip key={s} text={s} />)}
               </div>
             </Reveal>
@@ -573,16 +540,16 @@ function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
           {/* RIGHT — body */}
           <div style={{ paddingTop: 6 }}>
             <Reveal delay={0.06}>
-              <CaseBlock label="Obiettivo del Progetto" mark="🎯">{c.obiettivo}</CaseBlock>
+              <CaseBlock label={t.labels.goal} mark="🎯">{c.obiettivo}</CaseBlock>
             </Reveal>
             <Reveal delay={0.1}>
-              <CaseBlock label="La Sfida Tecnica" mark="⚡">{c.sfida}</CaseBlock>
+              <CaseBlock label={t.labels.challenge} mark="⚡">{c.sfida}</CaseBlock>
             </Reveal>
 
             <Reveal delay={0.14}>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 16, marginTop: 4 }}>
                 <span style={{ width: 30, height: 30, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, background: "rgba(190,54,72,0.12)", border: "1px solid rgba(190,54,72,0.30)" }}>🚀</span>
-                <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: ".22em", textTransform: "uppercase" as const, color: T.accentTx }}>Soluzioni & Impatto Business</span>
+                <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: ".22em", textTransform: "uppercase" as const, color: T.accentTx }}>{t.labels.solutions}</span>
               </div>
             </Reveal>
 
@@ -603,6 +570,8 @@ function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
    Final CTA
 ══════════════════════════════════════════════════════════════════════════ */
 function FinalCTA() {
+  const t = useT(PROJECTS_STR)
+  const { href: L } = useLocale()
   return (
     <section style={{ padding: "96px 0 40px", borderTop: `1px solid ${T.border}` }}>
       <div style={WRAP}>
@@ -616,27 +585,27 @@ function FinalCTA() {
 
             <div style={{ position: "relative", zIndex: 1, maxWidth: 640 }}>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10.5, letterSpacing: ".2em", textTransform: "uppercase" as const, color: T.accentTx, marginBottom: 20 }}>
-                <span>●</span><span>Prossimo Progetto</span>
+                <span>●</span><span>{t.cta.kicker}</span>
               </div>
               <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(28px,4vw,50px)", lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 18px" }}>
-                Pronto a discutere il tuo prossimo progetto?
+                {t.cta.title}
               </h2>
               <p style={{ ...BODY, color: T.muted, margin: "0 0 34px", maxWidth: 520 }}>
-                Raccontami la sfida tecnica. Riceverai un piano d'azione chiaro, con architettura e stima, entro 24 ore lavorative.
+                {t.cta.lead}
               </p>
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
-                <motion.a href="/#s9" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                <motion.a href={`${L("/")}#s9`} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
                   style={{ minHeight: 54, padding: 0, borderRadius: 12, cursor: "pointer", textDecoration: "none", border: "1px solid rgba(184,50,64,0.80)", background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", display: "inline-flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
                   <span style={{ padding: "0 14px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[→]</span>
                   <span style={{ display: "flex", alignItems: "center", gap: 14, padding: "0 20px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
-                    Avvia il tuo Progetto <span style={{ fontSize: 14 }}>→</span>
+                    {t.cta.primary} <span style={{ fontSize: 14 }}>→</span>
                   </span>
                 </motion.a>
 
                 <motion.a href={mailLink()} whileHover={{ y: -2, background: "rgba(255,255,255,0.09)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
                   style={{ minHeight: 54, padding: "0 22px", borderRadius: 12, fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, display: "inline-flex", alignItems: "center", textDecoration: "none", border: "1px solid rgba(255,255,255,0.28)", background: "rgba(255,255,255,0.04)", color: T.text }}>
-                  Scrivimi via Email
+                  {t.cta.secondary}
                 </motion.a>
               </div>
 
@@ -666,17 +635,9 @@ function FinalCTA() {
    Page
 ══════════════════════════════════════════════════════════════════════════ */
 export default function NadiaMaarProjects() {
-  useEffect(() => {
-    const sync = (e: PointerEvent) => {
-      const r = document.documentElement
-      r.style.setProperty("--x", e.clientX.toFixed(2))
-      r.style.setProperty("--y", e.clientY.toFixed(2))
-      r.style.setProperty("--xp", (e.clientX / window.innerWidth).toFixed(4))
-      r.style.setProperty("--yp", (e.clientY / window.innerHeight).toFixed(4))
-    }
-    document.addEventListener("pointermove", sync)
-    return () => document.removeEventListener("pointermove", sync)
-  }, [])
+  const cases = useCases()
+
+  usePointerGlow()
 
   return (
     <div style={{
@@ -691,7 +652,7 @@ export default function NadiaMaarProjects() {
       <Header />
       <div style={{ position: "relative", zIndex: 1 }}>
         <Hero />
-        {CASES.map((c, i) => <CaseSection key={c.n} c={c} first={i === 0} />)}
+        {cases.map((c, i) => <CaseSection key={c.n} c={c} first={i === 0} />)}
         <FinalCTA />
       </div>
       <Footer />

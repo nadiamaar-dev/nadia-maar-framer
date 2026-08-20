@@ -8,6 +8,9 @@ import Background from "./components/Background"
 import { sendContact } from "./lib/sendContact"
 import FoundryConfigurator from "./components/foundry/FoundryConfigurator"
 import type { VectorId } from "./components/foundry/modules"
+import { useLocale } from "./lib/i18n/LocaleContext"
+import { useT } from "./lib/i18n/t"
+import { SERVICES_STR } from "./lib/i18n/strings/services"
 
 /* ── tokens ── */
 const T = {
@@ -24,10 +27,6 @@ const WRAP: React.CSSProperties = { maxWidth: 1120, margin: "0 auto", padding: "
 const ease: [number,number,number,number] = [0.16,1,0.3,1]
 
 const SVC_CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { -webkit-font-smoothing: antialiased; overflow-x: hidden; scroll-behavior: smooth; }
   body { overflow-x: clip; }
@@ -133,6 +132,7 @@ function ScrollProgress() {
 
 /* ── ContactModal ── */
 function ContactModal({onClose}:{onClose:()=>void}) {
+  const t = useT(SERVICES_STR).ui
   const [sent,setSent] = useState(false)
   const [busy,setBusy] = useState(false)
   const [failed,setFailed] = useState(false)
@@ -154,29 +154,29 @@ function ContactModal({onClose}:{onClose:()=>void}) {
         {sent ? (
           <div style={{textAlign:"center",padding:"24px 0"}}>
             <div style={{fontSize:32,marginBottom:16}}>✓</div>
-            <h3 style={{fontFamily:DISPLAY,fontSize:20,fontWeight:700,color:"#fff",marginBottom:8}}>Messaggio inviato</h3>
-            <p style={{fontFamily:MONO,fontSize:12,color:T.faint}}>Ti rispondo entro 24 ore.</p>
+            <h3 style={{fontFamily:DISPLAY,fontSize:20,fontWeight:700,color:"#fff",marginBottom:8}}>{t.sentTitle}</h3>
+            <p style={{fontFamily:MONO,fontSize:12,color:T.faint}}>{t.sentBody}</p>
           </div>
         ) : (
           <>
-            <div style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:T.accentTx,marginBottom:8}}>// [ Richiesta Consulenza ]</div>
-            <h3 style={{fontFamily:DISPLAY,fontSize:22,fontWeight:700,color:"#fff",marginBottom:6}}>Iniziamo a parlarne</h3>
-            <p style={{fontFamily:MONO,fontSize:12,color:T.faint,lineHeight:1.7,marginBottom:24}}>Descrivi il tuo progetto. Rispondo entro 24h.</p>
+            <div style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.22em",textTransform:"uppercase" as const,color:T.accentTx,marginBottom:8}}>{t.modalKicker}</div>
+            <h3 style={{fontFamily:DISPLAY,fontSize:22,fontWeight:700,color:"#fff",marginBottom:6}}>{t.modalTitle}</h3>
+            <p style={{fontFamily:MONO,fontSize:12,color:T.faint,lineHeight:1.7,marginBottom:24}}>{t.modalLead}</p>
             <div style={{display:"flex",flexDirection:"column",gap:12}}>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-                <input placeholder="Nome" value={form.name} onChange={set("name")} style={inp}
+                <input placeholder={t.name} value={form.name} onChange={set("name")} style={inp}
                   onFocus={e=>(e.target.style.borderColor="rgba(184,50,64,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
-                <input placeholder="Email" type="email" value={form.email} onChange={set("email")} style={inp}
+                <input placeholder={t.email} type="email" value={form.email} onChange={set("email")} style={inp}
                   onFocus={e=>(e.target.style.borderColor="rgba(184,50,64,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               </div>
-              <input placeholder="Azienda (opzionale)" value={form.company} onChange={set("company")} style={inp}
+              <input placeholder={t.company} value={form.company} onChange={set("company")} style={inp}
                 onFocus={e=>(e.target.style.borderColor="rgba(184,50,64,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
-              <textarea placeholder="Descrivi il tuo progetto o problema principale..." value={form.message} onChange={set("message")} rows={4}
+              <textarea placeholder={t.messagePlaceholder} value={form.message} onChange={set("message")} rows={4}
                 style={{...inp,resize:"none" as const,lineHeight:1.65}}
                 onFocus={e=>(e.target.style.borderColor="rgba(184,50,64,0.60)")} onBlur={e=>(e.target.style.borderColor="rgba(255,255,255,0.12)")} />
               {failed && (
                 <p role="alert" style={{fontFamily:MONO,fontSize:10.5,letterSpacing:"0.06em",lineHeight:1.6,color:"rgba(255,120,120,0.95)",margin:0}}>
-                  Invio non riuscito. Riprova, oppure scrivici a {CONTACT.email}
+                  {t.failed.replace("{email}", CONTACT.email)}
                 </p>
               )}
               <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} disabled={busy}
@@ -189,7 +189,7 @@ function ContactModal({onClose}:{onClose:()=>void}) {
                 }}
                 style={{display:"flex",alignItems:"stretch",borderRadius:12,border:"1px solid rgba(184,50,64,0.80)",background:"linear-gradient(90deg,rgba(184,50,64,0.34) 0%,rgba(184,50,64,0.20) 100%)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",boxShadow:"0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)",cursor:"pointer",overflow:"hidden",marginTop:4}}>
                 <span style={{padding:"12px 14px 12px 16px",borderRight:"1px solid rgba(184,50,64,0.35)",display:"flex",alignItems:"center",fontFamily:MONO,fontSize:8.5,letterSpacing:"0.22em",color:"#FFFFFF",flexShrink:0}}>[→]</span>
-                <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 20px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"#FFFFFF",fontWeight:500}}>Invia Messaggio</span>
+                <span style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"12px 20px",fontFamily:MONO,fontSize:11,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:"#FFFFFF",fontWeight:500}}>{t.submit}</span>
               </motion.button>
             </div>
           </>
@@ -261,344 +261,159 @@ const iconStroke = (d: string, ...extra: string[]) => (
   </svg>
 )
 
-const SERVICES: Record<string, ServiceData> = {
+
+/** La parte visiva di un servizio: tutto tranne il testo. */
+interface ServiceArt {
+  num: string; slug: string
+  gradient: string; accentColor: string; accent: string
+  motif: Motif; layout: OfferLayout
+  order: SectionId[]
+  extraKind: ExtraBlock["kind"]
+  /** Una icona per ogni voce di `offer.items`, nello stesso ordine. */
+  icons: React.ReactNode[]
+}
+
+/* ── La parte visiva delle cinque pagine ────────────────────────────────────
+   Colori, motivo animato, disposizione delle schede, ordine delle sezioni e
+   icone: tutto ciò che non è testo. Il testo sta in src/lib/i18n/strings/
+   services.ts e si accoppia per posizione con `icons`. */
+const SERVICES_ART: Record<string, ServiceArt> = {
   ecommerce: {
     num:"01", slug:"ecommerce",
-    title:"E-commerce ad Alta Conversione",
-    subtitle:"Architetture Shopify su misura e headless commerce. Giacenze, cataloghi ad alto volume e logistica multi-corriere in un unico sistema: l'infrastruttura accompagna la crescita invece di frenarla.",
-    eyebrow:"E-Commerce · Shopify · Automazione",
     gradient:"linear-gradient(135deg,#B8323F 0%,#F0645C 100%)",
     accentColor:"rgba(184,50,63,0.55)",
     accent:"#E1483F",
     motif:"conveyor",
     layout:"cards",
-    kickers:{ what:"Il Problema", offer:"L'Infrastruttura", how:"Dall'Audit al Lancio" },
     order:["what","offer","extra","how"],
-    extra:{
-      kind:"checklist",
-      kicker:"Prima del Go-Live",
-      heading:"Che cosa viene verificato prima di dire che è pronto",
-      intro:"Un e-commerce non si consegna perché «il sito si vede». Si consegna quando questi punti sono verdi su dati reali, non su un ambiente di prova pulito.",
-      items:[
-        "Il venduto non supera mai il disponibile, nemmeno con due ordini nello stesso secondo",
-        "Il checkout regge il traffico del picco previsto, misurato con traffico simulato",
-        "Ogni prezzo e ogni giacenza hanno una sola fonte, e si sa qual è",
-        "Le etichette di spedizione si generano senza intervento manuale",
-        "Un reso parte dal cliente e arriva in magazzino senza scambi di email",
-        "LCP sotto 1,2s sulle schede prodotto, non solo in home",
-        "Se un fornitore non risponde, il sito continua a vendere ciò che ha",
-        "Esiste un modo per tornare indietro entro un minuto se qualcosa non torna",
-      ],
-    },
-    whatWeDo:{
-      heading:"Il tuo e-commerce è un asset — non un sito.",
-      body:[
-        "Molte aziende trattano lo store online come una vetrina statica. Noi lo progettiamo come un sistema operativo: giacenze allineate in tempo reale, checkout costruito per ridurre l'abbandono, integrazioni con i fornitori che tolgono di mezzo l'inserimento manuale.",
-        "Lavoriamo su cataloghi da poche centinaia a oltre 30.000 referenze, marketplace B2B, configuratori di prodotto e architetture multi-store internazionali. Il perimetro cambia, il principio no: l'architettura si dimensiona prima del picco, non dopo."
-      ],
-      stats:[
-        {value:"30K+",label:"SKU gestiti su progetti reali"},
-        {value:"<1.2s",label:"LCP: obiettivo su ogni build"},
-        {value:"0",label:"Over-selling ammesso in produzione"},
-      ]
-    },
-    whatWeOffer:{
-      heading:"Cosa costruiamo per te",
-      items:[
-        {icon:iconStroke("M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18","M16 10a4 4 0 01-8 0"),title:"Shopify su misura & headless",desc:"Temi custom, app private, checkout personalizzato. Architetture Hydrogen o Remix quando il tema standard diventa il collo di bottiglia."},
-        {icon:iconStroke("M22 12h-4l-3 9L9 3l-3 9H2"),title:"Magazzino sincronizzato",desc:"Giacenze allineate con ERP, fornitori e marketplace. Un solo dato di verità, così il venduto non supera mai il disponibile."},
-        {icon:iconStroke("M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2","M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"),title:"Catalogo e listini B2B",desc:"Varianti, listini riservati per cliente, sconti a scaglioni e cataloghi differenziati per segmento commerciale."},
-        {icon:iconStroke("M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z","M12 7v5l3 3"),title:"Logistica integrata",desc:"Connessione con GLS, DHL, BRT e SDA: etichette generate in automatico, tracking in tempo reale, flusso resi senza scambi di email."},
-        {icon:iconStroke("M3 3h18v18H3zM3 9h18M3 15h18M9 3v18"),title:"Core Web Vitals",desc:"LCP sotto 1,2s, layout stabile, interazione nella fascia verde. Immagini, caricamento differito, CDN e cache a più livelli."},
-        {icon:iconStroke("M18 20V10","M12 20V4","M6 20v-6"),title:"Misurazione e CRO",desc:"GA4 con eventi e-commerce, mappe di calore, imbuto di checkout. Test A/B sulle fasi che perdono più carrelli."},
-      ]
-    },
-    howWeDoIt:{
-      heading:"Dall'audit al lancio",
-      steps:[
-        {title:"Audit tecnico e analisi delle perdite",desc:"Analizziamo lo stack attuale, individuiamo i punti in cui il funnel perde e ne quantifichiamo l'impatto. Ne esce un report con le priorità in ordine di ritorno."},
-        {title:"Architettura e pianificazione",desc:"Scelta dello stack, mappa delle integrazioni, piano di migrazione dei dati e calendario dei rilasci."},
-        {title:"Sviluppo e integrazioni",desc:"Tema su misura, app private, connettori API. Ogni integrazione viene provata su dati reali prima di toccare la produzione."},
-        {title:"Collaudo e test di carico",desc:"Traffico simulato sui picchi previsti, verifica dei flussi critici — checkout, resi, notifiche — e approvazione del tuo team prima del go-live."},
-        {title:"Lancio graduale e presidio",desc:"Rilascio progressivo con feature flag e rientro immediato se qualcosa non torna. Monitoraggio attivo nelle prime 72 ore."},
-      ]
-    },
-    cta:{
-      heading:"Il tuo store regge la prossima campagna?",
-      sub:"Analisi gratuita dello store attuale, con i punti di perdita in ordine di impatto. Nessun impegno.",
-      btn:"Richiedi l'Audit Gratuito"
-    }
+    extraKind:"checklist",
+    icons:[
+      iconStroke("M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18","M16 10a4 4 0 01-8 0"),
+      iconStroke("M22 12h-4l-3 9L9 3l-3 9H2"),
+      iconStroke("M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2","M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"),
+      iconStroke("M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z","M12 7v5l3 3"),
+      iconStroke("M3 3h18v18H3zM3 9h18M3 15h18M9 3v18"),
+      iconStroke("M18 20V10","M12 20V4","M6 20v-6"),
+    ],
   },
-
   corporate: {
     num:"02", slug:"corporate",
-    title:"Siti Corporate & Lead Generation",
-    subtitle:"Presenza digitale per aziende e studi professionali. Architetture web costruite per reggere il confronto nel momento in cui il decisore vi sta valutando, e per trasformare quella visita in un contatto utile al commerciale.",
-    eyebrow:"Corporate · UI/UX Premium · Lead Generation",
     gradient:"linear-gradient(135deg,#3E6E8E 0%,#9FC7DE 100%)",
     accentColor:"rgba(62,110,142,0.50)",
     accent:"#5C93B8",
     motif:"frame",
     layout:"wide",
-    kickers:{ what:"Perché Conta", offer:"Cosa Comprende", how:"Il Percorso" },
     order:["extra","what","offer","how"],
-    extra:{
-      kind:"compare",
-      kicker:"Due Modi di Intenderlo",
-      heading:"Vetrina o strumento commerciale",
-      left:{ title:"Sito vetrina", points:[
-        "Racconta l'azienda a chi già la conosce",
-        "Si aggiorna quando qualcuno se ne ricorda",
-        "I contatti arrivano in una casella condivisa",
-        "Nessuno sa quale pagina abbia portato la richiesta",
-        "Il confronto con i concorrenti non è mai stato fatto",
-      ]},
-      right:{ title:"Strumento commerciale", points:[
-        "Risponde alle domande che il decisore si fa prima di scrivere",
-        "Il team pubblica in autonomia, senza passare dallo sviluppo",
-        "Il contatto entra nel CRM già qualificato",
-        "Ogni richiesta porta con sé la pagina da cui è nata",
-        "Le pagine chiave si rivedono sui dati, non sulle opinioni",
-      ]},
-    },
-    whatWeDo:{
-      heading:"Il tuo sito è il tuo miglior commerciale.",
-      body:[
-        "Un sito corporate mediocre non è neutro: lavora contro di te. Chi deve firmare un contratto importante ti valuta anche da lì, e ogni euro speso in campagne finisce su una pagina che non regge il confronto. Costruiamo presenze digitali che sostengono il posizionamento invece di indebolirlo.",
-        "Tipografia, gerarchia dei contenuti, micro-interazioni, tempi di caricamento: ogni scelta risponde a un obiettivo dichiarato, cioè portare il visitatore giusto a lasciare un contatto con cui il tuo commerciale possa davvero lavorare."
-      ],
-      stats:[
-        {value:"100",label:"Lighthouse Performance: soglia di consegna"},
-        {value:"<0.8s",label:"LCP su desktop: obiettivo di progetto"},
-        {value:"1",label:"Referente unico dal brief al lancio"},
-      ]
-    },
-    whatWeOffer:{
-      heading:"Architettura completa per la tua presenza digitale",
-      items:[
-        {icon:iconStroke("M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"),title:"Design system",desc:"Dal file Figma al codice senza scarti: token, componenti riutilizzabili, tema chiaro e scuro, animazioni coerenti su tutto il sito."},
-        {icon:iconStroke("M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2","M12 3a4 4 0 010 8 4 4 0 010-8z"),title:"Architettura di acquisizione",desc:"Moduli progettati per essere compilati davvero, collegamento a HubSpot o Salesforce, sequenze di follow-up e qualificazione automatica del contatto."},
-        {icon:iconStroke("M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"),title:"CMS headless",desc:"Sanity o Contentful: il tuo team pubblica e aggiorna senza passare dallo sviluppo e senza rischiare di rompere il layout."},
-        {icon:iconStroke("M22 12h-4l-3 9L9 3l-3 9H2"),title:"Performance",desc:"Next.js con App Router, rendering ibrido statico e dinamico, rigenerazione incrementale per le sezioni che cambiano spesso."},
-        {icon:iconStroke("M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"),title:"SEO strutturale",desc:"Dati strutturati, sitemap dinamica, Open Graph, Core Web Vitals. La visibilità organica nasce dall'architettura, non da un plugin aggiunto dopo."},
-        {icon:iconStroke("M18 20V10","M12 20V4","M6 20v-6"),title:"Misurazione",desc:"GA4 con eventi su misura, mappe di calore, imbuti di conversione e un pannello sintetico pensato per la direzione."},
-      ]
-    },
-    howWeDoIt:{
-      heading:"Dal brief al primo contatto qualificato",
-      steps:[
-        {title:"Discovery e strategia",desc:"Due ore di confronto su mercato, cliente ideale, concorrenti e obiettivi di crescita. Gli indicatori si definiscono prima di disegnare qualsiasi schermata."},
-        {title:"Design e prototipo",desc:"Wireframe, design system, prototipo navigabile in Figma. Approvi ogni schermata prima che parta lo sviluppo: nessuna sorpresa a fine lavoro."},
-        {title:"Sviluppo e integrazioni",desc:"Next.js, CMS headless e CRM. TypeScript, test end-to-end e integrazione continua: le performance si verificano a ogni commit, non alla fine."},
-        {title:"Impianto SEO",desc:"Struttura degli URL, modelli di meta tag, dati strutturati, sitemap e Search Console. Il sito è indicizzabile dal primo giorno di vita."},
-        {title:"Lancio e taratura",desc:"Go-live con monitoraggio attivo. Nei trenta giorni successivi si interviene su titoli, inviti all'azione e percorsi di contatto sulla base dei dati reali."},
-      ]
-    },
-    cta:{
-      heading:"Il tuo brand merita una presenza all'altezza.",
-      sub:"Ti mostriamo un'analisi del sito attuale e ne discutiamo insieme: dove perde autorevolezza e dove perde contatti.",
-      btn:"Analizza il mio Sito"
-    }
+    extraKind:"compare",
+    icons:[
+      iconStroke("M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"),
+      iconStroke("M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2","M12 3a4 4 0 010 8 4 4 0 010-8z"),
+      iconStroke("M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"),
+      iconStroke("M22 12h-4l-3 9L9 3l-3 9H2"),
+      iconStroke("M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"),
+      iconStroke("M18 20V10","M12 20V4","M6 20v-6"),
+    ],
   },
-
   webapp: {
     num:"03", slug:"webapp",
-    title:"Applicazioni Web & Automazione Custom",
-    subtitle:"Software su misura che collega CRM, ERP e sistemi di terze parti. Togliamo di mezzo i passaggi manuali, mettiamo i dati in un solo posto e costruiamo strumenti interni che lavorano anche quando l'ufficio è chiuso.",
-    eyebrow:"Web App · CRM/ERP · Automazione Processi",
     gradient:"linear-gradient(135deg,#4E7C6B 0%,#8FD3B4 100%)",
     accentColor:"rgba(78,124,107,0.50)",
     accent:"#5FA987",
     motif:"nodes",
     layout:"rows",
-    kickers:{ what:"Il Costo Nascosto", offer:"Cosa Costruiamo", how:"Come Procediamo" },
     order:["what","extra","offer","how"],
-    extra:{
-      kind:"flow",
-      kicker:"Una Giornata Tipo",
-      heading:"Lo stesso lavoro, prima e dopo",
-      before:[
-        "Si esporta il file dal gestionale",
-        "Si sistemano a mano le colonne che non tornano",
-        "Si carica sul CRM e si controlla che non ci siano doppioni",
-        "Si avvisa il commerciale su WhatsApp",
-        "A fine mese si ricostruisce il report cercando negli allegati",
-      ],
-      after:[
-        "Il gestionale scrive sul CRM appena il dato cambia",
-        "I doppioni non entrano: la regola sta nel sistema",
-        "Il commerciale riceve una notifica con il contesto già dentro",
-        "Il report esiste sempre, aggiornato, senza che qualcuno lo compili",
-      ],
-    },
-    whatWeDo:{
-      heading:"Ogni processo manuale è un costo nascosto.",
-      body:[
-        "Il costo di un'operazione manuale non è solo il tempo: sono gli errori di trascrizione, le decisioni prese in ritardo e l'impossibilità di crescere senza assumere. Quando una persona passa tre ore al giorno a spostare dati fra due sistemi, stai pagando una professionalità per fare il lavoro di uno script.",
-        "Costruiamo applicazioni web e automazioni che parlano con gli strumenti già in uso, tolgono la routine e restituiscono al team le ore che oggi finiscono in copia-incolla. Il ritorno si calcola prima di iniziare, sul costo reale del processo attuale."
-      ],
-      stats:[
-        {value:"1",label:"Fonte unica per ogni dato"},
-        {value:"24/7",label:"Automazioni attive senza presidio"},
-        {value:"0",label:"Passaggi di copia-incolla previsti"},
-      ]
-    },
-    whatWeOffer:{
-      heading:"Soluzioni software per ogni livello di complessità",
-      items:[
-        {icon:iconStroke("M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"),title:"Applicazioni web su misura",desc:"Frontend React o Next.js, backend Node.js o Python. Autenticazione, permessi per ruolo e un'architettura che regge la crescita del team."},
-        {icon:iconStroke("M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z","M22 10H2"),title:"Integrazioni CRM ed ERP",desc:"Salesforce, HubSpot, SAP, Odoo o gestionale interno. I dati si allineano da soli, in una direzione decisa e sempre tracciabile."},
-        {icon:iconStroke("M13 10V3L4 14h7v7l9-11h-7z"),title:"Automazione dei flussi",desc:"n8n, Zapier o script dedicati in Python e Node. Attivazioni su evento, avvisi mirati, report che partono da soli."},
-        {icon:iconStroke("M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"),title:"Gateway API e middleware",desc:"Servizi REST e GraphQL che centralizzano le chiamate, governano i limiti di traffico e rendono visibile ciò che passa fra i sistemi."},
-        {icon:iconStroke("M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z","M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"),title:"Pannelli di controllo",desc:"Numeri di business aggiornati, indicatori scelti insieme, approfondimento fino al singolo record, invii programmati via email o Slack."},
-        {icon:iconStroke("M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"),title:"Portali B2B",desc:"Area riservata per clienti e partner: ordini, fatture, documenti e comunicazioni in un unico posto, con traccia di chi ha fatto cosa."},
-      ]
-    },
-    howWeDoIt:{
-      heading:"Dall'analisi dei processi al presidio",
-      steps:[
-        {title:"Analisi dei processi",desc:"Mappatura dei flussi esistenti: ogni passaggio manuale, ogni integrazione mancante e il costo operativo di come si lavora oggi."},
-        {title:"Progettazione dell'architettura",desc:"Schema del sistema: quali strumenti si collegano, come si muovono i dati, quali automazioni entrano in gioco. Approvato prima di scrivere una riga di codice."},
-        {title:"Sviluppo a iterazioni",desc:"Sprint settimanali con dimostrazione dal vivo: vedi crescere il prodotto e puoi correggere la rotta a ogni passaggio."},
-        {title:"Integrazione e collaudo",desc:"Collegamento ai sistemi esistenti in ambiente di prova, test di carico e di sicurezza, verifica dei flussi critici su dati reali resi anonimi."},
-        {title:"Rilascio e formazione",desc:"Messa in produzione con rientro automatico in caso di anomalia, sessione di formazione per il team e documentazione tecnica completa."},
-        {title:"Presidio ed evoluzione",desc:"Monitoraggio dopo il rilascio. Il sistema cresce con te: nuove automazioni, nuove integrazioni, nuovi moduli quando servono davvero."},
-      ]
-    },
-    cta:{
-      heading:"Ogni ora persa in processi manuali è denaro bruciato.",
-      sub:"Raccontaci il processo che vi costa di più. In mezz'ora ti diciamo se si può automatizzare, come, e che cosa serve per farlo.",
-      btn:"Parla dei tuoi Processi"
-    }
+    extraKind:"flow",
+    icons:[
+      iconStroke("M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"),
+      iconStroke("M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z","M22 10H2"),
+      iconStroke("M13 10V3L4 14h7v7l9-11h-7z"),
+      iconStroke("M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"),
+      iconStroke("M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z","M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"),
+      iconStroke("M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"),
+    ],
   },
-
   seo: {
     num:"04", slug:"seo",
-    title:"SEO Strategico & Performance Marketing",
-    subtitle:"Posizionamento organico previsto nell'architettura dal primo giorno e campagne Google e Meta governate sugli stessi dati. Due canali che si sostengono a vicenda, invece di competere per lo stesso budget.",
-    eyebrow:"SEO Tecnico · Google Ads · Meta Ads",
     gradient:"linear-gradient(135deg,#8A6A2F 0%,#E4C06A 100%)",
     accentColor:"rgba(138,106,47,0.50)",
     accent:"#C9A052",
     motif:"bars",
     layout:"stagger",
-    kickers:{ what:"La Logica", offer:"Le Leve", how:"Il Percorso" },
     order:["what","offer","how","extra"],
-    extra:{
-      kind:"timeline",
-      kicker:"Che Cosa Aspettarsi",
-      heading:"I primi dodici mesi, senza scorciatoie",
-      phases:[
-        { when:"Mese 1–2", what:"Correzioni tecniche e struttura. In questa fase i numeri si muovono poco: si sta togliendo ciò che frena." },
-        { when:"Mese 3–4", what:"Prime pagine posizionate sulle ricerche di coda lunga. Il traffico cresce su termini specifici, non ancora su quelli generici." },
-        { when:"Mese 5–8", what:"I gruppi tematici si consolidano. Le pagine si sostengono a vicenda e iniziano a salire anche le query più contese." },
-        { when:"Mese 9–12", what:"L'organico regge una quota stabile della domanda. Da qui il budget delle campagne può iniziare a spostarsi." },
-      ],
-    },
-    whatWeDo:{
-      heading:"L'organico è l'unico canale che non si spegne quando smetti di pagare.",
-      body:[
-        "Dipendere solo dalle campagne significa affittare la propria visibilità: il giorno in cui il budget si ferma, si ferma anche il traffico. Il lavoro organico costruisce invece qualcosa che resta — una pagina ben posizionata continua a portare visite molto dopo essere stata scritta.",
-        "Teniamo insieme SEO tecnico, strategia dei contenuti e campagne a pagamento in un unico piano. Le campagne coprono la domanda mentre l'organico cresce; man mano che l'organico regge, il peso del budget si sposta."
-      ],
-      stats:[
-        {value:"12–18",label:"Mesi: orizzonte realistico dell'organico"},
-        {value:"0",label:"Tecniche a rischio penalizzazione"},
-        {value:"1",label:"Pannello unico per organico e campagne"},
-      ]
-    },
-    whatWeOffer:{
-      heading:"Le leve su cui lavoriamo",
-      items:[
-        {icon:iconStroke("M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"),title:"SEO tecnico",desc:"Core Web Vitals, scansione, hreflang, dati strutturati, sitemap dinamica, analisi dei log del server. La parte che Google misura e che dipende solo da noi."},
-        {icon:iconStroke("M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"),title:"Strategia delle query",desc:"Analisi per intento di ricerca, confronto con i concorrenti, architettura dei contenuti per gruppi tematici e pagine pilastro."},
-        {icon:iconStroke("M4 6h16M4 12h16M4 18h7"),title:"Architettura dei contenuti",desc:"Brief per ogni pagina che conta, ottimizzazione on-page, collegamenti interni ragionati e revisione di ciò che è già pubblicato."},
-        {icon:iconStroke("M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"),title:"Google Ads",desc:"Search, Shopping e Performance Max con offerte automatiche governate. L'obiettivo di ROAS si fissa insieme nel brief e si rivede ogni mese sui dati reali."},
-        {icon:iconStroke("M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"),title:"Meta e social ads",desc:"Campagne su Feed, Storie e Reels. Retargeting per livelli di interesse, pubblici simili e test sistematico dei creativi."},
-        {icon:iconStroke("M15 10l4.553-2.069A1 1 0 0121 8.87V15.13a1 1 0 01-1.447.9L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"),title:"Report e letture",desc:"Pannello aggiornato con posizioni, traffico, conversioni e ritorno sulla spesa. Ogni mese un'analisi con le azioni in ordine di priorità."},
-      ]
-    },
-    howWeDoIt:{
-      heading:"Dall'audit alla crescita stabile",
-      steps:[
-        {title:"Audit SEO",desc:"Analisi tecnica del sito, report di scansione, studio dei concorrenti organici, interventi rapidi e opportunità di lungo periodo. Ne esce una roadmap in ordine di priorità."},
-        {title:"Strategia di query e contenuti",desc:"Mappa delle ricerche per ogni fase del percorso d'acquisto, architettura dei contenuti, confronto con i concorrenti. Si decide cosa creare, cosa rivedere e cosa togliere."},
-        {title:"Interventi tecnici",desc:"Correzioni sul sito, dati strutturati, tempi di caricamento, errori di scansione. In parallelo partono le prime campagne, che intanto coprono la domanda."},
-        {title:"Produzione e autorevolezza",desc:"Contenuti ottimizzati, digital PR per citazioni autorevoli, rapporti editoriali. Solo tecniche che reggono un aggiornamento dell'algoritmo."},
-        {title:"Taratura mensile",desc:"Analisi dei dati, test sulle pagine di atterraggio, aggiornamento dei contenuti in calo, apertura di nuovi gruppi tematici quando i primi sono consolidati."},
-      ]
-    },
-    cta:{
-      heading:"Ogni giorno senza SEO è un giorno regalato ai competitor.",
-      sub:"Analisi gratuita del posizionamento attuale a confronto con i concorrenti. In mezz'ora sai dove sei, che cosa manca e in che ordine intervenire.",
-      btn:"Ottieni l'Analisi SEO Gratuita"
-    }
+    extraKind:"timeline",
+    icons:[
+      iconStroke("M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"),
+      iconStroke("M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"),
+      iconStroke("M4 6h16M4 12h16M4 18h7"),
+      iconStroke("M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"),
+      iconStroke("M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"),
+      iconStroke("M15 10l4.553-2.069A1 1 0 0121 8.87V15.13a1 1 0 01-1.447.9L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"),
+    ],
   },
-
   ai: {
     num:"05", slug:"ai",
-    title:"Integrazione AI & Sistemi Intelligenti",
-    subtitle:"Agenti, modelli linguistici e ricerca sui documenti aziendali, integrati nei processi che già esistono. Non progetti pilota fini a sé stessi: casi d'uso scelti perché hanno un ritorno calcolabile.",
-    eyebrow:"AI Agents · LLM · Automazione Intelligente",
     gradient:"linear-gradient(135deg,#6A4C93 0%,#B79CE0 100%)",
     accentColor:"rgba(106,76,147,0.50)",
     accent:"#9070C4",
     motif:"orbit",
     layout:"bento",
-    kickers:{ what:"Quando Conviene", offer:"Gli Ambiti", how:"Dalla Valutazione alla Produzione" },
     order:["what","extra","offer","how"],
-    extra:{
-      kind:"limits",
-      kicker:"Quando Diciamo di No",
-      heading:"Dove l'AI non conviene",
-      intro:"Metà del valore di questo lavoro sta nell'escludere i casi sbagliati prima di spenderci mesi. Questi li scartiamo in fase di valutazione.",
-      items:[
-        { t:"Processi che cambiano a ogni cliente", d:"Se non esiste una regola ricorrente, non c'è niente da automatizzare: c'è da riprogettare il processo, ed è un altro lavoro." },
-        { t:"Dati assenti o inaffidabili", d:"Un modello addestrato su archivi incompleti restituisce risposte sicure e sbagliate. Prima si sistemano i dati." },
-        { t:"Decisioni con responsabilità legale", d:"Approvazioni contrattuali, valutazioni del personale, questioni sanitarie: l'AI può preparare, non decidere." },
-        { t:"Volumi troppo bassi", d:"Sotto una certa soglia di ripetizioni il costo di costruzione e presidio non rientra. Meglio dirlo subito." },
-      ],
+    extraKind:"limits",
+    icons:[
+      iconStroke("M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15M14.25 3.104c.251.023.501.05.75.082M19.8 15l-1.575 1.548M19.8 15H4.2",""),
+      iconStroke("M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"),
+      iconStroke("M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"),
+      iconStroke("M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18","M16 10a4 4 0 01-8 0"),
+      iconStroke("M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"),
+      iconStroke("M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"),
+    ],
+  },
+}
+
+/**
+ * Disegno + testo → la pagina completa, nella lingua che si sta leggendo.
+ *
+ * L'unione avviene qui e non a mano in cinque punti: se domani si aggiunge
+ * una lingua, non c'è nessun altro posto da toccare. Le icone si accoppiano
+ * per posizione con le voci di `offer`; se il dizionario ne ha una in più,
+ * quella scheda resta senza simbolo invece di far esplodere la pagina.
+ */
+type ServiceSlug = "ecommerce" | "corporate" | "webapp" | "seo" | "ai"
+type ServiceText = (typeof SERVICES_STR)["it"][ServiceSlug]
+
+function buildService(art: ServiceArt, txt: ServiceText): ServiceData {
+  const extra = { kind: art.extraKind, ...txt.extra } as ExtraBlock
+  return {
+    num: art.num, slug: art.slug,
+    title: txt.title, subtitle: txt.subtitle, eyebrow: txt.eyebrow,
+    gradient: art.gradient, accentColor: art.accentColor, accent: art.accent,
+    motif: art.motif, layout: art.layout,
+    kickers: txt.kickers,
+    order: art.order,
+    extra,
+    whatWeDo: txt.whatWeDo,
+    whatWeOffer: {
+      heading: txt.offer.heading,
+      items: txt.offer.items.map((item, i) => ({ ...item, icon: art.icons[i] ?? null })),
     },
-    whatWeDo:{
-      heading:"L'AI conviene dove il processo è ripetitivo e i dati ci sono già.",
-      body:[
-        "Il valore non arriva dall'adottare un modello, ma dallo scegliere il punto giusto in cui inserirlo. Un'attività ripetitiva, con regole chiare e dati già disponibili, è il candidato ideale. Un processo che cambia forma a ogni cliente, quasi mai — e dirlo prima fa risparmiare mesi.",
-        "Implementiamo cose che poi restano in produzione: assistenti che rispondono alle richieste ricorrenti, sistemi che rendono cercabile la documentazione interna, generazione assistita delle schede prodotto. Ogni caso d'uso parte da una misura del prima, così il dopo è verificabile."
-      ],
-      stats:[
-        {value:"2",label:"Settimane per il primo prototipo utile"},
-        {value:"1",label:"Caso d'uso alla volta, misurato"},
-        {value:"0",label:"Dati inviati a modelli non concordati"},
-      ]
-    },
-    whatWeOffer:{
-      heading:"Dove l'AI porta un vantaggio reale",
-      items:[
-        {icon:iconStroke("M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15M14.25 3.104c.251.023.501.05.75.082M19.8 15l-1.575 1.548M19.8 15H4.2",""),title:"Agenti su misura",desc:"LangChain, AutoGen, CrewAI. Sequenze che cercano, analizzano, redigono e passano la mano all'operatore quando il caso esce dal previsto."},
-        {icon:iconStroke("M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"),title:"Ricerca sui documenti interni",desc:"Manuali, contratti, capitolati, email: il sistema trova il passaggio giusto e ne cita la fonte, invece di inventare una risposta plausibile."},
-        {icon:iconStroke("M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"),title:"Scelta e integrazione dei modelli",desc:"OpenAI, Anthropic, Mistral o modelli ospitati da voi. Il criterio è costo, latenza e vincoli di riservatezza, non la moda del mese."},
-        {icon:iconStroke("M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18","M16 10a4 4 0 01-8 0"),title:"AI per l'e-commerce",desc:"Schede prodotto generate e poi revisionate, arricchimento del catalogo, assistente di pre-vendita collegato alle giacenze reali."},
-        {icon:iconStroke("M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"),title:"Assistenti conversazionali",desc:"Qualificazione dei contatti, primo livello di supporto, onboarding. Collegati al CRM, con passaggio a una persona nel momento in cui serve."},
-        {icon:iconStroke("M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"),title:"Modelli predittivi",desc:"Previsione della domanda e delle scorte, rilevamento delle anomalie, segnali che arrivano prima che il problema si veda in bilancio."},
-      ]
-    },
-    howWeDoIt:{
-      heading:"Dalla valutazione al sistema in produzione",
-      steps:[
-        {title:"Valutazione di fattibilità",desc:"Quali dati esistono e in che stato, quali processi sono candidati e quale ritorno è plausibile per ciascuno. Ne esce una lista ordinata per rapporto fra valore e sforzo."},
-        {title:"Prototipo sul caso più promettente",desc:"Due settimane per una versione funzionante sul caso a maggiore impatto. Si misura sui vostri dati prima di impegnarsi sull'implementazione completa."},
-        {title:"Architettura",desc:"Scelta dei modelli, flusso dei dati, archivio vettoriale, limiti di sicurezza e comportamento previsto quando il modello non sa rispondere."},
-        {title:"Integrazione nei processi",desc:"Collegamento a CRM, ERP, e-commerce e banche dati. Il sistema diventa un passaggio del lavoro quotidiano, non uno strumento a parte da ricordarsi di aprire."},
-        {title:"Adattamento ai vostri dati",desc:"Messa a punto sui casi reali, prove sui casi limite, raccolta strutturata dei riscontri per migliorare nel tempo."},
-        {title:"Rilascio e presidio",desc:"Attivazione graduale a confronto con il processo manuale. Monitoraggio di accuratezza, tempi di risposta e costo per richiesta."},
-      ]
-    },
-    cta:{
-      heading:"Non tutti i processi meritano l'AI. Alcuni sì.",
-      sub:"In 45 minuti guardiamo insieme i vostri processi e individuiamo quelli che valgono un'automazione — e quelli che non la valgono.",
-      btn:"Prenota la Sessione AI"
-    }
+    howWeDoIt: txt.how,
+    cta: txt.cta,
   }
+}
+
+/** La pagina del servizio richiesto, già tradotta. */
+function useService(slug: ServiceSlug): ServiceData {
+  const txt = useT(SERVICES_STR)
+  return buildService(SERVICES_ART[slug], txt[slug])
+}
+
+/** Le altre quattro pagine, per la striscia in fondo: numero, titolo e
+ *  occhiello, che è tutto ciò che quella striscia mostra. */
+function useOtherServices(current: string): { slug: string; num: string; title: string; eyebrow: string }[] {
+  const txt = useT(SERVICES_STR)
+  return (Object.keys(SERVICES_ART) as ServiceSlug[])
+    .filter(slug => slug !== current)
+    .map(slug => ({ slug, num: SERVICES_ART[slug].num, title: txt[slug].title, eyebrow: txt[slug].eyebrow }))
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -893,6 +708,7 @@ function PageSection({ id, data }: { id: SectionId; data: ServiceData }) {
    BLOCCO ESCLUSIVO — cinque forme, una per servizio
 ══════════════════════════════════════════════════════════════════════════ */
 function ExtraSection({ data }: { data: ServiceData }) {
+  const t = useT(SERVICES_STR).ui
   const e = data.extra
   const A = data.accent
   const head = <SecHead kicker={e.kicker} heading={e.heading} accent={A} gap={"intro" in e ? 22 : 44} />
@@ -975,8 +791,8 @@ function ExtraSection({ data }: { data: ServiceData }) {
           {head}
           <style>{`.svc-flow{display:grid;grid-template-columns:1fr 1fr;gap:40px}@media(max-width:768px){.svc-flow{grid-template-columns:1fr!important;gap:32px}}`}</style>
           <div className="svc-flow">
-            <Reveal>{list("Oggi", e.before, false)}</Reveal>
-            <Reveal delay={0.1}>{list("Dopo", e.after, true)}</Reveal>
+            <Reveal>{list(t.flowBefore, e.before, false)}</Reveal>
+            <Reveal delay={0.1}>{list(t.flowAfter, e.after, true)}</Reveal>
           </div>
         </div>
       </section>
@@ -1036,6 +852,8 @@ function ExtraSection({ data }: { data: ServiceData }) {
 }
 
 function ServicePage({data}:{data:ServiceData}) {
+  const ui = useT(SERVICES_STR).ui
+  const { href: L } = useLocale()
   const [modalOpen, setModalOpen] = useState(false)
 
   return (
@@ -1062,9 +880,9 @@ function ServicePage({data}:{data:ServiceData}) {
             {/* breadcrumb */}
             <Reveal>
               <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:32}}>
-                <motion.a href="/" whileHover={{x:-2}} style={{display:"inline-flex",alignItems:"center",gap:6,fontFamily:MONO,fontSize:10,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:T.faint,textDecoration:"none",transition:"color 0.2s"}}
+                <motion.a href={L("/")} whileHover={{x:-2}} style={{display:"inline-flex",alignItems:"center",gap:6,fontFamily:MONO,fontSize:10,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:T.faint,textDecoration:"none",transition:"color 0.2s"}}
                   onMouseEnter={e=>(e.currentTarget.style.color="#fff")} onMouseLeave={e=>(e.currentTarget.style.color=T.faint)}>
-                  <ArrowLeftIcon size={10} /> Home
+                  <ArrowLeftIcon size={10} /> {ui.home}
                 </motion.a>
                 <span style={{color:"#FFFFFF"}}>·</span>
                 <span style={{fontFamily:MONO,fontSize:10,letterSpacing:"0.18em",textTransform:"uppercase" as const,color:data.accent}}>{data.eyebrow}</span>
@@ -1100,9 +918,9 @@ function ServicePage({data}:{data:ServiceData}) {
                     {data.cta.btn} <ArrowRightIcon size={11} />
                   </span>
                 </motion.button>
-                <motion.a href="/" whileHover={{x:-2}} style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:11,letterSpacing:"0.14em",textTransform:"uppercase" as const,color:T.faint,textDecoration:"none",transition:"color 0.2s"}}
+                <motion.a href={L("/")} whileHover={{x:-2}} style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:MONO,fontSize:11,letterSpacing:"0.14em",textTransform:"uppercase" as const,color:T.faint,textDecoration:"none",transition:"color 0.2s"}}
                   onMouseEnter={e=>(e.currentTarget.style.color="#fff")} onMouseLeave={e=>(e.currentTarget.style.color=T.faint)}>
-                  <ArrowLeftIcon size={10} /> Tutti i servizi
+                  <ArrowLeftIcon size={10} /> {ui.allServices}
                 </motion.a>
               </div>
             </Reveal>
@@ -1188,7 +1006,9 @@ const SERVICE_ROUTE: Record<string, string> = {
 }
 
 function OtherServices({ current }: { current: string }) {
-  const others = Object.values(SERVICES).filter(s => s.slug !== current)
+  const t = useT(SERVICES_STR).ui
+  const { href: L } = useLocale()
+  const others = useOtherServices(current)
   return (
     <section style={{ padding: "72px 0", borderTop: `1px solid ${T.border}`, position: "relative" }}>
       <div style={WRAP}>
@@ -1198,11 +1018,11 @@ function OtherServices({ current }: { current: string }) {
           @media(max-width:560px){ .svc-others{grid-template-columns:1fr!important;} }
         `}</style>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 18 }}>
-          <span style={{ color: T.accentTx }}>//</span><span>[ Altri Servizi ]</span>
+          <span style={{ color: T.accentTx }}>//</span><span>[ {t.otherServices} ]</span>
         </div>
         <div className="svc-others">
           {others.map(s => (
-            <a key={s.slug} href={SERVICE_ROUTE[s.slug] ?? "/"}
+            <a key={s.slug} href={L(SERVICE_ROUTE[s.slug] ?? "/")}
               style={{
                 display: "flex", flexDirection: "column" as const, gap: 8,
                 padding: "20px 18px", borderRadius: 12, textDecoration: "none",
@@ -1310,8 +1130,8 @@ function ProcessStep({step,index,total,gradient,accentColor}:{step:Step;index:nu
 /* ══════════════════════════════════════════════════════════════════════════
    NAMED EXPORTS — one per route
 ══════════════════════════════════════════════════════════════════════════ */
-export function EcommercePage()  { return <ServicePage data={SERVICES.ecommerce} /> }
-export function CorporatePage()  { return <ServicePage data={SERVICES.corporate} /> }
-export function WebAppPage()     { return <ServicePage data={SERVICES.webapp} /> }
-export function SeoPage()        { return <ServicePage data={SERVICES.seo} /> }
-export function AiPage()         { return <ServicePage data={SERVICES.ai} /> }
+export function EcommercePage()  { return <ServicePage data={useService("ecommerce")} /> }
+export function CorporatePage()  { return <ServicePage data={useService("corporate")} /> }
+export function WebAppPage()     { return <ServicePage data={useService("webapp")} /> }
+export function SeoPage()        { return <ServicePage data={useService("seo")} /> }
+export function AiPage()         { return <ServicePage data={useService("ai")} /> }

@@ -14,6 +14,7 @@
 ══════════════════════════════════════════════════════════════════════════ */
 
 import { type EdgeReq, type EdgeRes, originOf, pgSelect, text } from "../src/lib/edge.js"
+import { DEFAULT_LOCALE, LOCALES, LOCALE_LABEL, localizedUrl } from "../src/lib/i18n/locales.js"
 
 type SeoRow = {
   page_slug: string
@@ -52,7 +53,12 @@ export default async function handler(req: EdgeReq, res: EdgeRes) {
 
   const [settingsRows, seo] = await Promise.all([
     pgSelect<Settings>("public_site_settings?select=foundry_enabled,maintenance_mode,site_name,default_meta_description&limit=1"),
-    pgSelect<SeoRow>("page_seo_configs?select=page_slug,meta_title,meta_description,keywords,is_noindex"),
+    /* Solo le schede nella lingua predefinita: questo file è un indice, e un
+       indice in due lingue mescolate non è un indice. Le versioni tradotte
+       sono annunciate in fondo, con il loro prefisso. Senza il filtro la
+       Map qui sotto terrebbe, per ogni pagina, la riga che il database
+       restituisce per ultima — cioè una lingua a caso. */
+    pgSelect<SeoRow>(`page_seo_configs?select=page_slug,meta_title,meta_description,keywords,is_noindex&locale=eq.${DEFAULT_LOCALE}`),
   ])
   const s = settingsRows[0]
   const name = s?.site_name || "Nadia Maar"
@@ -87,6 +93,13 @@ export default async function handler(req: EdgeReq, res: EdgeRes) {
   })
 
   const keywords = Array.from(new Set(seo.flatMap(r => r.keywords ?? []))).slice(0, 25)
+
+  /* Le lingue in cui il sito esiste, con l'indirizzo della rispettiva home.
+     Serve a dire a un modello che /en/<pagina> è la STESSA pagina tradotta e
+     non un contenuto in più da citare due volte. */
+  const langs = LOCALES
+    .map(l => `- ${LOCALE_LABEL[l].native}: ${localizedUrl(origin, "/", l)}`)
+    .join("\n")
 
   const body = `# ${name}
 
@@ -123,6 +136,14 @@ Ogni pagina espone JSON-LD (schema.org) nel proprio \`<head>\` quando è
 configurato. Per i crawler che non eseguono JavaScript le meta tag vengono
 servite già presenti nell'HTML.
 ${keywords.length ? `\n## Parole chiave\n\n${keywords.join(", ")}\n` : ""}
+## Versioni linguistiche
+
+Le pagine elencate qui sopra sono nella lingua predefinita. Ogni pagina esiste
+anche nelle altre lingue allo stesso indirizzo con il prefisso della lingua
+(\`/en/about\` è \`/about\` in inglese): stesso contenuto, non contenuto nuovo.
+
+${langs}
+
 ## Contatti
 
 Preventivi e richieste: ${origin}/contatti

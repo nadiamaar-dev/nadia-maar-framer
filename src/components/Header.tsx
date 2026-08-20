@@ -14,6 +14,10 @@ import { useFoundryEnabled } from "../lib/useSiteSettings"
 import { motion, AnimatePresence } from "framer-motion"
 import { CONTACT, mailLink } from "../lib/contact"
 import { useBlueprint } from "../context/BlueprintContext"
+import LanguageSwitcher from "./LanguageSwitcher"
+import { useLocale } from "../lib/i18n/LocaleContext"
+import { DATE_TAG, useT } from "../lib/i18n/t"
+import { HEADER_STR } from "../lib/i18n/strings/header"
 
 /* ── tokens ── */
 const T = {
@@ -75,12 +79,14 @@ const HDR_STYLE = `
 }
 @media(max-width:767px){
   .nm-hdr-foundry    { display:none !important; }
+  .nm-hdr-lang       { display:none !important; }
   .nm-hdr-dash-label { display:none !important; }
   .nm-hdr-dash-btn   { width:30px !important; height:30px !important; padding:0 !important; justify-content:center !important; }
 }`
 
 /* ── DateTimeWidget — minimal, no border ── */
 function DateTimeWidget() {
+  const { locale } = useLocale()
   useEffect(() => {
     const id = "hdr-dt-style"
     if (document.getElementById(id)) return
@@ -94,7 +100,7 @@ function DateTimeWidget() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 1, userSelect: "none", pointerEvents: "none" }}>
       <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
-        {now.toLocaleDateString("it-IT", { day: "2-digit", month: "short", year: "numeric" })}
+        {now.toLocaleDateString(DATE_TAG[locale], { day: "2-digit", month: "short", year: "numeric" })}
       </span>
       <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.18em", color: "#FFFFFF" }}>
         {pad(now.getHours())}<span style={{ animation: "hdr-colon-blink 1s ease-in-out infinite", display: "inline-block" }}>:</span>{pad(now.getMinutes())}<span style={{ animation: "hdr-colon-blink 1s ease-in-out infinite", display: "inline-block" }}>:</span>{pad(now.getSeconds())}
@@ -133,7 +139,11 @@ function MenuNavItem({ num, label, onClick, index, active = false }: {
    pagina significava ricaricare la home e scorrere, per poi cliccare una
    seconda volta. Qui le cinque pagine sono raggiungibili in un clic. */
 function MenuNavGroup({ num, label, items, index, path }: {
-  num: string; label: string; items: { label: string; href: string }[]; index: number; path: string
+  num: string; label: string
+  /** `href` è il path canonico (per riconoscere la pagina corrente), `url`
+      l'indirizzo con il prefisso di lingua (per andarci davvero). */
+  items: { label: string; href: string; url: string }[]
+  index: number; path: string
 }) {
   const onChild = items.some(i => i.href === path)
   /* se sei già dentro una delle cinque, l'elenco è aperto: la voce corrente
@@ -166,7 +176,7 @@ function MenuNavGroup({ num, label, items, index, path }: {
               {items.map((s, i) => {
                 const here = s.href === path
                 return (
-                  <a key={s.href} href={s.href}
+                  <a key={s.href} href={s.url}
                     style={{ display: "flex", alignItems: "center", gap: 12, padding: "9px 0", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
                     onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.paddingLeft = "6px"; (el.querySelector("[data-lb]") as HTMLElement).style.color = "#FFFFFF" }}
                     onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.paddingLeft = "0px"; (el.querySelector("[data-lb]") as HTMLElement).style.color = here ? T.accentLt : "rgba(255,255,255,0.78)" }}
@@ -187,6 +197,7 @@ function MenuNavGroup({ num, label, items, index, path }: {
 /* ── Auth section inside the menu ── */
 function MenuAuthSection({ onClose }: { onClose: () => void }) {
   const { user, openAuthModal, signOut } = useBlueprint()
+  const t = useT(HEADER_STR)
   const handleSignOut = async () => {
     await signOut()
     window.location.href = "/"
@@ -220,11 +231,11 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
               <rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
               <rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
             </svg>
-            Dashboard
+            {t.dashboard}
           </a>
           <button
             onClick={handleSignOut}
-            title="Esci"
+            title={t.signOut}
             style={{
               padding: "11px 16px",
               background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.20)",
@@ -240,7 +251,7 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
             <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
               <path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M11 11l3-3-3-3M14 8H6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            Esci
+            {t.signOut}
           </button>
         </div>
       ) : (
@@ -268,7 +279,7 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
             <rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
             <path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
           </svg>
-          Area Clienti
+          {t.clientArea}
         </motion.button>
       )}
     </motion.div>
@@ -277,7 +288,13 @@ function MenuAuthSection({ onClose }: { onClose: () => void }) {
 
 /* ── MenuOverlay (main-page style) ── */
 function MenuOverlay({ onClose }: { onClose: () => void }) {
-  const isHome = typeof window !== "undefined" && window.location.pathname === "/"
+  const t = useT(HEADER_STR)
+  /* `canonical` è il path senza prefisso di lingua ("/about" anche quando si
+     legge /en/about): è quello che dice su quale pagina siamo. `L()` rifà il
+     prefisso quando serve un indirizzo da mettere in un href — chi naviga dal
+     menu deve restare nella lingua che stava leggendo. */
+  const { path: canonical, href: L } = useLocale()
+  const isHome = canonical === "/"
   const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth <= 800)
   const [activeId, setActiveId] = useState("")
 
@@ -323,33 +340,34 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
   }
 
   const NAV = [
-    { num: "01", label: "Home",     sectionId: "s1", href: "/",          action: () => nav("s1", "/") },
+    { num: "01", label: t.nav.home,     sectionId: "s1", href: "/",          action: () => nav("s1", L("/")) },
     /* "About" suonava come "chi sono": la pagina però è I Numeri → L'Approccio
        → Il Processo → Competenze, cioè il metodo di lavoro, non una bio.
        Subito dopo Home perché è il metodo a spiegare perché scegliere lo
        studio, prima ancora di entrare nel dettaglio dei singoli servizi. */
-    { num: "02", label: "Metodo",   sectionId: "",   href: "/about",     action: () => { window.location.href = "/about" } },
+    { num: "02", label: t.nav.method,   sectionId: "",   href: "/about",     action: () => { window.location.href = L("/about") } },
     /* Voce ad accordion: apre le cinque pagine invece di rimandare
        all'ancora della griglia in home. Vedi SERVIZI qui sotto. */
-    { num: "03", label: "Servizi",  sectionId: "",   href: "#servizi",   action: () => {} },
-    { num: "04", label: "Projects", sectionId: "",   href: "/projects",  action: () => { window.location.href = "/projects" } },
+    { num: "03", label: t.nav.services, sectionId: "",   href: "#servizi",   action: () => {} },
+    { num: "04", label: t.nav.projects, sectionId: "",   href: "/projects",  action: () => { window.location.href = L("/projects") } },
     /* "Foundry" indicava tre cose diverse nel sito: qui è la galleria degli
        esperimenti, quindi si chiama Lab. Il configuratore resta in home. */
-    { num: "05", label: "Lab",      sectionId: "",   href: "/foundry",   action: () => { window.location.href = "/foundry" } },
+    { num: "05", label: t.nav.lab,      sectionId: "",   href: "/foundry",   action: () => { window.location.href = L("/foundry") } },
     /* Portava alla sezione CTA della home: da un'altra pagina significava
        ricaricare la home e scorrere. Ora è una pagina vera, con i canali
        diretti e un modulo che spedisce davvero. */
-    { num: "06", label: "Contatti", sectionId: "",   href: "/contatti",  action: () => { window.location.href = "/contatti" } },
+    { num: "06", label: t.nav.contact,  sectionId: "",   href: "/contatti",  action: () => { window.location.href = L("/contatti") } },
   ].filter(item => foundryOn || item.href !== "/foundry")
 
   /* etichette corte: nel menu contano leggibilità e riconoscibilità, non
-     il titolo completo della pagina */
+     il titolo completo della pagina. `href` resta canonico — è la chiave con
+     cui si riconosce la pagina corrente — e `url` è dove si va davvero. */
   const SERVIZI = [
-    { label: "E-commerce",        href: "/ecommerce" },
-    { label: "Siti Corporate",    href: "/corporate" },
-    { label: "Applicazioni Web",  href: "/web-app"   },
-    { label: "SEO & Performance", href: "/seo"       },
-    { label: "Integrazione AI",   href: "/ai"        },
+    { label: t.services.ecommerce, href: "/ecommerce", url: L("/ecommerce") },
+    { label: t.services.corporate, href: "/corporate", url: L("/corporate") },
+    { label: t.services.webapp,    href: "/web-app",   url: L("/web-app")   },
+    { label: t.services.seo,       href: "/seo",       url: L("/seo")       },
+    { label: t.services.ai,        href: "/ai",        url: L("/ai")        },
   ]
 
   const MENU_SOCIALS = [
@@ -359,8 +377,9 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
     { label: "DC", href: "https://discord.gg/nadiamaar" },
   ]
 
-  /* highlight the current page/section in the menu */
-  const path = typeof window !== "undefined" ? window.location.pathname : "/"
+  /* highlight the current page/section in the menu — sul path canonico, così
+     /about e /en/about si riconoscono come la stessa pagina */
+  const path = canonical
   const isActive = (item: typeof NAV[number]) => {
     // standalone page links (e.g. /about, /projects, /foundry)
     if (item.href !== "/" && !item.href.includes("#") && path === item.href) return true
@@ -389,9 +408,13 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         </a>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
           <PingDot color={T.green} size={5} />
-          <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(190,245,220,0.70)" }}>Disponibile · 2026</span>
+          <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "rgba(190,245,220,0.70)" }}>{t.available}</span>
         </div>
       </div>
+      {/* Nel menu il selettore sta per esteso: qui c'è spazio, e "Italiano /
+          English" si capisce senza doverlo interpretare come nella barra,
+          dove per larghezza restano due sigle. */}
+      <LanguageSwitcher variant="menu" />
       <div style={{ display: "flex", gap: 8 }}>
         {MENU_SOCIALS.map(({ label, href }) => (
           <a key={label} href={href} target="_blank" rel="noopener noreferrer"
@@ -425,7 +448,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
           <motion.button onClick={onClose}
             whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            aria-label="Chiudi menu"
+            aria-label={t.closeMenu}
             style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.17)", borderRadius: 9, width: 36, height: 36, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#FFFFFF", flexShrink: 0, transition: "background 0.18s, border-color 0.18s, color 0.18s" }}
             onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(184,50,64,0.14)"; el.style.borderColor = "rgba(184,50,64,0.45)"; el.style.color = "#fff" }}
             onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.10)"; el.style.color = "#FFFFFF" }}>
@@ -438,7 +461,7 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         {/* eyebrow */}
         <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 8, paddingLeft: 20 }}>
           <span style={{ color: "rgba(184,50,64,0.70)" }}>//</span>
-          <span>[ Navigazione ]</span>
+          <span>{t.eyebrow}</span>
         </div>
 
         {/* ghost MAAR */}
@@ -478,12 +501,12 @@ function MenuOverlay({ onClose }: { onClose: () => void }) {
         <div style={{ height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
             <span style={{ color: "rgba(184,50,64,0.70)" }}>//</span>
-            <span>[ Navigazione ]</span>
+            <span>{t.eyebrow}</span>
           </div>
           <motion.button onClick={onClose}
             whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            aria-label="Chiudi menu"
+            aria-label={t.closeMenu}
             style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 9, width: 34, height: 34, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#FFFFFF", flexShrink: 0, transition: "background 0.18s, border-color 0.18s, color 0.18s" }}
             onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(184,50,64,0.14)"; el.style.borderColor = "rgba(184,50,64,0.45)"; el.style.color = "#fff" }}
             onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(184,50,64,0)"; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.color = "#FFFFFF" }}>
@@ -525,6 +548,8 @@ export default function Header() {
   const [menuOpen,  setMenuOpen]  = useState(false)
   const [logoHover, setLogoHover] = useState(false)
   const { user, openAuthModal, signOut } = useBlueprint()
+  const t = useT(HEADER_STR)
+  const { href: L } = useLocale()
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 48)
@@ -560,7 +585,7 @@ export default function Header() {
 
         {/* ── centre: NM logo → / ── */}
         <motion.a
-          href="/"
+          href={L("/")}
           onHoverStart={() => setLogoHover(true)} onHoverEnd={() => setLogoHover(false)}
           whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }}
           transition={{ type: "spring", stiffness: 420, damping: 22 }}
@@ -586,7 +611,7 @@ export default function Header() {
               conta, cioè il configuratore. Prima portava alla galleria degli
               esperimenti, che ora vive nel menu sotto il nome "Lab". */}
           <motion.a
-            href="/#s7" className="nm-hdr-foundry"
+            href={`${L("/")}#s7`} className="nm-hdr-foundry"
             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             style={{
@@ -601,8 +626,15 @@ export default function Header() {
             onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.05)"; el.style.borderColor = "rgba(255,255,255,0.16)"; el.style.color = "#FFFFFF" }}
           >
             <span style={{ width: 5, height: 5, borderRadius: "50%", background: T.accentLt, flexShrink: 0 }} />
-            Configuratore
+            {t.configurator}
           </motion.a>
+
+          {/* Su schermo stretto sparisce: resta quello dentro al menu. Due
+              sigle costano poco, ma in una barra dove il logo è già stretto
+              costano proprio lo spazio che serve al logo. */}
+          <span className="nm-hdr-lang">
+            <LanguageSwitcher />
+          </span>
 
           {/* Auth button */}
           <AnimatePresence mode="wait">
@@ -633,13 +665,13 @@ export default function Header() {
                     <rect x="1" y="8" width="5" height="5" rx="1.2" stroke="currentColor" strokeWidth="1.3"/>
                     <rect x="8" y="8" width="5" height="5" rx="1.2" stroke="currentColor" strokeWidth="1.3"/>
                   </svg>
-                  <span className="nm-hdr-dash-label">Dashboard</span>
+                  <span className="nm-hdr-dash-label">{t.dashboard}</span>
                 </motion.a>
                 <motion.button
                   onClick={handleSignOut}
                   whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
                   transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                  title="Esci"
+                  title={t.signOut}
                   style={{
                     width: 30, height: 30,
                     background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.20)",
@@ -676,7 +708,7 @@ export default function Header() {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 24px rgba(184,50,64,0.35), inset 0 1px 0 rgba(255,255,255,0.18)" }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)" }}
               >
-                Area Clienti
+                {t.clientArea}
               </motion.button>
             )}
           </AnimatePresence>
@@ -685,7 +717,7 @@ export default function Header() {
             onClick={() => setMenuOpen(o => !o)}
             whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            aria-label="Menu"
+            aria-label={t.menu}
             style={{ background: "none", border: "none", cursor: "pointer", padding: "8px 4px", display: "flex", flexDirection: "column", gap: 5, zIndex: 401, flexShrink: 0 }}>
             <motion.span animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 7 : 0 }} transition={{ duration: 0.26 }}
               style={{ display: "block", width: 22, height: 1.8, background: menuOpen ? "#fff" : "rgba(255,255,255,0.80)", borderRadius: 2, transformOrigin: "center" }} />

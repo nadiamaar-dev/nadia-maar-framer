@@ -1,6 +1,9 @@
 import React, { useState } from "react"
 import { SandboxItem } from "../../data/sandboxData"
 import { useBlueprint } from "../../context/BlueprintContext"
+import { DEMO_HREF } from "../../data/demos"
+import { useT } from "../../lib/i18n/t"
+import { LAB_STR } from "../../lib/i18n/strings/lab"
 
 const MONO    = "'JetBrains Mono',monospace"
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
@@ -157,14 +160,10 @@ function initials(title: string): string {
   return title.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase()
 }
 
-/* ogni demo ha la sua rotta: "Full Preview" ci porta direttamente, in una
-   scheda nuova — l'Anteprima resta il posto dove si guarda senza uscire
-   dalla griglia. */
-const DEMO_HREF: Record<string, string> = {
-  "supplier-portal": "/demo/portale-fornitori",
-}
+
 
 export default function ProjectCard({ item, onOpen }: { item: SandboxItem; onOpen?: () => void }) {
+  const t = useT(LAB_STR).card
   const { user, isInBlueprint, addToBlueprint, removeFromBlueprint, openAuthModal } = useBlueprint()
   const inBlueprint = isInBlueprint(item.id)
   const [added, setAdded] = useState(false)
@@ -215,7 +214,39 @@ export default function ProjectCard({ item, onOpen }: { item: SandboxItem; onOpe
           colore dell'item — mai un riquadro vuoto sopra il testo. */}
       <div className="nm-card-thumb">
         {item.previewUrl
-          ? <img src={item.previewUrl} alt="" loading="lazy" decoding="async" />
+          ? (
+            /* Tre formati e due misure: il browser prende il primo che sa
+               leggere alla densità che ha. AVIF pesa circa un quindicesimo
+               del JPEG di partenza; il JPEG resta in fondo per i browser che
+               non lo supportano, che oggi sono pochissimi ma esistono.
+               `sizes` dice quanto sarà larga davvero l'immagine, così non
+               viene scaricata la misura grande su una scheda piccola. */
+            <picture>
+              <source
+                type="image/avif"
+                srcSet={`${item.previewUrl}-480.avif 480w, ${item.previewUrl}-960.avif 960w`}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 44vw, 30vw"
+              />
+              <source
+                type="image/webp"
+                srcSet={`${item.previewUrl}-480.webp 480w, ${item.previewUrl}-960.webp 960w`}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 44vw, 30vw"
+              />
+              <img
+                src={`${item.previewUrl}-960.jpg`}
+                srcSet={`${item.previewUrl}-480.jpg 480w, ${item.previewUrl}-960.jpg 960w`}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 44vw, 30vw"
+                /* Le proporzioni sono già fissate dal CSS (aspect-ratio 16/10),
+                   ma width e height esplicite le comunicano anche prima che il
+                   foglio di stile sia applicato. */
+                width={960}
+                height={600}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
+          )
           : (
             <div className="nm-card-thumb-placeholder" style={{
               background: `radial-gradient(120% 140% at 30% -10%, ${item.accent}33 0%, rgba(9,11,16,0) 62%)`,
@@ -244,7 +275,7 @@ export default function ProjectCard({ item, onOpen }: { item: SandboxItem; onOpe
             border: "1px solid rgba(255,255,255,0.20)",
             borderRadius: 4,
           }}>
-            {item.type === "full-site" ? "Full Site" : "Component"}
+            {item.type === "full-site" ? t.fullSite : t.component}
           </span>
         </div>
 
@@ -281,7 +312,7 @@ export default function ProjectCard({ item, onOpen }: { item: SandboxItem; onOpe
         <div className="nm-card-btn-toprow">
           {onOpen && (
             <button type="button" className="nm-card-btn-primary" onClick={onOpen}
-              aria-label={`Anteprima di ${item.title}`}>
+              aria-label={t.preview.replace("{title}", item.title)}>
               <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor"
                 strokeWidth="1.4" aria-hidden>
                 <rect x="1.2" y="2.2" width="9.6" height="7.6" rx="1.4" />
@@ -307,7 +338,7 @@ export default function ProjectCard({ item, onOpen }: { item: SandboxItem; onOpe
         <button className="nm-card-btn-bp" onClick={handleBlueprint}>
           <span className="nm-card-btn-bp-tag">{inBlueprint ? "[−]" : "[+]"}</span>
           <span className="nm-card-btn-bp-label">
-            {added ? "✓ Aggiunto" : inBlueprint ? "Rimuovi" : "Blueprint"}
+            {added ? t.added : inBlueprint ? t.remove : t.blueprint}
           </span>
         </button>
       </div>

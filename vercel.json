@@ -5,12 +5,24 @@
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "rewrites": [
-    { "source": "/robots.txt", "destination": "/api/robots" },
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
-    { "source": "/llms.txt", "destination": "/api/llms" },
-    { "source": "/:key([a-f0-9]{16,64}).txt", "destination": "/api/indexnow-key?key=:key" },
     {
-      "source": "/((?!api/|assets/|favicon).*)",
+      "source": "/robots.txt",
+      "destination": "/api/robots"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    },
+    {
+      "source": "/llms.txt",
+      "destination": "/api/llms"
+    },
+    {
+      "source": "/:key([a-f0-9]{16,64}).txt",
+      "destination": "/api/indexnow-key?key=:key"
+    },
+    {
+      "source": "/((?!api/|assets/|fonts/|previews/|favicon)(?!.*\\.(?:woff2?|css|js|mjs|map|png|jpe?g|webp|avif|svg|ico|txt|xml|json)$).*)",
       "has": [
         {
           "type": "header",
@@ -20,17 +32,100 @@
       ],
       "destination": "/api/prerender"
     },
-    { "source": "/", "destination": "/index.html" },
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en",
+      "destination": "/index.html"
+    },
     {
       "source": "/(about|projects|contatti|foundry|ecommerce|corporate|web-app|seo|ai|cabinet|dashboard)",
       "destination": "/index.html"
     },
-    { "source": "/(.*)", "destination": "/api/route" }
+    {
+      "source": "/demo/(portale-fornitori|crm-vendite)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/(about|projects|contatti|foundry|ecommerce|corporate|web-app|seo|ai)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/en/demo/(portale-fornitori|crm-vendite)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/api/route"
+    }
   ],
   "headers": [
     {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "source": "/previews/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
       "source": "/(robots.txt|sitemap.xml|llms.txt)",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        }
+      ]
     }
   ]
 }

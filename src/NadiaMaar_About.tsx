@@ -32,7 +32,11 @@ import Background from "./components/Background"
 import FoundryShowcase from "./components/FoundryShowcase"
 import StudioApproach from "./components/studio/StudioApproach"
 import StudioCapabilities from "./components/studio/StudioCapabilities"
-import { PROCESSO, type Fase } from "./data/process"
+import { processo, type Fase } from "./data/process"
+import { useLocale } from "./lib/i18n/LocaleContext"
+import { useT } from "./lib/i18n/t"
+import { ABOUT_STR } from "./lib/i18n/strings/about"
+import { usePointerGlow } from "./hooks/usePointerGlow"
 
 /* ══════════════════════════════════════════════════════════════════════════
    ICONS
@@ -90,10 +94,6 @@ const MONO_LABEL: React.CSSProperties = {
    CSS
 ══════════════════════════════════════════════════════════════════════════ */
 const GLOBAL_CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; scroll-behavior: smooth; }
   p, li { font-weight: 300; line-height: 1.8; }
@@ -433,6 +433,7 @@ function LiveTerminal() {
 }
 
 function HeroSection() {
+  const t = useT(ABOUT_STR).hero
   return (
     <section style={{ minHeight: "100svh", display: "flex", alignItems: "flex-start", position: "relative", overflow: "clip", paddingTop: 64 }}>
       <div className="abt-wrap abt-hero-inner" style={{ position: "relative", zIndex: 1, paddingTop: 40, paddingBottom: 64, width: "100%" }}>
@@ -440,15 +441,15 @@ function HeroSection() {
         {/* editorial corner row */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease }}
           style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 40 }}>
-          <span style={{ ...MONO_LABEL, fontSize: 10.5, color: T.accentTx }}>Nadia Maar® — Digital Studio</span>
-          <span style={{ ...MONO_LABEL, fontSize: 10.5, color: T.faint }}>About / 01</span>
+          <span style={{ ...MONO_LABEL, fontSize: 10.5, color: T.accentTx }}>{t.corner}</span>
+          <span style={{ ...MONO_LABEL, fontSize: 10.5, color: T.faint }}>{t.cornerRight}</span>
         </motion.div>
 
         <div className="abt-hero-grid">
           {/* LEFT */}
           <div>
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }}>
-              <Kicker index="01" text="Architettura & Codice" />
+              <Kicker index="01" text={t.kicker} />
             </motion.div>
 
             <motion.h1
@@ -460,32 +461,29 @@ function HeroSection() {
                 lineHeight: 0.95, letterSpacing: "-0.045em", color: T.text, margin: "0 0 30px",
               }}
             >
-              <ScrambleLine text="DIGITAL" delay={280} /><br />
-              <ScrambleLine text="ARCHITECT" delay={430} style={{ color: "#FFFFFF" }} /><br />
-              <ScrambleLine text="&" delay={560} style={{ color: "#FFFFFF", fontWeight: 300 }} />{" "}
-              <ScrambleLine text="E-COM" delay={620} style={{ color: "#FFFFFF" }} /><br />
-              <ScrambleLine text="DEVELOPER" delay={760} style={{ color: "#FFFFFF" }} />
+              <ScrambleLine text={t.h1[0]} delay={280} /><br />
+              <ScrambleLine text={t.h1[1]} delay={430} style={{ color: "#FFFFFF" }} /><br />
+              <ScrambleLine text={t.h1[2]} delay={560} style={{ color: "#FFFFFF", fontWeight: 300 }} />{" "}
+              <ScrambleLine text={t.h1[3]} delay={620} style={{ color: "#FFFFFF" }} /><br />
+              <ScrambleLine text={t.h1[4]} delay={760} style={{ color: "#FFFFFF" }} />
             </motion.h1>
 
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.22, ease }}
               style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 36 }}>
               <PingDot color={T.green} size={7} />
               <span style={{ ...MONO_LABEL, fontSize: 11, color: T.muted, letterSpacing: "0.26em" }}>
-                BASED IN ITALY&nbsp;/&nbsp;AVAILABLE WORLDWIDE
+                {t.location}
               </span>
             </motion.div>
 
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.80, delay: 0.30, ease }}
               style={{ ...BODY, color: T.muted, maxWidth: 540, margin: "0 0 44px" }}>
-              Costruisco ecosistemi digitali che vendono. Un solo punto di contatto dalla
-              strategia al codice di produzione: design premium, sviluppo frontend solido,
-              SEO e advertising — cuciti insieme in un unico flusso, guidato dalla logica
-              e privo di compromessi.
+              {t.lead}
             </motion.p>
 
             <motion.div className="abt-hero-actions" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.70, delay: 0.40, ease }}
               style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
-              <PillCTA label="Lavoriamo insieme" href={mailLink()} />
+              <PillCTA label={t.cta} href={mailLink()} />
             </motion.div>
           </div>
 
@@ -503,11 +501,11 @@ function HeroSection() {
               {/* ── Eyebrow ── */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
                 <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: T.faint }}>
-                  <span style={{ color: T.accentTx }}>//</span> [ IDENTITY ]
+                  <span style={{ color: T.accentTx }}>//</span> {t.identity}
                 </span>
                 <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "4px 10px", borderRadius: 99, background: "rgba(75,211,155,0.08)", border: "1px solid rgba(75,211,155,0.22)" }}>
                   <PingDot color={T.green} size={5} />
-                  <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.20em", textTransform: "uppercase", color: T.green }}>DISPONIBILE</span>
+                  <span style={{ fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.20em", textTransform: "uppercase", color: T.green }}>{t.available}</span>
                 </div>
               </div>
 
@@ -529,7 +527,7 @@ function HeroSection() {
                 </div>
                 <div>
                   <div style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 800, letterSpacing: "-0.03em", color: T.text, lineHeight: 1.1 }}>Nadia Maar</div>
-                  <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: T.faint, marginTop: 4 }}>Digital Architect · E-Commerce Dev</div>
+                  <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: T.faint, marginTop: 4 }}>{t.role}</div>
                 </div>
               </div>
 
@@ -555,7 +553,7 @@ function HeroSection() {
                       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
                     </svg>
                   </div>
-                  <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", color: T.faint }}>Italy · Remote Worldwide</span>
+                  <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", color: T.faint }}>{t.locationRow}</span>
                 </div>
                 <span style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.18em", textTransform: "uppercase", color: TX(0.60), padding: "3px 8px", borderRadius: 6, border: `1px solid ${AM(0.22)}`, background: AM(0.08) }}>EU +</span>
               </div>
@@ -613,11 +611,15 @@ function MarqueeStrip() {
    §2  STAT BENTO — giant gradient numerals + accent statement card
 ══════════════════════════════════════════════════════════════════════════ */
 //PLACEHOLDER metrics
-const STATS = [
-  { n: 5,   pad: 2, suffix: "+",  cat: "Esperienza", sub: "Anni a costruire prodotti digitali" },
-  { n: 50,  pad: 0, suffix: "+",  cat: "Delivery",   sub: "Progetti spediti in produzione" },
-  { n: 30,  pad: 0, suffix: "k+", cat: "Scala",      sub: "Prodotti e-commerce sincronizzati" },
+/* Numeri e suffissi restano nel codice, categoria e didascalia nel dizionario:
+   "5+" non cambia da una lingua all'altra, "Anni a costruire…" sì. */
+const STATS_ART = [
+  { n: 5,   pad: 2, suffix: "+"  },
+  { n: 50,  pad: 0, suffix: "+"  },
+  { n: 30,  pad: 0, suffix: "k+" },
 ]
+
+type Stat = typeof STATS_ART[number] & { cat: string; sub: string }
 
 function useCountUp(target: number, run: boolean, dur = 1300) {
   const [v, setV] = useState(0)
@@ -637,7 +639,7 @@ function useCountUp(target: number, run: boolean, dur = 1300) {
   return v
 }
 
-function StatCard({ s, i }: { s: typeof STATS[number]; i: number }) {
+function StatCard({ s, i }: { s: Stat; i: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: "-60px" })
   const val = useCountUp(s.n, inView)
@@ -699,17 +701,19 @@ function AccentBars() {
 }
 
 function StatBento() {
+  const t = useT(ABOUT_STR).stats
+  const STATS: Stat[] = STATS_ART.map((art, i) => ({ ...art, ...t.items[i] }))
   return (
     <section className="abt-section-pad" style={{ padding: "100px 0", position: "relative", borderTop: `1px solid ${T.border}` }}>
       <div className="abt-wrap">
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 40 }}>
           <div>
-            <Kicker index="02" text="I Numeri" />
+            <Kicker index="02" text={t.kicker} />
             <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px, 3vw, 44px)", fontWeight: 900, lineHeight: 1.02, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-              IMPATTO <span style={{ color: "#FFFFFF" }}>MISURABILE</span>
+              {t.title1} <span style={{ color: "#FFFFFF" }}>{t.title2}</span>
             </h2>
           </div>
-          <span style={{ ...MONO_LABEL, fontSize: 10.5, color: T.faint, paddingBottom: 6 }}>Aggiornato · 2026</span>
+          <span style={{ ...MONO_LABEL, fontSize: 10.5, color: T.faint, paddingBottom: 6 }}>{t.updated}</span>
         </div>
 
         <div className="abt-stat-grid">
@@ -720,9 +724,9 @@ function StatBento() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.24, ease }}
             style={{ position: "relative", overflow: "hidden", borderRadius: 14, padding: "18px 22px", minHeight: 150, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 12, border: `1px solid ${LT(0.24)}`, borderTop: `1px solid ${LT(0.4)}`, background: `linear-gradient(135deg, ${AM(0.16)}, ${RD(0.08)} 60%, rgba(255,255,255,0.03))`, boxShadow: `0 8px 32px rgba(0,0,0,0.55), 0 0 40px ${OR(0.12)}, inset 0 1px 0 rgba(255,255,255,0.16)` }}>
-            <span style={{ ...MONO_LABEL, fontSize: 9, color: T.accentTx }}>100% CUSTOM</span>
+            <span style={{ ...MONO_LABEL, fontSize: 9, color: T.accentTx }}>{t.customTag}</span>
             <p style={{ fontFamily: DISPLAY, fontSize: "clamp(16px, 1.7vw, 20px)", fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.25, color: T.text, margin: 0, maxWidth: 260 }}>
-              Ogni progetto è su misura. Zero template, zero scorciatoie.
+              {t.customText}
             </p>
             <AccentBars />
           </motion.div>
@@ -735,13 +739,9 @@ function StatBento() {
 /* ══════════════════════════════════════════════════════════════════════════
    §3  APPROACH / PHILOSOPHY
 ══════════════════════════════════════════════════════════════════════════ */
-const PHILOSOPHY = [
-  { n: "01", label: "Vision",       text: "Mi bastano poche parole per mappare l'intera struttura del tuo business. Questa lettura immediata, unita a un pensiero creativo profondo, mi permette di decodificare la tua visione commerciale e tradurla subito in un'architettura digitale ad altissime prestazioni." },
-  { n: "02", label: "Performance",  text: "Fondo l'eleganza del minimalismo visivo con prestazioni frontend eccezionali. Ogni riga di codice, ogni layout e ogni campagna hanno un solo scopo: eliminare il superfluo, massimizzare la conversione e dominare il posizionamento di mercato." },
-  { n: "03", label: "AI + Code",    text: "Integro l'AI in ogni fase — dallo sviluppo alla SEO. Scrivo codice più pulito, testo più a fondo e consegno infrastrutture complesse a una velocità semplicemente fuori portata per un'agenzia tradizionale." },
-]
-
 function PhilosophySection() {
+  const t = useT(ABOUT_STR).philosophy
+  const PHILOSOPHY = t.items.map((p, i) => ({ n: `0${i + 1}`, ...p }))
   return (
     <section className="abt-section-pad" style={{ padding: "120px 0", position: "relative", borderTop: `1px solid ${T.border}` }}>
       <div className="abt-wrap">
@@ -750,12 +750,12 @@ function PhilosophySection() {
         <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}
           style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 64, flexWrap: "wrap", gap: 16 }}>
           <div>
-            <Kicker index="03" text="L'Approccio" />
+            <Kicker index="03" text={t.kicker} />
             <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(32px, 3.8vw, 56px)", fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-              COME LAVORIAMO
+              {t.title}
             </h2>
           </div>
-          <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.18em", color: T.faint, paddingBottom: 6 }}>3 principi · Studio NM</span>
+          <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.18em", color: T.faint, paddingBottom: 6 }}>{t.meta}</span>
         </motion.div>
 
         {/* principle rows — §04 style */}
@@ -853,6 +853,9 @@ function ProcessCard({ p, i }: { p: Fase; i: number }) {
 }
 
 function ProcessSection() {
+  const t = useT(ABOUT_STR).process
+  const { locale } = useLocale()
+  const PROCESSO = processo(locale)
   return (
     <section className="abt-section-pad" style={{ padding: "120px 0", position: "relative", borderTop: `1px solid ${T.border}`, overflow: "hidden" }}>
       <motion.div aria-hidden animate={{ opacity: [0.5, 0.9, 0.5], scale: [1, 1.08, 1] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
@@ -867,20 +870,20 @@ function ProcessSection() {
             fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(100px, 18vw, 220px)",
             lineHeight: 1, letterSpacing: "-0.05em", whiteSpace: "nowrap",
             color: "transparent", WebkitTextStroke: "1px rgba(255,255,255,0.04)",
-          }}>PROCESSO</div>
+          }}>{t.watermark}</div>
 
-          <Kicker index="04" text="Il Processo" />
+          <Kicker index="04" text={t.kicker} />
 
           {/* typographic composition */}
           <div style={{ position: "relative" }}>
-            <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.26em", color: "#FFFFFF", marginBottom: 10, textTransform: "uppercase" as const }}>Il tuo</div>
+            <div style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.26em", color: "#FFFFFF", marginBottom: 10, textTransform: "uppercase" as const }}>{t.over}</div>
 
             {/* outlined */}
             <motion.div
               initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.08, ease }}
               style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(50px, 8.5vw, 116px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.58)", userSelect: "none" }}>
-              PROSSIMO
+              {t.lineOutlined}
             </motion.div>
 
             {/* solid */}
@@ -888,7 +891,7 @@ function ProcessSection() {
               initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.18, ease }}
               style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(50px, 8.5vw, 116px)", lineHeight: 0.88, letterSpacing: "-0.05em", color: "#FFFFFF", userSelect: "none" }}>
-              PRODOTTO
+              {t.lineSolid}
             </motion.div>
 
             {/* "parte da qui" light */}
@@ -896,7 +899,7 @@ function ProcessSection() {
               initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.30, ease }}
               style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 18, fontFamily: DISPLAY, fontWeight: 300, fontSize: "clamp(20px, 2.4vw, 34px)", color: "#FFFFFF", letterSpacing: "-0.02em" }}>
-              parte da qui
+              {t.lineLight}
               <motion.span animate={{ x: [0, 6, 0] }} transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }} style={{ fontSize: 22, color: "#FFFFFF" }}>→</motion.span>
             </motion.div>
 
@@ -905,7 +908,7 @@ function ProcessSection() {
               initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.42, ease }}
               style={{ display: "flex", alignItems: "center", gap: 0, marginTop: 32, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.16)" }}>
-              {(["strategico", "elegante", "redditizio"] as const).map((w, i) => (
+              {t.attributes.map((w, i) => (
                 <React.Fragment key={w}>
                   <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: i === 2 ? "#FFFFFF" : "#FFFFFF" }}>{w}</span>
                   {i < 2 && <span aria-hidden style={{ margin: "0 22px", width: 1, height: 12, background: "rgba(255,255,255,0.15)", display: "inline-block" }} />}
@@ -927,16 +930,11 @@ function ProcessSection() {
 /* ══════════════════════════════════════════════════════════════════════════
    §5  TECH TOOLKIT — bento grid with spotlight borders
 ══════════════════════════════════════════════════════════════════════════ */
-const TOOLKIT = [
-  { num: "01", title: "Design & Thinking", items: ["Pensiero Creativo & Strategia", "Premium UI/UX Design", "Minimalist Aesthetics", "Advanced Design Systems", "Framer Prototyping", "Mobile-First Architecture"] },
-  { num: "02", title: "E-Commerce Eng.", items: ["Shopify Custom Sviluppo", "Headless Commerce", "Custom Checkouts", "Data Migrations", "CRO Optimization", "E-commerce Analytics"] },
-  { num: "03", title: "Web, Mobile & AI", items: ["React.js & Next.js", "Tailwind CSS", "JavaScript (ES6+)", "Expo & Supabase", "AI-Driven Coding Workflows", "Claude Code & Cursor"] },
-  { num: "04", title: "Acquisition & Growth", items: ["SEO Avanzato & AI SEO Audit", "Google Ads (Search & Pmax)", "Meta Ads (FB & Instagram)", "Funnel Strategy & Growth", "B2B Lead Generation", "Conversion Tracking Advanced"] },
-]
+type ToolkitGroup = { num: string; title: string; items: string[] }
 
 const TOOLKIT_SLUGS = ["design_thinking", "ecommerce_eng", "web_mobile_ai", "acquisition_growth"]
 
-function ToolkitPanel({ data, i }: { data: typeof TOOLKIT[number]; i: number }) {
+function ToolkitPanel({ data, i }: { data: ToolkitGroup; i: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: "-80px" })
   const [hov, setHov] = useState(false)
@@ -1008,22 +1006,24 @@ function ToolkitPanel({ data, i }: { data: typeof TOOLKIT[number]; i: number }) 
 }
 
 function ToolkitSection() {
+  const t = useT(ABOUT_STR).toolkit
+  const TOOLKIT: ToolkitGroup[] = t.groups.map((g, i) => ({ num: `0${i + 1}`, ...g }))
   return (
     <section className="abt-section-pad" style={{ padding: "120px 0", position: "relative", borderTop: `1px solid ${T.border}` }}>
       <div className="abt-wrap">
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 64 }}>
           <div>
             <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}>
-              <Kicker index="05" text="Competenze" />
+              <Kicker index="05" text={t.kicker} />
             </motion.div>
             <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.75, delay: 0.08, ease }}
               style={{ fontFamily: DISPLAY, fontSize: "clamp(30px, 4vw, 60px)", fontWeight: 900, lineHeight: 1.02, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-              LO STACK
+              {t.title}
             </motion.h2>
           </div>
           <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}
             style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.18em", color: T.faint, paddingBottom: 6 }}>
-            4 aree · 24 competenze
+            {t.meta}
           </motion.span>
         </div>
 
@@ -1038,14 +1038,6 @@ function ToolkitSection() {
 /* ══════════════════════════════════════════════════════════════════════════
    §7  FAQs
 ══════════════════════════════════════════════════════════════════════════ */
-const FAQS = [
-  { q: "Cosa significa lavorare con un \"Digital Architect\"?", a: "Significa un solo punto di contatto per l'intero progetto: dall'analisi strategica iniziale allo sviluppo dell'interfaccia premium, dal codice frontend alla SEO e al growth marketing. Niente intermediari, niente colli di bottiglia — solo esecuzione diretta." },
-  { q: "Ti occupi anche di acquisizione traffico e advertising?", a: "Sì. Un prodotto eccezionale ha bisogno di visibilità eccezionale. Integro la SEO avanzata basata su AI fin dalla progettazione e gestisco campagne ad alto budget su Google Ads e Meta Ads, con funnel completi per la lead generation B2B e la vendita e-commerce." },
-  { q: "Qual è il tuo stack tecnologico principale?", a: "React.js e Next.js con Tailwind CSS per web app e interfacce dinamiche. Expo e Supabase per mobile e backend agili. Per l'e-commerce ad alta scalabilità lavoro su Shopify Custom." },
-  { q: "Come usi l'Intelligenza Artificiale nel flusso di lavoro?", a: "Uso AI-assisted coding di ultima generazione e modelli predittivi per SEO e advertising. Questo accelera in modo esponenziale scrittura del codice, analisi dei dati e ottimizzazione — consegno infrastrutture perfette in tempi ridotti." },
-  { q: "Come gestisci tempi, costi e migrazioni?", a: "Ogni progetto parte da uno scoping tecnico accurato: timeline realistica (di solito da poche settimane a due mesi) e preventivo fisso. Per le piattaforme obsolete gestisco la migrazione verso Shopify preservando SEO, meta tag e dati storici." },
-]
-
 function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
   const [open, setOpen] = useState(false)
   return (
@@ -1090,22 +1082,23 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
 }
 
 function FAQSection() {
+  const t = useT(ABOUT_STR).faq
   return (
     <section className="abt-section-pad" style={{ padding: "120px 0", position: "relative", borderTop: `1px solid ${T.border}` }}>
       <div className="abt-wrap">
         <div className="abt-faq-grid" style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "0 80px", alignItems: "start" }}>
           <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease }}
             className="abt-faq-sticky" style={{ position: "sticky", top: 100 }}>
-            <Kicker index="06" text="Domande Frequenti" />
+            <Kicker index="06" text={t.kicker} />
             <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px, 3vw, 44px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: T.text, margin: 0 }}>
-              LOGICA&<br /><span style={{ color: "#FFFFFF" }}>TRASPARENZA</span>
+              {t.title1}<br /><span style={{ color: "#FFFFFF" }}>{t.title2}</span>
             </h2>
             <p style={{ ...BODY, color: T.muted, marginTop: 20, maxWidth: 240 }}>
-              Risposte dirette alle domande che contano davvero.
+              {t.lead}
             </p>
           </motion.div>
           <div>
-            {FAQS.map((faq, i) => <FAQItem key={i} {...faq} index={i} />)}
+            {t.items.map((faq, i) => <FAQItem key={i} {...faq} index={i} />)}
             <div style={{ height: 1, background: "rgba(255,255,255,0.09)" }} />
           </div>
         </div>
@@ -1147,20 +1140,21 @@ function GlassTextarea({ label, placeholder, value, onChange }: {
 
 function GlassSelect({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   const [f, setF] = useState(false)
-  const options = ["E-commerce ad Alta Conversione", "Siti Corporate & Lead Generation", "Applicazioni Web & Automazione Custom", "SEO Strategico & Performance Marketing", "Integrazione AI & Sistemi Intelligenti"]
+  const t = useT(ABOUT_STR).modal
   return (
     <div>
       <label style={{ display: "block", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: f ? T.accentTx : T.faint, marginBottom: 8, transition: "color 0.2s" }}>{label}</label>
       <select value={value} onChange={e => onChange(e.target.value)} onFocus={() => setF(true)} onBlur={() => setF(false)} required
         style={{ width: "100%", padding: "13px 16px", background: f ? AM(0.08) : "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${f ? LT(0.55) : "rgba(255,255,255,0.11)"}`, borderRadius: 12, color: value ? T.text : T.faint, fontSize: 14, outline: "none", boxSizing: "border-box" as const, fontFamily: "inherit", appearance: "none" as const, cursor: "pointer", boxShadow: f ? `0 0 0 3px ${AM(0.12)}, inset 0 1px 0 rgba(255,255,255,0.06)` : "inset 0 1px 0 rgba(255,255,255,0.04)", transition: "background 0.22s, border-color 0.22s, box-shadow 0.22s" }}>
-        <option value="" disabled style={{ background: "#141010", color: T.muted }}>Seleziona un'area...</option>
-        {options.map(o => <option key={o} value={o} style={{ background: "#141010", color: T.text }}>{o}</option>)}
+        <option value="" disabled style={{ background: "#141010", color: T.muted }}>{t.areaPlaceholder}</option>
+        {t.areas.map(o => <option key={o} value={o} style={{ background: "#141010", color: T.text }}>{o}</option>)}
       </select>
     </div>
   )
 }
 
 function ContactModal({ onClose }: { onClose: () => void }) {
+  const t = useT(ABOUT_STR).modal
   const [fields, setFields] = useState({ name: "", email: "", site: "", area: "", msg: "" })
   const [sent, setSent] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -1187,9 +1181,9 @@ function ContactModal({ onClose }: { onClose: () => void }) {
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
                 <PingDot color={T.accentLt} size={6} />
-                <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: T.accentTx }}>RICHIESTA CONSULENZA</span>
+                <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: T.accentTx }}>{t.kicker}</span>
               </div>
-              <h3 style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.025em", color: T.text, margin: 0, lineHeight: 1.22 }}>Raccontami il tuo progetto</h3>
+              <h3 style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.025em", color: T.text, margin: 0, lineHeight: 1.22 }}>{t.title}</h3>
             </div>
             <motion.button onClick={onClose} whileHover={{ scale: 1.10, background: "rgba(255,255,255,0.10)" }} whileTap={{ scale: 0.92 }}
               style={{ flexShrink: 0, width: 34, height: 34, borderRadius: 10, border: "1px solid rgba(255,255,255,0.20)", background: "rgba(255,255,255,0.05)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, transition: "background 0.18s" }}>
@@ -1203,27 +1197,27 @@ function ContactModal({ onClose }: { onClose: () => void }) {
                 setBusy(true); setFailed(false)
                 const ok = await sendContact({
                   name: fields.name, email: fields.email,
-                  message: withExtras(fields.msg, { "Sito": fields.site, "Area": fields.area }),
+                  message: withExtras(fields.msg, { [t.extraSite]: fields.site, [t.extraArea]: fields.area }),
                 })
                 setBusy(false)
                 if (ok) setSent(true); else setFailed(true)
               }} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <div className="contact-modal-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <GlassInput label="Nome" placeholder="Il tuo nome" value={fields.name} onChange={set("name")} />
-                <GlassInput label="Email" placeholder="email@azienda.it" type="email" value={fields.email} onChange={set("email")} />
+                <GlassInput label={t.name} placeholder={t.namePlaceholder} value={fields.name} onChange={set("name")} />
+                <GlassInput label={t.email} placeholder={t.emailPlaceholder} type="email" value={fields.email} onChange={set("email")} />
               </div>
-              <GlassInput label="Sito Web" placeholder="https://tuosito.it (opzionale)" value={fields.site} onChange={set("site")} />
-              <GlassSelect label="Cosa dobbiamo risolvere?" value={fields.area} onChange={set("area")} />
-              <GlassTextarea label="Messaggio" placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={set("msg")} />
+              <GlassInput label={t.site} placeholder={t.sitePlaceholder} value={fields.site} onChange={set("site")} />
+              <GlassSelect label={t.area} value={fields.area} onChange={set("area")} />
+              <GlassTextarea label={t.message} placeholder={t.messagePlaceholder} value={fields.msg} onChange={set("msg")} />
               {failed && (
                 <p role="alert" style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.06em", lineHeight: 1.6, color: "rgba(255,120,120,0.95)", margin: 0 }}>
-                  Invio non riuscito. Riprova, oppure scrivici a {CONTACT.email}
+                  {t.failed.replace("{email}", CONTACT.email)}
                 </p>
               )}
               <motion.button type="submit" disabled={busy} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 380, damping: 18 }}
                 style={{ marginTop: 4, width: "100%", padding: 0, borderRadius: 12, cursor: "pointer", border: "1px solid rgba(184,50,64,0.80)", background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", display: "flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
                 <span style={{ padding: "14px 14px 14px 18px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[→]</span>
-                <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF", padding: "14px 0" }}>Invia Richiesta →</span>
+                <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF", padding: "14px 0" }}>{t.submit}</span>
               </motion.button>
             </form>
           ) : (
@@ -1232,8 +1226,8 @@ function ContactModal({ onClose }: { onClose: () => void }) {
                 style={{ width: 60, height: 60, borderRadius: "50%", background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.35)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 22px", fontSize: 26, color: T.green }}>
                 ✓
               </motion.div>
-              <h4 style={{ fontSize: 19, fontWeight: 700, color: T.green, marginBottom: 10 }}>Richiesta inviata!</h4>
-              <p className="hp-body" style={{ fontSize: 14, color: T.muted, lineHeight: 1.8, margin: 0 }}>Riceverai un piano d'azione chiaro entro 24 ore lavorative.</p>
+              <h4 style={{ fontSize: 19, fontWeight: 700, color: T.green, marginBottom: 10 }}>{t.sentTitle}</h4>
+              <p className="hp-body" style={{ fontSize: 14, color: T.muted, lineHeight: 1.8, margin: 0 }}>{t.sentBody}</p>
             </motion.div>
           )}
         </div>
@@ -1249,6 +1243,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
    §8  FINAL CTA
 ══════════════════════════════════════════════════════════════════════════ */
 function FinalCTA({ onOpenModal }: { onOpenModal: () => void }) {
+  const t = useT(ABOUT_STR).cta
   const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth <= 768)
   useEffect(() => {
     const fn = () => setIsMobile(window.innerWidth <= 768)
@@ -1263,12 +1258,12 @@ function FinalCTA({ onOpenModal }: { onOpenModal: () => void }) {
       <div className="abt-wrap abt-cta-section" style={{ paddingTop: isMobile ? 150 : 120, paddingBottom: isMobile ? 200 : 60, position: "relative", zIndex: 1, textAlign: "center" }}>
         <motion.h2 className="abt-cta-h2" initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.90, ease }}
           style={{ fontFamily: DISPLAY, fontSize: "clamp(44px, 7vw, 100px)", fontWeight: 900, lineHeight: 0.94, letterSpacing: "-0.045em", color: T.text, margin: "0 auto 52px", maxWidth: 920 }}>
-          HAI QUALCOSA<br /><span style={{ color: "#FFFFFF" }}>DA COSTRUIRE?</span>
+          {t.title1}<br /><span style={{ color: "#FFFFFF" }}>{t.title2}</span>
         </motion.h2>
 
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.70, delay: 0.18, ease }}
           style={{ display: "flex", justifyContent: "center" }}>
-          <PillCTA label="Iniziamo a parlarne" onClick={onOpenModal} />
+          <PillCTA label={t.button} onClick={onOpenModal} />
         </motion.div>
       </div>
     </section>
@@ -1282,17 +1277,7 @@ function FinalCTA({ onOpenModal }: { onOpenModal: () => void }) {
 export default function NadiaMaarAbout() {
   const [modalOpen, setModalOpen] = useState(false)
 
-  useEffect(() => {
-    const sync = (e: PointerEvent) => {
-      const r = document.documentElement
-      r.style.setProperty("--x", e.clientX.toFixed(2))
-      r.style.setProperty("--y", e.clientY.toFixed(2))
-      r.style.setProperty("--xp", (e.clientX / window.innerWidth).toFixed(4))
-      r.style.setProperty("--yp", (e.clientY / window.innerHeight).toFixed(4))
-    }
-    document.addEventListener("pointermove", sync)
-    return () => document.removeEventListener("pointermove", sync)
-  }, [])
+  usePointerGlow()
 
   return (
     <div style={{

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
+import { useT } from "../lib/i18n/t"
+import { AUTH_STR } from "../lib/i18n/strings/auth"
 import { supabase } from "../lib/supabase"
 import { useBlueprint } from "../context/BlueprintContext"
 
@@ -104,6 +106,7 @@ const CSS = `
 type Mode = "login" | "register"
 
 export default function AuthModal() {
+  const t = useT(AUTH_STR).auth
   const { closeAuthModal } = useBlueprint()
   const [mode, setMode]     = useState<Mode>("login")
   const [email, setEmail]   = useState("")
@@ -148,7 +151,7 @@ export default function AuthModal() {
   }
 
   const sendMagicLink = async () => {
-    if (!email.trim()) { setError("Inserisci la tua email per ricevere il link."); return }
+    if (!email.trim()) { setError(t.magicLinkNoEmail); return }
     setError(""); setBusy("loading")
     const { error: err } = await supabase.auth.signInWithOtp({
       email: email.trim(),
@@ -209,15 +212,15 @@ export default function AuthModal() {
             fontFamily: DISPLAY, fontSize: 22, fontWeight: 800,
             color: "#fff", margin: "0 0 8px", letterSpacing: "-0.02em",
           }}>
-            {mode === "login" ? "Bentornato." : "Crea la tua Architettura."}
+            {mode === "login" ? t.titleLogin : t.titleRegister}
           </h2>
           <p className="hp-body" style={{
             fontFamily: DISPLAY, fontSize: 13.5, lineHeight: 1.6,
             color: "#FFFFFF", margin: 0,
           }}>
             {mode === "login"
-              ? "Accedi per salvare il tuo Blueprint e gestire i progetti."
-              : "Registrati gratuitamente per salvare componenti nel Blueprint e collaborare con noi."
+              ? t.leadLogin
+              : t.leadRegister
             }
           </p>
         </div>
@@ -230,10 +233,10 @@ export default function AuthModal() {
           borderRadius: 12, marginBottom: 24,
         }}>
           <button className={`nm-auth-tab${mode === "login" ? " active" : ""}`} onClick={() => switchMode("login")}>
-            Accedi
+            {t.tabLogin}
           </button>
           <button className={`nm-auth-tab${mode === "register" ? " active" : ""}`} onClick={() => switchMode("register")}>
-            Registrati
+            {t.tabRegister}
           </button>
         </div>
 
@@ -252,14 +255,14 @@ export default function AuthModal() {
               </svg>
             </div>
             <div style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>
-              {mode === "register" || magicSent ? "Controlla la tua email!" : "Accesso riuscito!"}
+              {mode === "register" || magicSent ? t.doneCheckEmail : t.doneLogin}
             </div>
             <div className="hp-body" style={{ fontFamily: DISPLAY, fontSize: 13, color: "#FFFFFF" }}>
               {magicSent
-                ? "Ti abbiamo inviato un link per accedere senza password."
+                ? t.doneMagic
                 : mode === "register"
-                  ? "Abbiamo inviato un link di conferma al tuo indirizzo email."
-                  : "Benvenuto nel tuo Blueprint."
+                  ? t.doneRegister
+                  : t.doneWelcome
               }
             </div>
           </div>
@@ -270,13 +273,13 @@ export default function AuthModal() {
                 <input
                   className="nm-auth-input"
                   type="text" required autoComplete="name"
-                  placeholder="Nome e cognome"
+                  placeholder={t.fullName}
                   value={fullName} onChange={e => setFullName(e.target.value)}
                 />
                 <input
                   className="nm-auth-input"
                   type="text" autoComplete="organization"
-                  placeholder="Azienda (facoltativo)"
+                  placeholder={t.company}
                   value={company} onChange={e => setCompany(e.target.value)}
                 />
               </>
@@ -284,13 +287,13 @@ export default function AuthModal() {
             <input
               className="nm-auth-input"
               type="email" required autoComplete="email"
-              placeholder="Email aziendale"
+              placeholder={t.email}
               value={email} onChange={e => setEmail(e.target.value)}
             />
             <input
               className="nm-auth-input"
               type="password" required autoComplete={mode === "login" ? "current-password" : "new-password"}
-              placeholder="Password"
+              placeholder={t.password}
               value={password} onChange={e => setPass(e.target.value)}
             />
 
@@ -311,7 +314,7 @@ export default function AuthModal() {
             <button className="nm-auth-submit" type="submit" disabled={busy === "loading"}>
               {busy === "loading"
                 ? "..."
-                : mode === "login" ? "Accedi al Blueprint" : "Crea Account Gratuito"
+                : mode === "login" ? t.submitLogin : t.submitRegister
               }
             </button>
 
@@ -319,7 +322,7 @@ export default function AuthModal() {
               <>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "2px 0" }}>
                   <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.10)" }} />
-                  <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.14em", color: "#FFFFFF" }}>OPPURE</span>
+                  <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.14em", color: "#FFFFFF" }}>{t.or}</span>
                   <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.10)" }} />
                 </div>
                 <button
@@ -339,7 +342,7 @@ export default function AuthModal() {
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 7l-10 6L2 7" />
                   </svg>
-                  Accedi con link magico
+                  {t.magicLink}
                 </button>
               </>
             )}
@@ -349,8 +352,8 @@ export default function AuthModal() {
               textAlign: "center", color: "#FFFFFF",
             }}>
               {mode === "register"
-                ? "Registrandoti accetti i nostri termini di servizio."
-                : "Senza password: ti inviamo un link di accesso via email."
+                ? t.footerRegister
+                : t.footerLogin
               }
             </div>
           </form>

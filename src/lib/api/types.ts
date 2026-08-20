@@ -1,3 +1,5 @@
+import type { Locale } from "../i18n/locales"
+
 /* ── Clients (CRM) ─────────────────────────────────────────── */
 export type ClientPlan = "starter" | "pro" | "enterprise"
 /** `archived` chiude il rapporto senza cancellare nulla: fatture, documenti e
@@ -347,7 +349,12 @@ export interface SiteSettings {
 
 export interface PageSeoConfig {
   id: string
+  /** Path canonico senza prefisso di lingua: "/about" vale per IT e EN. */
   pageSlug: string
+  /** La lingua di QUESTA scheda. L'indirizzo pubblico si calcola da
+      pageSlug + locale: due colonne che devono restare d'accordo fra loro
+      prima o poi non lo sono. */
+  locale: Locale
   metaTitle?: string
   metaDescription?: string
   ogImageUrl?: string

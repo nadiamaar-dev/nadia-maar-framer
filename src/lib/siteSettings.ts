@@ -67,14 +67,40 @@ function readCache(): PublicSiteSettings | null {
   } catch { return null }
 }
 
+/** Oltre questa soglia si procede senza le impostazioni: vedi il commento
+ *  dentro `getSiteSettings`. */
+const SETTINGS_TIMEOUT_MS = 2000
+
 export function getSiteSettings(): Promise<PublicSiteSettings> {
   if (inflight) return inflight
   const cached = readCache()
   if (cached) { inflight = Promise.resolve(cached); return inflight }
   if (!URL_ || !KEY) { inflight = Promise.resolve(DEFAULT_PUBLIC_SETTINGS); return inflight }
 
+  /* ── PERCHÉ UN TIMEOUT ────────────────────────────────────────────────
+     Il `.catch()` in fondo copre l'errore, non l'attesa. Se la richiesta
+     resta appesa — rete lenta, DNS che non risponde, Supabase che limita —
+     la promessa non si risolve mai, <MaintenanceGate> resta in `loading` e
+     il visitatore guarda uno schermo scuro vuoto finché non se ne va.
+
+     Non è teoria: è successo durante i test di questa stessa build, e lo
+     schermo nero era indistinguibile da un sito rotto.
+
+     Due secondi e poi si procede con i valori predefiniti. Il compromesso è
+     esplicito: passata quella soglia si rischia di non mostrare la tenda di
+     manutenzione, ma la manutenzione è uno stato raro e volontario, mentre
+     una rete lenta capita a chiunque legga dal telefono. Fra «una volta su
+     mille non vedono l'avviso» e «una volta su cento non vedono il sito» la
+     scelta non è in dubbio.
+
+     I bot non passano di qui: /api/prerender legge le impostazioni lato
+     server e la manutenzione resta rispettata per l'indicizzazione. */
+  const ctrl = typeof AbortController !== "undefined" ? new AbortController() : null
+  const scaduto = setTimeout(() => ctrl?.abort(), SETTINGS_TIMEOUT_MS)
+
   inflight = fetch(`${URL_}/rest/v1/public_site_settings?select=*&limit=1`, {
     headers: { apikey: KEY, accept: "application/json" },
+    signal: ctrl?.signal,
   })
     .then(r => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
     .then((rows: Record<string, unknown>[]) => {
@@ -102,6 +128,7 @@ export function getSiteSettings(): Promise<PublicSiteSettings> {
       return s
     })
     .catch(() => DEFAULT_PUBLIC_SETTINGS)
+    .finally(() => clearTimeout(scaduto))
 
   return inflight
 }

@@ -1,6 +1,8 @@
 import React, { useEffect } from "react"
 import { SandboxCategory, SandboxType } from "../../data/sandboxData"
 import { useBlueprint } from "../../context/BlueprintContext"
+import { useT } from "../../lib/i18n/t"
+import { LAB_STR } from "../../lib/i18n/strings/lab"
 
 const MONO    = "'JetBrains Mono',monospace"
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
@@ -14,19 +16,9 @@ const CATEGORIES: SandboxCategory[] = [
   "UI Components",
 ]
 
-const CAT_SHORT: Record<string, string> = {
-  "All":                  "Tutti",
-  "B2B Portals":          "B2B",
-  "E-commerce & Shopify": "E-com",
-  "Landing Pages":        "Landing",
-  "UI Components":        "UI",
-}
-
-const TYPE_OPTIONS = [
-  { value: "all",       label: "Tutti"    },
-  { value: "full-site", label: "Full Site"},
-  { value: "component", label: "Comp."    },
-] as const
+/* Le etichette — per esteso nella colonna, accorciate nella barra
+   orizzontale — arrivano dal dizionario: qui resta solo l'ordine. */
+const TYPE_VALUES = ["all", "full-site", "component"] as const
 
 /* Nel JSX, non in un useEffect: la barra è unica, quindi lo <style> si monta
    nello stesso commit dei pulsanti e il browser non li disegna mai spogli. */
@@ -116,8 +108,9 @@ interface Props {
 
 export default function Sidebar({ activeCategory, activeType, onCategoryChange, onTypeChange }: Props) {
   const { items } = useBlueprint()
+  const t = useT(LAB_STR).filters
 
-  const typeIndex = TYPE_OPTIONS.findIndex(t => t.value === activeType)
+  const typeIndex = TYPE_VALUES.findIndex(v => v === activeType)
 
   /* ── Blueprint badge — [→] mono glass style ── */
   const BlueprintBadge = (
@@ -126,7 +119,7 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
         [{items.length}]
       </span>
       <span className="nm-blueprint-body">
-        <span style={{ fontFamily: DISPLAY, fontSize: 12, fontWeight: 700, color: "#fff", letterSpacing: "-0.01em" }}>Blueprint</span>
+        <span style={{ fontFamily: DISPLAY, fontSize: 12, fontWeight: 700, color: "#fff", letterSpacing: "-0.01em" }}>{t.blueprint}</span>
         <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.12em", color: "#FFFFFF" }}>
           {items.length === 0 ? "vuoto · aggiungi" : `${items.length} element${items.length > 1 ? "i" : "o"}`}
         </span>
@@ -180,7 +173,7 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
                   cursor: "pointer", transition: "all 0.18s ease",
                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const,
                 }}>
-                  {CAT_SHORT[c] ?? c}
+                  {t.categoriesShort[c]}
                 </button>
               )
             })}
@@ -203,8 +196,8 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
               transition: "transform 0.22s cubic-bezier(0.16,1,0.3,1)",
               pointerEvents: "none",
             }} />
-            {TYPE_OPTIONS.map(t => (
-              <button key={t.value} onClick={() => onTypeChange(t.value)} style={{
+            {TYPE_VALUES.map(v => (
+              <button key={v} onClick={() => onTypeChange(v)} style={{
                 flex: 1, padding: "9px 0",
                 background: "transparent", border: "none",
                 borderRadius: 10, cursor: "pointer",
@@ -214,7 +207,7 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
                 transition: "color 0.18s ease",
                 position: "relative", zIndex: 1,
               }}>
-                {t.label}
+                {t.typesShort[v]}
               </button>
             ))}
           </div>
@@ -240,14 +233,14 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
           textTransform: "uppercase", color: "#FFFFFF",
           padding: "0 14px", marginBottom: 4,
         }}>
-          Categoria
+          {t.categoryLabel}
         </div>
 
         {CATEGORIES.map(c => (
           <button key={c}
             className={`nm-sb-cat${activeCategory === c ? " active" : ""}`}
             onClick={() => onCategoryChange(c)}>
-            {c}
+            {t.categories[c]}
           </button>
         ))}
 
@@ -257,7 +250,7 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
           textTransform: "uppercase", color: "#FFFFFF",
           padding: "0 14px", marginTop: 16, marginBottom: 4,
         }}>
-          Tipo
+          {t.typeLabel}
         </div>
         <div style={{
           display: "flex", flexDirection: "column",
@@ -265,11 +258,11 @@ export default function Sidebar({ activeCategory, activeType, onCategoryChange, 
           border: "1px solid rgba(255,255,255,0.18)",
           borderRadius: 8, padding: 3, gap: 2,
         }}>
-          {TYPE_OPTIONS.map(t => (
-            <button key={t.value}
-              className={`nm-sb-type${activeType === t.value ? " active" : ""}`}
-              onClick={() => onTypeChange(t.value)}>
-              {t.value === "all" ? "Tutti" : t.value === "full-site" ? "Full Site" : "Component"}
+          {TYPE_VALUES.map(v => (
+            <button key={v}
+              className={`nm-sb-type${activeType === v ? " active" : ""}`}
+              onClick={() => onTypeChange(v)}>
+              {t.types[v]}
             </button>
           ))}
         </div>

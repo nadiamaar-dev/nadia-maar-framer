@@ -21,7 +21,11 @@ import FloatingContact from "./components/FloatingContact"
 import Header from "./components/Header"
 import { sendContact, withExtras } from "./lib/sendContact"
 import FoundryConfigurator from "./components/foundry/FoundryConfigurator"
-import { PROCESSO } from "./data/process"
+import { processo } from "./data/process"
+import { useLocale } from "./lib/i18n/LocaleContext"
+import { useT } from "./lib/i18n/t"
+import { HOME_STR } from "./lib/i18n/strings/home"
+import { usePointerGlow } from "./hooks/usePointerGlow"
 
 /* ══════════════════════════════════════════════════════════════════════════
    INLINE SVG ICONS (replaces lucide-react)
@@ -60,10 +64,6 @@ const DiscordIcon = () => (
    GLOBAL CSS
 ══════════════════════════════════════════════════════════════════════════ */
 const GLOBAL_CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
   body { font-family: 'Space Grotesk', system-ui, sans-serif; }
@@ -469,6 +469,7 @@ const HERO_SOCIALS = [
    uppercase mono labels. That repetition was the clutter. One status line,
    one metric, done. */
 function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
+  const t = useT(HOME_STR).hero
   return (
     <div className="hp-hero-live-cards hp-av">
       <style>{`
@@ -513,10 +514,10 @@ function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
       `}</style>
 
       <button className="hp-av-in" onClick={onOpen}
-        aria-label="Disponibile: apri il form di contatto">
+        aria-label={t.availableAria}>
         <span className="hp-av-status">
           <PingDot color={T.green} size={6} />
-          Disponibile
+          {t.available}
         </span>
 
         <div className="hp-av-val">
@@ -524,13 +525,15 @@ function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
           <span className="hp-av-n">24</span>
           <span className="hp-av-u">h</span>
         </div>
-        <div className="hp-av-cap">Tempo di risposta</div>
+        <div className="hp-av-cap">{t.responseTime}</div>
       </button>
     </div>
   )
 }
 
 function Hero() {
+  const t = useT(HOME_STR).hero
+  const { href: L } = useLocale()
   const [formOpen, setFormOpen] = useState(false)
   return (
     <section style={{ ...SEC, minHeight: 800, display: "flex", alignItems: "center", overflow: "clip", position: "relative" }} id="s1" className="hp-sec hp-hero">
@@ -636,7 +639,7 @@ function Hero() {
       {/* small NM monogram + credit */}
       <div className="hp-hero-nm" aria-hidden>
         <span className="nm-l">NM</span>
-        <span className="nm-c">Nadia Maar<br />Studio © 2026</span>
+        <span className="nm-c">Nadia Maar<br />{t.credit}</span>
       </div>
 
       {/* right-edge numbered tickers (blueprint) */}
@@ -654,7 +657,7 @@ function Hero() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }} style={{ marginBottom: 24 }}>
           <div className="hp-hero-eyebrow" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 13, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
             <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Development · Performance Marketing ]</span>
+            <span>{t.eyebrow}</span>
           </div>
         </motion.div>
 
@@ -666,17 +669,17 @@ function Hero() {
               <div className="hp-hl">
                 <span className="hp-hl-corner tl" />
                 <span className="hp-hl-corner br" />
-                <span className="hp-hl-tag">Fig. 01 — Identità</span>
+                <span className="hp-hl-tag">{t.figTag}</span>
                 <span className="hp-hl-dim">72PT / DISPLAY</span>
                 <motion.h1
                   className="hp-hero-h1"
                   initial={{ opacity: 0, y: 38 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease }}
                   style={{ fontFamily: DISPLAY, fontSize: "clamp(42px, 5.4vw, 82px)", fontWeight: 900, lineHeight: 0.95, letterSpacing: "-0.045em", margin: 0, color: "#FFFFFF", textTransform: "uppercase" as const, filter: "drop-shadow(0 12px 34px rgba(0,0,0,0.6))", textShadow: "0 4px 12px rgba(0, 0, 0, 0.8)" }}
                 >
-                  <span style={{ whiteSpace: "nowrap" }}>E&#8209;commerce</span><br />
-                  <span>Architect</span><br />
+                  <span style={{ whiteSpace: "nowrap" }}>{t.title1}</span><br />
+                  <span>{t.title2}</span><br />
                   <span>{"& "}</span>
-                  <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(240,243,249,0.88)", textShadow: "none" }}>Digital Strategist</span>
+                  <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(240,243,249,0.88)", textShadow: "none" }}>{t.title3}</span>
                 </motion.h1>
               </div>
 
@@ -701,7 +704,7 @@ function Hero() {
               initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, delay: 0.22, ease }}
               style={{ fontSize: "clamp(16px, 1.4vw, 17px)", color: "#FFFFFF", fontWeight: 400, fontFamily: "'Geist', system-ui, sans-serif", maxWidth: 340, lineHeight: 1.85, margin: "28px 0 0", letterSpacing: "0.01em", WebkitFontSmoothing: "antialiased" } as React.CSSProperties}
             >
-              Un'unica mente tra codice e business. Architetture digitali che scalano — senza intermediari, senza compromessi.
+              {t.desc}
             </motion.p>
 
             {/* Process flow — visual timeline */}
@@ -711,7 +714,7 @@ function Hero() {
               transition={{ duration: 0.75, delay: 0.28, ease }}
               style={{ marginTop: 36 }}
             >
-              {(["Idea", "Strategia", "Esecuzione", "Risultato"]).map((label, i) => (
+              {t.flow.map((label, i) => (
                 <div key={label} className="hp-flow-step">
                   <span className="hp-flow-num"  style={{ color: "#FFFFFF" }}>{`0${i + 1}`}</span>
                   <div  className="hp-flow-dot"   style={{ background: "rgba(255,255,255,0.50)" }} />
@@ -737,15 +740,15 @@ function Hero() {
               >
                 <span className="hp-hero-cta-index" style={{ padding: "0 14px", borderRight: "1px solid rgba(255,60,92,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[01]</span>
                 <span className="hp-hero-cta-inner" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", fontSize: 13, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
-                  <span>Configura il Progetto</span>
+                  <span>{t.ctaPrimary}</span>
                   <span style={{ fontSize: 15 }}>→</span>
                 </span>
               </motion.button>
               <motion.a
-                href="/#s9" whileHover={{ y: -2, background: "rgba(255,255,255,0.13)", borderColor: "rgba(224,224,224,0.38)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                href={`${L("/")}#s9`} whileHover={{ y: -2, background: "rgba(255,255,255,0.13)", borderColor: "rgba(224,224,224,0.38)" }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
                 style={{ flex: "1 1 0", minHeight: 54, padding: "0 18px", borderRadius: 9, fontFamily: MONO, fontSize: 13, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, textAlign: "center" as const, textDecoration: "none", border: "1px solid rgba(255,255,255,0.30)", background: "rgba(255,255,255,0.012)", color: T.text, boxShadow: "0 6px 28px rgba(8,12,28,0.42), inset 0 1px 0 rgba(255,255,255,0.012)" }}
               >
-                Parliamo del Progetto <span style={{ fontSize: 15 }}>→</span>
+                {t.ctaSecondary} <span style={{ fontSize: 15 }}>→</span>
               </motion.a>
             </motion.div>
 
@@ -783,7 +786,7 @@ function Hero() {
                 .hp-spec-v { font-family:${MONO}; font-size:12.5px; letter-spacing:0.02em;
                   color:#FFFFFF; text-align:right; }
               `}</style>
-              {[["Focus", "E-commerce · Growth"], ["Studio", "NM 2026"]].map(([k, v]) => (
+              {[[t.specFocusKey, t.specFocusValue], [t.specStudioKey, t.specStudioValue]].map(([k, v]) => (
                 <div className="hp-spec-row" key={k}>
                   <span className="hp-spec-k">{k}</span>
                   <span className="hp-spec-v">{v}</span>
@@ -818,7 +821,7 @@ function Hero() {
 
         {/* bottom — stats grid V3 style + scroll cue */}
         <motion.div className="hp-hero-botnav" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.55, ease }}>
-          <span className="hp-hero-scroll" style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>Scorri ↓</span>
+          <span className="hp-hero-scroll" style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>{t.scroll}</span>
         </motion.div>
 
         {/* ── Social proof marquee ── */}
@@ -837,7 +840,11 @@ function Hero() {
 /* ══════════════════════════════════════════════════════════════════════════
    §  LE SOLUZIONI — La Matrice di Conversione
 ══════════════════════════════════════════════════════════════════════════ */
-const SOLUZIONI = [
+/* Icona, gradiente e destinazione restano qui: sono scelte di disegno, non
+   testo. Titolo, descrizione e CTA arrivano dal dizionario e si accoppiano
+   per posizione — l'ordine di questo elenco e quello di `soluzioni.items`
+   sono la stessa cosa. */
+const SOLUZIONI_ART = [
   {
     num: "01",
     icon: (
@@ -848,9 +855,6 @@ const SOLUZIONI = [
     ),
     gradient: "linear-gradient(135deg, #FF3552 0%, #FF334B 100%)",
     glow: "rgba(255,60,92,0.28)",
-    title: "E-commerce ad Alta Conversione",
-    desc: "Negozi online veloci, stabili e scalabili. Automazione totale di magazzini, cataloghi massivi e logistica.",
-    cta: "Ottimizza il tuo E-commerce",
     href: "/ecommerce",
   },
   {
@@ -862,9 +866,6 @@ const SOLUZIONI = [
     ),
     gradient: "linear-gradient(135deg, #AEB6C4 0%, #EDF1F7 100%)",
     glow: "rgba(210,220,235,0.24)",
-    title: "Applicazioni Web & Automazione Custom",
-    desc: "Software e strumenti di produttività su misura. Connettiamo i tuoi sistemi (CRM/ERP) per eliminare l'errore umano.",
-    cta: "Automatizza i tuoi Processi",
     href: "/web-app",
   },
   {
@@ -877,9 +878,6 @@ const SOLUZIONI = [
     ),
     gradient: "linear-gradient(135deg, #FF334B 0%, #FF8A96 100%)",
     glow: "rgba(255,60,92,0.28)",
-    title: "Integrazione AI & Sistemi Intelligenti",
-    desc: "Soluzioni pratiche basate su Intelligenza Artificiale (Agenti AI, LLM). Abbattiamo i costi di gestione e ottimizziamo la routine.",
-    cta: "Innova con l'AI",
     href: "/ai",
   },
   {
@@ -891,9 +889,6 @@ const SOLUZIONI = [
     ),
     gradient: "linear-gradient(135deg, #FF3552 0%, #FF8A96 100%)",
     glow: "rgba(255,60,92,0.28)",
-    title: "SEO Strutturale & Performance",
-    desc: "Posizionamento organico integrato nel codice fin dal primo giorno. Scaliamo Google per intercettare traffico pronto a comprare.",
-    cta: "Scala le Classifiche",
     href: "/seo",
   },
   {
@@ -905,14 +900,13 @@ const SOLUZIONI = [
     ),
     gradient: "linear-gradient(135deg, #AEB6C4 0%, #EDF1F7 100%)",
     glow: "rgba(210,220,235,0.24)",
-    title: "Corporate & Lead Generation",
-    desc: "Presenza digitale premium in React/Next.js: interfacce ad alte performance, Core Web Vitals ottimizzati e funnel di acquisizione pensati per generare lead qualificati.",
-    cta: "Potenzia il tuo Brand",
     href: "/corporate",
   },
 ]
 
-function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
+type Soluzione = typeof SOLUZIONI_ART[number] & { title: string; desc: string; cta: string; url: string }
+
+function SolCard({ s, i }: { s: Soluzione; i: number }) {
   const [hover, setHover] = useState(false)
   const featured = i === 0
 
@@ -942,7 +936,7 @@ function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
 
   return (
     <a
-      href={s.href}
+      href={s.url}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
@@ -999,6 +993,9 @@ function SolCard({ s, i }: { s: typeof SOLUZIONI[0]; i: number }) {
 }
 
 function SoluzioniMatrix() {
+  const t = useT(HOME_STR).soluzioni
+  const { href: L } = useLocale()
+  const SOLUZIONI: Soluzione[] = SOLUZIONI_ART.map((art, i) => ({ ...art, ...t.items[i], url: L(art.href) }))
   return (
     /* id="s4": è l'ancora a cui puntano il menu e il piè di pagina. Prima la
        sezione non ne aveva nessuna e il link "Soluzioni" ricaricava la home. */
@@ -1009,13 +1006,13 @@ function SoluzioniMatrix() {
             <span style={{ color: T.accentLt }}>//</span>
             {/* il kicker precedente, "Core Skills & Tech Stack", era rimasto
                 da un'altra sezione e non aveva a che vedere con i servizi */}
-            <span>[ Servizi ]</span>
+            <span>{t.kicker}</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.6vw,48px)", fontWeight: 700, lineHeight: 1.06, letterSpacing: "-0.025em", margin: "0 0 16px", maxWidth: 780, color: T.text }}>
-            Soluzioni ad Alta Ingegneria
+            {t.title}
           </h2>
           <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 680, margin: "0 0 40px" }}>
-            Ogni soluzione è un servizio completo con la <span style={{ color: "#FFFFFF" }}>sua pagina dedicata</span> — architettura, stack tecnologico e casi d'uso spiegati in dettaglio. Clicca su una card per esplorarla.
+            {t.leadBefore}<span style={{ color: "#FFFFFF" }}>{t.leadHighlight}</span>{t.leadAfter}
           </p>
         </Reveal>
 
@@ -1057,7 +1054,9 @@ function SoluzioniMatrix() {
 /* ══════════════════════════════════════════════════════════════════════════
    §  IL PROBLEMA — La Diagnosi
 ══════════════════════════════════════════════════════════════════════════ */
-const DIAGNOSI_PS = [
+/* Come per le soluzioni: qui restano le sole icone, accoppiate per posizione
+   con `diagnosi.items` del dizionario. */
+const DIAGNOSI_ART = [
   {
     problem: {
       icon: (
@@ -1066,8 +1065,6 @@ const DIAGNOSI_PS = [
           <path d="M16 10a4 4 0 0 1-8 0"/>
         </svg>
       ),
-      title: "E-commerce inefficiente",
-      body: "Cataloghi disconnessi, errori di magazzino e automatismi rotti. Perdi vendite ogni giorno senza saperlo.",
     },
     solution: {
       icon: (
@@ -1075,8 +1072,6 @@ const DIAGNOSI_PS = [
           <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
         </svg>
       ),
-      title: "Shopify Custom Automatizzato",
-      body: "Sincronizzazione in tempo reale di stock, ordini e cataloghi con 30.000+ SKU. Zero errori manuali, conversioni al massimo.",
     },
   },
   {
@@ -1087,8 +1082,6 @@ const DIAGNOSI_PS = [
           <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
         </svg>
       ),
-      title: "Invisibilità su Google",
-      body: "Traffico dipendente al 100% dalle Ads. Se smetti di pagare, i clienti spariscono. Nessuna rendita organica.",
     },
     solution: {
       icon: (
@@ -1096,8 +1089,6 @@ const DIAGNOSI_PS = [
           <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
         </svg>
       ),
-      title: "SEO Strutturale + Ads Scalabili",
-      body: "Architettura SEO integrata nel codice dal giorno uno. Traffico organico che cresce in autonomia, campagne Google e Meta che amplificano il ROI.",
     },
   },
   {
@@ -1108,8 +1099,6 @@ const DIAGNOSI_PS = [
           <line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="12" x2="13" y2="12"/>
         </svg>
       ),
-      title: "Sito aziendale debole",
-      body: "Presenza online lenta e obsoleta. I clienti premium valutano il tuo brand in 3 secondi — e scelgono il competitor.",
     },
     solution: {
       icon: (
@@ -1117,8 +1106,6 @@ const DIAGNOSI_PS = [
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
         </svg>
       ),
-      title: "Interfaccia Premium ad Alta Conversione",
-      body: "Design d'élite in React/Next.js con Core Web Vitals al 100%. La prima impressione è impeccabile e converte clienti B2B di alto profilo.",
     },
   },
   {
@@ -1128,8 +1115,6 @@ const DIAGNOSI_PS = [
           <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
         </svg>
       ),
-      title: "Processi manuali e ripetitivi",
-      body: "Il tuo team spreca ore su attività che un sistema intelligente farebbe in secondi. Costi operativi fuori controllo.",
     },
     solution: {
       icon: (
@@ -1137,13 +1122,17 @@ const DIAGNOSI_PS = [
           <circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
         </svg>
       ),
-      title: "Automazione AI su Misura",
-      body: "API, middleware e agenti AI che eliminano il lavoro ripetitivo. Il tuo team torna a fare ciò che conta davvero: crescita e strategia.",
     },
   },
 ]
 
-function DiagnosiCard({ d, i }: { d: typeof DIAGNOSI_PS[0]; i: number }) {
+type Diagnosi = {
+  problem: { icon: React.ReactNode; title: string; body: string }
+  solution: { icon: React.ReactNode; title: string; body: string }
+}
+
+function DiagnosiCard({ d, i }: { d: Diagnosi; i: number }) {
+  const t = useT(HOME_STR).diagnosi
   const [hov, setHov] = useState(false)
   return (
     <motion.div
@@ -1167,7 +1156,7 @@ function DiagnosiCard({ d, i }: { d: typeof DIAGNOSI_PS[0]; i: number }) {
       <div style={{ position: "relative", zIndex: 3 }}>
         <div style={{ padding: "26px 26px 20px" }}>
           <div style={{ marginBottom: 14 }}>
-            <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(239,68,68,0.55)" }}>[ Problema ]</span>
+            <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: "rgba(239,68,68,0.55)" }}>{t.problemTag}</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
             <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.24)", color: "#FFFFFF" }}>
@@ -1180,7 +1169,7 @@ function DiagnosiCard({ d, i }: { d: typeof DIAGNOSI_PS[0]; i: number }) {
         <div style={{ margin: "0 26px", height: 1, background: `linear-gradient(90deg, transparent, ${hov ? "rgba(255,60,92,0.35)" : "rgba(255,255,255,0.07)"}, transparent)`, transition: "background 0.30s" }} />
         <div style={{ padding: "20px 26px 26px" }}>
           <div style={{ marginBottom: 14 }}>
-            <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: hov ? T.accentLt : "rgba(255,60,92,0.55)", transition: "color 0.28s" }}>[ Soluzione ]</span>
+            <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", textTransform: "uppercase" as const, color: hov ? T.accentLt : "rgba(255,60,92,0.55)", transition: "color 0.28s" }}>{t.solutionTag}</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
             <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.24)", color: "#FFFFFF" }}>
@@ -1196,16 +1185,21 @@ function DiagnosiCard({ d, i }: { d: typeof DIAGNOSI_PS[0]; i: number }) {
 }
 
 function DiagnosiBlock() {
+  const t = useT(HOME_STR).diagnosi
+  const DIAGNOSI_PS: Diagnosi[] = DIAGNOSI_ART.map((art, i) => ({
+    problem:  { ...art.problem,  ...t.items[i].problem  },
+    solution: { ...art.solution, ...t.items[i].solution },
+  }))
   return (
     <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Il Problema — La Diagnosi ]</span>
+            <span>{t.kicker}</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,46px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 40px", maxWidth: 680, color: T.text }}>
-            Sei bloccato in una di queste situazioni?
+            {t.title}
           </h2>
         </Reveal>
         <style>{`
@@ -1230,7 +1224,7 @@ function DiagnosiBlock() {
 
 function VisualAnalisi() {
   const cx = 150, cy = 125, R = 80
-  const topics = ["Mercato","Stack Tech","Obiettivi","Competitor","Logistica","Budget"]
+  const topics = useT(HOME_STR).visuals.topics
   const sats = topics.map((label, i) => {
     const a = (i * 60 - 90) * (Math.PI / 180)
     return { label, x: cx + R * Math.cos(a), y: cy + R * Math.sin(a) }
@@ -1336,8 +1330,9 @@ function VisualDesign() {
 }
 
 function VisualAPI() {
+  const { supplier } = useT(HOME_STR).visuals
   const boxes = [
-    { label: "Fornitore", sub: "ERP/CRM",     x: 14,  y: 72, w: 76, h: 86,  ac: "rgba(120,20,30,0.05)", bd: "rgba(255,60,92,0.12)" },
+    { label: supplier, sub: "ERP/CRM",     x: 14,  y: 72, w: 76, h: 86,  ac: "rgba(120,20,30,0.05)", bd: "rgba(255,60,92,0.12)" },
     { label: "API Layer", sub: "Middleware",   x: 112, y: 50, w: 76, h: 130, ac: "rgba(255,60,92,0.05)", bd: "rgba(255,60,92,0.13)" },
     { label: "Shopify",   sub: "+ Analytics",  x: 210, y: 72, w: 76, h: 86,  ac: "rgba(120,20,30,0.05)", bd: "rgba(255,60,92,0.12)" },
   ]
@@ -1391,6 +1386,7 @@ function VisualAPI() {
 }
 
 function VisualLancio() {
+  const { months } = useT(HOME_STR).visuals
   const pts: [number,number][] = [[22,178],[57,162],[92,147],[127,124],[162,92],[197,62],[232,34]]
   const lineD = `M${pts.map(([x,y])=>`${x},${y}`).join(" L")}`
   const areaD = `${lineD} L232,192 L22,192 Z`
@@ -1422,7 +1418,7 @@ function VisualLancio() {
           style={{ transformOrigin: `${x}px ${y}px` }}
         />
       ))}
-      {["Gen","Feb","Mar","Apr","Mag","Giu","Lug"].map((m,i) => (
+      {months.map((m,i) => (
         <text key={i} x={22+i*35} y={200} textAnchor="middle" fontSize={6.5}
           fill="rgba(242,242,250,0.26)" fontFamily="Inter,sans-serif">{m}</text>
       ))}
@@ -1442,16 +1438,15 @@ function VisualLancio() {
   )
 }
 
-const METHOD_STEPS = [
-  { n: "01", label: "FASE 1", title: "Analisi Tecnica e di Business", body: "Non inizio a scrivere codice senza una strategia. Analizzo il tuo modello di business, i competitor e i flussi logistici per mappare lo stack tecnologico perfetto in base ai tuoi obiettivi commerciali." },
-  { n: "02", label: "FASE 2", title: "UI/UX Design & Sviluppo", body: "Progetto l'interfaccia focalizzandomi sulla User Experience. Sviluppo l'infrastruttura garantendo velocità di caricamento massime, sicurezza e un design sartoriale studiato sul target." },
-  { n: "03", label: "FASE 3", title: "Ingegnerizzazione & Sincronizzazione API", body: "Collego i sistemi di fornitori e gestionali. Automatizzo l'aggiornamento in tempo reale di scorte, prezzi e ordini. Configuro l'AI per ottimizzare il catalogo ed eliminare i processi manuali." },
-  { n: "04", label: "FASE 4", title: "Lancio, Tracking & Growth Marketing", body: "Configuro i pixel di tracciamento e attivo i canali di acquisizione (SEO, Adv, Social). Monitoro i dati in tempo reale per ottimizzare il tasso di conversione (CRO) e scalare il fatturato." },
-]
+/* Le quattro fasi del carosello: il numero è la posizione, il resto è testo
+   e vive nel dizionario. */
+type MethodStep = { n: string; label: string; title: string; body: string }
 
 const METHOD_VISUALS = [VisualAnalisi, VisualDesign, VisualAPI, VisualLancio]
 
 function MethodCarousel() {
+  const t = useT(HOME_STR).cabinet
+  const METHOD_STEPS: MethodStep[] = t.steps.map((st, i) => ({ n: `0${i + 1}`, ...st }))
   const [step, setStep] = useState<number | null>(0)
   const [tick, setTick] = useState(0)
   const STEP_MS = 8500
@@ -1587,6 +1582,9 @@ function MethodCarousel() {
    ciascuna; il dettaglio resta su About, a un clic di distanza.
 ══════════════════════════════════════════════════════════════════════════ */
 function ProcessStrip() {
+  const t = useT(HOME_STR).processo
+  const { locale, href: L } = useLocale()
+  const PROCESSO = processo(locale)
   return (
     <section style={{ ...SEC, borderTop: `1px solid ${T.border}` }} id="s5" className="hp-sec">
       <div style={WRAP} className="hp-wrap">
@@ -1599,13 +1597,13 @@ function ProcessStrip() {
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Il Processo ]</span>
+            <span>{t.kicker}</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 16px", maxWidth: 680, color: T.text }}>
-            Quattro fasi, nessuna sorpresa
+            {t.title}
           </h2>
           <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 640, margin: "0 0 40px" }}>
-            Dal primo confronto al monitoraggio dopo il lancio: ogni fase ha una durata dichiarata e un esito verificabile.
+            {t.lead}
           </p>
         </Reveal>
 
@@ -1637,8 +1635,8 @@ function ProcessStrip() {
         </div>
 
         <div style={{ marginTop: 28 }}>
-          <a href="/about" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase" as const, color: "#FFFFFF", textDecoration: "none", borderBottom: `1px solid ${T.accentLt}`, paddingBottom: 3 }}>
-            Il processo in dettaglio <span style={{ color: T.accentLt }}>→</span>
+          <a href={L("/about")} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase" as const, color: "#FFFFFF", textDecoration: "none", borderBottom: `1px solid ${T.accentLt}`, paddingBottom: 3 }}>
+            {t.detail} <span style={{ color: T.accentLt }}>→</span>
           </a>
         </div>
       </div>
@@ -1650,6 +1648,7 @@ function ProcessStrip() {
    la trasparenza sul lavoro in corso. Il processo vero sta in ProcessStrip,
    che ora la precede. */
 function Cabinet() {
+  const t = useT(HOME_STR).cabinet
   return (
     <section style={{ ...SEC, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} id="s6" className="hp-sec">
       <div style={WRAP} className="hp-wrap">
@@ -1660,26 +1659,26 @@ function Cabinet() {
             <div>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
                 <span style={{ width: 24, height: 1, background: "linear-gradient(90deg, rgba(255,60,92,0.50), transparent)" }} />
-                <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: ".22em", textTransform: "uppercase" as const, color: "rgba(255,60,92,0.55)" }}>Lavoro Trasparente</span>
+                <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: ".22em", textTransform: "uppercase" as const, color: "rgba(255,60,92,0.55)" }}>{t.kicker}</span>
                 <span style={{ width: 24, height: 1, background: "linear-gradient(270deg, rgba(255,60,92,0.50), transparent)" }} />
               </div>
 
               <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.04em", margin: 0, fontSize: "clamp(30px,3.8vw,52px)" }}>
-                <span style={{ color: "#FFFFFF" }}>Una roadmap</span>{" "}
-                <span style={{ color: "#FFFFFF", fontWeight: 300 }}>trasparente,</span>
+                <span style={{ color: "#FFFFFF" }}>{t.title1}</span>{" "}
+                <span style={{ color: "#FFFFFF", fontWeight: 300 }}>{t.title2}</span>
                 <br />
-                <span style={{ color: "#FFFFFF", fontWeight: 300 }}>gestita dal tuo</span>{" "}
-                <span style={{ color: "#FFFFFF" }}>Cabinet</span>
+                <span style={{ color: "#FFFFFF", fontWeight: 300 }}>{t.title3}</span>{" "}
+                <span style={{ color: "#FFFFFF" }}>{t.title4}</span>
               </h2>
               <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 460, margin: "22px 0 0" }}>
-                Contratti, invoice e stato di ogni attività sono visibili in tempo reale nel tuo <span style={{ color: "#FFFFFF" }}>Area Clienti</span> privato. Zero sorprese, zero perdita di controllo: segui l'avanzamento del progetto fase per fase.
+                {t.bodyBefore}<span style={{ color: "#FFFFFF" }}>{t.bodyHighlight}</span>{t.bodyAfter}
               </p>
             </div>
 
             {/* right — editorial counter */}
             <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "flex-end", gap: 4, paddingBottom: 8, flexShrink: 0 }}>
               <span style={{ fontFamily: MONO, fontSize: 44, fontWeight: 900, lineHeight: 1, letterSpacing: "-0.07em", color: "#FFFFFF" }}>04</span>
-              <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "#FFFFFF", textAlign: "right" as const, lineHeight: 1.6 }}>fasi · processo<br />completo</span>
+              <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: ".18em", textTransform: "uppercase" as const, color: "#FFFFFF", textAlign: "right" as const, lineHeight: 1.6 }}>{t.counterLabel1}<br />{t.counterLabel2}</span>
             </div>
 
           </div>
@@ -1697,23 +1696,15 @@ function Cabinet() {
 /* ══════════════════════════════════════════════════════════════════════════
    §6b  CASE STUDIES FEATURE — teaser → /projects
 ══════════════════════════════════════════════════════════════════════════ */
-const CASE_LIST = [
-  { n: "01", cat: "CIVIC TECH · OPEN-GOV · SAAS",  title: "Piattaforma Civica Regionale",
-    metric: "131 Sub-Admin gestiti · dati isolati con RLS",
-    desc: "Architettura multi-ruolo su Supabase — Super Admin, 131 Sub-Admin e cabinet cliente — con progetti di donazione e bandi per giovani startup." },
-  { n: "02", cat: "E-COMMERCE · SHOPIFY PLUS",     title: "E-Commerce Enterprise",
-    metric: "32.000+ SKU senza latenza · TTI < 1.4s",
-    desc: "Piattaforma Shopify Plus scalabile: catalogo 32.000+ SKU, Core Web Vitals ottimizzati e architettura multi-country europea (OSS)." },
-  { n: "03", cat: "MIDDLEWARE · AUTOMAZIONE B2B",  title: "Middleware di Automazione Logistica",
-    metric: "Uptime 99.9% · ordini processati in < 3s",
-    desc: "Software di sincronizzazione stock in tempo reale, architettura fault-tolerant a doppia scrittura e uptime del servizio del 99.9%." },
-]
+type CaseItem = { n: string; cat: string; title: string; metric: string; desc: string }
 
-function CaseMiniCard({ c, i }: { c: typeof CASE_LIST[number]; i: number }) {
+function CaseMiniCard({ c, i }: { c: CaseItem; i: number }) {
+  const t = useT(HOME_STR).cases
+  const { href: L } = useLocale()
   const [h, setH] = useState(false)
   return (
     <motion.a
-      href={`/projects#case-${c.n}`}
+      href={`${L("/projects")}#case-${c.n}`}
       initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.55, delay: i * 0.09, ease }}
       onHoverStart={() => setH(true)} onHoverEnd={() => setH(false)}
@@ -1731,7 +1722,7 @@ function CaseMiniCard({ c, i }: { c: typeof CASE_LIST[number]; i: number }) {
 
       {/* Number column */}
       <div style={{ padding: "28px 24px 28px 28px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-end", flexShrink: 0, borderRight: "1px solid rgba(255,255,255,0.16)" }}>
-        <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", color: "#FFFFFF", marginBottom: 6, textTransform: "uppercase" as const }}>CASE</span>
+        <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 600, letterSpacing: "0.20em", color: "#FFFFFF", marginBottom: 6, textTransform: "uppercase" as const }}>{t.caseLabel}</span>
         <span style={{ fontFamily: DISPLAY, fontSize: "clamp(52px,6vw,80px)", fontWeight: 900, letterSpacing: "-0.06em", lineHeight: 1, color: h ? "rgba(255,60,92,0.70)" : "rgba(255,60,92,0.45)", transition: "color .28s" }}>{c.n}</span>
       </div>
 
@@ -1746,7 +1737,7 @@ function CaseMiniCard({ c, i }: { c: typeof CASE_LIST[number]; i: number }) {
         {/* Result callout */}
         <div className="cs-card-arrow" style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 16 }}>
           <div style={{ padding: "12px 16px", borderRadius: 10, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.20)", textAlign: "right" as const }}>
-            <div style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.18em", color: "#FFFFFF", marginBottom: 5, textTransform: "uppercase" as const }}>RISULTATO</div>
+            <div style={{ fontFamily: MONO, fontSize: 8, letterSpacing: "0.18em", color: "#FFFFFF", marginBottom: 5, textTransform: "uppercase" as const }}>{t.resultLabel}</div>
             <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, color: "#FFFFFF", letterSpacing: "0.02em", whiteSpace: "nowrap" as const }}>{c.metric}</div>
           </div>
           <motion.div
@@ -1761,6 +1752,9 @@ function CaseMiniCard({ c, i }: { c: typeof CASE_LIST[number]; i: number }) {
 }
 
 function ProjectsFeature() {
+  const t = useT(HOME_STR).cases
+  const { href: L } = useLocale()
+  const CASE_LIST: CaseItem[] = t.items.map((c, i) => ({ n: `0${i + 1}`, ...c }))
   return (
     <section style={{ ...SEC, borderTop: `1px solid ${T.border}` }} className="hp-sec">
       <div style={WRAP} className="hp-wrap">
@@ -1780,28 +1774,28 @@ function ProjectsFeature() {
             <div>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 18 }}>
                 <span style={{ color: T.accentLt }}>//</span>
-                <span>[ Casi Studio ]</span>
+                <span>{t.kicker}</span>
               </div>
 
               <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(34px,5vw,66px)", lineHeight: 0.98, letterSpacing: "-0.04em", margin: 0 }}>
-                <span style={{ color: "#FFFFFF" }}>Progetti </span>
+                <span style={{ color: "#FFFFFF" }}>{t.title1}</span>
                 <span style={{ color: "#FFFFFF", fontWeight: 300 }}>&amp; </span>
-                <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.63)" }}>Soluzioni</span>
+                <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.63)" }}>{t.title2}</span>
               </h2>
 
               <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, maxWidth: 560, margin: "20px 0 0" }}>
-                Dall'obiettivo all'impatto: come risolviamo sfide tecniche complesse.
+                {t.lead}
               </p>
             </div>
 
             {/* CTA — top-right at title level */}
             <motion.a
-              href="/projects" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
+              href={L("/projects")} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}
               style={{ flexShrink: 0, minHeight: 52, borderRadius: 12, cursor: "pointer", textDecoration: "none", border: "1px solid rgba(255,60,92,0.80)", background: "linear-gradient(90deg, rgba(255,60,92,0.34) 0%, rgba(255,60,92,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(255,60,92,0.20), inset 0 1px 0 rgba(255,255,255,0.15)", display: "inline-flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}
             >
               <span style={{ padding: "0 14px", borderRight: "1px solid rgba(255,60,92,0.45)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[→]</span>
               <span style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 20px", fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
-                Scopri tutti i progetti <span style={{ fontSize: 14 }}>→</span>
+                {t.cta} <span style={{ fontSize: 14 }}>→</span>
               </span>
             </motion.a>
           </div>
@@ -1826,6 +1820,7 @@ function ProjectsFeature() {
 
 /* ── Contact modal ── */
 function ContactModal({ onClose }: { onClose: () => void }) {
+  const t = useT(HOME_STR).modal
   const [fields, setFields] = useState({ name: "", email: "", site: "", area: "", msg: "" })
   const [sent, setSent] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -1899,10 +1894,10 @@ function ContactModal({ onClose }: { onClose: () => void }) {
             <div>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 10, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 10 }}>
                 <span style={{ color: T.accentLt }}>//</span>
-                <span>[ Richiesta Consulenza ]</span>
+                <span>{t.kicker}</span>
               </div>
               <h3 style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 700, letterSpacing: "-0.022em", color: "#FFFFFF", margin: 0, lineHeight: 1.2 }}>
-                Descrivi il tuo blocco principale
+                {t.title}
               </h3>
             </div>
             <button onClick={onClose}
@@ -1921,7 +1916,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
                 setBusy(true); setFailed(false)
                 const ok = await sendContact({
                   name: fields.name, email: fields.email,
-                  message: withExtras(fields.msg, { "Sito": fields.site, "Area": fields.area }),
+                  message: withExtras(fields.msg, { [t.extraSite]: fields.site, [t.extraArea]: fields.area }),
                 })
                 setBusy(false)
                 if (ok) setSent(true); else setFailed(true)
@@ -1929,38 +1924,38 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               {/* grid Nome + Email */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                 <div>
-                  <label style={labelStyle}>Nome</label>
-                  <input style={inputStyle} placeholder="Il tuo nome" value={fields.name} onChange={e => set("name")(e.target.value)}
+                  <label style={labelStyle}>{t.name}</label>
+                  <input style={inputStyle} placeholder={t.namePlaceholder} value={fields.name} onChange={e => set("name")(e.target.value)}
                     onFocus={e => { e.currentTarget.style.borderColor="rgba(255,60,92,.5)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }}
                     onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.13)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }} />
                 </div>
                 <div>
-                  <label style={labelStyle}>Email</label>
-                  <input style={inputStyle} type="email" placeholder="email@azienda.it" value={fields.email} onChange={e => set("email")(e.target.value)}
+                  <label style={labelStyle}>{t.email}</label>
+                  <input style={inputStyle} type="email" placeholder={t.emailPlaceholder} value={fields.email} onChange={e => set("email")(e.target.value)}
                     onFocus={e => { e.currentTarget.style.borderColor="rgba(255,60,92,.5)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }}
                     onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.13)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }} />
                 </div>
               </div>
               <div>
-                <label style={labelStyle}>Sito Web</label>
-                <input style={inputStyle} placeholder="https://tuosito.it (opzionale)" value={fields.site} onChange={e => set("site")(e.target.value)}
+                <label style={labelStyle}>{t.site}</label>
+                <input style={inputStyle} placeholder={t.sitePlaceholder} value={fields.site} onChange={e => set("site")(e.target.value)}
                   onFocus={e => { e.currentTarget.style.borderColor="rgba(255,60,92,.5)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }}
                   onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.13)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }} />
               </div>
               <div>
-                <label style={labelStyle}>Cosa dobbiamo risolvere?</label>
+                <label style={labelStyle}>{t.area}</label>
                 <select style={{ ...inputStyle, appearance: "none" as const, WebkitAppearance: "none" as const }} value={fields.area} onChange={e => set("area")(e.target.value)}
                   onFocus={e => { e.currentTarget.style.borderColor="rgba(255,60,92,.5)" }}
                   onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.13)" }}>
-                  <option value="" style={{ background: "#060C18" }}>Seleziona un'area...</option>
-                  {["E-commerce ad Alta Conversione","Siti Corporate & Lead Generation","Applicazioni Web & Automazione Custom","SEO Strategico & Performance Marketing","Integrazione AI & Sistemi Intelligenti"].map(o => (
+                  <option value="" style={{ background: "#060C18" }}>{t.areaPlaceholder}</option>
+                  {t.areas.map(o => (
                     <option key={o} value={o} style={{ background: "#060C18" }}>{o}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label style={labelStyle}>Messaggio</label>
-                <textarea style={{ ...inputStyle, resize: "vertical" as const, minHeight: 90 }} placeholder="Descrivi la situazione attuale e il risultato che vuoi ottenere..." value={fields.msg} onChange={e => set("msg")(e.target.value)}
+                <label style={labelStyle}>{t.message}</label>
+                <textarea style={{ ...inputStyle, resize: "vertical" as const, minHeight: 90 }} placeholder={t.messagePlaceholder} value={fields.msg} onChange={e => set("msg")(e.target.value)}
                   onFocus={e => { e.currentTarget.style.borderColor="rgba(255,60,92,.5)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }}
                   onBlur={e => { e.currentTarget.style.borderColor="rgba(255,255,255,0.13)"; e.currentTarget.style.background="rgba(255,255,255,0.012)" }} />
               </div>
@@ -1970,7 +1965,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
 
               {failed && (
                 <p role="alert" style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.06em", lineHeight: 1.6, color: "rgba(255,120,120,0.95)", margin: 0 }}>
-                  Invio non riuscito. Riprova, oppure scrivici a {CONTACT.email}
+                  {t.failed.replace("{email}", CONTACT.email)}
                 </p>
               )}
               <button type="submit" disabled={busy}
@@ -1978,15 +1973,15 @@ function ContactModal({ onClose }: { onClose: () => void }) {
                 onMouseEnter={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(255,70,100,0.14)"; el.style.boxShadow="0 0 20px rgba(255,70,100,0.18), inset 0 1px 0 rgba(255,70,100,0.15)"; el.style.transform="translateY(-1px)"; el.style.borderColor="rgba(255,70,100,0.50)" }}
                 onMouseLeave={e => { const el=e.currentTarget as HTMLElement; el.style.background="rgba(255,70,100,0.08)"; el.style.boxShadow="0 0 12px rgba(255,70,100,0.10), inset 0 1px 0 rgba(255,70,100,0.10)"; el.style.transform=""; el.style.borderColor="rgba(255,70,100,0.28)" }}
               >
-                Invia Richiesta →
+                {t.submit}
               </button>
             </form>
           ) : (
             <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
               style={{ textAlign: "center", padding: "36px 0" }}>
               <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(16,185,129,0.10)", border: "1px solid rgba(16,185,129,0.30)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: 24, color: T.green }}>✓</div>
-              <h4 style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 700, color: T.green, marginBottom: 10 }}>Richiesta inviata!</h4>
-              <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, margin: 0 }}>Riceverai un piano d'azione chiaro entro 24 ore lavorative.</p>
+              <h4 style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 700, color: T.green, marginBottom: 10 }}>{t.sentTitle}</h4>
+              <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.8, margin: 0 }}>{t.sentBody}</p>
             </motion.div>
           )}
         </div>
@@ -1995,7 +1990,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
   , document.body)
 }
 
-function CTAContactButton({ onClick }: { onClick: () => void }) {
+function CTAContactButton({ onClick, label }: { onClick: () => void; label: string }) {
   const [hov, setHov] = useState(false)
   const btnRef = useRef<HTMLButtonElement>(null)
   const [mx, setMx] = useState(0)
@@ -2054,7 +2049,7 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
         </div>
         {/* label */}
         <div style={{ padding: "17px 28px", display: "flex", alignItems: "center", gap: 14, position: "relative", fontSize: 12, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase" as const }}>
-          Prenota un Audit Gratuito
+          {label}
           <motion.span
             animate={{ x: hov ? [0, 5, 0] : 0 }}
             transition={{ duration: 0.55, repeat: hov ? Infinity : 0, ease: "easeInOut" }}
@@ -2067,6 +2062,7 @@ function CTAContactButton({ onClick }: { onClick: () => void }) {
 }
 
 function Contact() {
+  const t = useT(HOME_STR).contact
   const [modalOpen, setModalOpen] = useState(false)
   return (
     <section style={{ ...SEC, borderTop: `1px solid ${T.border}` }} id="s9" className="hp-sec">
@@ -2074,10 +2070,10 @@ function Contact() {
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Parliamone ]</span>
+            <span>{t.kicker}</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.2vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 16px", color: "#FFFFFF" }}>
-            Pronto a scalare il tuo <span style={{ color: "#FFFFFF" }}>ecosistema digitale?</span>
+            {t.titleBefore}<span style={{ color: "#FFFFFF" }}>{t.titleHighlight}</span>
           </h2>
         </Reveal>
         <motion.p className="hp-body"
@@ -2085,12 +2081,12 @@ function Contact() {
           viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.16, ease }}
           style={{ fontSize: 15, color: T.muted, lineHeight: 1.82, marginBottom: 52, maxWidth: 580 }}
         >
-          Prenota un audit gratuito: analizziamo la tua architettura attuale, individuiamo i colli di bottiglia e ti consegniamo un piano d'azione chiaro, orientato ai numeri.
+          {t.lead}
         </motion.p>
 
         {/* CTA button */}
         <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.24, ease }}>
-          <CTAContactButton onClick={() => setModalOpen(true)} />
+          <CTAContactButton onClick={() => setModalOpen(true)} label={t.cta} />
         </motion.div>
       </div>
 
@@ -2131,6 +2127,7 @@ function ScrollProgress() {
 const SP_TECH = ["Shopify Plus", "Supabase", "Stripe", "Vercel", "Next.js", "Node.js", "React", "Framer Motion"]
 
 function SocialProof() {
+  const t = useT(HOME_STR).hero
   return (
     <div className="sp-root" style={{ marginTop: 30, padding: "18px 26px", borderRadius: 14, background: "rgba(10,15,27,0.38)", border: "1px solid rgba(255,255,255,0.18)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.012)", position: "relative", overflow: "hidden" }}>
       <style>{`
@@ -2154,7 +2151,7 @@ function SocialProof() {
         <div className="sp-label" style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 10 }}>
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: T.accentLt, flexShrink: 0 }} />
           <span className="sp-label-text" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: ".1em", color: "#FFFFFF" }}>
-            Tecnologie enterprise e brand che scalano con me:
+            {t.socialProof}
           </span>
         </div>
 
@@ -2182,17 +2179,7 @@ function SocialProof() {
    ROOT EXPORT — default export for Framer
 ══════════════════════════════════════════════════════════════════════════ */
 export default function NadiaMaarLab() {
-  useEffect(() => {
-    const sync = (e: PointerEvent) => {
-      const r = document.documentElement
-      r.style.setProperty("--x", e.clientX.toFixed(2))
-      r.style.setProperty("--y", e.clientY.toFixed(2))
-      r.style.setProperty("--xp", (e.clientX / window.innerWidth).toFixed(4))
-      r.style.setProperty("--yp", (e.clientY / window.innerHeight).toFixed(4))
-    }
-    document.addEventListener("pointermove", sync)
-    return () => document.removeEventListener("pointermove", sync)
-  }, [])
+  usePointerGlow()
 
   return (
     <div style={{ background: T.bg, color: T.text, fontFamily: "'Space Grotesk', system-ui, sans-serif", minHeight: "100vh", position: "relative" }}>

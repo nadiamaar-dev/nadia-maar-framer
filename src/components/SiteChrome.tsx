@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react"
+import { useT } from "../lib/i18n/t"
+import { AUTH_STR } from "../lib/i18n/strings/auth"
 import { DEFAULT_PUBLIC_SETTINGS, getSiteSettings, type PublicSiteSettings } from "../lib/siteSettings"
 import { grantConsent, hasStoredConsent, refuseConsent } from "../lib/measure"
 
@@ -23,6 +25,7 @@ const MONO = "'JetBrains Mono', ui-monospace, monospace"
 const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 export default function SiteChrome() {
+  const t = useT(AUTH_STR).chrome
   const [s, setS] = useState<PublicSiteSettings | null>(null)
   const [promoClosed, setPromoClosed] = useState(() => {
     try { return sessionStorage.getItem("nm-promo-closed") === "1" } catch { return false }
@@ -71,12 +74,12 @@ export default function SiteChrome() {
                 fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 700, color: "#FFFFFF",
               }}
             >
-              Scopri →
+              {t.promoCta}
             </a>
           )}
           <button
             type="button"
-            aria-label="Chiudi l'avviso"
+            aria-label={t.promoClose}
             onClick={() => {
               setPromoClosed(true)
               try { sessionStorage.setItem("nm-promo-closed", "1") } catch { /* privata */ }
@@ -97,7 +100,7 @@ export default function SiteChrome() {
       {showConsent && (
         <div
           role="dialog"
-          aria-label="Consenso alle statistiche"
+          aria-label={t.consentLabel}
           style={{
             position: "fixed", left: 16, bottom: 16, zIndex: 90, maxWidth: 380,
             padding: "17px 19px", borderRadius: 16,
@@ -110,14 +113,12 @@ export default function SiteChrome() {
             fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.12em", textTransform: "uppercase",
             color: "#E4697A", margin: 0,
           }}>
-            Statistiche
+            {t.consentTitle}
           </p>
           <p style={{
             fontFamily: DISPLAY, fontSize: 14, lineHeight: 1.6, color: "#FFFFFF", margin: "9px 0 14px",
           }}>
-            Vorrei usare strumenti di analisi di terze parti per capire come viene usato il sito.
-            Le mie statistiche interne funzionano già senza cookie e senza il tuo indirizzo IP:
-            se rifiuti, non perdo nulla di importante.
+            {t.consentBody}
           </p>
           <div style={{ display: "flex", gap: 9 }}>
             <button
@@ -129,7 +130,7 @@ export default function SiteChrome() {
                 fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 600, color: "#FFFFFF",
               }}
             >
-              Rifiuta
+              {t.consentRefuse}
             </button>
             <button
               type="button"
@@ -141,7 +142,7 @@ export default function SiteChrome() {
                 fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 700, color: "#FFFFFF",
               }}
             >
-              Accetta
+              {t.consentAccept}
             </button>
           </div>
         </div>

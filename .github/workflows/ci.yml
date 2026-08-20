@@ -1,0 +1,112 @@
+# ══════════════════════════════════════════════════════════════════════════
+# CONTROLLI AUTOMATICI SU OGNI MODIFICA.
+#
+# Vercel pubblica ogni push: senza un cancello davanti, «pubblicato» e
+# «funzionante» sono la stessa parola per due cose diverse. Questo workflow
+# è quel cancello.
+#
+# Tre lavori separati e non uno solo: se cade il lint si vuole sapere subito
+# se anche i test cadono, non scoprirlo al giro dopo. Girano in parallelo.
+#
+# I browser di Playwright si installano con `--with-deps` e restano in cache
+# fra le esecuzioni: senza cache sarebbero due minuti a giro, e un controllo
+# lento è un controllo che qualcuno finirà per saltare.
+# ══════════════════════════════════════════════════════════════════════════
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  # Un push nuovo sullo stesso ramo annulla il controllo precedente: quello
+  # vecchio riguarda codice che non esiste più.
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  typecheck:
+    name: Tipi
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      # `tsc -b` copre src/ tramite i riferimenti di progetto.
+      - run: npm run typecheck
+      # Le funzioni serverless hanno un tsconfig proprio e non entrano in
+      # `tsc -b`: su Vercel vengono compilate una per una, ed è lì che sono
+      # emersi errori che la build locale non mostrava.
+      - name: Tipi delle funzioni serverless
+        run: npx tsc --noEmit -p api/tsconfig.json
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
+  e2e:
+    name: Test di fumo
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+
+      - name: Cache dei browser
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      # Il guscio headless è un pacchetto a sé: `chromium` da solo lascia
+      # il runner senza l'eseguibile che usa davvero, e i test falliscono
+      # con «Executable doesn't exist» invece che con un errore vero.
+      - name: Installa i browser
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium chromium-headless-shell
+
+      - name: Dipendenze di sistema
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      # I test girano sulla build di produzione (vedi playwright.config.ts):
+      # il comando del server la costruisce da sé.
+      - run: npm test -- --project=chromium --project=mobile
+        env:
+          CI: "true"
+          # Le variabili di Supabase non ci sono in CI, e va bene così: i
+          # test di fumo coprono le pagine pubbliche, che devono funzionare
+          # anche se il database non risponde. È esattamente la condizione
+          # in cui il sito non deve mostrare una pagina bianca.
+          VITE_SUPABASE_URL: ""
+          VITE_SUPABASE_ANON_KEY: ""
+
+      - name: Rapporto
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

@@ -2,12 +2,15 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { createPortal } from "react-dom"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import {
-  VECTORS, ADDON_GROUPS, CANVAS_BANDS, GROUP_COLOR,
+  vectors, addonGroups, canvasBands, GROUP_COLOR,
   baseFor, addonsOf, vectorById, buildBlueprint, complexityOf,
   type Blueprint, type GroupId, type Item, type VectorId,
 } from "./modules"
 import { downloadRoadmapPdf, printRoadmap } from "./roadmap"
 import { useFoundryStore, type Step } from "./store"
+import { useLocale } from "../../lib/i18n/LocaleContext"
+import { DATE_TAG, useT } from "../../lib/i18n/t"
+import { CONFIGURATOR_STR } from "../../lib/i18n/strings/configurator"
 
 /* ══════════════════════════════════════════════════════════════════════════
    DIGITAL FOUNDRY — SOLUTION ARCHITECT
@@ -31,12 +34,8 @@ const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
 const WRAP: React.CSSProperties = { maxWidth: 1120, margin: "0 auto", padding: "0 32px" }
 const SEC: React.CSSProperties  = { padding: "80px 0", position: "relative" }
 
-const STEPS: { n: Step; label: string }[] = [
-  { n: 1, label: "Direzione" },
-  { n: 2, label: "Funzioni Base" },
-  { n: 3, label: "Moduli" },
-  { n: 4, label: "Blueprint" },
-]
+/** I numeri dei passi. Le etichette arrivano dal dizionario, nell'ordine. */
+const STEP_NS: Step[] = [1, 2, 3, 4]
 
 /** Stessa sorgente di verità della media query: niente divergenze a zoom frazionari. */
 function useMedia(query: string) {
@@ -94,23 +93,24 @@ const IconCheck = (
    STEPPER
 ══════════════════════════════════════════════════════════════════════════ */
 function Stepper() {
+  const t = useT(CONFIGURATOR_STR)
   const step    = useFoundryStore(s => s.step)
   const vector  = useFoundryStore(s => s.vector)
   const setStep = useFoundryStore(s => s.setStep)
 
   return (
-    <div className="fc-stepper" role="group" aria-label="Fasi del configuratore">
-      {STEPS.map(s => {
-        const state = s.n === step ? "on" : s.n < step ? "done" : "off"
-        const reachable = s.n === 1 || (Boolean(vector) && s.n <= Math.max(step, 2))
+    <div className="fc-stepper" role="group" aria-label={t.stepperLabel}>
+      {STEP_NS.map((n, i) => {
+        const state = n === step ? "on" : n < step ? "done" : "off"
+        const reachable = n === 1 || (Boolean(vector) && n <= Math.max(step, 2))
         return (
           <button
-            key={s.n} className={`fc-step is-${state}`} disabled={!reachable}
-            onClick={() => reachable && setStep(s.n)}
-            aria-current={s.n === step ? "step" : undefined}
+            key={n} className={`fc-step is-${state}`} disabled={!reachable}
+            onClick={() => reachable && setStep(n)}
+            aria-current={n === step ? "step" : undefined}
           >
-            <span className="fc-step-n">{state === "done" ? "✓" : `0${s.n}`}</span>
-            <span className="fc-step-l">{s.label}</span>
+            <span className="fc-step-n">{state === "done" ? "✓" : `0${n}`}</span>
+            <span className="fc-step-l">{t.steps[i]}</span>
           </button>
         )
       })}
@@ -122,13 +122,15 @@ function Stepper() {
    PASSO 1 — vettore principale
 ══════════════════════════════════════════════════════════════════════════ */
 function StepVector() {
+  const t = useT(CONFIGURATOR_STR)
+  const { locale } = useLocale()
   const vector = useFoundryStore(s => s.vector)
   const pick   = useFoundryStore(s => s.pickVector)
   return (
     <>
-      <p className="fc-step-hint">Da dove parte il tuo progetto? Scegli la direzione principale: definisce il nucleo dell'architettura.</p>
+      <p className="fc-step-hint">{t.hints.vector}</p>
       <div className="fc-list">
-        {VECTORS.map(v => {
+        {vectors(locale).map(v => {
           const on = vector === v.id
           return (
             <motion.button key={v.id} className={`fc-card${on ? " is-on" : ""}`} onClick={() => pick(v.id)}
@@ -172,13 +174,20 @@ function ItemList({ items }: { items: Item[] }) {
 }
 
 function StepBase() {
+  const t = useT(CONFIGURATOR_STR)
+  const { locale } = useLocale()
   const vector = useFoundryStore(s => s.vector)
-  const items  = baseFor(vector)
-  const v      = vectorById(vector)
+  const items  = baseFor(vector, locale)
+  const v      = vectorById(vector, locale)
+
+  /* La frase contiene il nome della direzione in grassetto: si spezza sul
+     segnaposto invece di concatenare due pezzi, così in inglese il nome può
+     cadere in un altro punto della frase. */
+  const [before, after] = t.hints.base.split("{vector}")
   return (
     <>
       <p className="fc-step-hint">
-        Funzioni portanti di <strong>{v?.label ?? "—"}</strong>. Attiva quelle che ti servono davvero: si può partire anche solo dal nucleo.
+        {before}<strong>{v?.label ?? "—"}</strong>{after}
       </p>
       <ItemList items={items} />
     </>
@@ -188,6 +197,8 @@ function StepBase() {
 /** Selettore a tendina delle famiglie di moduli: le etichette sono lunghe e la
     colonna è stretta, una fila di tab si troncherebbe senza preavviso. */
 function GroupSelect() {
+  const { locale } = useLocale()
+  const ADDON_GROUPS = addonGroups(locale)
   const active   = useFoundryStore(s => s.activeGroup) as GroupId
   const setGroup = useFoundryStore(s => s.setActiveGroup)
   const selected = useFoundryStore(s => s.selected)
@@ -199,7 +210,7 @@ function GroupSelect() {
 
   const idx = Math.max(0, ADDON_GROUPS.findIndex(g => g.id === active))
   const current = ADDON_GROUPS[idx]
-  const countOf = (g: GroupId) => addonsOf(g).filter(i => selected.includes(i.id)).length
+  const countOf = (g: GroupId) => addonsOf(g, locale).filter(i => selected.includes(i.id)).length
 
   useEffect(() => {
     if (!open) return
@@ -278,15 +289,18 @@ function GroupSelect() {
 }
 
 function StepAddons() {
+  const t = useT(CONFIGURATOR_STR)
+  const { locale } = useLocale()
+  const groups = addonGroups(locale)
   const active = useFoundryStore(s => s.activeGroup) as GroupId
-  const group  = ADDON_GROUPS.find(g => g.id === active) ?? ADDON_GROUPS[0]
+  const group  = groups.find(g => g.id === active) ?? groups[0]
 
   return (
     <>
-      <p className="fc-step-hint">Moduli trasversali: si innestano su qualsiasi nucleo. Sono le richieste più frequenti del momento.</p>
+      <p className="fc-step-hint">{t.hints.addons}</p>
       <GroupSelect />
       <div className="fc-cat-hint">{group.sub}</div>
-      <ItemList items={addonsOf(group.id)} />
+      <ItemList items={addonsOf(group.id, locale)} />
     </>
   )
 }
@@ -299,28 +313,31 @@ function StepAddons() {
    modulo non arriva — rete che cade, deploy in corso — si ripiega sulla
    finestra di stampa: meglio due clic in più che restare a mani vuote. */
 function useRoadmapPdf(bp: Blueprint | null) {
+  const { locale } = useLocale()
   const [busy, setBusy] = useState(false)
   const run = useCallback(async () => {
     if (!bp || busy) return
     setBusy(true)
-    const date = new Date().toLocaleDateString("it-IT", { day: "2-digit", month: "long", year: "numeric" })
+    const date = new Date().toLocaleDateString(DATE_TAG[locale], { day: "2-digit", month: "long", year: "numeric" })
     try {
-      await downloadRoadmapPdf(bp, date)
+      await downloadRoadmapPdf(bp, date, locale)
     } catch (err) {
       console.error("[foundry] PDF non generato, ripiego sulla stampa:", err)
-      printRoadmap(bp, date)
+      printRoadmap(bp, date, locale)
     } finally {
       setBusy(false)
     }
-  }, [bp, busy])
+  }, [bp, busy, locale])
   return { busy, run }
 }
 
 function StepActions() {
+  const t = useT(CONFIGURATOR_STR)
+  const { locale } = useLocale()
   const vector    = useFoundryStore(s => s.vector)
   const selected  = useFoundryStore(s => s.selected)
   const openModal = useFoundryStore(s => s.openModal)
-  const cx        = complexityOf(vector, selected)
+  const cx        = complexityOf(vector, selected, locale)
   const actionsRef = useRef<HTMLDivElement>(null)
 
   /* Il pulsante di contatto fisso del sito sta bottom-right e coprirebbe i CTA:
@@ -337,23 +354,23 @@ function StepActions() {
     return () => { io.disconnect(); delete document.body.dataset.fcCta }
   }, [])
 
-  const bp = useMemo(() => buildBlueprint(vector, selected), [vector, selected])
+  const bp = useMemo(() => buildBlueprint(vector, selected, locale), [vector, selected, locale])
   const pdf = useRoadmapPdf(bp)
 
   if (!cx) return null
 
   return (
     <>
-      <p className="fc-step-hint">La tua architettura è pronta. Qui sotto la stima di impegno tecnico; il dettaglio completo è nel resoconto.</p>
+      <p className="fc-step-hint">{t.hints.actions}</p>
 
       <div className="fc-cx">
         <div className="fc-cx-row">
           <div>
-            <div className="fc-cx-k">Complessità</div>
+            <div className="fc-cx-k">{t.complexity.label}</div>
             <div className="fc-cx-v">{cx.label}</div>
           </div>
           <div style={{ textAlign: "right" }}>
-            <div className="fc-cx-k">Durata orientativa</div>
+            <div className="fc-cx-k">{t.complexity.duration}</div>
             <div className="fc-cx-v">{cx.weeks}</div>
           </div>
         </div>
@@ -370,16 +387,14 @@ function StepActions() {
         <motion.button className="fc-cta" onClick={openModal}
           whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}>
           <span className="fc-cta-ix">[→]</span>
-          <span className="fc-cta-tx">Richiedi Proposta <span style={{ fontSize: 14 }}>→</span></span>
+          <span className="fc-cta-tx">{t.actions.cta} <span style={{ fontSize: 14 }}>→</span></span>
         </motion.button>
         <motion.button className="fc-ghost fc-ghost-wide" onClick={pdf.run} disabled={pdf.busy} whileTap={{ scale: 0.98 }}>
-          {pdf.busy ? "Preparazione…" : "Scarica Roadmap PDF"}
+          {pdf.busy ? t.actions.pdfBusy : t.actions.pdf}
         </motion.button>
       </div>
 
-      <p className="fc-actions-note">
-        Un PDF con architettura, stima di impegno e fasi di lavoro: si scarica subito, senza lasciare l'email.
-      </p>
+      <p className="fc-actions-note">{t.actions.note}</p>
     </>
   )
 }
@@ -388,6 +403,7 @@ function StepActions() {
    PANNELLO DI SINISTRA — passo corrente + navigazione
 ══════════════════════════════════════════════════════════════════════════ */
 function StepPanel() {
+  const t = useT(CONFIGURATOR_STR)
   const step   = useFoundryStore(s => s.step)
   const vector = useFoundryStore(s => s.vector)
   const next   = useFoundryStore(s => s.next)
@@ -395,7 +411,7 @@ function StepPanel() {
   const reset  = useFoundryStore(s => s.reset)
 
   const canNext = step < 4 && (step === 1 ? Boolean(vector) : true)
-  const nextLabel = step === 3 ? "Vedi il Blueprint" : "Avanti"
+  const nextLabel = step === 3 ? t.nav.seeBlueprint : t.nav.next
 
   return (
     <div className="fc-panel">
@@ -413,13 +429,13 @@ function StepPanel() {
 
       <div className="fc-nav">
         {step > 1
-          ? <button className="fc-nav-b" onClick={back}>← Indietro</button>
+          ? <button className="fc-nav-b" onClick={back}>{t.nav.back}</button>
           : <span />}
         {canNext
           ? <button className="fc-nav-b is-next" onClick={next} disabled={!canNext}>{nextLabel} →</button>
           : step === 4
-            ? <button className="fc-nav-b" onClick={reset}>Ricomincia</button>
-            : <span className="fc-nav-hint">Scegli una direzione per continuare</span>}
+            ? <button className="fc-nav-b" onClick={reset}>{t.nav.restart}</button>
+            : <span className="fc-nav-hint">{t.nav.pickFirst}</span>}
       </div>
     </div>
   )
@@ -453,7 +469,9 @@ function Canvas({ mobile }: { mobile: boolean }) {
   const vectorId = useFoundryStore(s => s.vector)
   const selected = useFoundryStore(s => s.selected)
   const toggle   = useFoundryStore(s => s.toggle)
-  const vector   = vectorById(vectorId)
+  const t        = useT(CONFIGURATOR_STR)
+  const { locale } = useLocale()
+  const vector   = vectorById(vectorId, locale)
 
   const boxRef   = useRef<HTMLDivElement>(null)
   const coreRef  = useRef<HTMLDivElement>(null)
@@ -464,10 +482,10 @@ function Canvas({ mobile }: { mobile: boolean }) {
   const [tick, setTick] = useState(0)
 
   const bands = useMemo(
-    () => CANVAS_BANDS
-      .map(b => ({ band: b, items: (b.id === "base" ? baseFor(vectorId) : addonsOf(b.id)).filter(i => selected.includes(i.id)) }))
+    () => canvasBands(locale)
+      .map(b => ({ band: b, items: (b.id === "base" ? baseFor(vectorId, locale) : addonsOf(b.id, locale)).filter(i => selected.includes(i.id)) }))
       .filter(b => b.items.length > 0),
-    [vectorId, selected],
+    [vectorId, selected, locale],
   )
   const key = `${vectorId}|${selected.join(",")}`
 
@@ -531,9 +549,9 @@ function Canvas({ mobile }: { mobile: boolean }) {
         <span className="fc-cv-tag">
           {vector ? <PingDot color={T.green} size={6} />
                   : <span aria-hidden style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.35)", flexShrink: 0 }} />}
-          Architettura // Live
+          {t.canvas.tag}
         </span>
-        <span className="fc-cv-count">{count} {count === 1 ? "Modulo" : "Moduli"}</span>
+        <span className="fc-cv-count">{count} {count === 1 ? t.canvas.moduleOne : t.canvas.moduleMany}</span>
       </div>
 
       {!mobile && (
@@ -598,7 +616,7 @@ function Canvas({ mobile }: { mobile: boolean }) {
                     <motion.button key={i.id}
                       ref={el => { if (el) nodeRefs.current.set(i.id, el); else nodeRefs.current.delete(i.id) }}
                       className="fc-node" style={{ borderColor: `${GROUP_COLOR[band.id]}52` }}
-                      onClick={() => toggle(i.id)} aria-label={`Rimuovi il modulo ${i.node}`} title="Rimuovi"
+                      onClick={() => toggle(i.id)} aria-label={t.canvas.removeModule.replace("{node}", i.node)} title={t.canvas.remove}
                       initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.82, y: 10 }}
                       animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: reduce ? 1 : 0.9, transition: { duration: 0.16 } }}
@@ -619,8 +637,8 @@ function Canvas({ mobile }: { mobile: boolean }) {
       <AnimatePresence>
         {!vector && (
           <motion.div className="fc-empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
-            <span className="fc-empty-badge">In attesa del nucleo</span>
-            <span className="fc-empty-hint">Scegli una direzione: l'architettura si assembla qui, dal vivo.</span>
+            <span className="fc-empty-badge">{t.canvas.waiting}</span>
+            <span className="fc-empty-hint">{t.canvas.waitingHint}</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -634,22 +652,24 @@ function Canvas({ mobile }: { mobile: boolean }) {
 function BlueprintPanel() {
   const vector   = useFoundryStore(s => s.vector)
   const selected = useFoundryStore(s => s.selected)
-  const bp       = useMemo(() => buildBlueprint(vector, selected), [vector, selected])
+  const t        = useT(CONFIGURATOR_STR)
+  const { locale } = useLocale()
+  const bp       = useMemo(() => buildBlueprint(vector, selected, locale), [vector, selected, locale])
 
   return (
     <div className="fc-summary" aria-live="polite">
-      <span className="fc-cv-tag" style={{ letterSpacing: "0.2em" }}>Resoconto // Generato dalla tua selezione</span>
+      <span className="fc-cv-tag" style={{ letterSpacing: "0.2em" }}>{t.summary.tag}</span>
 
       {!bp ? (
-        <p className="fc-sum-empty">Scegli la direzione del progetto: il resoconto dell'architettura si scrive da solo, in tempo reale.</p>
+        <p className="fc-sum-empty">{t.summary.empty}</p>
       ) : (
         <motion.div className="fc-shelves" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, ease }}>
           <div className="fc-shelf">
-            <div className="fc-shelf-label"><span style={{ color: T.accentLt }}>//</span> [ Obiettivo ]</div>
+            <div className="fc-shelf-label"><span style={{ color: T.accentLt }}>//</span> {t.summary.goal}</div>
             <p className="fc-shelf-txt">{bp.obiettivo}</p>
           </div>
           <div className="fc-shelf">
-            <div className="fc-shelf-label"><span style={{ color: T.accentLt }}>//</span> [ Architettura ]</div>
+            <div className="fc-shelf-label"><span style={{ color: T.accentLt }}>//</span> {t.summary.architecture}</div>
             <p className="fc-shelf-txt">{bp.architettura}</p>
           </div>
 
@@ -702,6 +722,9 @@ function FInput({ label, placeholder, type = "text", value, onChange, required =
 }
 
 function LeadModal() {
+  const tCfg          = useT(CONFIGURATOR_STR)
+  const t             = tCfg.modal
+  const { locale }    = useLocale()
   const vector        = useFoundryStore(s => s.vector)
   const selected      = useFoundryStore(s => s.selected)
   const closeModal    = useFoundryStore(s => s.closeModal)
@@ -724,10 +747,10 @@ function LeadModal() {
   const coarse   = useMedia("(pointer: coarse)")
   const reduceMotion = useReducedMotion()
 
-  const bp    = useMemo(() => buildBlueprint(vector, selected), [vector, selected])
+  const bp    = useMemo(() => buildBlueprint(vector, selected, locale), [vector, selected, locale])
   const items = useMemo(
-    () => CANVAS_BANDS.flatMap(b => (b.id === "base" ? baseFor(vector) : addonsOf(b.id)).filter(i => selected.includes(i.id))),
-    [vector, selected],
+    () => canvasBands(locale).flatMap(b => (b.id === "base" ? baseFor(vector, locale) : addonsOf(b.id, locale)).filter(i => selected.includes(i.id))),
+    [vector, selected, locale],
   )
 
   /* il download non tocca la pagina, quindi il blocco di scroll del modale
@@ -795,7 +818,7 @@ function LeadModal() {
       complexity: bp ? { label: bp.complexity.label, weeks: bp.complexity.weeks, level: bp.complexity.level } : null,
       modules: items.map(({ id, node, tech, group, label }) => ({ id, node, tech, group, label })),
       blueprint: bp ? { obiettivo: bp.obiettivo, architettura: bp.architettura, scaffali: bp.scaffali } : null,
-      meta: { page: typeof location !== "undefined" ? location.pathname : "/", locale: "it", ts: new Date().toISOString() },
+      meta: { page: typeof location !== "undefined" ? location.pathname : "/", locale, ts: new Date().toISOString() },
     }
 
     /* In `vite dev` le funzioni Vercel non vengono servite: l'endpoint
@@ -840,19 +863,17 @@ function LeadModal() {
         exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 18, scale: 0.98 }}
         transition={{ duration: reduceMotion ? 0.18 : 0.4, ease }}
       >
-        <button className="fc-modal-x" onClick={closeModal} aria-label="Chiudi">×</button>
+        <button className="fc-modal-x" onClick={closeModal} aria-label={t.close}>×</button>
 
         {leadStatus === "sent" ? (
           <div style={{ textAlign: "center", padding: "26px 4px 12px" }} role="status">
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}><PingDot color={T.green} size={12} /></div>
             <h3 id="fc-modal-title" ref={doneRef} tabIndex={-1} style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 22, letterSpacing: "-0.02em", color: "#FFFFFF", margin: "0 0 12px", outline: "none" }}>
-              Configurazione salvata
+              {t.sentTitle}
             </h3>
             <p style={{ fontFamily: SANS, fontSize: 15.5, lineHeight: 1.7, color: "#FFFFFF", margin: "0 auto 22px", maxWidth: 390 }}>
-              Ti ricontattiamo entro 24 ore per discutere i dettagli del progetto.
-              {copySent
-                ? " Una copia del resoconto ti arriverà via email."
-                : " Intanto porta con te il blueprint: è il riepilogo di ciò che hai appena composto."}
+              {t.sentBody}
+              {copySent ? t.sentWithCopy : t.sentWithoutCopy}
             </p>
             {/* Il momento in cui la roadmap serve davvero è questo: ha appena
                 lasciato i contatti ed è al massimo dell'interesse. Prima il
@@ -863,22 +884,22 @@ function LeadModal() {
                 <motion.button className="fc-cta" onClick={pdf.run} disabled={pdf.busy}
                   whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}>
                   <span className="fc-cta-ix">[↓]</span>
-                  <span className="fc-cta-tx">{pdf.busy ? "Preparazione…" : "Scarica Roadmap PDF"}</span>
+                  <span className="fc-cta-tx">{pdf.busy ? tCfg.actions.pdfBusy : tCfg.actions.pdf}</span>
                 </motion.button>
               )}
-              <button className="fc-ghost" onClick={closeModal}>Chiudi</button>
+              <button className="fc-ghost" onClick={closeModal}>{t.close}</button>
             </div>
           </div>
         ) : (
           <>
             <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: "#FFFFFF", marginBottom: 14 }}>
-              <span style={{ color: T.accentLt }}>//</span> [ Richiesta di Proposta ]
+              <span style={{ color: T.accentLt }}>//</span> {t.kicker}
             </div>
             <h3 id="fc-modal-title" style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 23, letterSpacing: "-0.02em", color: "#FFFFFF", margin: "0 0 10px" }}>
-              Invia la tua Architettura
+              {t.title}
             </h3>
             <p style={{ fontFamily: SANS, fontSize: 15, lineHeight: 1.65, color: "#FFFFFF", margin: "0 0 18px" }}>
-              Ogni configurazione viene letta personalmente: risposta entro 24 ore. Il blueprint resta tuo, puoi salvarlo in PDF subito dopo l'invio.
+              {t.lead}
             </p>
 
             {bp && (
@@ -887,7 +908,7 @@ function LeadModal() {
                 <span className="fc-recap-cx">{bp.complexity.label} · {bp.complexity.weeks}</span>
               </div>
             )}
-            <div className="fc-recap" role="group" aria-label="Moduli selezionati">
+            <div className="fc-recap" role="group" aria-label={t.selectedModules}>
               {items.map(i => (
                 <span key={i.id} className="fc-recap-chip">
                   <span aria-hidden style={{ width: 5, height: 5, borderRadius: "50%", background: GROUP_COLOR[i.group], flexShrink: 0 }} />
@@ -897,9 +918,9 @@ function LeadModal() {
             </div>
 
             <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <FInput label="Nome" placeholder="Il tuo nome" value={name} onChange={setName} required inputRef={nameRef} />
-              <FInput label="Email" placeholder="nome@azienda.it" type="email" value={email} onChange={setEmail} required />
-              <FInput label="Telegram / WhatsApp" placeholder="@username oppure +39…" value={messenger} onChange={setMessenger} />
+              <FInput label={t.name} placeholder={t.namePlaceholder} value={name} onChange={setName} required inputRef={nameRef} />
+              <FInput label={t.email} placeholder={t.emailPlaceholder} type="email" value={email} onChange={setEmail} required />
+              <FInput label={t.messenger} placeholder={t.messengerPlaceholder} value={messenger} onChange={setMessenger} />
               {/* honeypot. Il nome NON deve somigliare a un campo reale
                   ("company", "organization"…): l'autofill del browser lo
                   riempirebbe e le richieste vere verrebbero scartate. */}
@@ -909,7 +930,7 @@ function LeadModal() {
 
               {leadStatus === "error" && (
                 <p role="alert" style={{ fontFamily: SANS, fontSize: 14, lineHeight: 1.6, color: "#FF8A96", margin: 0 }}>
-                  Invio non riuscito. Riprova tra qualche istante, oppure scrivici direttamente dalla sezione contatti.
+                  {t.error}
                 </p>
               )}
 
@@ -919,13 +940,13 @@ function LeadModal() {
                   <>
                     <motion.span aria-hidden style={{ width: 13, height: 13, borderRadius: "50%", border: "1.6px solid rgba(255,255,255,0.35)", borderTopColor: "#FFFFFF", display: "inline-block" }}
                       animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} />
-                    Invio in corso…
+                    {t.sending}
                   </>
-                ) : (<>Invia per l'Analisi <span style={{ fontSize: 15 }}>→</span></>)}
+                ) : (<>{t.submit} <span style={{ fontSize: 15 }}>→</span></>)}
               </motion.button>
 
               <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)", margin: "2px 0 0", textAlign: "center" }}>
-                Nessuna newsletter · Solo la risposta al tuo progetto
+                {t.privacy}
               </p>
             </form>
           </>
@@ -949,6 +970,7 @@ function LeadModal() {
  * e colorarne solo l'occhiello avrebbe fatto sembrare il resto un errore.
  */
 export default function FoundryConfigurator({ initialVector }: { initialVector?: VectorId } = {}) {
+  const tSec      = useT(CONFIGURATOR_STR).section
   const mobile    = useMedia("(max-width: 900px)")
   const modalOpen = useFoundryStore(s => s.modalOpen)
   const preset    = Boolean(initialVector)
@@ -967,25 +989,23 @@ export default function FoundryConfigurator({ initialVector }: { initialVector?:
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase", color: "#FFFFFF", marginBottom: 18 }}>
             <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Digital Foundry — Configuratore ]</span>
+            <span>{tSec.kicker}</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontWeight: 900, fontSize: "clamp(34px,5vw,66px)", lineHeight: 0.98, letterSpacing: "-0.04em", margin: 0 }}>
             {preset ? (
               <>
-                <span style={{ color: "#FFFFFF" }}>Completa la tua </span>
-                <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.63)" }}>Architettura</span>
+                <span style={{ color: "#FFFFFF" }}>{tSec.titlePresetBefore}</span>
+                <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.63)" }}>{tSec.titleHighlight}</span>
               </>
             ) : (
               <>
-                <span style={{ color: "#FFFFFF" }}>Componi la tua </span>
-                <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.63)" }}>Architettura</span>
+                <span style={{ color: "#FFFFFF" }}>{tSec.titleBefore}</span>
+                <span style={{ color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.63)" }}>{tSec.titleHighlight}</span>
               </>
             )}
           </h2>
           <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: "#FFFFFF", lineHeight: 1.8, maxWidth: 620, margin: "20px 0 0" }}>
-            {preset
-              ? "Il nucleo è già quello di questa pagina. Aggiungi i moduli che ti servono attorno: il configuratore assembla dal vivo l'architettura, ne stima l'impegno e la traduce in un blueprint che puoi salvare."
-              : "Quattro passi, in linguaggio semplice. Il configuratore assembla dal vivo l'architettura tecnica della soluzione, ne stima l'impegno e la traduce in un blueprint che puoi salvare."}
+            {preset ? tSec.leadPreset : tSec.lead}
           </p>
         </Reveal>
 

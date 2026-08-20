@@ -7,19 +7,22 @@
 import React, { useState } from "react"
 import { motion } from "framer-motion"
 import { DISPLAY, MONO, RESPONSIVE_CSS, Reveal, SANS, SEC, T, WRAP, ease } from "./tokens"
+import { useT } from "../../lib/i18n/t"
+import { STUDIO_STR } from "../../lib/i18n/strings/studio"
 
 
-const ADVANTAGES = [
+/* Numero e icona: il testo arriva dal dizionario, accoppiato per posizione. */
+const ADVANTAGES_ART = [
   {
-    n: "01", title: "Infrastrutture Senza Errori", body: "Architetture testate da chi le ha progettate. Codice pulito, automazioni e connessioni ai fornitori affidabili: zero bug in produzione, sistemi che reggono la scala.",
+    n: "01",
     icon: (<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>),
   },
   {
-    n: "02", title: "Velocità di Esecuzione", body: "Nessun passaggio di consegne né perdita di informazioni. Dal codice alla campagna di marketing, tutto vive in un unico flusso perfettamente allineato.",
+    n: "02",
     icon: (<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>),
   },
   {
-    n: "03", title: "Unico Referente Strategico", body: "Sviluppo tecnico, logica di business, integrazione AI e SEO gestiti da un'unica mente. Nessun rimpallo di responsabilità, nessuna scusa.",
+    n: "03",
     icon: (<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>),
   },
 ]
@@ -71,22 +74,23 @@ function MetodoCard({ n, title, body, icon, i }: { n: string; title: string; bod
 }
 
 export default function StudioApproach() {
+  const t = useT(STUDIO_STR).approach
   return (
     <section style={{ ...SEC, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }} className="studio-sec">
       <div style={WRAP} className="studio-wrap">
         <Reveal>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Un Solo Partner ]</span>
+            <span>{t.kicker}</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(26px,3.4vw,44px)", fontWeight: 700, lineHeight: 1.08, letterSpacing: "-0.025em", marginBottom: 18, maxWidth: 780, color: T.text }}>
             {/* senza "Il Metodo:" davanti: il metodo è il processo in quattro
                 fasi, e due sezioni che si chiamavano entrambe così erano
                 proprio il problema da cui è partito questo lavoro */}
-            Un Solo Partner, Zero Scuse.
+            {t.title}
           </h2>
           <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.75, maxWidth: 740, marginBottom: 40 }}>
-            Sviluppatore, designer, esperto di automazioni API e agenzia di marketing sono di solito quattro fornitori diversi — con costi frammentati, comunicazione lenta e responsabilità sfumate. Lo studio li tiene insieme in un'unica mente strategica.
+            {t.lead}
           </p>
         </Reveal>
 
@@ -97,8 +101,8 @@ export default function StudioApproach() {
           @media(min-width:701px) and (max-width:960px){ .aio-grid{grid-template-columns:repeat(2,1fr)!important;} }
         `}</style>
         <div className="aio-grid">
-          {ADVANTAGES.map((a, i) => (
-            <MetodoCard key={a.n} n={a.n} title={a.title} body={a.body} icon={a.icon} i={i} />
+          {ADVANTAGES_ART.map((a, i) => (
+            <MetodoCard key={a.n} n={a.n} title={t.items[i].title} body={t.items[i].body} icon={a.icon} i={i} />
           ))}
         </div>
       </div>

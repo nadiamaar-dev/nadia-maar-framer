@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node ./.vt-t5.mjs)",
+      "Bash(npm run *)",
+      "Bash(pkill -f \"vite\")",
+      "Bash(node ./.vt-settings.mjs)",
+      "Bash(node ./.vt-settings2.mjs)",
+      "Bash(node ./.vt-mobile-sweep.mjs)",
+      "Bash(grep -n \"vt-grid-2, .vt-grid-3 { grid-template-columns:minmax\\(0,1fr\\)\" src/components/Sandbox/preview/valtecnica/style.ts)",
+      "Bash(node ./.vt-desktop-check.mjs)",
+      "Bash(pkill -f \"vite\" 2>/dev/null; rm -f .vt-*.mjs .vt-*.png; echo \"pulito\")",
+      "Bash(node ./.vt-overlay.mjs)",
+      "Bash(node ./.vt-ov2.mjs)"
+    ],
+    "additionalDirectories": [
+      "/Users/nadiiamarchenko/website/nadia-maar-framer"
+    ]
+  }
+}

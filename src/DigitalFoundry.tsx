@@ -6,7 +6,10 @@ import FloatingContact from "./components/FloatingContact"
 import Sidebar from "./components/Sandbox/Sidebar"
 import ProjectCard, { PROJECT_CARD_CSS } from "./components/Sandbox/ProjectCard"
 import ProjectOverlay from "./components/Sandbox/preview/ProjectOverlay"
-import { SANDBOX_ITEMS, SandboxCategory, SandboxType } from "./data/sandboxData"
+import { sandboxItems, SandboxCategory, SandboxType } from "./data/sandboxData"
+import { useLocale } from "./lib/i18n/LocaleContext"
+import { useT } from "./lib/i18n/t"
+import { LAB_STR } from "./lib/i18n/strings/lab"
 
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const MONO    = "'JetBrains Mono',monospace"
@@ -21,9 +24,6 @@ const BODY: React.CSSProperties = { fontFamily: "'Geist', system-ui, sans-serif"
    pagine del sito, lo <style> ora vive nel JSX: React lo monta nello stesso
    commit del resto dell'albero, prima che il browser disegni qualsiasi cosa. */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
 /* Restano tre colonne, ma il contenitore è passato da 1160 a 1440px: ogni
    scheda guadagna comunque un ~35% di larghezza rispetto a prima — la
    miniatura sopra il testo si legge come uno screenshot vero, non come un
@@ -99,6 +99,8 @@ const CSS = `
 `
 
 export default function DigitalFoundry() {
+  const t = useT(LAB_STR)
+  const { locale } = useLocale()
   const [category, setCategory] = useState<SandboxCategory>("All")
   const [type, setType] = useState<SandboxType | "all">("all")
   /* indice dentro `filtered`, non id: la carosella sfoglia esattamente ciò
@@ -109,12 +111,12 @@ export default function DigitalFoundry() {
   useEffect(() => { setPreview(null) }, [category, type])
 
   const filtered = useMemo(() => {
-    return SANDBOX_ITEMS.filter(item => {
+    return sandboxItems(locale).filter(item => {
       const catMatch = category === "All" || item.category === category
       const typeMatch = type === "all" || item.type === type
       return catMatch && typeMatch
     })
-  }, [category, type])
+  }, [category, type, locale])
 
   return (
     <div style={{ minHeight: "100vh", background: "#060C18", position: "relative" }}>
@@ -161,7 +163,7 @@ export default function DigitalFoundry() {
             }}>
               {/* rame per il testo: #BE3648 è quello dei riempimenti e a 11px dà 3,55:1 */}
               <span style={{ color: "#E4697A" }}>//</span>
-              <span>[ Digital Foundry · Sandbox ]</span>
+              <span>{t.page.kicker}</span>
             </div>
 
             {/* headline */}
@@ -169,20 +171,19 @@ export default function DigitalFoundry() {
               fontFamily: DISPLAY, fontSize: "clamp(32px, 4.2vw, 56px)", fontWeight: 900,
               color: "#fff", margin: "0 0 8px", lineHeight: 0.96, letterSpacing: "-0.04em",
             }}>
-              Costruisci il tuo
+              {t.page.title1}
             </h1>
             <h1 className="nm-foundry-h1" style={{
               fontFamily: DISPLAY, fontSize: "clamp(32px, 4.2vw, 56px)", fontWeight: 900,
               color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.40)",
               margin: "0 0 28px", lineHeight: 0.96, letterSpacing: "-0.04em",
             }}>
-              progetto ideale
+              {t.page.title2}
             </h1>
 
             {/* description */}
             <p className="hp-body" style={{ ...BODY, color: "#FFFFFF", margin: 0, maxWidth: 500 }}>
-              Esplora la libreria di soluzioni e componenti. Seleziona ciò che ti serve,
-              salvalo nel Blueprint e ricevi un'offerta su misura.
+              {t.page.lead}
             </p>
 
             {/* thin accent divider */}
@@ -206,7 +207,7 @@ export default function DigitalFoundry() {
 
             <div style={{ flex: 1, minWidth: 0 }}>
               <div className="nm-foundry-count">
-                {filtered.length} soluzioni disponibili
+                {t.page.count.replace("{n}", String(filtered.length))}
               </div>
 
               {filtered.length === 0 ? (
@@ -215,8 +216,8 @@ export default function DigitalFoundry() {
                   border: "1px dashed rgba(255,255,255,0.10)",
                   borderRadius: 16,
                 }}>
-                  <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: "#FFFFFF", marginBottom: 12 }}>[ 0 risultati ]</div>
-                  <div className="hp-body" style={{ fontFamily: DISPLAY, fontSize: 15, color: "#FFFFFF" }}>Nessun risultato per i filtri selezionati.</div>
+                  <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: "#FFFFFF", marginBottom: 12 }}>{t.page.emptyTag}</div>
+                  <div className="hp-body" style={{ fontFamily: DISPLAY, fontSize: 15, color: "#FFFFFF" }}>{t.page.empty}</div>
                 </div>
               ) : (
                 <div className="nm-foundry-grid">

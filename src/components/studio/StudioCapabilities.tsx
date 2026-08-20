@@ -7,20 +7,21 @@
 import React, { useEffect, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import { DISPLAY, MONO, RESPONSIVE_CSS, Reveal, SANS, SEC, T, WRAP, ease } from "./tokens"
+import { useT } from "../../lib/i18n/t"
+import { STUDIO_STR } from "../../lib/i18n/strings/studio"
 
 
-const TECH_POINTS = [
+/* Numeri, icona e colori: il testo (etichetta del punteggio, titolo, corpo)
+   arriva dal dizionario e si accoppia per posizione. */
+const TECH_ART = [
   {
     metric: "< 0.5s",
     score: 96,
-    scoreLabel: "Performance",
     icon: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
       </svg>
     ),
-    title: "Caricamento Istantaneo",
-    body: "Un sito istantaneo abbatte il tasso di abbandono e aumenta drasticamente la conversione finale.",
     color: "rgba(251,191,36,1)",
     colorDim: "rgba(251,191,36,0.14)",
     colorBd: "rgba(251,191,36,0.30)",
@@ -28,14 +29,11 @@ const TECH_POINTS = [
   {
     metric: "100/100",
     score: 100,
-    scoreLabel: "Core Web Vitals",
     icon: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
       </svg>
     ),
-    title: "Core Web Vitals Perfetti",
-    body: "Google premia i siti tecnicamente perfetti. Vantaggio competitivo immediato sul posizionamento organico.",
     color: T.accentLt,
     colorDim: "rgba(255,70,100,0.14)",
     colorBd: "rgba(255,70,100,0.32)",
@@ -43,21 +41,20 @@ const TECH_POINTS = [
   {
     metric: "99.9%",
     score: 99,
-    scoreLabel: "Uptime",
     icon: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
       </svg>
     ),
-    title: "Infrastruttura Serverless",
-    body: "Zero downtime durante i picchi di traffico e massima protezione contro le vulnerabilità informatiche.",
     color: T.green,
     colorDim: "rgba(16,185,129,0.12)",
     colorBd: "rgba(16,185,129,0.28)",
   },
 ]
 
-function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim, colorBd, index }: typeof TECH_POINTS[0] & { index: number }) {
+type TechPoint = typeof TECH_ART[number] & { scoreLabel: string; title: string; body: string }
+
+function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim, colorBd, index }: TechPoint & { index: number }) {
   const [hov, setHov] = useState(false)
   const [inView, setInView] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -137,6 +134,7 @@ function TechRow({ metric, score, scoreLabel, icon, title, body, color, colorDim
 }
 
 export default function StudioCapabilities() {
+  const t = useT(STUDIO_STR).capabilities
   return (
     <section style={{ ...SEC, padding: "80px 0", borderTop: `1px solid ${T.border}` }} className="studio-sec">
       {/* Il layout mobile delle righe viveva nel CSS globale della home:
@@ -179,19 +177,19 @@ export default function StudioCapabilities() {
         <Reveal>
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase" as const, color: "#FFFFFF", marginBottom: 20 }}>
             <span style={{ color: T.accentLt }}>//</span>
-            <span>[ Tecnologia all&apos;Avanguardia ]</span>
+            <span>{t.kicker}</span>
           </div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(30px,3.4vw,50px)", fontWeight: 800, lineHeight: 1.06, letterSpacing: "-0.03em", margin: "0 0 18px", maxWidth: "min(680px,100%)", color: T.text }}>
-            Perché la Velocità Determina il tuo Fatturato
+            {t.title}
           </h2>
           <p style={{ fontFamily: SANS, fontSize: "clamp(16px, 1.4vw, 17px)", color: T.muted, lineHeight: 1.75, maxWidth: "min(740px,100%)", marginBottom: 40 }}>
-            Ogni millisecondo conta. Un&apos;architettura tecnica di alto livello non è un lusso — è il fondamento su cui si costruisce la crescita del fatturato.
+            {t.lead}
           </p>
         </Reveal>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {TECH_POINTS.map((pt, i) => (
-            <TechRow key={pt.title} {...pt} index={i} />
+          {TECH_ART.map((pt, i) => (
+            <TechRow key={i} {...pt} {...t.items[i]} index={i} />
           ))}
         </div>
       </div>

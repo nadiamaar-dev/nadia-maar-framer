@@ -2,8 +2,11 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import type { SandboxItem } from "../../../data/sandboxData"
 import { useBlueprint } from "../../../context/BlueprintContext"
+import { DEMO_HREF } from "../../../data/demos"
 import CarouselControls, { CarouselCounter } from "./CarouselControls"
 import BottomActionBar from "./BottomActionBar"
+import { useT } from "../../../lib/i18n/t"
+import { LAB_STR } from "../../../lib/i18n/strings/lab"
 
 /* ══════════════════════════════════════════════════════════════════════════
    ANTEPRIMA DI PROGETTO
@@ -16,10 +19,7 @@ import BottomActionBar from "./BottomActionBar"
    il CTA «Preview» porta alla cosa vera in una scheda nuova.
 ══════════════════════════════════════════════════════════════════════════ */
 
-/* ogni demo ha la sua rotta; le altre schede mostrano il manifesto */
-const DEMO_HREF: Record<string, string> = {
-  "supplier-portal": "/demo/portale-fornitori",
-}
+/* le rotte delle demo vivono in data/demos.ts: le altre schede mostrano il manifesto */
 
 type Props = {
   items: SandboxItem[]
@@ -52,6 +52,7 @@ function Overlay({ items, index, onIndex, onClose }: {
   onIndex: (i: number) => void
   onClose: () => void
 }) {
+  const t = useT(LAB_STR).card
   const item = items[index]
   const reduce = useReducedMotion()
   const panelRef = useRef<HTMLDivElement>(null)
@@ -124,7 +125,7 @@ function Overlay({ items, index, onIndex, onClose }: {
       onMouseDown={e => { if (e.target === e.currentTarget) onClose() }}
       role="dialog"
       aria-modal="true"
-      aria-label={`Anteprima · ${item.title}`}
+      aria-label={t.previewOverlay.replace("{title}", item.title)}
     >
       <motion.div
         ref={panelRef}
@@ -151,7 +152,7 @@ function Overlay({ items, index, onIndex, onClose }: {
           <button
             type="button"
             onClick={onClose}
-            aria-label="Chiudi anteprima"
+            aria-label={t.closePreview}
             className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-white/60
                        bg-white/[0.06] ring-1 ring-white/12 backdrop-blur-xl
                        transition duration-200 hover:bg-white/[0.13] hover:text-white
@@ -255,6 +256,7 @@ function Skeleton() {
 }
 
 function Poster({ item }: { item: SandboxItem }) {
+  const t = useT(LAB_STR).card
   return (
     <div
       className="absolute inset-0 grid place-items-center px-8 text-center"
@@ -262,7 +264,7 @@ function Poster({ item }: { item: SandboxItem }) {
     >
       <div className="max-w-[46ch]">
         <div className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-white/45">
-          {item.type === "full-site" ? "Full Site" : "Component"}
+          {item.type === "full-site" ? t.fullSite : t.component}
         </div>
         <h3 className="mt-2.5 text-[26px] font-bold leading-tight tracking-[-0.02em] text-white max-md:text-[19px]">
           {item.title}

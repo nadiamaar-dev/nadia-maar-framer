@@ -13,6 +13,9 @@
 import React, { useEffect } from "react"
 import { motion } from "framer-motion"
 import { CONTACT, mailLink } from "../lib/contact"
+import { useLocale } from "../lib/i18n/LocaleContext"
+import { useT } from "../lib/i18n/t"
+import { FOOTER_STR } from "../lib/i18n/strings/footer"
 
 /* ── design tokens (self-contained so the component has no peer deps) ── */
 const T = {
@@ -108,18 +111,22 @@ const SOCIALS = [
 
 /* nav links — same hrefs work from any page:
    on the main page the browser scrolls to #anchor;
-   from other pages it navigates to /#anchor */
-const NAV_LINKS = [
-  { label: "Home",      href: "/" },
-  { label: "Metodo",    href: "/about" },
-  /* "Soluzioni" puntava a un'ancora che in pagina non esisteva e "Portfolio"
-     a una sezione mai renderizzata: entrambi ricaricavano la home senza
-     muoversi. Ora s4 esiste davvero e i progetti hanno la loro pagina. */
-  { label: "Servizi",   href: "/#s4" },
-  { label: "Projects",  href: "/projects" },
-  { label: "Configuratore", href: "/#s7" },
-  { label: "Contatti",  href: "/contatti" },
-]
+   from other pages it navigates to /#anchor.
+   `L` aggiunge il prefisso di lingua: dal footer inglese si resta in inglese. */
+function navLinks(t: typeof FOOTER_STR.it, L: (p: string) => string) {
+  const home = L("/")
+  return [
+    { label: t.nav.home,         href: home },
+    { label: t.nav.method,       href: L("/about") },
+    /* "Soluzioni" puntava a un'ancora che in pagina non esisteva e "Portfolio"
+       a una sezione mai renderizzata: entrambi ricaricavano la home senza
+       muoversi. Ora s4 esiste davvero e i progetti hanno la loro pagina. */
+    { label: t.nav.services,     href: `${home}#s4` },
+    { label: t.nav.projects,     href: L("/projects") },
+    { label: t.nav.configurator, href: `${home}#s7` },
+    { label: t.nav.contact,      href: L("/contatti") },
+  ]
+}
 
 /* ── NMmark ── */
 function NMmark({ size = 30, id = "nm-ft" }: { size?: number; id?: string }) {
@@ -162,6 +169,10 @@ export interface FooterProps {
 }
 
 export default function Footer({ onContact }: FooterProps) {
+  const t = useT(FOOTER_STR)
+  const { href: L } = useLocale()
+  const NAV_LINKS = navLinks(t, L)
+
   /* inject scoped CSS once */
   useEffect(() => {
     const id = "nm-footer-styles"
@@ -194,20 +205,20 @@ export default function Footer({ onContact }: FooterProps) {
                 </span>
               </div>
               <p className="nm-footer-hide-mobile" style={{ fontFamily: SANS, fontSize: "clamp(15px, 1.4vw, 17px)", color: T.faint, lineHeight: 1.85, maxWidth: 280, letterSpacing: "0.01em", flexDirection: "column" }}>
-                E-commerce, Web Apps, AI e Performance Marketing.<br />Architettura digitale ad alte prestazioni.
+                {t.tagline.line1}<br />{t.tagline.line2}
               </p>
             </div>
             <div className="nm-footer-hide-mobile"
               style={{ alignItems: "center", gap: 10, padding: "8px 14px", borderRadius: 9999, background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.22)", width: "fit-content" }}>
               <PingDot color={T.green} size={7} />
-              <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(190,245,220,0.90)" }}>Disponibile · 2026</span>
+              <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(190,245,220,0.90)" }}>{t.available}</span>
             </div>
           </div>
 
           {/* col 2 — nav */}
           <div className="nm-footer-hide-mobile" style={{ flexDirection: "column", gap: 4 }}>
             <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.24em", textTransform: "uppercase", color: "#FFFFFF", marginBottom: 16 }}>
-              Navigazione
+              {t.navTitle}
             </div>
             {NAV_LINKS.map(({ label, href }) => (
               <motion.a key={label} href={href}
@@ -225,7 +236,7 @@ export default function Footer({ onContact }: FooterProps) {
           {/* col 3 — contact */}
           <div className="nm-footer-hide-mobile" style={{ flexDirection: "column", gap: 14 }}>
             <div style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.24em", textTransform: "uppercase", color: "#FFFFFF", marginBottom: 4 }}>
-              Contatti
+              {t.contactTitle}
             </div>
 
             <a href={mailLink()}
@@ -236,13 +247,13 @@ export default function Footer({ onContact }: FooterProps) {
 
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ width: 5, height: 5, borderRadius: "50%", background: "rgba(184,50,64,0.60)", flexShrink: 0 }} />
-              <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.10em", color: "#FFFFFF" }}>Remote · Europa</span>
+              <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.10em", color: "#FFFFFF" }}>{t.location}</span>
             </div>
 
             <div style={{ height: 1, background: "rgba(255,255,255,0.07)", margin: "2px 0" }} />
 
             <motion.a
-              href="/contatti"
+              href={L("/contatti")}
               whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}
               transition={{ type: "spring", stiffness: 400, damping: 22 }}
               style={{ display: "inline-flex", alignItems: "stretch", borderRadius: 10, textDecoration: "none", border: "1px solid rgba(184,50,64,0.50)", background: "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)", overflow: "hidden", width: "fit-content", transition: "background 0.25s, border-color 0.25s, box-shadow 0.25s" }}
@@ -250,7 +261,7 @@ export default function Footer({ onContact }: FooterProps) {
               onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "linear-gradient(90deg, rgba(184,50,64,0.34) 0%, rgba(184,50,64,0.20) 100%)"; el.style.borderColor = "rgba(184,50,64,0.50)"; el.style.boxShadow = "0 0 12px rgba(184,50,64,0.20), inset 0 1px 0 rgba(255,255,255,0.12)" }}
             >
               <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(184,50,64,0.45)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "#FFFFFF", flexShrink: 0 }}>[01]</span>
-              <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>Prenota una Call</span>
+              <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>{t.bookCall}</span>
             </motion.a>
 
             {onContact && (
@@ -261,7 +272,7 @@ export default function Footer({ onContact }: FooterProps) {
                 onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.12)" }}
               >
                 <span style={{ padding: "9px 12px 9px 14px", borderRight: "1px solid rgba(255,255,255,0.14)", display: "flex", alignItems: "center", fontFamily: MONO, fontSize: 8, letterSpacing: "0.22em", color: "#FFFFFF", flexShrink: 0 }}>[✉]</span>
-                <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.faint }}>Scrivici</span>
+                <span style={{ display: "flex", alignItems: "center", padding: "9px 16px", fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: T.faint }}>{t.writeUs}</span>
               </motion.button>
             )}
           </div>
@@ -270,7 +281,7 @@ export default function Footer({ onContact }: FooterProps) {
         {/* ── bottom row — copyright + socials ── */}
         <div className="nm-footer-bottom">
           <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: "#FFFFFF" }}>
-            © NADIA MAAR 2026 — Digital Architecture Studio
+            {t.copyright}
           </span>
           <div className="nm-footer-socials" style={{ display: "flex", gap: 8 }}>
             {SOCIALS.map(({ label, href, Icon }) => (

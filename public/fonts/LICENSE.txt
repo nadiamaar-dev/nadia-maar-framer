@@ -1,0 +1,14 @@
+I caratteri in questa cartella sono distribuiti con SIL Open Font License 1.1,
+che consente l'uso, la modifica e la ridistribuzione — compreso l'hosting sul
+proprio dominio — a condizione che i file non vengano venduti da soli e che la
+licenza accompagni le copie.
+
+  Plus Jakarta Sans  © Tokotype        https://github.com/tokotype/PlusJakartaSans
+  JetBrains Mono     © JetBrains       https://github.com/JetBrains/JetBrainsMono
+  Space Grotesk      © Florian Karsten https://github.com/floriankarsten/space-grotesk
+  Geist              © Vercel          https://github.com/vercel/geist-font
+  Inter              © Rasmus Andersson https://github.com/rsms/inter
+
+Testo completo della licenza: https://openfontlicense.org
+I file sono i sottoinsiemi latin e latin-ext delle versioni variabili
+pubblicate da Google Fonts.

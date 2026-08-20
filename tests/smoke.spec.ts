@@ -1,0 +1,186 @@
+import { expect, test } from "@playwright/test"
+
+/* ══════════════════════════════════════════════════════════════════════════
+   I QUATTRO CONTROLLI CHE DEVONO PASSARE PRIMA DI PUBBLICARE.
+
+   Il criterio per stare in questo file: se si rompe, smettono di arrivare
+   richieste — o ne arrivano di sbagliate. Tutto il resto sta altrove.
+
+   1. La home si disegna e il titolo c'è.
+   2. Il configuratore arriva al blueprint: è la macchina che raccoglie i
+      contatti qualificati.
+   3. L'area riservata resta chiusa a chi non ha fatto accesso.
+   4. La versione inglese esiste, si dichiara tale e non è un doppione.
+
+   Più due controlli di regressione sulle prestazioni, scritti dopo aver
+   corretto i difetti che coprono: sono le cose che tornano indietro da sole
+   al primo refactor distratto.
+══════════════════════════════════════════════════════════════════════════ */
+
+test.describe("pagine pubbliche", () => {
+  test("la home si disegna e sostituisce la schermata di avvio", async ({ page }) => {
+    await page.goto("/")
+
+    /* Il titolo è spezzato in più <span> con trattamenti grafici diversi:
+       si cerca la riga, non la stringa intera. */
+    /* Quindici secondi e non i cinque predefiniti: qui si sta verificando
+       CHE la pagina si disegni, non QUANTO ci mette. La velocità si misura
+       con gli strumenti giusti (vedi docs/prestazioni.md) su un dominio
+       pubblicato; un test funzionale che fallisce perché la macchina è
+       carica non dice niente di vero sul sito. */
+    await expect(page.locator("h1").first()).toContainText(/Architect/i, { timeout: 15_000 })
+
+    /* #nm-boot vive dentro #root: se resta a schermo, React non è montato —
+       cioè la pagina è bianca per il visitatore. */
+    await expect(page.locator("#nm-boot")).toHaveCount(0)
+
+    await expect(page.locator("header")).toBeVisible()
+  })
+
+  test("il configuratore arriva fino al blueprint", async ({ page }) => {
+    await page.goto("/")
+
+    const configuratore = page.locator("#s7")
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 })
+    await configuratore.scrollIntoViewIfNeeded()
+
+    /* Passo 1: si sceglie una direzione. Senza, «Avanti» resta spento — ed è
+       proprio quel vincolo che si vuole verificare. */
+    const avanti = configuratore.locator(".fc-nav-b.is-next")
+    await expect(avanti).toHaveCount(0)
+
+    /* Scegliere la direzione porta già al passo 2 (lo fa `pickVector` nello
+       store): il numero di clic che restano è un dettaglio del prodotto, non
+       qualcosa che questo test debba sapere. Si avanza finché il pulsante
+       esiste — al blueprint sparisce, ed è quello il segnale di arrivo. */
+    await configuratore.locator(".fc-card").first().click()
+
+    for (let i = 0; i < 5 && (await avanti.count()) > 0; i++) {
+      await avanti.click()
+    }
+    await expect(avanti, "al blueprint non si va più avanti").toHaveCount(0)
+
+    /* Al quarto passo compaiono la stima di impegno e i due pulsanti che
+       portano al contatto e al PDF. */
+    await expect(configuratore.locator(".fc-cx")).toBeVisible()
+    await expect(configuratore.locator(".fc-cta")).toBeVisible()
+
+    /* Il resoconto si scrive da solo dalla selezione: se resta il testo del
+       vuoto, la catena selezione → blueprint si è interrotta. */
+    await expect(page.locator(".fc-sum-empty")).toHaveCount(0)
+    await expect(page.locator(".fc-shelf").first()).toBeVisible()
+  })
+
+  test("le cinque pagine servizio rispondono e hanno titoli distinti", async ({ page }) => {
+    const rotte = ["/ecommerce", "/corporate", "/web-app", "/seo", "/ai"]
+    const titoli = new Set<string>()
+
+    for (const rotta of rotte) {
+      const risposta = await page.goto(rotta)
+      expect(risposta?.status(), `${rotta} deve rispondere 200`).toBe(200)
+      await expect(page.locator("h1").first()).toBeVisible()
+      titoli.add((await page.locator("h1").first().innerText()).trim())
+    }
+
+    /* Cinque pagine con lo stesso titolo sono cinque pagine che competono
+       fra loro su Google. */
+    expect(titoli.size).toBe(rotte.length)
+  })
+})
+
+test.describe("area riservata", () => {
+  test("il pannello non si apre senza accesso", async ({ page }) => {
+    await page.goto("/dashboard")
+
+    /* Chi non ha fatto accesso viene rimandato alla home
+       (`window.location.replace("/")` in DashboardGate). Si aspetta che la
+       navigazione si sia assestata: la prima versione di questo test
+       cercava la schermata di accesso, che però esiste solo per una frazione
+       di secondo prima del reindirizzamento — passava o falliva a seconda di
+       quanto era carica la macchina, ed è il modo più veloce per farsi
+       ignorare da chi legge i risultati. */
+    await page.waitForURL(url => !url.pathname.startsWith("/dashboard"), { timeout: 15_000 })
+
+    /* Quello che conta davvero, e che non dipende dai tempi: nessun dato del
+       pannello deve essere finito in pagina. */
+    await expect(page.locator("body")).not.toContainText(/Fatturato|Clienti attivi|Audit trail/i)
+    await expect(page.locator("body")).not.toContainText(/Panoramica|Fatturazione/i)
+  })
+})
+
+test.describe("versione inglese", () => {
+  test("/en si dichiara inglese e traduce la navigazione", async ({ page }) => {
+    await page.goto("/en")
+
+    await expect(page.locator("html")).toHaveAttribute("lang", "en")
+
+    /* Il selettore di lingua è fatto di <a> veri: la versione inglese deve
+       poter tornare indietro. */
+    await expect(page.locator('a[hreflang="it"]').first()).toBeVisible()
+  })
+
+  test("/en/contatti mostra il modulo in inglese", async ({ page }) => {
+    await page.goto("/en/contatti")
+    await expect(page.locator("h1").first()).toContainText(/talk about your project/i)
+    await expect(page.getByPlaceholder("Your name")).toBeVisible()
+  })
+})
+
+test.describe("resilienza", () => {
+  test("il sito si disegna anche se Supabase non risponde", async ({ page }) => {
+    /* Le pagine pubbliche non hanno bisogno del database: i testi sono nel
+       bundle. Prima però <MaintenanceGate> restava in attesa delle
+       impostazioni senza scadenza, e con una richiesta appesa il visitatore
+       vedeva uno schermo scuro vuoto a tempo indeterminato. Qui la richiesta
+       viene fatta sparire del tutto: il sito deve comparire lo stesso. */
+    await page.route("**/rest/v1/public_site_settings*", async () => {
+      /* Nessuna risposta e nessun errore: la peggiore delle ipotesi, quella
+         che un `.catch()` da solo non intercetta. */
+      await new Promise(() => {})
+    })
+
+    await page.goto("/")
+    await expect(page.locator("h1").first()).toContainText(/Architect/i, { timeout: 15_000 })
+  })
+})
+
+test.describe("regressioni sulle prestazioni", () => {
+  test("nessun carattere viene chiesto a Google", async ({ page }) => {
+    /* I caratteri erano importati da fonts.googleapis.com dentro uno <style>
+       inserito da React: tre viaggi di rete in fila prima che il titolo
+       potesse comparire. Ora stanno su /fonts. Questo controllo esiste
+       perché un @import è una riga sola, ed è facilissimo rimetterla. */
+    const esterni: string[] = []
+    page.on("request", r => {
+      const u = r.url()
+      if (u.includes("fonts.googleapis.com") || u.includes("fonts.gstatic.com")) esterni.push(u)
+    })
+
+    await page.goto("/", { waitUntil: "networkidle" })
+    expect(esterni, "i caratteri devono arrivare dal nostro dominio").toEqual([])
+  })
+
+  test("una sola description e le proporzioni delle immagini dichiarate", async ({ page }) => {
+    await page.goto("/")
+
+    /* Il guscio ne porta una statica e /api/prerender ne inietta una per
+       pagina: se un giorno le due convivessero, sarebbe il crawler a
+       scegliere quale contare. */
+    await expect(page.locator('meta[name="description"]')).toHaveCount(1)
+
+    /* Immagini senza dimensioni dichiarate = spostamento di layout mentre
+       si legge. Vale per tutte, non solo per quelle che ricordiamo. */
+    await page.goto("/foundry")
+    const immagini = page.locator("img:visible")
+    const n = await immagini.count()
+    for (let i = 0; i < n; i++) {
+      const img = immagini.nth(i)
+      const w = await img.getAttribute("width")
+      const ratio = await img.evaluate(el => getComputedStyle(el.parentElement!).aspectRatio)
+      expect(
+        w !== null || (ratio !== "auto" && ratio !== ""),
+        "ogni immagine deve avere width/height o un contenitore con aspect-ratio",
+      ).toBeTruthy()
+    }
+  })
+})

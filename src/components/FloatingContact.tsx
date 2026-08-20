@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { CONTACT, mailLink, telLink, waLink } from "../lib/contact"
+import { useT } from "../lib/i18n/t"
+import { COMMON_STR } from "../lib/i18n/strings/common"
 
 const MONO = "'JetBrains Mono','SF Mono',ui-monospace,monospace"
 
@@ -72,7 +74,10 @@ export default function FloatingContact() {
   /* Erano costanti locali, e telefono e WhatsApp erano rimasti segnaposto:
      ogni «Chiama» e «WhatsApp» del sito portava a un numero inesistente.
      Ora vengono da src/lib/contact.ts, insieme al resto del sito. */
-  const { name, email, telDisplay, location, initials } = CONTACT
+  const t = useT(COMMON_STR).floating
+  /* `location` viene dal dizionario e non da CONTACT: "Remote · Europa" è
+     una frase, non un recapito, e va tradotta come il resto. */
+  const { name, email, telDisplay, initials } = CONTACT
 
   const [open,     setOpen]     = useState(false)
   /* Misurato al primo render, non dopo. Partendo da `false` il pulsante si
@@ -179,8 +184,8 @@ export default function FloatingContact() {
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: T.text, letterSpacing: "-0.01em", lineHeight: 1.2, marginBottom: 2 }}>{name}</div>
-                <div style={{ fontSize: 10, color: T.muted, lineHeight: 1.35, marginBottom: 4 }}>Web Architecture & Digital Strategy</div>
-                <span style={{ fontSize: 9, fontWeight: 600, color: T.accentLt, letterSpacing: "0.08em", textTransform: "uppercase" as const }}>● Available</span>
+                <div style={{ fontSize: 10, color: T.muted, lineHeight: 1.35, marginBottom: 4 }}>{t.role}</div>
+                <span style={{ fontSize: 9, fontWeight: 600, color: T.accentLt, letterSpacing: "0.08em", textTransform: "uppercase" as const }}>{t.available}</span>
               </div>
               <motion.button onClick={() => setOpen(false)}
                 whileHover={{ scale: 1.14, background: "rgba(255,255,255,0.10)" }} whileTap={{ scale: 0.90 }}
@@ -204,15 +209,15 @@ export default function FloatingContact() {
                 <PhoneIcon size={11} /><span>{telDisplay}</span>
               </a>
               <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: T.muted }}>
-                <MapPinIcon size={11} /><span>{location}</span>
+                <MapPinIcon size={11} /><span>{t.location}</span>
               </div>
             </div>
 
             {/* action buttons */}
             <div style={{ padding: "9px 12px 14px", borderTop: "1px solid rgba(120,20,30,0.18)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
-              <FloatingActionBtn href={mailLink()}  icon={<MailIcon size={13} />}  label="Email"    />
-              <FloatingActionBtn href={telLink()}   icon={<PhoneIcon size={13} />} label="Chiama"   />
-              <FloatingActionBtn href={waLink()}    icon={<WhatsAppIcon />}        label="WhatsApp" external />
+              <FloatingActionBtn href={mailLink()}          icon={<MailIcon size={13} />}  label={t.email} />
+              <FloatingActionBtn href={telLink()}           icon={<PhoneIcon size={13} />} label={t.call} />
+              <FloatingActionBtn href={waLink(t.waGreeting)} icon={<WhatsAppIcon />}        label={t.whatsapp} external />
             </div>
           </motion.div>
         )}
@@ -224,7 +229,7 @@ export default function FloatingContact() {
         onClick={() => setOpen(o => !o)}
         whileHover={{ scale: 1.09 }} whileTap={{ scale: 0.92 }}
         transition={{ type: "spring", stiffness: 440, damping: 20 }}
-        aria-label="Contatta Nadia Maar"
+        aria-label={t.trigger}
         style={{
           position: "fixed",
           right:  isMobile ? 16 : 24,

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react"
 import Background from "./Background"
 import { DEFAULT_PUBLIC_SETTINGS, getSiteSettings, type PublicSiteSettings } from "../lib/siteSettings"
+import { useLocale } from "../lib/i18n/LocaleContext"
+import { useT } from "../lib/i18n/t"
+import { COMMON_STR } from "../lib/i18n/strings/common"
 
 /* ══════════════════════════════════════════════════════════════════════════
    INTERRUTTORI DI ROTTA.
@@ -34,6 +37,8 @@ function useSiteSettings(): State {
 }
 
 function Curtain({ title, body }: { title: string; body: string }) {
+  const t = useT(COMMON_STR)
+  const { href: L } = useLocale()
   return (
     <div style={{
       minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
@@ -65,14 +70,14 @@ function Curtain({ title, body }: { title: string; body: string }) {
         }}>
           {body}
         </p>
-        <a href="/" style={{
+        <a href={L("/")} style={{
           display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none",
           padding: "11px 20px", borderRadius: 99,
           background: "linear-gradient(90deg, rgba(184,50,64,0.34), rgba(184,50,64,0.20))",
           border: "1px solid rgba(184,50,64,0.80)", color: "#FFFFFF",
           fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: 14, fontWeight: 700,
         }}>
-          Torna alla home
+          {t.notFound.home}
         </a>
       </div>
     </div>
@@ -90,6 +95,8 @@ const Blank = () => <div style={{ minHeight: "100vh", background: "#121418" }} a
  * Adesso /api/route risponde davvero 404 e disegna questa.
  */
 export function NotFound() {
+  const t = useT(COMMON_STR).notFound
+  const { href: L } = useLocale()
   const path = typeof window !== "undefined" ? window.location.pathname : ""
   return (
     <div style={{
@@ -108,39 +115,39 @@ export function NotFound() {
           fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11.5,
           letterSpacing: "0.14em", textTransform: "uppercase", color: "#E4697A", margin: 0,
         }}>
-          Errore 404
+          {t.code}
         </p>
         <h1 style={{
           fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: 26, fontWeight: 800,
           color: "#FFFFFF", margin: "14px 0 10px", letterSpacing: "-0.02em", lineHeight: 1.2,
         }}>
-          Questa pagina non esiste
+          {t.title}
         </h1>
         <p style={{
           fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: 15,
           lineHeight: 1.6, color: "#FFFFFF", margin: "0 0 8px",
         }}>
-          L'indirizzo <code style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 14 }}>{path}</code> non
-          corrisponde a nessuna pagina. Se ci sei arrivato da un link, l'ho già registrato: lo sistemo io.
+          {t.bodyBefore} <code style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 14 }}>{path}</code>{" "}
+          {t.bodyAfter}
         </p>
         <div style={{ display: "flex", gap: 9, justifyContent: "center", flexWrap: "wrap", marginTop: 22 }}>
-          <a href="/" style={{
+          <a href={L("/")} style={{
             display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none",
             padding: "11px 20px", borderRadius: 99,
             background: "linear-gradient(90deg, rgba(184,50,64,0.34), rgba(184,50,64,0.20))",
             border: "1px solid rgba(184,50,64,0.80)", color: "#FFFFFF",
             fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: 14, fontWeight: 700,
           }}>
-            Torna alla home
+            {t.home}
           </a>
-          <a href="/contatti" style={{
+          <a href={L("/contatti")} style={{
             display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none",
             padding: "11px 20px", borderRadius: 99,
             background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.16)",
             color: "#FFFFFF", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
             fontSize: 14, fontWeight: 600,
           }}>
-            Contatti
+            {t.contact}
           </a>
         </div>
       </div>
@@ -153,12 +160,16 @@ export function NotFound() {
  *  in corso e le loro fatture da consultare. */
 export function MaintenanceGate({ children }: { children: React.ReactNode }) {
   const s = useSiteSettings()
+  const t = useT(COMMON_STR).maintenance
   if (s.phase === "loading") return <Blank />
   if (s.settings.maintenanceMode) {
+    /* Il messaggio scritto dal pannello vince, ed è in una lingua sola: è un
+       avviso momentaneo scritto a mano, non contenuto da tradurre. Quando non
+       c'è, si usa il testo del dizionario. */
     return (
       <Curtain
-        title="Torniamo fra poco"
-        body={s.settings.maintenanceMessage?.trim() || "Stiamo aggiornando il sito. L'area clienti resta accessibile su /cabinet."}
+        title={t.title}
+        body={s.settings.maintenanceMessage?.trim() || t.body}
       />
     )
   }

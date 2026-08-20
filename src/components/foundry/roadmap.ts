@@ -1,5 +1,8 @@
 import type { Blueprint } from "./modules"
-import { PROCESSO } from "../../data/process"
+import { processo } from "../../data/process"
+import { DEFAULT_LOCALE, LOCALE_TAG, type Locale } from "../../lib/i18n/locales"
+import { CONFIGURATOR_STR } from "../../lib/i18n/strings/configurator"
+import { pick } from "../../lib/i18n/t"
 import { A4, COL_W, MG, downloadPdf, safe, slug, wrap as wrapText } from "../../lib/pdf/core"
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -20,7 +23,8 @@ function esc(s: string): string {
    parole diverse, e chi leggeva About e poi apriva il PDF trovava due
    descrizioni dello stesso processo che non coincidevano. */
 
-export function buildRoadmapHtml(bp: Blueprint, dateLabel: string): string {
+export function buildRoadmapHtml(bp: Blueprint, dateLabel: string, locale: Locale = DEFAULT_LOCALE): string {
+  const t = pick(CONFIGURATOR_STR, locale).roadmap
   const scaffali = bp.scaffali
     .map(
       s => `
@@ -35,12 +39,12 @@ export function buildRoadmapHtml(bp: Blueprint, dateLabel: string): string {
     )
     .join("")
 
-  const fasi = PROCESSO.map(
+  const fasi = processo(locale).map(
     f => `<div class="fase"><span class="fase-n">${f.n}</span><div><p class="fase-t">${esc(f.title)}</p><p class="fase-b">${esc(f.desc)}</p></div></div>`,
   ).join("")
 
   return `<!doctype html>
-<html lang="it"><head><meta charset="utf-8"><title>Roadmap — ${esc(bp.vector.label)}</title>
+<html lang="${LOCALE_TAG[locale]}"><head><meta charset="utf-8"><title>${esc(t.docTitle)} — ${esc(bp.vector.label)}</title>
 <style>
   @page { margin: 18mm 16mm; }
   * { box-sizing: border-box; }
@@ -70,39 +74,39 @@ export function buildRoadmapHtml(bp: Blueprint, dateLabel: string): string {
 </style></head>
 <body>
   <header>
-    <p class="brand mono">Nadia Maar — Digital Foundry</p>
+    <p class="brand mono">${esc(t.brand)}</p>
     <h1>${esc(bp.vector.label)}</h1>
     <p class="stack mono">${esc(bp.vector.node)} · ${esc(bp.vector.stack)}</p>
   </header>
 
   <div class="meta">
-    <div><p class="meta-k mono">Complessità</p><p class="meta-v">${esc(bp.complexity.label)}</p></div>
-    <div><p class="meta-k mono">Durata orientativa</p><p class="meta-v">${esc(bp.complexity.weeks)}</p></div>
-    <div><p class="meta-k mono">Data</p><p class="meta-v">${esc(dateLabel)}</p></div>
+    <div><p class="meta-k mono">${esc(t.complexity)}</p><p class="meta-v">${esc(bp.complexity.label)}</p></div>
+    <div><p class="meta-k mono">${esc(t.duration)}</p><p class="meta-v">${esc(bp.complexity.weeks)}</p></div>
+    <div><p class="meta-k mono">${esc(t.date)}</p><p class="meta-v">${esc(dateLabel)}</p></div>
   </div>
 
-  <h2 class="mono">Obiettivo</h2>
+  <h2 class="mono">${esc(t.goal)}</h2>
   <p>${esc(bp.obiettivo)}</p>
 
-  <h2 class="mono">Architettura</h2>
+  <h2 class="mono">${esc(t.architecture)}</h2>
   <p>${esc(bp.architettura)}</p>
   <p>${esc(bp.vector.tech)}</p>
 
-  <h2 class="mono">Componenti</h2>
+  <h2 class="mono">${esc(t.components)}</h2>
   ${scaffali}
 
-  <h2 class="mono">Fasi di lavoro</h2>
+  <h2 class="mono">${esc(t.phases)}</h2>
   ${fasi}
 
-  <h2 class="mono">Nota</h2>
-  <p class="note">Complessità e durata sono una stima tecnica preliminare, basata sui moduli selezionati. Il perimetro definitivo si stabilisce dopo l'analisi dei processi e dei sistemi esistenti.</p>
+  <h2 class="mono">${esc(t.noteTitle)}</h2>
+  <p class="note">${esc(t.note)}</p>
 
-  <footer class="mono">Nadia Maar · Digital Foundry — Development &amp; Growth</footer>
+  <footer class="mono">${esc(t.footer)}</footer>
 </body></html>`
 }
 
 /** Apre la finestra di stampa del browser su un documento roadmap isolato. */
-export function printRoadmap(bp: Blueprint, dateLabel: string): void {
+export function printRoadmap(bp: Blueprint, dateLabel: string, locale: Locale = DEFAULT_LOCALE): void {
   const prev = document.getElementById("fc-roadmap-frame")
   if (prev) prev.remove()
 
@@ -115,7 +119,7 @@ export function printRoadmap(bp: Blueprint, dateLabel: string): void {
   const doc = frame.contentDocument
   if (!doc) { frame.remove(); return }
   doc.open()
-  doc.write(buildRoadmapHtml(bp, dateLabel))
+  doc.write(buildRoadmapHtml(bp, dateLabel, locale))
   doc.close()
 
   const go = () => {
@@ -147,7 +151,8 @@ export function printRoadmap(bp: Blueprint, dateLabel: string): void {
 
 /** Compone il documento e restituisce i byte. Separata dallo scaricamento
     perché non tocca il DOM: si può generare e ispezionare fuori dal browser. */
-export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise<Uint8Array> {
+export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string, locale: Locale = DEFAULT_LOCALE): Promise<Uint8Array> {
+  const t = pick(CONFIGURATOR_STR, locale).roadmap
   const { PDFDocument, StandardFonts, rgb } = await import("pdf-lib")
 
   const doc    = await PDFDocument.create()
@@ -211,7 +216,7 @@ export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise
 
   /* ── Intestazione ──────────────────────────────────────────────────── */
   y -= 9
-  tracked("NADIA MAAR - DIGITAL FOUNDRY", 8, mono, MUTED, 1.9)
+  tracked(safe(t.brand).toUpperCase(), 8, mono, MUTED, 1.9)
   y -= 12
   for (const line of wrap(bp.vector.label, bold, 20, COL_W)) {
     y -= 23
@@ -225,9 +230,9 @@ export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise
   /* ── Riga dati: complessità · durata · data ────────────────────────── */
   y -= 20
   const cells: [string, string][] = [
-    ["Complessità", bp.complexity.label],
-    ["Durata orientativa", bp.complexity.weeks],
-    ["Data", dateLabel],
+    [t.complexity, bp.complexity.label],
+    [t.duration, bp.complexity.weeks],
+    [t.date, dateLabel],
   ]
   const cellW = (COL_W - 28 * 2) / 3
   cells.forEach(([k, v], i) => {
@@ -244,14 +249,14 @@ export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise
   rule(RULE)
 
   /* ── Corpo ─────────────────────────────────────────────────────────── */
-  h2("Obiettivo")
+  h2(t.goal)
   para(bp.obiettivo, sans, 11, INK, 16, 0)
 
-  h2("Architettura")
+  h2(t.architecture)
   para(bp.architettura, sans, 11, INK, 16, 9)
   para(bp.vector.tech, sans, 11, INK, 16, 0)
 
-  h2("Componenti")
+  h2(t.components)
   for (const shelf of bp.scaffali) {
     /** Titolo del gruppo con la sua sottolineatura. */
     const shelfHead = (label: string) => {
@@ -272,7 +277,7 @@ export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise
       room(15 + tech.length * 13 + 8)
       /* se il gruppo è proseguito su una pagina nuova il titolo è rimasto
          indietro, e queste righe sembrerebbero non appartenere a nulla */
-      if (page !== wasOn) shelfHead(`${shelf.label} (segue)`)
+      if (page !== wasOn) shelfHead(`${shelf.label} ${t.continued}`)
       y -= 15
       page.drawText(safe(r.node), { x: MG.x, y, size: 11, font: bold, color: INK })
       for (const line of tech) {
@@ -283,8 +288,8 @@ export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise
     }
   }
 
-  h2("Fasi di lavoro")
-  for (const f of PROCESSO) {
+  h2(t.phases)
+  for (const f of processo(locale)) {
     const body = wrap(f.desc, sans, 9.5, COL_W - 32)
     room(14 + body.length * 13 + 9)
     y -= 14
@@ -297,12 +302,8 @@ export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise
     y -= 9
   }
 
-  h2("Nota")
-  para(
-    "Complessità e durata sono una stima tecnica preliminare, basata sui moduli selezionati. " +
-    "Il perimetro definitivo si stabilisce dopo l'analisi dei processi e dei sistemi esistenti.",
-    italic, 9, MUTED, 14, 0,
-  )
+  h2(t.noteTitle)
+  para(t.note, italic, 9, MUTED, 14, 0)
 
   /* ── Piè di pagina, uguale su ogni pagina ──────────────────────────── */
   const pages = doc.getPages()
@@ -312,7 +313,7 @@ export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise
       thickness: 1, color: RULE,
     })
     let x = MG.x
-    for (const ch of "NADIA MAAR · DIGITAL FOUNDRY") {
+    for (const ch of safe(t.brand).toUpperCase()) {
       p.drawText(ch, { x, y: MG.bottom - 34, size: 7.5, font: mono, color: MUTED })
       x += mono.widthOfTextAtSize(ch, 7.5) + 1.2
     }
@@ -323,7 +324,7 @@ export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise
     })
   })
 
-  doc.setTitle(`Roadmap — ${bp.vector.label}`)
+  doc.setTitle(`${t.docTitle} — ${bp.vector.label}`)
   doc.setAuthor("Nadia Maar")
   doc.setSubject(`${bp.vector.node} · ${bp.complexity.label} · ${bp.complexity.weeks}`)
   doc.setCreator("Nadia Maar — Digital Foundry")
@@ -333,7 +334,8 @@ export async function buildRoadmapPdf(bp: Blueprint, dateLabel: string): Promise
 }
 
 /** Genera il file e lo consegna al browser come download. */
-export async function downloadRoadmapPdf(bp: Blueprint, dateLabel: string): Promise<void> {
-  const bytes = await buildRoadmapPdf(bp, dateLabel)
-  downloadPdf(bytes, `roadmap-${slug(bp.vector.node, "roadmap")}.pdf`)
+export async function downloadRoadmapPdf(bp: Blueprint, dateLabel: string, locale: Locale = DEFAULT_LOCALE): Promise<void> {
+  const bytes = await buildRoadmapPdf(bp, dateLabel, locale)
+  const base = pick(CONFIGURATOR_STR, locale).roadmap.fileName
+  downloadPdf(bytes, `${base}-${slug(bp.vector.node, base)}.pdf`)
 }

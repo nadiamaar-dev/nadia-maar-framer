@@ -26,6 +26,8 @@ import Header from "./components/Header"
 import FoundryConfigurator from "./components/foundry/FoundryConfigurator"
 import { sendContact } from "./lib/sendContact"
 import { CONTACT } from "./lib/contact"
+import { useT } from "./lib/i18n/t"
+import { CONTATTI_STR } from "./lib/i18n/strings/contatti"
 
 const T = {
   bg: "#060C18", text: "#FFFFFF", muted: "#FFFFFF",
@@ -140,6 +142,7 @@ const labelStyle: React.CSSProperties = {
 }
 
 function ContactForm() {
+  const t = useT(CONTATTI_STR).form
   const [f, setF] = useState({ name: "", email: "", company: "", message: "", website: "" })
   const [busy, setBusy] = useState(false)
   const [sent, setSent] = useState(false)
@@ -160,9 +163,9 @@ function ContactForm() {
     return (
       <div style={{ ...CARD, padding: "40px 32px", textAlign: "center" }} role="status">
         <div style={{ width: 10, height: 10, borderRadius: "50%", background: T.green, margin: "0 auto 20px" }} />
-        <h3 style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 700, color: "#FFFFFF", margin: "0 0 12px" }}>Richiesta ricevuta</h3>
+        <h3 style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 700, color: "#FFFFFF", margin: "0 0 12px" }}>{t.sentTitle}</h3>
         <p style={{ fontFamily: SANS, fontSize: 15, lineHeight: 1.7, color: T.muted, margin: 0, maxWidth: 380, marginInline: "auto" }}>
-          Ti rispondiamo entro 24 ore, nei giorni lavorativi. Se serve prima, il telefono qui sopra è il modo più rapido.
+          {t.sentBody}
         </p>
       </div>
     )
@@ -182,25 +185,25 @@ function ContactForm() {
 
       <div className="ct-field-row">
         <div>
-          <label style={labelStyle} htmlFor="ct-name">Nome</label>
-          <input id="ct-name" style={inputStyle} value={f.name} onChange={set("name")} onFocus={focus} onBlur={blur} required maxLength={200} placeholder="Il tuo nome" />
+          <label style={labelStyle} htmlFor="ct-name">{t.name}</label>
+          <input id="ct-name" style={inputStyle} value={f.name} onChange={set("name")} onFocus={focus} onBlur={blur} required maxLength={200} placeholder={t.namePlaceholder} />
         </div>
         <div>
-          <label style={labelStyle} htmlFor="ct-email">Email</label>
-          <input id="ct-email" type="email" style={inputStyle} value={f.email} onChange={set("email")} onFocus={focus} onBlur={blur} required maxLength={200} placeholder="nome@azienda.it" />
+          <label style={labelStyle} htmlFor="ct-email">{t.email}</label>
+          <input id="ct-email" type="email" style={inputStyle} value={f.email} onChange={set("email")} onFocus={focus} onBlur={blur} required maxLength={200} placeholder={t.emailPlaceholder} />
         </div>
       </div>
 
       <div>
-        <label style={labelStyle} htmlFor="ct-company">Azienda <span style={{ textTransform: "none" as const, letterSpacing: 0 }}>(opzionale)</span></label>
-        <input id="ct-company" style={inputStyle} value={f.company} onChange={set("company")} onFocus={focus} onBlur={blur} maxLength={200} placeholder="Nome dell'azienda" />
+        <label style={labelStyle} htmlFor="ct-company">{t.company} <span style={{ textTransform: "none" as const, letterSpacing: 0 }}>{t.companyOptional}</span></label>
+        <input id="ct-company" style={inputStyle} value={f.company} onChange={set("company")} onFocus={focus} onBlur={blur} maxLength={200} placeholder={t.companyPlaceholder} />
       </div>
 
       <div>
-        <label style={labelStyle} htmlFor="ct-msg">Il progetto</label>
+        <label style={labelStyle} htmlFor="ct-msg">{t.project}</label>
         <textarea id="ct-msg" rows={6} style={{ ...inputStyle, resize: "vertical", minHeight: 130, lineHeight: 1.65 }}
           value={f.message} onChange={set("message")} onFocus={focus} onBlur={blur} required minLength={10} maxLength={4000}
-          placeholder="Che cosa vendi o gestisci, che cosa funziona già, che cosa vorresti ottenere e in quali tempi." />
+          placeholder={t.projectPlaceholder} />
       </div>
 
       {/* honeypot: il nome NON deve somigliare a un campo reale, altrimenti
@@ -210,7 +213,7 @@ function ContactForm() {
 
       {failed && (
         <p role="alert" style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.06em", lineHeight: 1.6, color: "rgba(255,120,120,0.95)", margin: 0 }}>
-          Invio non riuscito. Riprova fra un istante, oppure scrivici direttamente a {EMAIL}.
+          {t.failed.replace("{email}", EMAIL)}
         </p>
       )}
 
@@ -226,12 +229,12 @@ function ContactForm() {
         }}>
         <span style={{ padding: "0 14px", borderRight: "1px solid rgba(255,60,92,0.40)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[→]</span>
         <span style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
-          {busy ? "Invio in corso…" : "Invia la richiesta"}
+          {busy ? t.sending : t.submit}
         </span>
       </motion.button>
 
       <p style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.6, color: "rgba(255,255,255,0.5)", margin: 0 }}>
-        I dati servono solo a risponderti. Nessuna newsletter, nessuna condivisione con terzi.
+        {t.privacy}
       </p>
     </form>
   )
@@ -246,6 +249,7 @@ function ContactForm() {
    il modale del lead che il configuratore apre al quarto passo (2000), che
    deve restare in cima. */
 function ConfiguratorDialog({ onClose }: { onClose: () => void }) {
+  const t = useT(CONTATTI_STR).alt
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
     window.addEventListener("keydown", onKey)
@@ -268,7 +272,7 @@ function ConfiguratorDialog({ onClose }: { onClose: () => void }) {
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.26 }}
       onClick={e => { if (e.target === e.currentTarget) onClose() }}
-      role="dialog" aria-modal="true" aria-label="Configuratore"
+      role="dialog" aria-modal="true" aria-label={t.dialogLabel}
       style={{
         position: "fixed", inset: 0, zIndex: 800, overflowY: "auto", overscrollBehavior: "contain",
         background: "rgba(3,7,14,0.72)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
@@ -283,7 +287,7 @@ function ConfiguratorDialog({ onClose }: { onClose: () => void }) {
           background: T.bg, borderRadius: 18, overflow: "hidden",
           border: "1px solid rgba(255,255,255,0.14)", boxShadow: "0 40px 120px rgba(0,0,0,0.6)",
         }}>
-        <button onClick={onClose} aria-label="Chiudi"
+        <button onClick={onClose} aria-label={t.close}
           style={{
             position: "sticky", top: 14, left: "100%", zIndex: 5, transform: "translateX(-58px)",
             width: 40, height: 40, borderRadius: 11, cursor: "pointer",
@@ -302,20 +306,11 @@ function ConfiguratorDialog({ onClose }: { onClose: () => void }) {
 }
 
 /* ── Pagina ──────────────────────────────────────────────────────────────── */
-const COSA_SCRIVERE = [
-  "Che cosa vendi o gestisci, e su quale piattaforma gira oggi",
-  "Che cosa funziona già e che cosa invece ti fa perdere tempo o vendite",
-  "Il risultato che vuoi ottenere, possibilmente in numeri",
-  "Entro quando ti serve, e se c'è una scadenza fissa",
-]
-
-const DOPO = [
-  { n: "01", t: "Leggiamo", d: "Ogni richiesta viene letta personalmente. Nessun assistente automatico in mezzo." },
-  { n: "02", t: "Rispondiamo entro 24 ore", d: "Nei giorni lavorativi. Nella risposta trovi una prima valutazione tecnica, non un listino." },
-  { n: "03", t: "Ci parliamo", d: "Una call di trenta minuti per capire se ha senso lavorare insieme. Gratuita e senza impegno." },
-]
 
 export default function NadiaMaarContatti() {
+  const t = useT(CONTATTI_STR)
+  const COSA_SCRIVERE = t.how.points
+  const DOPO = t.after.steps
   const hasLegale = Object.values(LEGALE).some(v => v !== "—")
   const [cfgOpen, setCfgOpen] = useState(false)
 
@@ -331,20 +326,20 @@ export default function NadiaMaarContatti() {
         <section style={{ padding: "80px 0 64px", borderBottom: `1px solid ${T.border}` }}>
           <div className="ct-wrap">
             <Reveal>
-              <Kicker text="Contatti" />
+              <Kicker text={t.hero.kicker} />
               <h1 style={{ fontFamily: DISPLAY, fontSize: "clamp(38px,5vw,68px)", fontWeight: 900, lineHeight: 1.02, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 20px", maxWidth: 780 }}>
-                Parliamo del tuo progetto
+                {t.hero.title}
               </h1>
               <p style={{ fontFamily: SANS, fontSize: "clamp(16px,1.4vw,17px)", lineHeight: 1.8, color: T.muted, maxWidth: 620, margin: "0 0 40px" }}>
-                Scrivi come preferisci: modulo, email, telefono o Telegram. Rispondiamo entro 24 ore nei giorni lavorativi, e la prima call è gratuita.
+                {t.hero.lead}
               </p>
             </Reveal>
 
             <Reveal delay={0.08}>
               <div className="ct-channels">
-                <Channel label="Email"    value={EMAIL}       href={`mailto:${EMAIL}`}  icon={ICON.mail} />
-                <Channel label="Telefono" value={TEL_DISPLAY} href={`tel:${TEL_HREF}`}  icon={ICON.phone} />
-                <Channel label="Telegram" value="@Nadiamaar_bot" href={TELEGRAM}        icon={ICON.tg} />
+                <Channel label={t.channels.email}    value={EMAIL}       href={`mailto:${EMAIL}`} icon={ICON.mail} />
+                <Channel label={t.channels.phone}    value={TEL_DISPLAY} href={`tel:${TEL_HREF}`} icon={ICON.phone} />
+                <Channel label={t.channels.telegram} value="@Nadiamaar_bot" href={TELEGRAM}       icon={ICON.tg} />
               </div>
             </Reveal>
           </div>
@@ -356,12 +351,12 @@ export default function NadiaMaarContatti() {
             <div className="ct-grid">
               <div>
                 <Reveal>
-                  <Kicker text="Come Scrivere" />
+                  <Kicker text={t.how.kicker} />
                   <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(24px,2.8vw,38px)", fontWeight: 700, lineHeight: 1.14, letterSpacing: "-0.025em", color: "#FFFFFF", margin: "0 0 18px" }}>
-                    Quattro righe bastano
+                    {t.how.title}
                   </h2>
                   <p style={{ fontFamily: SANS, fontSize: 15.5, lineHeight: 1.75, color: T.muted, margin: "0 0 30px", maxWidth: 480 }}>
-                    Non serve un capitolato. Questi quattro punti ci evitano un giro di domande e ti fanno arrivare una risposta utile già al primo scambio.
+                    {t.how.lead}
                   </p>
                   <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 14, margin: 0, padding: 0 }}>
                     {COSA_SCRIVERE.map((c, i) => (
@@ -383,9 +378,9 @@ export default function NadiaMaarContatti() {
         <section style={{ padding: "80px 0", borderBottom: `1px solid ${T.border}` }}>
           <div className="ct-wrap">
             <Reveal>
-              <Kicker text="Dopo l'Invio" />
+              <Kicker text={t.after.kicker} />
               <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(24px,2.8vw,38px)", fontWeight: 700, lineHeight: 1.14, letterSpacing: "-0.025em", color: "#FFFFFF", margin: "0 0 44px" }}>
-                Che cosa succede dopo
+                {t.after.title}
               </h2>
             </Reveal>
             <div className="ct-steps">
@@ -409,17 +404,17 @@ export default function NadiaMaarContatti() {
             <Reveal>
               <div style={{ ...CARD, padding: "36px 34px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 28, flexWrap: "wrap" }}>
                 <div style={{ minWidth: 260, flex: 1 }}>
-                  <Kicker text="In Alternativa" />
+                  <Kicker text={t.alt.kicker} />
                   <h2 style={{ fontFamily: DISPLAY, fontSize: "clamp(20px,2.2vw,28px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.02em", color: "#FFFFFF", margin: "0 0 10px" }}>
-                    Preferisci comporre invece di scrivere?
+                    {t.alt.title}
                   </h2>
                   <p style={{ fontFamily: SANS, fontSize: 15, lineHeight: 1.7, color: T.muted, margin: 0, maxWidth: 520 }}>
-                    Il configuratore monta l'architettura in quattro passi e la traduce in un blueprint scaricabile. La richiesta arriva già con il perimetro definito.
+                    {t.alt.body}
                   </p>
                 </div>
                 <button onClick={() => setCfgOpen(true)}
                   style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "14px 22px", borderRadius: 11, cursor: "pointer", border: "1px solid rgba(255,255,255,0.28)", background: "rgba(255,255,255,0.03)", fontFamily: MONO, fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "#FFFFFF", flexShrink: 0 }}>
-                  Apri il configuratore <span style={{ color: T.accentLt }}>→</span>
+                  {t.alt.cta} <span style={{ color: T.accentLt }}>→</span>
                 </button>
               </div>
             </Reveal>
@@ -433,8 +428,8 @@ export default function NadiaMaarContatti() {
               <Reveal>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "18px 56px", fontFamily: MONO, fontSize: 11, letterSpacing: "0.06em", color: "rgba(255,255,255,0.55)" }}>
                   <span>{LEGALE.ragioneSociale}</span>
-                  <span>P.IVA {LEGALE.piva}</span>
-                  <span>PEC {LEGALE.pec}</span>
+                  <span>{t.legal.vat} {LEGALE.piva}</span>
+                  <span>{t.legal.pec} {LEGALE.pec}</span>
                 </div>
               </Reveal>
             </div>

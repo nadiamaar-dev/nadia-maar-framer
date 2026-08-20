@@ -1,5 +1,6 @@
 import { supabase } from "./core"
 import type { PageSeoConfig } from "./types"
+import { DEFAULT_LOCALE, type Locale, isLocale } from "../i18n/locales"
 
 /* ══════════════════════════════════════════════════════════════════════════
    SCHEDE SEO PER PAGINA.
@@ -33,6 +34,9 @@ function map(r: any): PageSeoConfig {
   return {
     id: r.id,
     pageSlug: r.page_slug,
+    /* Le righe scritte prima della migrazione multilingua non avevano la
+       colonna: erano tutte italiane, ed è quello che il default dichiara. */
+    locale: isLocale(r.locale) ? r.locale : DEFAULT_LOCALE,
     metaTitle: r.meta_title ?? undefined,
     metaDescription: r.meta_description ?? undefined,
     ogImageUrl: r.og_image_url ?? undefined,
@@ -44,28 +48,44 @@ function map(r: any): PageSeoConfig {
   }
 }
 
+/** Tutte le schede, tutte le lingue. Il pannello le raggruppa da sé. */
 export async function fetchSeoConfigs(): Promise<PageSeoConfig[]> {
-  const { data, error } = await supabase.from("page_seo_configs").select("*").order("page_slug")
+  const { data, error } = await supabase
+    .from("page_seo_configs").select("*").order("page_slug").order("locale")
   if (error) throw error
   return (data ?? []).map(map)
 }
 
-export async function fetchSeoConfig(slug: string): Promise<PageSeoConfig | null> {
+export async function fetchSeoConfig(slug: string, locale: Locale = DEFAULT_LOCALE): Promise<PageSeoConfig | null> {
   const { data, error } = await supabase
-    .from("page_seo_configs").select("*").eq("page_slug", slug).maybeSingle()
+    .from("page_seo_configs").select("*")
+    .eq("page_slug", slug).eq("locale", locale).maybeSingle()
   if (error) throw error
   return data ? map(data) : null
 }
 
+/** Le lingue già pubblicate per una pagina: alimenta gli hreflang e dice al
+ *  pannello quali schede esistono davvero. */
+export async function fetchPublishedLocales(slug: string): Promise<Locale[]> {
+  const { data, error } = await supabase
+    .from("page_seo_configs").select("locale")
+    .eq("page_slug", slug).eq("is_noindex", false)
+  if (error) throw error
+  return (data ?? []).map(r => r.locale).filter(isLocale).sort()
+}
+
 export type SeoDraft = Omit<PageSeoConfig, "id" | "updatedAt">
 
-/** Una scheda per slug: `upsert` sul vincolo unico evita la doppia domanda
- *  «esiste già?» → «allora aggiorna», che in mezzo può perdere una corsa. */
+/** Una scheda per (slug, lingua): `upsert` sul vincolo unico evita la doppia
+ *  domanda «esiste già?» → «allora aggiorna», che in mezzo può perdere una
+ *  corsa. Il vincolo è composto, quindi `onConflict` deve nominarli entrambi:
+ *  con il solo page_slug, salvare l'inglese sovrascriverebbe l'italiano. */
 export async function saveSeoConfig(draft: SeoDraft): Promise<PageSeoConfig> {
   const { data, error } = await supabase
     .from("page_seo_configs")
     .upsert({
       page_slug: draft.pageSlug.trim(),
+      locale: draft.locale,
       meta_title: draft.metaTitle?.trim() || null,
       meta_description: draft.metaDescription?.trim() || null,
       og_image_url: draft.ogImageUrl?.trim() || null,
@@ -74,7 +94,7 @@ export async function saveSeoConfig(draft: SeoDraft): Promise<PageSeoConfig> {
       is_noindex: draft.isNoindex,
       json_ld_schema: draft.jsonLdSchema ?? null,
       updated_at: new Date().toISOString(),
-    }, { onConflict: "page_slug" })
+    }, { onConflict: "page_slug,locale" })
     .select().single()
   if (error) throw error
   return map(data)

@@ -1,5 +1,16 @@
 import { useEffect } from "react"
 import { DEFAULT_PUBLIC_SETTINGS, getSiteSettings } from "../lib/siteSettings"
+import {
+  DEFAULT_LOCALE,
+  LOCALE_TAG,
+  type Locale,
+  OG_LOCALE,
+  isLocale,
+  localizePath,
+  localizedUrl,
+} from "../lib/i18n/locales"
+import { META_STR } from "../lib/i18n/strings/meta"
+import { pick } from "../lib/i18n/t"
 
 /* ══════════════════════════════════════════════════════════════════════════
    <SEOHead slug="/about" />
@@ -22,6 +33,7 @@ import { DEFAULT_PUBLIC_SETTINGS, getSiteSettings } from "../lib/siteSettings"
 ══════════════════════════════════════════════════════════════════════════ */
 
 interface SeoRow {
+  locale?: string | null
   meta_title?: string | null
   meta_description?: string | null
   og_image_url?: string | null
@@ -34,19 +46,20 @@ interface SeoRow {
 const URL_ = (import.meta.env.VITE_SUPABASE_URL as string | undefined) ?? ""
 const KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) ?? ""
 
-/* Una scheda per rotta, richiesta al massimo una volta per sessione. */
-const cache = new Map<string, Promise<SeoRow | null>>()
+/* Tutte le lingue di una rotta in una richiesta sola, al massimo una volta
+   per sessione: una riempie i tag, le altre dicono quali hreflang esistono. */
+const cache = new Map<string, Promise<SeoRow[]>>()
 
-function fetchSeo(slug: string): Promise<SeoRow | null> {
+function fetchSeo(slug: string): Promise<SeoRow[]> {
   if (cache.has(slug)) return cache.get(slug)!
-  const p: Promise<SeoRow | null> = (!URL_ || !KEY)
-    ? Promise.resolve(null)
-    : fetch(`${URL_}/rest/v1/page_seo_configs?select=*&page_slug=eq.${encodeURIComponent(slug)}&limit=1`, {
+  const p: Promise<SeoRow[]> = (!URL_ || !KEY)
+    ? Promise.resolve([])
+    : fetch(`${URL_}/rest/v1/page_seo_configs?select=*&page_slug=eq.${encodeURIComponent(slug)}`, {
         headers: { apikey: KEY, accept: "application/json" },
       })
         .then(r => (r.ok ? r.json() : []))
-        .then((rows: SeoRow[]) => rows?.[0] ?? null)
-        .catch(() => null)
+        .then((rows: SeoRow[]) => rows ?? [])
+        .catch(() => [])
   cache.set(slug, p)
   return p
 }
@@ -64,17 +77,20 @@ function meta(attr: "name" | "property", key: string, content: string) {
   document.head.appendChild(m)
 }
 
-function link(rel: string, href: string) {
+function link(rel: string, href: string, hreflang?: string) {
   if (!href) return
   const l = document.createElement("link")
   l.rel = rel
   l.href = href
+  if (hreflang) l.hreflang = hreflang
   l.setAttribute("data-seo", "")
   document.head.appendChild(l)
 }
 
-export default function SEOHead({ slug, fallbackTitle, fallbackDescription }: {
+export default function SEOHead({ slug, locale = DEFAULT_LOCALE, fallbackTitle, fallbackDescription }: {
+  /** Path canonico, senza prefisso di lingua: "/about", non "/en/about". */
   slug: string
+  locale?: Locale
   /** Usato quando né la scheda né i predefiniti dicono nulla. */
   fallbackTitle?: string
   fallbackDescription?: string
@@ -83,30 +99,66 @@ export default function SEOHead({ slug, fallbackTitle, fallbackDescription }: {
     let alive = true
 
     Promise.all([fetchSeo(slug), getSiteSettings().catch(() => DEFAULT_PUBLIC_SETTINGS)])
-      .then(([row, site]) => {
+      .then(([rows, site]) => {
         if (!alive) return
         drop()
 
-        const title = row?.meta_title || fallbackTitle || site.defaultMetaTitle
-        const desc = row?.meta_description || fallbackDescription || site.defaultMetaDescription
+        const row = rows.find(r => (r.locale ?? DEFAULT_LOCALE) === locale) ?? null
+
+        /* Le lingue pubblicate per questa pagina. Stessa regola del
+           prerender: una versione noindex non è un'alternativa da annunciare,
+           e una lingua senza scheda non è tradotta. */
+        const published = rows
+          .filter(r => r.is_noindex !== true && isLocale(r.locale ?? DEFAULT_LOCALE))
+          .map(r => (r.locale ?? DEFAULT_LOCALE) as Locale)
+          .sort()
+
+        const origin = window.location.origin
+        /* Ordine: la scheda scritta a mano nel pannello, poi ciò che passa la
+           pagina, poi il titolo di ripiego della lingua corrente, e infine il
+           default globale del sito — che è in italiano, quindi per l'inglese
+           è l'ultima spiaggia e non la prima scelta. */
+        const preset = pick(META_STR, locale)[slug]
+        const title = row?.meta_title || fallbackTitle || preset?.title || site.defaultMetaTitle
+        const desc = row?.meta_description || fallbackDescription || preset?.description || site.defaultMetaDescription
         /* Senza immagine propria si usa quella generata da /api/og: la
            stessa che riceve un crawler, così l'anteprima è una sola. */
         const image = row?.og_image_url || site.defaultOgImageUrl
-          || `${window.location.origin}/api/og?slug=${encodeURIComponent(slug)}`
-        const canonical = row?.canonical_url || `${window.location.origin}${slug === "/" ? "/" : slug}`
+          || `${origin}/api/og?slug=${encodeURIComponent(slug)}&locale=${locale}`
+        const canonical = row?.canonical_url || localizedUrl(origin, slug, locale)
 
         if (title) document.title = title
         if (desc) meta("name", "description", desc)
         if (row?.keywords?.length) meta("name", "keywords", row.keywords.join(", "))
-        /* noindex vale solo se lo chiede la scheda: il predefinito è
-           «indicizzabile», altrimenti un campo dimenticato spegne una pagina. */
-        if (row?.is_noindex) meta("name", "robots", "noindex, nofollow")
+        /* noindex se lo chiede la scheda, oppure se questa lingua non ha una
+           scheda affatto: senza traduzione il testo mostrato è ancora quello
+           italiano, e due indirizzi con lo stesso contenuto si fanno
+           concorrenza da soli. Stessa regola di /api/prerender. */
+        if (row?.is_noindex || (locale !== DEFAULT_LOCALE && !row)) {
+          meta("name", "robots", "noindex, nofollow")
+        }
 
         link("canonical", canonical)
+
+        /* hreflang reciproci: ogni versione elenca tutte le altre, sé stessa
+           compresa. Con una lingua sola non si scrive niente — un gruppo di
+           uno non è un gruppo. */
+        if (published.length > 1) {
+          for (const alt of published) {
+            link("alternate", localizedUrl(origin, slug, alt), LOCALE_TAG[alt])
+          }
+          if (published.includes(DEFAULT_LOCALE)) {
+            link("alternate", localizedUrl(origin, slug, DEFAULT_LOCALE), "x-default")
+          }
+        }
 
         meta("property", "og:type", "website")
         meta("property", "og:url", canonical)
         meta("property", "og:site_name", site.siteName)
+        meta("property", "og:locale", OG_LOCALE[locale])
+        for (const alt of published) {
+          if (alt !== locale) meta("property", "og:locale:alternate", OG_LOCALE[alt])
+        }
         if (title) meta("property", "og:title", title)
         if (desc) meta("property", "og:description", desc)
         if (image) meta("property", "og:image", image)
@@ -126,7 +178,11 @@ export default function SEOHead({ slug, fallbackTitle, fallbackDescription }: {
       })
 
     return () => { alive = false }
-  }, [slug, fallbackTitle, fallbackDescription])
+  }, [slug, locale, fallbackTitle, fallbackDescription])
 
   return null
 }
+
+/* `localizePath` è riesportato perché i componenti che costruiscono link
+   interni lo prendano da qui invece di ricalcolare il prefisso a mano. */
+export { localizePath }

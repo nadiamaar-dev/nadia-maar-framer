@@ -27,7 +27,8 @@
    "rewrites" non sarebbe così: quelle hanno la precedenza sul filesystem.)
 ══════════════════════════════════════════════════════════════════════════ */
 
-import { CANVAS_BANDS, ITEMS, VECTORS, complexityOf, buildBlueprint, type VectorId } from "../src/components/foundry/modules.js"
+import { canvasBands, items as catalogo, vectors, complexityOf, buildBlueprint, type VectorId } from "../src/components/foundry/modules.js"
+import { DEFAULT_LOCALE, isLocale, type Locale } from "../src/lib/i18n/locales.js"
 import { clientIp, escTg, insertLead, oneLine, readEnv, sendTelegram, tgHandle, tooMany } from "../src/lib/leadIntake.js"
 
 /* req/res tipizzati a mano: la funzione è compilata da Vercel, non dal tsc
@@ -78,9 +79,21 @@ function validate(p: unknown): { ok: true; value: LeadPayload } | { ok: false } 
   if (!email || email.length > MAX.email || !EMAIL_RE.test(email)) return { ok: false }
   if (messenger && messenger.length > MAX.messenger) return { ok: false }
 
+  /* La lingua in cui il visitatore ha composto la configurazione. Il client
+     la manda in `meta`; qui la si valida invece di fidarsi, e serve a due
+     cose: rigenerare il resoconto nelle stesse parole che ha letto lui, e
+     far arrivare il brief su Telegram nella lingua della richiesta.
+
+     Prima era scritta a mano come "it" nel valore di ritorno: una richiesta
+     dalla versione inglese risultava italiana nell'archivio. */
+  const metaRaw = q.meta as Record<string, unknown> | null | undefined
+  const locale: Locale = isLocale(metaRaw?.locale as string | undefined)
+    ? (metaRaw!.locale as Locale)
+    : DEFAULT_LOCALE
+
   const vRaw = q.vector as Record<string, unknown> | null | undefined
   const vId = vRaw && typeof vRaw.id === "string" ? vRaw.id : null
-  const vec = VECTORS.find(v => v.id === vId) ?? null
+  const vec = vectors(locale).find(v => v.id === vId) ?? null
   if (!vec) return { ok: false }
 
   if (!Array.isArray(q.modules) || q.modules.length > MAX.modules) return { ok: false }
@@ -90,7 +103,7 @@ function validate(p: unknown): { ok: true; value: LeadPayload } | { ok: false } 
     if (!m || typeof m !== "object") return { ok: false }
     const id = (m as Record<string, unknown>).id
     if (!isStr(id, 80)) return { ok: false }
-    const known = ITEMS.find(i => i.id === id)
+    const known = catalogo(locale).find(i => i.id === id)
     if (!known) return { ok: false }            // id sconosciuto → richiesta scartata
     if (ids.includes(known.id)) continue        // duplicati ignorati
     ids.push(known.id)
@@ -98,8 +111,8 @@ function validate(p: unknown): { ok: true; value: LeadPayload } | { ok: false } 
   }
 
   /* resoconto e complessità rigenerati server-side dagli stessi id */
-  const bp = buildBlueprint(vec.id as VectorId, ids)
-  const cx = complexityOf(vec.id as VectorId, ids)
+  const bp = buildBlueprint(vec.id as VectorId, ids, locale)
+  const cx = complexityOf(vec.id as VectorId, ids, locale)
 
   return {
     ok: true,
@@ -110,7 +123,7 @@ function validate(p: unknown): { ok: true; value: LeadPayload } | { ok: false } 
       complexity: cx ? { label: cx.label, weeks: cx.weeks, level: cx.level } : null,
       modules,
       blueprint: bp ? { obiettivo: bp.obiettivo, architettura: bp.architettura, scaffali: bp.scaffali } : null,
-      meta: { page: "/", locale: "it", ts: new Date().toISOString() },
+      meta: { page: "/", locale, ts: new Date().toISOString() },
     },
   }
 }
@@ -269,9 +282,10 @@ async function send(apiKey: string, msg: { from: string; to: string; subject: st
    proprietario è la via più corta. Il contenuto è lo stesso brief delle email,
    compresso in un messaggio leggibile dal telefono. */
 
-const GROUP_LABEL: Record<string, string> = Object.fromEntries(
-  CANVAS_BANDS.map(b => [b.id, b.label]),
-)
+/* Le etichette dei gruppi dipendono dalla lingua, quindi non possono più
+   essere una costante di modulo: si costruiscono per richiesta. */
+const groupLabels = (locale: Locale): Record<string, string> =>
+  Object.fromEntries(canvasBands(locale).map(b => [b.id, b.label]))
 
 /* Un messaggio non può superare i 4096 caratteri. Invece di tagliare il testo
    finito — cosa che spezzerebbe un tag HTML a metà e farebbe fallire l'invio —
@@ -280,6 +294,11 @@ const TG_MAX_ROWS = 25
 
 function telegramText(p: LeadPayload): string {
   const c = p.contact
+  /* Il brief lo legge il proprietario, quindi l'intestazione resta in
+     italiano; i nomi dei moduli invece sono quelli che ha visto il
+     visitatore, così un riferimento al «Client Portal» in una risposta
+     corrisponde a ciò che lui ha selezionato. */
+  const etichette = groupLabels(isLocale(p.meta?.locale) ? p.meta.locale : DEFAULT_LOCALE)
   const L: string[] = ["<b>Nuova configurazione Foundry</b>", ""]
 
   L.push(`<b>${escTg(c.name)}</b>`)
@@ -298,7 +317,7 @@ function telegramText(p: LeadPayload): string {
   if (p.modules.length) {
     L.push("", `<b>Moduli (${p.modules.length})</b>`)
     for (const m of p.modules.slice(0, TG_MAX_ROWS)) {
-      L.push(`• ${escTg(m.node)} <i>${escTg(GROUP_LABEL[m.group] ?? m.group)}</i>`)
+      L.push(`• ${escTg(m.node)} <i>${escTg(etichette[m.group] ?? m.group)}</i>`)
     }
     const rest = p.modules.length - TG_MAX_ROWS
     if (rest > 0) L.push(`<i>…e altri ${rest}. Il dettaglio completo è in area admin.</i>`)

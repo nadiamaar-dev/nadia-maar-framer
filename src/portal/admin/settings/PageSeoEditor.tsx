@@ -9,6 +9,9 @@ import {
   Badge, Btn, ConfirmDialog, DISPLAY, Field, Glass, Icon, Input, MONO, Modal, Note, Row,
   Select, T, Textarea,
 } from "../../ui"
+import {
+  DEFAULT_LOCALE, LOCALES, LOCALE_LABEL, type Locale, localizePath,
+} from "../../../lib/i18n/locales"
 
 /* ══════════════════════════════════════════════════════════════════════════
    EDITOR SEO PER PAGINA.
@@ -25,7 +28,7 @@ import {
 ══════════════════════════════════════════════════════════════════════════ */
 
 const EMPTY: SeoDraft = {
-  pageSlug: "/", metaTitle: "", metaDescription: "", ogImageUrl: "",
+  pageSlug: "/", locale: DEFAULT_LOCALE, metaTitle: "", metaDescription: "", ogImageUrl: "",
   keywords: [], canonicalUrl: "", isNoindex: false, jsonLdSchema: undefined,
 }
 
@@ -42,27 +45,47 @@ export default function PageSeoEditor({ configs, reload, siteOrigin, defaults }:
   const [removing, setRemoving] = useState<PageSeoConfig | null>(null)
   const [kwInput, setKwInput] = useState("")
 
-  const bySlug = useMemo(() => new Map(configs.map(c => [c.pageSlug, c])), [configs])
+  /* La chiave è (pagina, lingua): con `page_slug` da solo, aprire l'inglese
+     mostrerebbe i campi italiani e salvarli sopra. */
+  const byKey = useMemo(
+    () => new Map(configs.map(c => [`${c.pageSlug} ${c.locale}`, c])),
+    [configs],
+  )
+  const cfgOf = (slug: string, l: Locale) => byKey.get(`${slug} ${l}`)
 
   /* Tutte le rotte del sito, non solo quelle già configurate: una pagina
      senza scheda è proprio quella su cui bisogna intervenire, e se non
-     comparisse nell'elenco non si saprebbe che esiste. */
-  const rows = useMemo(() => {
-    const known = SITE_ROUTES.map(r => ({ ...r, cfg: bySlug.get(r.slug) }))
-    const extra = configs
-      .filter(c => !SITE_ROUTES.some(r => r.slug === c.pageSlug))
-      .map(c => ({ slug: c.pageSlug, label: c.pageSlug, cfg: c }))
-    return [...known, ...extra]
-  }, [configs, bySlug])
+     comparisse nell'elenco non si saprebbe che esiste.
 
-  function open(slug: string, cfg?: PageSeoConfig) {
+     Una riga per PAGINA, non per scheda: raddoppiare l'elenco a ogni lingua
+     lo renderebbe illeggibile alla quarta. Lo stato di ogni lingua si legge
+     dalle pillole a destra. */
+  const rows = useMemo(() => {
+    const known = SITE_ROUTES.map(r => ({ slug: r.slug, label: r.label }))
+    const extra = [...new Set(configs.map(c => c.pageSlug))]
+      .filter(slug => !SITE_ROUTES.some(r => r.slug === slug))
+      .map(slug => ({ slug, label: slug }))
+    return [...known, ...extra]
+  }, [configs])
+
+  function open(slug: string, locale: Locale) {
+    const cfg = cfgOf(slug, locale)
     setExistingId(cfg?.id ?? null)
     setKwInput("")
     setEditing(cfg
-      ? { pageSlug: cfg.pageSlug, metaTitle: cfg.metaTitle ?? "", metaDescription: cfg.metaDescription ?? "",
+      ? { pageSlug: cfg.pageSlug, locale: cfg.locale,
+          metaTitle: cfg.metaTitle ?? "", metaDescription: cfg.metaDescription ?? "",
           ogImageUrl: cfg.ogImageUrl ?? "", keywords: cfg.keywords, canonicalUrl: cfg.canonicalUrl ?? "",
           isNoindex: cfg.isNoindex, jsonLdSchema: cfg.jsonLdSchema }
-      : { ...EMPTY, pageSlug: slug })
+      : { ...EMPTY, pageSlug: slug, locale })
+  }
+
+  /* Cambiare lingua dentro la finestra ricarica i campi di QUELL'altra
+     scheda: è un secondo record, non una traduzione dello stesso. Se non
+     ricaricasse, si salverebbe il testo italiano dentro la riga inglese. */
+  function switchLocale(next: Locale) {
+    if (!editing || editing.locale === next) return
+    open(editing.pageSlug, next)
   }
 
   async function save() {
@@ -70,7 +93,7 @@ export default function PageSeoEditor({ configs, reload, siteOrigin, defaults }:
     setBusy(true)
     try {
       await saveSeoConfig(editing)
-      toast.success(`Scheda salvata per ${editing.pageSlug}`)
+      toast.success(`Scheda ${LOCALE_LABEL[editing.locale].short} salvata per ${editing.pageSlug}`)
       setEditing(null)
       reload()
     } catch {
@@ -106,7 +129,9 @@ export default function PageSeoEditor({ configs, reload, siteOrigin, defaults }:
       ...editing,
       jsonLdSchema: buildJsonLd(kind, {
         name: editing.metaTitle || defaults.title || "Nadia Maar",
-        url: `${siteOrigin}${editing.pageSlug}`,
+        /* L'indirizzo della VERSIONE che si sta scrivendo: un JSON-LD inglese
+           che dichiara l'URL italiano descriverebbe la pagina sbagliata. */
+        url: `${siteOrigin}${localizePath(editing.pageSlug, editing.locale)}`,
         description: editing.metaDescription || defaults.description,
         logo: editing.ogImageUrl || defaults.image,
       }),
@@ -117,31 +142,53 @@ export default function PageSeoEditor({ configs, reload, siteOrigin, defaults }:
     <>
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
         {rows.map(r => {
-          const h = seoHealth(r.cfg ?? {})
+          const primary = cfgOf(r.slug, DEFAULT_LOCALE)
+          const h = seoHealth(primary ?? {})
           const tone = h.level === "ok" ? "green" : h.level === "warn" ? "amber" : "steel"
           return (
             <Row
               key={r.slug}
-              icon={r.cfg?.isNoindex ? "lock" : "doc"}
-              iconTone={r.cfg?.isNoindex ? "red" : tone}
+              icon={primary?.isNoindex ? "lock" : "doc"}
+              iconTone={primary?.isNoindex ? "red" : tone}
               title={
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 9, flexWrap: "wrap" }}>
                   <span style={{ fontFamily: MONO, fontSize: 14 }}>{r.slug}</span>
                   <span style={{ fontSize: 14, fontWeight: 500, color: T.secondary }}>{r.label}</span>
                 </span>
               }
-              sub={r.cfg?.metaTitle || h.note}
+              sub={primary?.metaTitle || h.note}
               right={
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "wrap" }} onClick={e => e.stopPropagation()}>
-                  {r.cfg?.isNoindex && <Badge tone="red" dot>noindex</Badge>}
-                  <Badge tone={tone} dot>{h.level === "ok" ? "Completa" : h.level === "warn" ? "Da rifinire" : "Predefinita"}</Badge>
-                  <Btn size="sm" variant="ghost" icon="edit" onClick={() => open(r.slug, r.cfg)}>
-                    {r.cfg ? "Modifica" : "Configura"}
-                  </Btn>
-                  {r.cfg && <Btn size="sm" variant="danger" icon="trash" onClick={() => setRemoving(r.cfg!)} title="Elimina la scheda" />}
+                  {/* Una pillola per lingua: si vede a colpo d'occhio quali
+                      pagine hanno l'inglese e quali no, che è la domanda che
+                      ci si fa guardando questo elenco durante una traduzione.
+                      Grigia = nessuna scheda, e quindi /en/… non indicizzata. */}
+                  {LOCALES.map(l => {
+                    const cfg = cfgOf(r.slug, l)
+                    const health = cfg ? seoHealth(cfg) : null
+                    const t = !cfg ? "steel" : cfg.isNoindex ? "red"
+                      : health!.level === "ok" ? "green" : "amber"
+                    return (
+                      <Btn
+                        key={l}
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => open(r.slug, l)}
+                        title={cfg
+                          ? `${LOCALE_LABEL[l].native}: ${cfg.isNoindex ? "noindex" : health!.note}`
+                          : `${LOCALE_LABEL[l].native}: nessuna scheda — la pagina non viene indicizzata`}
+                      >
+                        <Badge tone={t as never} dot>{LOCALE_LABEL[l].short}</Badge>
+                      </Btn>
+                    )
+                  })}
+                  {primary && (
+                    <Btn size="sm" variant="danger" icon="trash"
+                      onClick={() => setRemoving(primary)} title="Elimina la scheda italiana" />
+                  )}
                 </span>
               }
-              onClick={() => open(r.slug, r.cfg)}
+              onClick={() => open(r.slug, DEFAULT_LOCALE)}
             />
           )
         })}
@@ -151,7 +198,7 @@ export default function PageSeoEditor({ configs, reload, siteOrigin, defaults }:
         open={!!editing}
         onClose={() => !busy && setEditing(null)}
         kicker="SEO"
-        title={editing ? `Metadati · ${editing.pageSlug}` : ""}
+        title={editing ? `Metadati · ${localizePath(editing.pageSlug, editing.locale)}` : ""}
         width={720}
         footer={
           <>
@@ -162,9 +209,66 @@ export default function PageSeoEditor({ configs, reload, siteOrigin, defaults }:
       >
         {editing && (
           <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
+            {/* ── la lingua che si sta scrivendo ──────────────────────────
+                Due schede separate e non un modulo con i campi doppi: i
+                campi doppi raddoppiano l'altezza della finestra e invitano a
+                tradurre parola per parola invece di riscrivere. Un titolo
+                inglese buono quasi mai è la traduzione letterale di quello
+                italiano. */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              <div style={{ display: "inline-flex", gap: 3, padding: 3, borderRadius: 10, background: "rgba(255,255,255,0.05)" }}>
+                {LOCALES.map(l => {
+                  const on = editing.locale === l
+                  const has = !!cfgOf(editing.pageSlug, l)
+                  return (
+                    <button
+                      key={l}
+                      type="button"
+                      onClick={() => switchLocale(l)}
+                      aria-pressed={on}
+                      style={{
+                        display: "inline-flex", alignItems: "center", gap: 7,
+                        padding: "6px 13px", borderRadius: 8, border: "none", cursor: "pointer",
+                        fontFamily: DISPLAY, fontSize: 12.5, fontWeight: on ? 700 : 500,
+                        background: on ? "rgba(255,255,255,0.13)" : "transparent",
+                        color: on ? "#FFFFFF" : T.secondary,
+                        transition: "background 0.16s, color 0.16s",
+                      }}
+                    >
+                      {LOCALE_LABEL[l].native}
+                      <span
+                        aria-hidden
+                        title={has ? "scheda presente" : "nessuna scheda"}
+                        style={{
+                          width: 6, height: 6, borderRadius: "50%",
+                          background: has ? "#34D399" : "rgba(255,255,255,0.22)",
+                        }}
+                      />
+                    </button>
+                  )
+                })}
+              </div>
+              <span style={{ fontFamily: MONO, fontSize: 11.5, color: T.secondary }}>
+                {localizePath(editing.pageSlug, editing.locale)}
+              </span>
+            </div>
+
+            {/* La regola più importante di questa schermata, detta dove
+                serve: finché la scheda non esiste, quell'indirizzo non entra
+                né in sitemap né nell'indice. Salvarla è l'atto che pubblica
+                la versione tradotta. */}
+            {editing.locale !== DEFAULT_LOCALE && !cfgOf(editing.pageSlug, editing.locale) && (
+              <Note tone="amber">
+                Questa pagina non ha ancora una scheda {LOCALE_LABEL[editing.locale].native}.
+                Finché non la salvi, {localizePath(editing.pageSlug, editing.locale)} resta
+                <strong> noindex</strong> e fuori dalla sitemap: mostrerebbe il testo italiano a
+                un indirizzo diverso, cioè due pagine uguali in concorrenza fra loro.
+              </Note>
+            )}
+
             <SerpPreview
               origin={siteOrigin}
-              slug={editing.pageSlug}
+              slug={localizePath(editing.pageSlug, editing.locale)}
               title={editing.metaTitle || defaults.title || "Titolo predefinito del sito"}
               description={editing.metaDescription || defaults.description || "Descrizione predefinita del sito."}
               image={editing.ogImageUrl || defaults.image}
@@ -202,7 +306,7 @@ export default function PageSeoEditor({ configs, reload, siteOrigin, defaults }:
               </Field>
               <Field label="Canonical" hint="Vuoto = l'URL della pagina stessa. Si compila solo se il contenuto vive altrove.">
                 <Input value={editing.canonicalUrl ?? ""} onChange={e => setEditing({ ...editing, canonicalUrl: e.target.value })}
-                  placeholder={`${siteOrigin}${editing.pageSlug}`} inputMode="url" />
+                  placeholder={`${siteOrigin}${localizePath(editing.pageSlug, editing.locale)}`} inputMode="url" />
               </Field>
             </div>
 

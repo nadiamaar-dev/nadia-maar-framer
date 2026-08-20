@@ -3,3 +3,16 @@ node_modules/
 dist/
 *.bak
 *.bak2
+
+# Segreti. Erano coperti solo dal .gitignore globale della macchina: chi
+# clona il progetto altrove non lo ha, e il primo commit porterebbe via le
+# chiavi. Un file di esempio senza valori sta invece in .env.example.
+.env
+.env.local
+.env.*.local
+
+# Artefatti dei test: tracce, screenshot dei fallimenti, rapporto HTML.
+test-results/
+playwright-report/
+blob-report/
+.playwright/

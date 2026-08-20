@@ -4,13 +4,159 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#121418" />
+    <meta name="theme-color" content="#060C18" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!--
+      ══════════════════════════════════════════════════════════════════════
+      Nadia Maar — architettura di questo sito, per chi guarda il sorgente.
+
+      · React 19 servito come applicazione statica da Vercel: nessun server
+        di rendering, nessun tempo di attesa lato origine.
+      · I crawler non ricevono questo guscio: /api/prerender consegna loro
+        un HTML con titolo, description, Open Graph e JSON-LD già dentro
+        (vedi vercel.json). Stesso indirizzo, stesso contenuto, nessun
+        cloaking: cambia solo chi assembla i metadati.
+      · La lingua è un prefisso dell'indirizzo (/en) risolto da un middleware
+        edge, non una rotta duplicata.
+      · Caratteri, immagini e bundle sono serviti dal nostro dominio con
+        cache immutabile: nessuna terza parte nel percorso critico.
+
+      Il codice sorgente di questa pagina è la prima cosa che guardiamo
+      quando ci chiedono un audit. Ci sembrava giusto che il nostro
+      reggesse la stessa lettura.
+      ══════════════════════════════════════════════════════════════════════
+    -->
+
     <title>Nadia Maar — Architetture Digitali ad Alte Prestazioni</title>
+    <meta
+      name="description"
+      content="Sviluppo full-stack su misura: e-commerce, web app e piattaforme scalabili progettate per velocità e conversione. Un solo interlocutore, dal codice alla crescita."
+    />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!--
+      I due caratteri che disegnano il primo schermo. `preload` li mette in
+      coda insieme al bundle invece che dopo: senza, il browser li scopre
+      solo quando il CSS è stato analizzato, cioè un viaggio di rete più
+      tardi. `crossorigin` è obbligatorio anche per file dello stesso
+      dominio — i caratteri si richiedono sempre in modalità anonima, e
+      senza l'attributo il file verrebbe scaricato due volte.
+
+      Gli altri tre (Geist, Space Grotesk, Inter) NON sono in preload: stanno
+      sotto la piega e `font-display: swap` li fa entrare senza bloccare
+      niente. Precaricare tutto significa non precaricare niente.
+    -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/plus-jakarta-sans-latin.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/jetbrains-mono-latin.woff2"
+      crossorigin
+    />
+
+    <!--
+      CSS critico in linea: poche righe, zero richieste. Serve a una cosa
+      sola — che il primo fotogramma sia già il sito e non una pagina bianca
+      che diventa scura quando arriva il JavaScript. Il lampo bianco è la
+      differenza percepita fra «lento» e «immediato», e costa 400 byte
+      evitarlo.
+    -->
+    <style>
+      :root { color-scheme: dark; }
+      html, body { margin: 0; padding: 0; background: #060C18; }
+      body {
+        min-height: 100vh;
+        font-family: 'Geist', 'Space Grotesk', system-ui, -apple-system, sans-serif;
+        color: #fff;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Schermata di avvio. Vive dentro #root, quindi React la sostituisce
+         in un solo fotogramma al montaggio: non lascia spazio vuoto dietro
+         di sé e non produce spostamenti di layout. */
+      #nm-boot {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 22px;
+        background:
+          radial-gradient(60% 50% at 50% 40%, rgba(184, 50, 64, 0.10), transparent 70%),
+          #060C18;
+      }
+      #nm-boot svg { opacity: 0.92; }
+      #nm-boot .nm-boot-bar {
+        width: 132px;
+        height: 1px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.10);
+      }
+      #nm-boot .nm-boot-bar::after {
+        content: '';
+        display: block;
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, #BE3648, transparent);
+        animation: nm-boot-slide 1.15s ease-in-out infinite;
+      }
+      @keyframes nm-boot-slide {
+        from { transform: translateX(-100%); }
+        to   { transform: translateX(350%); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #nm-boot .nm-boot-bar::after { animation: none; opacity: 0.55; }
+      }
+    </style>
   </head>
+
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Sostituito da React al montaggio. -->
+      <div id="nm-boot" role="status" aria-label="Caricamento">
+        <svg width="46" height="36" viewBox="0 2 28 22" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="nm-boot-g" x1="2" y1="12" x2="27" y2="12" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.90)" />
+              <stop offset="46%" stop-color="rgba(255,255,255,0.90)" />
+              <stop offset="58%" stop-color="#BE3648" />
+              <stop offset="100%" stop-color="#7C222B" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M 2,22 L 2,2 L 13,22 L 13,2 L 19.5,12 L 26,2 L 26,22"
+            stroke="url(#nm-boot-g)"
+            stroke-width="1.85"
+            stroke-linecap="square"
+            stroke-linejoin="miter"
+          />
+        </svg>
+        <div class="nm-boot-bar"></div>
+      </div>
+    </div>
+
+    <noscript>
+      <div style="max-width:640px;margin:14vh auto;padding:0 24px;text-align:center;font-family:system-ui,sans-serif">
+        <h1 style="font-size:22px;font-weight:800;margin:0 0 12px">Nadia Maar</h1>
+        <p style="line-height:1.7;color:rgba(255,255,255,0.78);margin:0 0 20px">
+          Questo sito ha bisogno di JavaScript per l'interfaccia interattiva.
+          Per scrivere basta l'email — la leggiamo comunque.
+        </p>
+        <a href="mailto:nadiamaar.dev@gmail.com" style="color:#E4697A">nadiamaar.dev@gmail.com</a>
+      </div>
+    </noscript>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
