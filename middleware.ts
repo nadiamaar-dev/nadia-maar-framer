@@ -62,8 +62,37 @@ export const config = {
   matcher: ["/((?!api/|assets/|_vercel|.*\\.[a-zA-Z0-9]+$).*)"],
 }
 
+/* ── L'INDIRIZZO CANONICO ─────────────────────────────────────────────────
+   Il sito risponde anche da nadia-maar-framer.vercel.app: senza questo
+   blocco esistono DUE copie identiche di ogni pagina, e Google sceglie lui
+   quale contare — di solito quella sbagliata. L'alias di produzione e
+   l'apex vengono quindi rimandati con un 308 (permanente, conserva il
+   metodo) all'host canonico.
+
+   Solo questi due host, elencati per nome: le anteprime di deploy
+   (nadia-maar-framer-git-*.vercel.app e simili) devono restare visitabili
+   dove stanno, altrimenti ogni branch preview rimbalzerebbe in produzione
+   e diventerebbe invisibile. */
+const CANONICAL_HOST = "www.nadiamaar.dev"
+const ALIAS_HOSTS = new Set(["nadia-maar-framer.vercel.app", "nadiamaar.dev"])
+
 export default function middleware(request: Request): Response | undefined {
   const url = new URL(request.url)
+
+  if (ALIAS_HOSTS.has(url.hostname)) {
+    const to = new URL(url.toString())
+    to.hostname = CANONICAL_HOST
+    to.protocol = "https:"
+    return new Response(null, {
+      status: 308,
+      headers: {
+        location: to.toString(),
+        /* qui la destinazione NON dipende da chi chiede: cache lunga */
+        "cache-control": "public, max-age=86400",
+      },
+    })
+  }
+
   const { locale, path, prefixed } = splitLocale(url.pathname)
 
   /* Il pannello e l'area cliente non hanno versione linguistica: entrarci

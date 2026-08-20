@@ -72,7 +72,7 @@ Per le metriche vere serve il dominio pubblicato, non la macchina locale:
 
 ```bash
 # dopo la pubblicazione
-npx unlighthouse --site https://nadiamaar.com --throttle
+npx unlighthouse --site https://www.nadiamaar.dev --throttle
 ```
 
 Oppure PageSpeed Insights su `/`, `/ecommerce`, `/en`. I dati di laboratorio

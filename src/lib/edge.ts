@@ -87,7 +87,7 @@ export async function pgInsert(table: string, row: Record<string, unknown>): Pro
 export function originOf(req: EdgeReq): string {
   const explicit = env("SITE_URL").replace(/\/+$/, "")
   if (explicit) return explicit.startsWith("http") ? explicit : `https://${explicit}`
-  const host = header(req, "x-forwarded-host") || header(req, "host") || "nadiamaar.com"
+  const host = header(req, "x-forwarded-host") || header(req, "host") || "www.nadiamaar.dev"
   const proto = header(req, "x-forwarded-proto") || "https"
   return `${proto}://${host}`
 }

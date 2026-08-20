@@ -16,3 +16,6 @@ test-results/
 playwright-report/
 blob-report/
 .playwright/
+
+# Copia di comodo per l'SQL Editor: si rigenera dalle migrazioni, non si versiona.
+supabase/DA-APPLICARE.sql

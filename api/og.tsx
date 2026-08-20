@@ -125,7 +125,7 @@ export default async function handler(req: Request) {
           {/* L'indirizzo mostrato è quello pubblico, prefisso compreso: è
               quello che vedrà chi riceve il link condiviso. */}
           <span style={{ color: "rgba(255,255,255,0.52)", fontSize: 21 }}>
-            nadiamaar.com{locale === DEFAULT_LOCALE ? "" : `/${locale}`}{slug === "/" ? "" : slug}
+            nadiamaar.dev{locale === DEFAULT_LOCALE ? "" : `/${locale}`}{slug === "/" ? "" : slug}
           </span>
           <span style={{
             color: "#E4697A", fontSize: 19, letterSpacing: 2.5, textTransform: "uppercase",
