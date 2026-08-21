@@ -138,7 +138,13 @@ test.describe("cabinet ospite", () => {
   test("l'ospite entra in sola lettura e vede il progetto demo", async ({ page }) => {
     /* Accesso VERO contro Supabase di produzione: le credenziali sono
        pubbliche per progetto (migrazione 25) e la sola lettura la impone il
-       database — è esattamente ciò che questo test certifica dal lato UI. */
+       database — è esattamente ciò che questo test certifica dal lato UI.
+       In CI le variabili Supabase sono vuote DI PROPOSITO (vedi ci.yml): lì
+       il cabinet mostra la schermata di configurazione e questo test non ha
+       niente da dire. */
+    test.skip(!!process.env.CI && !process.env.VITE_SUPABASE_URL,
+      "senza Supabase il cabinet non ha un accesso da verificare")
+
     await page.goto("/cabinet")
     await page.getByText("Entra come ospite", { exact: false }).click()
 

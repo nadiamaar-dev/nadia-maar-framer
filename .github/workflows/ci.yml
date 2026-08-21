@@ -78,18 +78,24 @@ jobs:
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          # `-wk`: il progetto `mobile` emula un iPhone, cioè gira su WEBKIT.
+          # La cache creata prima di questa scoperta contiene solo Chromium e
+          # farebbe saltare l'installazione: la chiave nuova la manda in
+          # pensione. Per mesi ogni test mobile è morto con «Executable
+          # doesn't exist» — non un guasto del sito, un browser mai
+          # installato.
+          key: playwright-wk-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       # Il guscio headless è un pacchetto a sé: `chromium` da solo lascia
       # il runner senza l'eseguibile che usa davvero, e i test falliscono
       # con «Executable doesn't exist» invece che con un errore vero.
       - name: Installa i browser
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium chromium-headless-shell
+        run: npx playwright install --with-deps chromium chromium-headless-shell webkit
 
       - name: Dipendenze di sistema
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
+        run: npx playwright install-deps chromium webkit
 
       # I test girano sulla build di produzione (vedi playwright.config.ts):
       # il comando del server la costruisce da sé.

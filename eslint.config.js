@@ -70,6 +70,19 @@ export default tseslint.config(
          di rete produce un'interfaccia che dichiara «fatto» prima che lo
          sia, ed è il tipo di difetto che il cliente vede per primo. */
       "no-console": ["warn", { allow: ["warn", "error"] }],
+
+      /* Le diagnostiche del React Compiler (plugin v7) fotografano un
+         debito reale ma PREESISTENTE: una quarantina di punti in codice
+         animato che oggi funziona. Da avviso restano visibili e contate a
+         ogni esecuzione; da errore bloccherebbero ogni pubblicazione
+         finché non si rifattorizza mezzo portale — cioè insegnerebbero a
+         ignorare il cancello. Le regole dei hook classiche
+         (rules-of-hooks, exhaustive-deps) restano errori: quelle
+         segnalano bug, non stile. */
+      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/immutability": "warn",
+      "react-hooks/refs": "warn",
+      "react-hooks/purity": "warn",
     },
   },
 

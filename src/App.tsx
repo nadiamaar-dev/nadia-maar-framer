@@ -59,7 +59,7 @@ export default function App() {
      /api/route risponde già 404, qui si disegna di conseguenza. */
   const foundryOn = useFoundryEnabled()
 
-  let el: React.ReactNode = null
+  let el: React.ReactNode
   let known = true
   /* `bare`: pagina indicizzabile ma senza la barra promo del sito, perché
      dentro ci si immerge in un prodotto che non è il sito. */

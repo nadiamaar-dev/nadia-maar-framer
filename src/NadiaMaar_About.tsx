@@ -739,6 +739,48 @@ function StatBento() {
 /* ══════════════════════════════════════════════════════════════════════════
    §3  APPROACH / PHILOSOPHY
 ══════════════════════════════════════════════════════════════════════════ */
+/* Componente e non corpo del .map: lo useState dentro un callback viola le
+   regole dei hook — reggeva solo perché l'elenco non cambia mai lunghezza. */
+function PhilosophyRow({ p, i }: { p: { n: string; label: string; text: string }; i: number }) {
+  const [hov, setHov] = React.useState(false)
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.6, delay: i * 0.1, ease }}
+      onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
+      style={{ position: "relative" }}>
+      <div style={{ height: 1, background: hov ? LT(0.50) : "rgba(255,255,255,0.09)", transition: "background .3s" }} />
+      <div className="abt-approach-row" style={{
+        background: "transparent",
+        boxShadow: "none",
+        transition: "box-shadow .35s",
+        position: "relative",
+        borderRadius: 2,
+      }}>
+        {/* brick bottom glow */}
+        <span aria-hidden style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg, ${LT(hov ? 0.65 : 0.10)}, transparent 60%)`, transition: "background .4s" }} />
+
+        {/* brick outlined number */}
+        <div style={{
+          fontFamily: DISPLAY, fontWeight: 900, fontSize: 72, lineHeight: 1,
+          letterSpacing: "-0.06em", color: "transparent",
+          WebkitTextStroke: `1.5px ${hov ? T.accentLt : LT(0.55)}`,
+          transition: "all .35s", userSelect: "none", paddingTop: 2,
+        }}>{p.n}</div>
+
+        {/* label + text */}
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
+            <h3 style={{ fontFamily: DISPLAY, fontSize: "clamp(20px, 2.2vw, 28px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#FFFFFF", margin: 0, lineHeight: 1.1 }}>{p.label}</h3>
+            <span aria-hidden style={{ flex: 1, height: 1, maxWidth: 60, background: `linear-gradient(90deg, ${LT(hov ? 0.50 : 0.22)}, transparent)`, transition: "background .3s" }} />
+          </div>
+          <p style={{ ...BODY, color: T.muted, margin: 0 }}>{p.text}</p>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
 function PhilosophySection() {
   const t = useT(ABOUT_STR).philosophy
   const PHILOSOPHY = t.items.map((p, i) => ({ n: `0${i + 1}`, ...p }))
@@ -759,45 +801,7 @@ function PhilosophySection() {
         </motion.div>
 
         {/* principle rows — §04 style */}
-        {PHILOSOPHY.map((p, i) => {
-          const [hov, setHov] = React.useState(false)
-          return (
-            <motion.div key={i}
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.6, delay: i * 0.1, ease }}
-              onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
-              style={{ position: "relative" }}>
-              <div style={{ height: 1, background: hov ? LT(0.50) : "rgba(255,255,255,0.09)", transition: "background .3s" }} />
-              <div className="abt-approach-row" style={{
-                background: "transparent",
-                boxShadow: "none",
-                transition: "box-shadow .35s",
-                position: "relative",
-                borderRadius: 2,
-              }}>
-                {/* brick bottom glow */}
-                <span aria-hidden style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg, ${LT(hov ? 0.65 : 0.10)}, transparent 60%)`, transition: "background .4s" }} />
-
-                {/* brick outlined number */}
-                <div style={{
-                  fontFamily: DISPLAY, fontWeight: 900, fontSize: 72, lineHeight: 1,
-                  letterSpacing: "-0.06em", color: "transparent",
-                  WebkitTextStroke: `1.5px ${hov ? T.accentLt : LT(0.55)}`,
-                  transition: "all .35s", userSelect: "none", paddingTop: 2,
-                }}>{p.n}</div>
-
-                {/* label + text */}
-                <div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
-                    <h3 style={{ fontFamily: DISPLAY, fontSize: "clamp(20px, 2.2vw, 28px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#FFFFFF", margin: 0, lineHeight: 1.1 }}>{p.label}</h3>
-                    <span aria-hidden style={{ flex: 1, height: 1, maxWidth: 60, background: `linear-gradient(90deg, ${LT(hov ? 0.50 : 0.22)}, transparent)`, transition: "background .3s" }} />
-                  </div>
-                  <p style={{ ...BODY, color: T.muted, margin: 0 }}>{p.text}</p>
-                </div>
-              </div>
-            </motion.div>
-          )
-        })}
+        {PHILOSOPHY.map((p, i) => <PhilosophyRow key={p.n} p={p} i={i} />)}
         <div style={{ height: 1, background: "rgba(255,255,255,0.09)" }} />
       </div>
     </section>
