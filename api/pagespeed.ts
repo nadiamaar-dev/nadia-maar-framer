@@ -51,8 +51,57 @@ function qp(req: EdgeReq, name: string): string {
   }
 }
 
+/* Forma ridotta della risposta PSI: i quattro numeri del distintivo. */
+type PsiBadge = {
+  lighthouseResult?: {
+    categories?: { performance?: { score?: number } }
+    audits?: Record<string, { numericValue?: number }>
+  }
+}
+
 export default async function handler(req: EdgeReq, res: EdgeRes) {
   const origin = originOf(req)
+
+  /* ── Modalità distintivo (footer del sito) ───────────────────────────────
+     Stessa funzione del pannello, percorso separato: l'URL non si sceglie —
+     è sempre la home del dominio corrente — e la risposta sono quattro
+     numeri. La quota la governa la CDN: `s-maxage=86400` interpella Google
+     al più una volta al giorno per regione, chiunque guardi il footer. Il
+     primo visitatore della giornata aspetta la misura; gli altri leggono la
+     copia. Su qualsiasi errore: 204 senza cache — il footer semplicemente
+     non mostra il distintivo, e il tentativo dopo riparte pulito.
+
+     Vive qui e non in una funzione propria: il deploy con una
+     /api/lighthouse separata falliva su Vercel (bisezione del 21/08),
+     mentre questo file compila e si pubblica da sempre. */
+  if (qp(req, "mode") === "badge") {
+    const params = new URLSearchParams({ url: `${origin}/`, strategy: "mobile", category: "performance" })
+    const key = env("PAGESPEED_API_KEY") || (await keyFromDb())
+    if (key) params.set("key", key)
+    try {
+      const controller = new AbortController()
+      const timer = setTimeout(() => controller.abort(), 50_000)
+      const r = await fetch(`${ENDPOINT}?${params}`, { signal: controller.signal })
+      clearTimeout(timer)
+      if (!r.ok) throw new Error(String(r.status))
+      const body = (await r.json()) as PsiBadge
+      const score = body.lighthouseResult?.categories?.performance?.score
+      if (typeof score !== "number") throw new Error("punteggio assente")
+      const audits = body.lighthouseResult?.audits ?? {}
+      res.setHeader("cache-control", "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800")
+      res.status(200).json({
+        performance: Math.round(score * 100),
+        lcpMs: Math.round(audits["largest-contentful-paint"]?.numericValue ?? -1),
+        cls: Number((audits["cumulative-layout-shift"]?.numericValue ?? -1).toFixed(3)),
+        strategy: "mobile",
+      })
+    } catch {
+      res.setHeader("cache-control", "no-store")
+      res.status(204).end()
+    }
+    return
+  }
+
   const raw = qp(req, "url") || origin
   const strategy = qp(req, "strategy") === "desktop" ? "desktop" : "mobile"
 

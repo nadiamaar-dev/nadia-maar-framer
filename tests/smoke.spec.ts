@@ -120,7 +120,9 @@ test.describe("architettura e prove", () => {
   test("il footer mostra il punteggio Lighthouse quando l'API risponde", async ({ page }) => {
     /* Il numero è finto QUI, non in produzione: si verifica il circuito
        fetch → distintivo, non la misura di Google. */
-    await page.route("**/api/lighthouse", route =>
+    /* `?` in un glob è un carattere jolly: si intercetta il percorso e basta,
+       la query non fa parte del criterio. */
+    await page.route("**/api/pagespeed*", route =>
       route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ performance: 97, lcpMs: 1200, cls: 0.01, strategy: "mobile" }) }),
     )
 

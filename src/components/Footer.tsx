@@ -149,10 +149,10 @@ function NMmark({ size = 30, id = "nm-ft" }: { size?: number; id?: string }) {
 
 /* ── ProofStrip — il punteggio Lighthouse vero, da Google ─────────────────
    La richiesta parte solo quando il footer entra in vista: il distintivo è
-   un vanto, non può costare niente a chi non scorre fin qui. /api/lighthouse
-   risponde dalla cache CDN (24h); su qualsiasi errore risponde 204 e qui non
-   si disegna nulla — un footer senza distintivo è meglio di un footer che
-   aspetta. */
+   un vanto, non può costare niente a chi non scorre fin qui. La modalità
+   badge di /api/pagespeed risponde dalla cache CDN (24h); su qualsiasi
+   errore risponde 204 e qui non si disegna nulla — un footer senza
+   distintivo è meglio di un footer che aspetta. */
 function ProofStrip() {
   const t = useT(FOOTER_STR)
   const ref = useRef<HTMLDivElement>(null)
@@ -166,7 +166,7 @@ function ProofStrip() {
       if (asked || !entries.some(e => e.isIntersecting)) return
       asked = true
       io.disconnect()
-      fetch("/api/lighthouse")
+      fetch("/api/pagespeed?mode=badge")
         .then(r => (r.status === 200 ? r.json() : null))
         .then((d: { performance?: number } | null) => {
           if (d && typeof d.performance === "number") setScore(d.performance)
