@@ -137,6 +137,77 @@ test.describe("architettura e prove", () => {
   })
 })
 
+test.describe("demo preventivo & roi", () => {
+  test.slow()
+
+  test("le scelte si vincolano e l'ordine esce in JSON", async ({ page }) => {
+    await page.goto("/demo/preventivo-roi")
+    const continua = page.getByRole("button", { name: "Continua" })
+    const totale = page.getByTestId("qt-totale")
+
+    /* §1 — su Shopify due moduli sono impossibili, e lo dicono. */
+    await page.getByRole("button", { name: /Shopify Plus/ }).click()
+    await expect(totale).toContainText("21.000")
+    await continua.click()
+
+    await expect(page.locator('[data-modulo="listini"]')).toBeDisabled()
+    await expect(page.locator('[data-modulo="listini"]')).toContainText(/B2B nativo/i)
+    await expect(page.locator('[data-modulo="rivenditori"]')).toBeDisabled()
+
+    /* Il prerequisito entra da sé: scegliendo il configuratore arriva il PIM. */
+    await page.locator('[data-modulo="configuratore"]').click()
+    await expect(page.locator('[data-modulo="pim"]')).toHaveAttribute("data-on", "true")
+
+    /* Il magazzino integra, quindi su Shopify costa il 35% in più del
+       listino base (7.800 → 10.530): la rettifica è dichiarata nella scheda,
+       non un arrotondamento nascosto. Applicarla due volte era il difetto
+       che questo controllo ha scoperto. */
+    await expect(page.locator('[data-modulo="magazzino"]')).toContainText("10.530")
+    await page.locator('[data-modulo="magazzino"]').click()
+
+    /* §3 esiste solo perché ora c'è qualcosa da sincronizzare. */
+    await continua.click()
+    await expect(page.getByRole("button", { name: /Flusso bidirezionale/ })).toBeVisible()
+
+    /* Il regime moltiplica il costo dei moduli che integrano: il totale sale. */
+    const prima = await totale.innerText()
+    await page.locator('[data-regime="streaming"]').click()
+    await expect(totale).not.toHaveText(prima)
+
+    /* §4 — il ritorno si muove coi numeri, e l'ordine esce valido. */
+    await continua.click()
+    await page.getByRole("button", { name: /Genera l'ordine in JSON/i }).click()
+    const json = await page.getByTestId("qt-json").innerText()
+    const ordine = JSON.parse(json)
+    expect(ordine.configurazione.piattaforma.id).toBe("shopify")
+    expect(ordine.configurazione.regime.id).toBe("streaming")
+    expect(ordine.configurazione.moduli.map((m: { id: string }) => m.id).sort())
+      .toEqual(["configuratore", "magazzino", "pim"])
+    expect(ordine.totali.imponibile).toBeGreaterThan(0)
+  })
+
+  test("cambiare piattaforma tiene le scelte compatibili e lascia cadere le altre", async ({ page }) => {
+    await page.goto("/demo/preventivo-roi")
+    const continua = page.getByRole("button", { name: "Continua" })
+
+    /* Su headless i listini si possono scegliere… */
+    await page.getByRole("button", { name: /Headless su misura/ }).click()
+    await continua.click()
+    await page.locator('[data-modulo="listini"]').click()
+    await page.locator('[data-modulo="fatturazione"]').click()
+    await expect(page.locator('[data-modulo="listini"]')).toHaveAttribute("data-on", "true")
+
+    /* …tornando su Shopify il listino cade (là non esiste) e la fatturazione
+       resta: ricominciare da capo per un cambio d'idea sarebbe punitivo. */
+    /* Il passo, non una scheda: «01» compare anche dentro un prezzo. */
+    await page.locator(".qt-passo").first().click()
+    await page.getByRole("button", { name: /Shopify Plus/ }).click()
+    await continua.click()
+    await expect(page.locator('[data-modulo="listini"]')).toBeDisabled()
+    await expect(page.locator('[data-modulo="fatturazione"]')).toHaveAttribute("data-on", "true")
+  })
+})
+
 test.describe("demo onboarding kyc", () => {
   /* Il percorso completo tocca cinque passi, tre caricamenti simulati e uno
      screening a quattro fonti: coi tempi predefiniti fallisce quando la

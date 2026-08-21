@@ -78,6 +78,10 @@ const it = {
       title: "Onboarding & KYC",
       description: "Flusso multistep con partita IVA verificata col checksum, caricamento documenti e stati di errore gestiti.",
     },
+    "b2b-preventivo-roi": {
+      title: "Preventivo & ROI",
+      description: "Configuratore dove le scelte si vincolano: la piattaforma cambia i prezzi dei moduli, il ritorno si calcola sui tuoi numeri, l'ordine esce in JSON.",
+    },
     "b2b-distributor-hub": {
       title: "Distributor Hub",
       description: "Gestione agenti, listini per area geografica e ordini white-label.",
@@ -189,6 +193,10 @@ const en: typeof it = {
     "b2b-onboarding-kyc": {
       title: "Onboarding & KYC",
       description: "A multi-step flow with checksum-verified VAT numbers, document upload and handled error states.",
+    },
+    "b2b-preventivo-roi": {
+      title: "Quote & ROI engine",
+      description: "A configurator where choices constrain each other: the platform reprices the modules, the return is computed on your own numbers, the order comes out as JSON.",
     },
     "b2b-distributor-hub": {
       title: "Distributor Hub",

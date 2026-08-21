@@ -24,6 +24,7 @@ const DigitalFoundry    = lazy(() => import("./DigitalFoundry"))
 const DemoSupplierPortal = lazy(() => import("./DemoSupplierPortal"))
 const DemoCrmDashboard   = lazy(() => import("./DemoCrmDashboard"))
 const DemoOnboardingKyc  = lazy(() => import("./DemoOnboardingKyc"))
+const DemoQuoteEngine    = lazy(() => import("./DemoQuoteEngine"))
 const CabinetApp        = lazy(() => import("./portal/cabinet/CabinetApp"))
 const DashboardGate     = lazy(() => import("./DashboardGate"))
 
@@ -93,6 +94,9 @@ export default function App() {
       el = <NotFound />; known = false; break
     case "/demo/onboarding-kyc":
       if (foundryOn) { el = <DemoOnboardingKyc />; bare = true; break }
+      el = <NotFound />; known = false; break
+    case "/demo/preventivo-roi":
+      if (foundryOn) { el = <DemoQuoteEngine />; bare = true; break }
       el = <NotFound />; known = false; break
     case "/cabinet":   el = <CabinetApp />; break
     case "/dashboard": el = <DashboardGate />; break
