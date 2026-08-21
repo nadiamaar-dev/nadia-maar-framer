@@ -78,7 +78,10 @@ test.describe("pagine pubbliche", () => {
     for (const rotta of rotte) {
       const risposta = await page.goto(rotta)
       expect(risposta?.status(), `${rotta} deve rispondere 200`).toBe(200)
-      await expect(page.locator("h1").first()).toBeVisible()
+      /* Quindici secondi come negli altri controlli di questo file: cinque
+         pagine in fila su una macchina carica superano i cinque predefiniti
+         senza che il sito abbia niente che non va. */
+      await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 })
       titoli.add((await page.locator("h1").first().innerText()).trim())
     }
 
@@ -135,45 +138,81 @@ test.describe("architettura e prove", () => {
 })
 
 test.describe("demo onboarding kyc", () => {
-  test("il flusso si attraversa: validazione, errore gestito, invio", async ({ page }) => {
-    await page.goto("/demo/onboarding-kyc")
+  /* Il percorso completo tocca cinque passi, tre caricamenti simulati e uno
+     screening a quattro fonti: coi tempi predefiniti fallisce quando la
+     macchina è carica, e un test che dipende dal carico è un test che si
+     impara a ignorare. Qui si verifica CHE il flusso arrivi in fondo. */
+  test.slow()
 
-    /* Passo 1 — una P.IVA sbagliata viene smascherata dal checksum… */
-    await page.locator("#kyc-ragioneSociale").fill("Aurora Living S.r.l.")
+  test("i cinque passi si attraversano: checksum, quote, errore, screening, invio", async ({ page }) => {
+    await page.goto("/demo/onboarding-kyc")
+    const continua = page.getByRole("button", { name: "Continua" })
+
+    /* §1 — una P.IVA inventata viene smascherata dal checksum… */
     await page.locator("#kyc-piva").fill("11111111111")
     await page.locator("#kyc-piva").blur()
     await expect(page.locator(".kyc-err")).toContainText(/codice di controllo/i)
 
-    /* …e una giusta accende la spunta e sblocca il passo. */
+    /* …una valida sblocca la ricerca a registro, che compila l'anagrafica. */
     await page.locator("#kyc-piva").fill("12345678903")
+    await page.getByRole("button", { name: /Cerca nel registro/i }).click()
+    await expect(page.locator("#kyc-ragioneSociale")).toHaveValue(/Aurora/i, { timeout: 20_000 })
+
     await page.locator("#kyc-email").fill("ops@auroraliving.it")
     await page.locator("#kyc-settore").selectOption("E-commerce & Retail")
-    const continua = page.getByRole("button", { name: "Continua" })
+    await page.getByRole("button", { name: "2 – 10 M€" }).click()
     await expect(continua).toBeEnabled()
     await continua.click()
 
-    /* Passo 2 — un file oltre gli 8 MB fallisce CON spiegazione… */
+    /* §2 — il passo resta chiuso finché le quote non fanno 100. */
+    await page.locator('input[id^="ubo-nome-"]').first().fill("Elena Bruni")
+    await page.locator('input[id^="ubo-nascita-"]').first().fill("1981-04-12")
+    await page.locator('input[id^="ubo-quota-"]').first().fill("60")
+    await expect(continua).toBeDisabled()
+    await page.locator('input[id^="ubo-quota-"]').first().fill("100")
+    await expect(continua).toBeEnabled()
+    await continua.click()
+
+    /* §3 — un file oltre gli 8 MB fallisce CON spiegazione… */
     await page.locator('[data-testid="kyc-file-visura"]').setInputFiles({
       name: "visura-scansione.pdf", mimeType: "application/pdf",
       buffer: Buffer.alloc(9 * 1024 * 1024),
     })
     await expect(page.locator('[data-doc="visura"]')).toContainText(/supera gli 8 MB/i, { timeout: 10_000 })
 
-    /* …e il «Riprova» con un file sano arriva in fondo. */
+    /* …e il «Riprova» con un file sano arriva in fondo, con l'impronta. */
     const pdf = Buffer.from("%PDF-1.4 demo")
     for (const doc of ["visura", "identita", "indirizzo"]) {
       await page.locator(`[data-testid="kyc-file-${doc}"]`).setInputFiles({
         name: `${doc}.pdf`, mimeType: "application/pdf", buffer: pdf,
       })
-      await expect(page.locator(`[data-doc="${doc}"]`)).toContainText(/caricato/i, { timeout: 10_000 })
+      await expect(page.locator(`[data-doc="${doc}"]`)).toContainText(/sha /i, { timeout: 10_000 })
     }
-    await page.getByRole("button", { name: "Continua" }).click()
+    await continua.click()
 
-    /* Passo 3 — il riepilogo mostra i dati, il consenso sblocca l'invio. */
-    await expect(page.locator(".kyc-glass")).toContainText("12345678903")
+    /* §4 — lo screening parte da solo e chiude con un punteggio. Il
+       pannello del rischio entra in scena animato: si aspetta che sia a
+       posto, poi si porta il pulsante in vista — la pagina qui è lunga. */
+    await expect(page.locator(".kyc-badge")).toContainText(/rischio/i, { timeout: 30_000 })
+    await expect(page.locator(".kyc-gauge-v")).toContainText(/\d+/)
+    await continua.scrollIntoViewIfNeeded()
+    await continua.click()
+
+    /* §5 — il riepilogo mostra i dati, il consenso sblocca l'invio. */
+    await expect(page.locator(".kyc-glass").first()).toContainText("12345678903")
     await page.locator(".kyc-consent input").check()
     await page.getByRole("button", { name: "Invia la pratica" }).click()
-    await expect(page.locator(".kyc-card")).toContainText(/Pratica ricevuta/i, { timeout: 10_000 })
+    await expect(page.locator(".kyc-card")).toContainText(/Pratica protocollata/i, { timeout: 15_000 })
+    await expect(page.locator(".kyc-ref")).toContainText(/KYC-2026-/)
+  })
+
+  test("il diario registra i passaggi della pratica", async ({ page }) => {
+    await page.goto("/demo/onboarding-kyc")
+    await page.locator("#kyc-piva").fill("12345678903")
+    await page.getByRole("button", { name: /Cerca nel registro/i }).click()
+    await expect(page.locator(".kyc-audit-t")).toContainText(/Diario della pratica/i, { timeout: 10_000 })
+    await page.locator(".kyc-audit-t").click()
+    await expect(page.locator(".kyc-audit-l")).toContainText(/registro imprese/i)
   })
 })
 
