@@ -184,8 +184,10 @@ test.describe("versione inglese", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "en")
 
     /* Il selettore di lingua è fatto di <a> veri: la versione inglese deve
-       poter tornare indietro. */
-    await expect(page.locator('a[hreflang="it"]').first()).toBeVisible()
+       poter tornare indietro. `toBeAttached` e non `toBeVisible`: su
+       schermo stretto il selettore vive dentro il menu, che qui non serve
+       aprire — si verifica che il percorso di ritorno ESISTA nel DOM. */
+    await expect(page.locator('a[hreflang="it"]').first()).toBeAttached()
   })
 
   test("/en/contatti mostra il modulo in inglese", async ({ page }) => {
@@ -214,7 +216,13 @@ test.describe("resilienza", () => {
 })
 
 test.describe("voronka", () => {
-  test("l'apertura di una demo e l'avanzamento del configuratore emettono eventi", async ({ page }) => {
+  test("l'apertura di una demo e l'avanzamento del configuratore emettono eventi", async ({ page, browserName }) => {
+    /* Gli eventi partono via sendBeacon, e su WebKit page.route non li
+       intercetta: il test vedrebbe zero eventi anche col codice sano.
+       La logica della voronka è identica sui tre motori — la copre il
+       profilo chromium. */
+    test.skip(browserName === "webkit", "page.route non intercetta sendBeacon su WebKit")
+
     /* Si intercetta /api/track: il test verifica che gli eventi PARTANO con
        la forma giusta, non che il database li riceva — quello è compito
        della migrazione e delle policy, non del browser. */
@@ -263,9 +271,12 @@ test.describe("regressioni sulle prestazioni", () => {
   test("una sola description e le proporzioni delle immagini dichiarate", async ({ page }) => {
     await page.goto("/")
 
-    /* Il guscio ne porta una statica e /api/prerender ne inietta una per
-       pagina: se un giorno le due convivessero, sarebbe il crawler a
-       scegliere quale contare. */
+    /* Il guscio ne porta una statica e <SEOHead> ne scrive una sua: se le
+       due convivessero, sarebbe il crawler a scegliere quale contare.
+       Prima si aspetta che SEOHead abbia scritto la SUA (arriva dopo una
+       fetch): senza questa attesa il conteggio fotografava il guscio da
+       solo e il test passava anche col difetto — è successo per mesi. */
+    await expect(page.locator('meta[name="description"][data-seo]')).toHaveCount(1, { timeout: 15_000 })
     await expect(page.locator('meta[name="description"]')).toHaveCount(1)
 
     /* Immagini senza dimensioni dichiarate = spostamento di layout mentre

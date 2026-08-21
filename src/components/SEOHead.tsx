@@ -128,7 +128,15 @@ export default function SEOHead({ slug, locale = DEFAULT_LOCALE, fallbackTitle, 
         const canonical = row?.canonical_url || localizedUrl(origin, slug, locale)
 
         if (title) document.title = title
-        if (desc) meta("name", "description", desc)
+        /* Il guscio statico porta una description propria, e l'HTML dei
+           crawler (prerender) un'altra ancora: questo componente sta per
+           scriverne la versione giusta, e due description sulla stessa
+           pagina lasciano al crawler la scelta di quale contare. Googlebot
+           esegue JavaScript: passa anche di qui, non solo dal prerender. */
+        if (desc) {
+          document.querySelectorAll('meta[name="description"]:not([data-seo])').forEach(n => n.remove())
+          meta("name", "description", desc)
+        }
         if (row?.keywords?.length) meta("name", "keywords", row.keywords.join(", "))
         /* noindex se lo chiede la scheda, oppure se questa lingua non ha una
            scheda affatto: senza traduzione il testo mostrato è ancora quello
@@ -138,6 +146,9 @@ export default function SEOHead({ slug, locale = DEFAULT_LOCALE, fallbackTitle, 
           meta("name", "robots", "noindex, nofollow")
         }
 
+        /* Stesso ragionamento della description: un canonical statico o
+           prerenderizzato che convive col nostro sono due canonical. */
+        document.querySelectorAll('link[rel="canonical"]:not([data-seo])').forEach(n => n.remove())
         link("canonical", canonical)
 
         /* hreflang reciproci: ogni versione elenca tutte le altre, sé stessa
