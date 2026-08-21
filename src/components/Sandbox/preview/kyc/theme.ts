@@ -251,6 +251,11 @@ select.kyc-input[data-empty="true"] { color: rgba(244,245,250,0.28); }
 .kyc-ubo-del:disabled { opacity: 0.3; cursor: not-allowed; }
 .kyc-quota-wrap { position: relative; }
 .kyc-quota-suffix { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-family: ${MONO}; font-size: 13px; color: var(--ink-3); pointer-events: none; }
+/* Le frecce native del campo numerico finivano sopra il segno di
+   percentuale. Si tolgono: la quota si scrive, non si incrementa di uno. */
+.kyc-quota-wrap input { -moz-appearance: textfield; appearance: textfield; }
+.kyc-quota-wrap input::-webkit-outer-spin-button,
+.kyc-quota-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .kyc-pep {
   display: flex; align-items: center; gap: 9px; margin-top: 11px; cursor: pointer;
   font-size: 12.5px; color: var(--ink-2); line-height: 1.5;
