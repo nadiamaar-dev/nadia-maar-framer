@@ -4,6 +4,10 @@
   "buildCommand": "vite build",
   "outputDirectory": "dist",
   "installCommand": "npm install",
+  "functions": {
+    "api/lighthouse.ts": { "maxDuration": 60 },
+    "api/pagespeed.ts": { "maxDuration": 60 }
+  },
   "rewrites": [
     {
       "source": "/robots.txt",
@@ -41,7 +45,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/(about|projects|contatti|foundry|ecommerce|corporate|web-app|seo|ai|cabinet|dashboard)",
+      "source": "/(about|architecture|projects|contatti|foundry|ecommerce|corporate|web-app|seo|ai|cabinet|dashboard)",
       "destination": "/index.html"
     },
     {
@@ -49,7 +53,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/en/(about|projects|contatti|foundry|ecommerce|corporate|web-app|seo|ai)",
+      "source": "/en/(about|architecture|projects|contatti|foundry|ecommerce|corporate|web-app|seo|ai)",
       "destination": "/index.html"
     },
     {

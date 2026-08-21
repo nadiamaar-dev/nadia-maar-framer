@@ -23,6 +23,10 @@ const it = {
     goal: "Obiettivo del Progetto",
     challenge: "La Sfida Tecnica",
     solutions: "Soluzioni & Impatto Business",
+    /* I casi sono anonimi per NDA: l'artefatto è la prova che non si può
+       inventare — un frammento tecnico reale al posto del nome del cliente. */
+    artifact: "L'Artefatto — un frammento vero",
+    similar: "Configura un progetto simile",
   },
 
   visuals: {
@@ -56,6 +60,7 @@ const it = {
         { v: "RLS", l: "Sicurezza Supabase" },
         { v: "3", l: "Livelli di ruolo" },
       ],
+      artifactCaption: "Il perimetro di ogni sub-admin non vive nell'interfaccia: è una policy Row-Level Security dentro Postgres. Il filtro vale per qualsiasi client — anche uno scritto male non vede dati che non gli spettano.",
     },
     {
       category: "E-Commerce · Shopify Plus",
@@ -73,6 +78,7 @@ const it = {
         { v: "<1.4s", l: "Time to Interactive" },
         { v: "EU", l: "Multi-country OSS" },
       ],
+      artifactCaption: "Su 32.000 SKU sono le immagini a decidere l'LCP: il browser sceglie la misura giusta con srcset, e width/height riservano lo spazio prima del caricamento — il grosso del CLS sparisce qui.",
     },
     {
       category: "Middleware · Automazione B2B",
@@ -90,6 +96,7 @@ const it = {
         { v: "<3s", l: "Order processing" },
         { v: "0", l: "Over-selling" },
       ],
+      artifactCaption: "Il cuore anti over-selling: la transazione scrive la verità relazionale e il journal nello stesso commit, e la spinta verso il fornitore riparte con backoff e chiave di idempotenza — mai due volte, mai zero volte.",
     },
   ],
 
@@ -118,6 +125,8 @@ const en: typeof it = {
     goal: "Project Goal",
     challenge: "The Technical Challenge",
     solutions: "Solutions & Business Impact",
+    artifact: "The Artifact — a real fragment",
+    similar: "Configure a similar project",
   },
 
   visuals: {
@@ -151,6 +160,7 @@ const en: typeof it = {
         { v: "RLS", l: "Supabase security" },
         { v: "3", l: "Role levels" },
       ],
+      artifactCaption: "Each sub-admin's perimeter does not live in the interface: it is a Row-Level Security policy inside Postgres. The filter holds for any client — even a badly written one never sees data it does not own.",
     },
     {
       category: "E-Commerce · Shopify Plus",
@@ -168,6 +178,7 @@ const en: typeof it = {
         { v: "<1.4s", l: "Time to Interactive" },
         { v: "EU", l: "Multi-country OSS" },
       ],
+      artifactCaption: "With 32,000 SKUs it is the images that decide LCP: the browser picks the right size via srcset, and width/height reserve the space before loading — most of the CLS disappears right here.",
     },
     {
       category: "Middleware · B2B Automation",
@@ -185,6 +196,7 @@ const en: typeof it = {
         { v: "<3s", l: "Order processing" },
         { v: "0", l: "Over-selling" },
       ],
+      artifactCaption: "The anti-overselling core: the transaction writes the relational truth and the journal in the same commit, and the push to the supplier retries with backoff and an idempotency key — never twice, never zero times.",
     },
   ],
 

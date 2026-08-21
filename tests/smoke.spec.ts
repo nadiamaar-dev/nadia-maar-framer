@@ -88,6 +88,50 @@ test.describe("pagine pubbliche", () => {
   })
 })
 
+test.describe("architettura e prove", () => {
+  test("/architecture esiste in due lingue e misura sé stessa", async ({ page }) => {
+    await page.goto("/architecture")
+    await expect(page.locator("h1").first()).toContainText(/QUESTO SITO/i, { timeout: 15_000 })
+
+    /* Le misure arrivano dalle Performance API dopo il load: almeno una
+       scheda deve smettere di dire «misurazione…». Se restano tutte vuote,
+       il hook è rotto e la pagina promette numeri che non mostra. */
+    await expect(page.locator(".ar-live-grid")).toContainText(/ms|kB/, { timeout: 15_000 })
+
+    await page.goto("/en/architecture")
+    await expect(page.locator("html")).toHaveAttribute("lang", "en")
+    await expect(page.locator("h1").first()).toContainText(/THIS SITE/i, { timeout: 15_000 })
+  })
+
+  test("i casi studio mostrano un artefatto e portano al configuratore", async ({ page }) => {
+    await page.goto("/projects")
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 })
+
+    /* L'artefatto del primo caso è una policy RLS vera: se sparisce, i casi
+       anonimi tornano a essere parole senza prova. */
+    await expect(page.locator("pre code").first()).toContainText("create policy")
+
+    /* Ogni caso chiude su un configuratore già impostato: il link porta
+       all'ancora #configuratore della pagina servizio corrispondente. */
+    const cta = page.locator('a[href*="#configuratore"]')
+    expect(await cta.count()).toBeGreaterThanOrEqual(3)
+  })
+
+  test("il footer mostra il punteggio Lighthouse quando l'API risponde", async ({ page }) => {
+    /* Il numero è finto QUI, non in produzione: si verifica il circuito
+       fetch → distintivo, non la misura di Google. */
+    await page.route("**/api/lighthouse", route =>
+      route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ performance: 97, lcpMs: 1200, cls: 0.01, strategy: "mobile" }) }),
+    )
+
+    await page.goto("/")
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 })
+    await page.locator("footer").scrollIntoViewIfNeeded()
+
+    await expect(page.locator("footer")).toContainText("Lighthouse 97/100", { timeout: 10_000 })
+  })
+})
+
 test.describe("area riservata", () => {
   test("il pannello non si apre senza accesso", async ({ page }) => {
     await page.goto("/dashboard")

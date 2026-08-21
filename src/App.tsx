@@ -12,6 +12,7 @@ import { LOCALE_TAG, splitLocale } from "./lib/i18n/locales"
    This keeps the portal (Supabase + cabinet/admin UI) and the service
    pages out of the initial homepage download. */
 const NadiaMaarAbout    = lazy(() => import("./NadiaMaar_About"))
+const NadiaMaarArchitecture = lazy(() => import("./NadiaMaar_Architecture"))
 const NadiaMaarProjects = lazy(() => import("./NadiaMaar_Projects"))
 const NadiaMaarContatti = lazy(() => import("./NadiaMaar_Contatti"))
 const EcommercePage     = lazy(() => import("./NadiaMaar_ServicePage").then(m => ({ default: m.EcommercePage })))
@@ -69,6 +70,7 @@ export default function App() {
        trovata» senza aggiungere anche questa riga ha spento la home. */
     case "/":          el = <NadiaMaar />; break
     case "/about":     el = <NadiaMaarAbout />; break
+    case "/architecture": el = <NadiaMaarArchitecture />; break
     case "/projects":  el = <NadiaMaarProjects />; break
     case "/contatti":  el = <NadiaMaarContatti />; break
     case "/ecommerce": el = <EcommercePage />; break

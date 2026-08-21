@@ -10,7 +10,7 @@
  *                browser navigates to home and then scrolls.
  */
 
-import React, { useEffect } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import { CONTACT, mailLink } from "../lib/contact"
 import { useLocale } from "../lib/i18n/LocaleContext"
@@ -123,6 +123,7 @@ function navLinks(t: typeof FOOTER_STR.it, L: (p: string) => string) {
        muoversi. Ora s4 esiste davvero e i progetti hanno la loro pagina. */
     { label: t.nav.services,     href: `${home}#s4` },
     { label: t.nav.projects,     href: L("/projects") },
+    { label: t.nav.architecture, href: L("/architecture") },
     { label: t.nav.configurator, href: `${home}#s7` },
     { label: t.nav.contact,      href: L("/contatti") },
   ]
@@ -143,6 +144,60 @@ function NMmark({ size = 30, id = "nm-ft" }: { size?: number; id?: string }) {
       <path d="M 2,22 L 2,2 L 13,22 L 13,2 L 19.5,12 L 26,2 L 26,22"
         stroke={`url(#${id})`} strokeWidth="1.85" />
     </svg>
+  )
+}
+
+/* ── ProofStrip — il punteggio Lighthouse vero, da Google ─────────────────
+   La richiesta parte solo quando il footer entra in vista: il distintivo è
+   un vanto, non può costare niente a chi non scorre fin qui. /api/lighthouse
+   risponde dalla cache CDN (24h); su qualsiasi errore risponde 204 e qui non
+   si disegna nulla — un footer senza distintivo è meglio di un footer che
+   aspetta. */
+function ProofStrip() {
+  const t = useT(FOOTER_STR)
+  const ref = useRef<HTMLDivElement>(null)
+  const [score, setScore] = useState<number | null>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || typeof IntersectionObserver === "undefined") return
+    let asked = false
+    const io = new IntersectionObserver(entries => {
+      if (asked || !entries.some(e => e.isIntersecting)) return
+      asked = true
+      io.disconnect()
+      fetch("/api/lighthouse")
+        .then(r => (r.status === 200 ? r.json() : null))
+        .then((d: { performance?: number } | null) => {
+          if (d && typeof d.performance === "number") setScore(d.performance)
+        })
+        .catch(() => { /* niente distintivo, nessun danno */ })
+    }, { rootMargin: "300px" })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
+  /* Le soglie sono quelle di Lighthouse: verde da 90, ambra da 50. */
+  const color = score === null ? "" : score >= 90 ? T.green : score >= 50 ? "#F59E0B" : "#EF4444"
+
+  return (
+    <div ref={ref} style={{ display: "flex", alignItems: "center", minHeight: 18 }}>
+      {score !== null && (
+        <a
+          href="https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fwww.nadiamaar.dev%2F"
+          target="_blank" rel="noopener noreferrer"
+          aria-label={t.proof.aria}
+          style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none", fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.14em", textTransform: "uppercase", color: T.faint, transition: "color 0.2s" }}
+          onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
+          onMouseLeave={e => (e.currentTarget.style.color = T.faint)}
+        >
+          <span aria-hidden style={{ width: 6, height: 6, borderRadius: "50%", background: color, boxShadow: `0 0 8px ${color}` }} />
+          <span>Lighthouse {score}/100</span>
+          <span style={{ color: "rgba(255,255,255,0.45)", textTransform: "none" }}>{t.proof.measured}</span>
+          <span aria-hidden style={{ color: T.accentLt }}>↗</span>
+        </a>
+      )}
+    </div>
   )
 }
 
@@ -283,6 +338,7 @@ export default function Footer({ onContact }: FooterProps) {
           <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: "#FFFFFF" }}>
             {t.copyright}
           </span>
+          <ProofStrip />
           <div className="nm-footer-socials" style={{ display: "flex", gap: 8 }}>
             {SOCIALS.map(({ label, href, Icon }) => (
               <motion.a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}

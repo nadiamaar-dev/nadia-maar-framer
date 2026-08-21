@@ -18,6 +18,7 @@ import { PROJECTS_STR } from "./lib/i18n/strings/projects"
 import Background from "./components/Background"
 import FloatingContact from "./components/FloatingContact"
 import { usePointerGlow } from "./hooks/usePointerGlow"
+import { trackEvent } from "./lib/measure"
 
 /* ── tokens ── */
 const T = {
@@ -289,15 +290,73 @@ type CaseStudy = {
   soluzioni: { t: string; d: string }[];
   stack: string[]; metrics: { v: string; l: string }[];
   Visual: React.ComponentType;
+  artifact: { file: string; code: string };
+  artifactCaption: string;
+  /* La pagina servizio col configuratore già impostato sul vettore giusto:
+     gli id dei vettori e gli slug delle rotte coincidono (vedi ServicePage). */
+  ctaTo: string;
 }
 
-/* Numero, stack e disegno animato: la parte che non si traduce. Il racconto
-   di ogni caso sta in src/lib/i18n/strings/projects.ts e si accoppia per
-   posizione con questo elenco. */
+/* Numero, stack, disegno animato e artefatto di codice: la parte che non si
+   traduce. Il racconto di ogni caso sta in src/lib/i18n/strings/projects.ts
+   e si accoppia per posizione con questo elenco.
+
+   Gli artefatti esistono perché i casi sono anonimi (NDA): senza un nome da
+   citare, la prova è un frammento tecnico che non si può inventare. I
+   frammenti sono anonimizzati ma fedeli alle soluzioni descritte accanto. */
 const CASES_ART = [
-  { n: "01", stack: ["Next.js / React", "Supabase", "PostgreSQL · RLS", "Tailwind CSS", "Framer Motion", "Vercel"], Visual: VisualCivic },
-  { n: "02", stack: ["Shopify Plus", "Liquid", "Tailwind CSS", "GraphQL Admin API"], Visual: VisualEcommerce },
-  { n: "03", stack: ["Node.js", "SQLite", "REST / Webhook", "PM2", "GitHub CI/CD", "Linux VPS"], Visual: VisualMiddleware },
+  {
+    n: "01",
+    stack: ["Next.js / React", "Supabase", "PostgreSQL · RLS", "Tailwind CSS", "Framer Motion", "Vercel"],
+    Visual: VisualCivic,
+    ctaTo: "/web-app",
+    artifact: {
+      file: "rls_policy.sql",
+      code: `create policy "sub_admin_reads_own_territory"
+  on public.applications
+  for select using (
+    territory_id in (
+      select territory_id from admin_scopes
+      where admin_id = auth.uid()
+    )
+  );`,
+    },
+  },
+  {
+    n: "02",
+    stack: ["Shopify Plus", "Liquid", "Tailwind CSS", "GraphQL Admin API"],
+    Visual: VisualEcommerce,
+    ctaTo: "/ecommerce",
+    artifact: {
+      file: "product-card.liquid",
+      code: `<img
+  src="{{ image | image_url: width: 480 }}"
+  srcset="{{ image | image_url: width: 480 }} 480w,
+          {{ image | image_url: width: 960 }} 960w"
+  sizes="(max-width: 680px) 92vw, 360px"
+  width="{{ image.width }}" height="{{ image.height }}"
+  loading="lazy" decoding="async">`,
+    },
+  },
+  {
+    n: "03",
+    stack: ["Node.js", "SQLite", "REST / Webhook", "PM2", "GitHub CI/CD", "Linux VPS"],
+    Visual: VisualMiddleware,
+    ctaTo: "/web-app",
+    artifact: {
+      file: "dual_write.js",
+      code: `const commit = db.transaction(order => {
+  upsertOrder.run(order)  // SQLite: source of truth
+  appendJournal(order)    // append-only JSON mirror
+})
+
+await withRetry(() => supplier.push(order), {
+  attempts: 5,
+  backoff: "exponential",
+  idempotencyKey: order.id,  // supplier deduplicates
+})`,
+    },
+  },
 ]
 
 /** I tre casi studio, già nella lingua che si sta leggendo. */
@@ -456,6 +515,7 @@ function SolutionCard({ s, i }: { s: { t: string; d: string }; i: number }) {
 ══════════════════════════════════════════════════════════════════════════ */
 function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
   const t = useT(PROJECTS_STR)
+  const { href: L } = useLocale()
   const { Visual } = c
   return (
     <section id={`case-${c.n}`} style={{ position: "relative", padding: "76px 0", borderTop: first ? "none" : `1px solid ${T.border}`, minHeight: "92vh" }}>
@@ -558,6 +618,42 @@ function CaseSection({ c, first }: { c: CaseStudy; first?: boolean }) {
                 <SolutionCard key={i} s={s} i={i} />
               ))}
             </div>
+
+            {/* ── L'artefatto: la prova che un caso anonimo non può falsificare ── */}
+            <Reveal delay={0.1}>
+              <div style={{ marginTop: 30 }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                  <span style={{ width: 30, height: 30, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, background: "rgba(190,54,72,0.12)", border: "1px solid rgba(190,54,72,0.30)" }}>⌘</span>
+                  <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, letterSpacing: ".22em", textTransform: "uppercase" as const, color: T.accentTx }}>{t.labels.artifact}</span>
+                </div>
+
+                <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid rgba(255,255,255,0.12)", background: "rgba(0,0,0,0.34)" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                    <span aria-hidden style={{ width: 7, height: 7, borderRadius: "50%", background: "rgba(190,54,72,0.65)" }} />
+                    <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.10em", color: "rgba(255,255,255,0.66)" }}>{c.artifact.file}</span>
+                  </div>
+                  <pre style={{ margin: 0, padding: "16px 18px", overflowX: "auto", fontFamily: MONO, fontSize: 11.5, lineHeight: 1.7, color: "rgba(255,255,255,0.80)" }}>
+                    <code>{c.artifact.code}</code>
+                  </pre>
+                </div>
+
+                <p style={{ ...BODY, fontSize: 14.5, lineHeight: 1.75, color: T.muted, margin: "12px 0 0", maxWidth: 560 }}>{c.artifactCaption}</p>
+
+                {/* Il caso finisce dove il visitatore può agire: il configuratore
+                    della pagina servizio, col vettore già impostato. */}
+                <motion.a
+                  href={`${L(c.ctaTo)}#configuratore`}
+                  onClick={() => trackEvent("case_cta", { case: c.n, to: c.ctaTo })}
+                  whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                  style={{ marginTop: 20, minHeight: 48, borderRadius: 12, textDecoration: "none", border: "1px solid rgba(184,50,64,0.65)", background: "linear-gradient(90deg, rgba(184,50,64,0.30) 0%, rgba(184,50,64,0.16) 100%)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 0 12px rgba(184,50,64,0.18), inset 0 1px 0 rgba(255,255,255,0.10)", display: "inline-flex", alignItems: "stretch", overflow: "hidden", fontFamily: MONO }}>
+                  <span style={{ padding: "0 13px", borderRight: "1px solid rgba(184,50,64,0.40)", display: "flex", alignItems: "center", fontSize: 9, letterSpacing: "0.22em", color: "#FFFFFF" }}>[{c.n}]</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 18px", fontSize: 10.5, fontWeight: 600, letterSpacing: "0.13em", textTransform: "uppercase" as const, color: "#FFFFFF" }}>
+                    {t.labels.similar} <span aria-hidden style={{ fontSize: 13 }}>→</span>
+                  </span>
+                </motion.a>
+              </div>
+            </Reveal>
           </div>
 
         </div>

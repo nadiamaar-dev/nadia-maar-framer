@@ -27,6 +27,10 @@ const it: Record<string, PageMeta> = {
     title: "Case study — Nadia Maar",
     description: "Tre progetti reali raccontati per obiettivo, sfida tecnica, soluzione e impatto: piattaforma civica regionale, e-commerce enterprise, middleware di automazione B2B.",
   },
+  "/architecture": {
+    title: "L'architettura di questo sito — Nadia Maar",
+    description: "Come è costruito nadiamaar.dev: prerender per i crawler, sicurezza a livello di database, caratteri self-hosted, analytics senza cookie e un budget di prestazione pubblico — con i numeri misurati sul tuo dispositivo.",
+  },
   "/contatti": {
     title: "Contatti — Nadia Maar",
     description: "Scrivi come preferisci: modulo, email, telefono o Telegram. Risposta entro 24 ore nei giorni lavorativi, prima call gratuita.",
@@ -69,6 +73,10 @@ const en: Record<string, PageMeta> = {
   "/projects": {
     title: "Case studies — Nadia Maar",
     description: "Three real projects told through goal, technical challenge, solution and impact: a regional civic platform, an enterprise e-commerce, a B2B automation middleware.",
+  },
+  "/architecture": {
+    title: "How this site is built — Nadia Maar",
+    description: "Under the hood of nadiamaar.dev: crawler prerendering, database-level security, self-hosted fonts, cookieless analytics and a public performance budget — with numbers measured on your own device.",
   },
   "/contatti": {
     title: "Contact — Nadia Maar",

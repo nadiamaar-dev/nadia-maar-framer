@@ -18,8 +18,16 @@ const it = {
     method: "Metodo",
     services: "Servizi",
     projects: "Progetti",
+    architecture: "Architettura",
     configurator: "Configuratore",
     contact: "Contatti",
+  },
+
+  /* Il distintivo Lighthouse in fondo: il numero arriva da Google via
+     /api/lighthouse, mai scritto a mano. */
+  proof: {
+    measured: "misurato da Google · mobile",
+    aria: "Punteggio Lighthouse della home, misurato da PageSpeed Insights",
   },
 }
 
@@ -41,8 +49,14 @@ const en: typeof it = {
     method: "Method",
     services: "Services",
     projects: "Projects",
+    architecture: "Architecture",
     configurator: "Configurator",
     contact: "Contact",
+  },
+
+  proof: {
+    measured: "measured by Google · mobile",
+    aria: "Lighthouse score of the home page, measured by PageSpeed Insights",
   },
 }
 
