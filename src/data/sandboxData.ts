@@ -59,6 +59,14 @@ export const SANDBOX_ART: Omit<SandboxItem, "title" | "description">[] = [
     previewUrl: "/previews/crm-dashboard",
   },
   {
+    id: "b2b-onboarding-kyc",
+    category: "B2B Portals",
+    type: "full-site",
+    tech: ["React", "TypeScript", "Zustand", "Zod", "Framer Motion"],
+    accent: "#6D5AE6",
+    demo: "onboarding-kyc",
+  },
+  {
     id: "b2b-distributor-hub",
     category: "B2B Portals",
     type: "full-site",

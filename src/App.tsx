@@ -23,6 +23,7 @@ const AiPage            = lazy(() => import("./NadiaMaar_ServicePage").then(m =>
 const DigitalFoundry    = lazy(() => import("./DigitalFoundry"))
 const DemoSupplierPortal = lazy(() => import("./DemoSupplierPortal"))
 const DemoCrmDashboard   = lazy(() => import("./DemoCrmDashboard"))
+const DemoOnboardingKyc  = lazy(() => import("./DemoOnboardingKyc"))
 const CabinetApp        = lazy(() => import("./portal/cabinet/CabinetApp"))
 const DashboardGate     = lazy(() => import("./DashboardGate"))
 
@@ -89,6 +90,9 @@ export default function App() {
       el = <NotFound />; known = false; break
     case "/demo/crm-vendite":
       if (foundryOn) { el = <DemoCrmDashboard />; bare = true; break }
+      el = <NotFound />; known = false; break
+    case "/demo/onboarding-kyc":
+      if (foundryOn) { el = <DemoOnboardingKyc />; bare = true; break }
       el = <NotFound />; known = false; break
     case "/cabinet":   el = <CabinetApp />; break
     case "/dashboard": el = <DashboardGate />; break

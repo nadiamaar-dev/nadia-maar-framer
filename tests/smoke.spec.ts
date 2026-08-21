@@ -134,6 +134,49 @@ test.describe("architettura e prove", () => {
   })
 })
 
+test.describe("demo onboarding kyc", () => {
+  test("il flusso si attraversa: validazione, errore gestito, invio", async ({ page }) => {
+    await page.goto("/demo/onboarding-kyc")
+
+    /* Passo 1 — una P.IVA sbagliata viene smascherata dal checksum… */
+    await page.locator("#kyc-ragioneSociale").fill("Aurora Living S.r.l.")
+    await page.locator("#kyc-piva").fill("11111111111")
+    await page.locator("#kyc-piva").blur()
+    await expect(page.locator(".kyc-err")).toContainText(/codice di controllo/i)
+
+    /* …e una giusta accende la spunta e sblocca il passo. */
+    await page.locator("#kyc-piva").fill("12345678903")
+    await page.locator("#kyc-email").fill("ops@auroraliving.it")
+    await page.locator("#kyc-settore").selectOption("E-commerce & Retail")
+    const continua = page.getByRole("button", { name: "Continua" })
+    await expect(continua).toBeEnabled()
+    await continua.click()
+
+    /* Passo 2 — un file oltre gli 8 MB fallisce CON spiegazione… */
+    await page.locator('[data-testid="kyc-file-visura"]').setInputFiles({
+      name: "visura-scansione.pdf", mimeType: "application/pdf",
+      buffer: Buffer.alloc(9 * 1024 * 1024),
+    })
+    await expect(page.locator('[data-doc="visura"]')).toContainText(/supera gli 8 MB/i, { timeout: 10_000 })
+
+    /* …e il «Riprova» con un file sano arriva in fondo. */
+    const pdf = Buffer.from("%PDF-1.4 demo")
+    for (const doc of ["visura", "identita", "indirizzo"]) {
+      await page.locator(`[data-testid="kyc-file-${doc}"]`).setInputFiles({
+        name: `${doc}.pdf`, mimeType: "application/pdf", buffer: pdf,
+      })
+      await expect(page.locator(`[data-doc="${doc}"]`)).toContainText(/caricato/i, { timeout: 10_000 })
+    }
+    await page.getByRole("button", { name: "Continua" }).click()
+
+    /* Passo 3 — il riepilogo mostra i dati, il consenso sblocca l'invio. */
+    await expect(page.locator(".kyc-glass")).toContainText("12345678903")
+    await page.locator(".kyc-consent input").check()
+    await page.getByRole("button", { name: "Invia la pratica" }).click()
+    await expect(page.locator(".kyc-card")).toContainText(/Pratica ricevuta/i, { timeout: 10_000 })
+  })
+})
+
 test.describe("cabinet ospite", () => {
   test("l'ospite entra in sola lettura e vede il progetto demo", async ({ page }) => {
     /* Accesso VERO contro Supabase di produzione: le credenziali sono

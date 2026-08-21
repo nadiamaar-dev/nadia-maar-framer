@@ -74,6 +74,10 @@ const it = {
       title: "CRM Dashboard",
       description: "Pipeline visuale, anagrafica clienti e report esportabili in PDF.",
     },
+    "b2b-onboarding-kyc": {
+      title: "Onboarding & KYC",
+      description: "Flusso multistep con partita IVA verificata col checksum, caricamento documenti e stati di errore gestiti.",
+    },
     "b2b-distributor-hub": {
       title: "Distributor Hub",
       description: "Gestione agenti, listini per area geografica e ordini white-label.",
@@ -181,6 +185,10 @@ const en: typeof it = {
     "b2b-crm-dashboard": {
       title: "CRM Dashboard",
       description: "Visual pipeline, customer records and reports exportable to PDF.",
+    },
+    "b2b-onboarding-kyc": {
+      title: "Onboarding & KYC",
+      description: "A multi-step flow with checksum-verified VAT numbers, document upload and handled error states.",
     },
     "b2b-distributor-hub": {
       title: "Distributor Hub",

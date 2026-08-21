@@ -45,7 +45,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/demo/(portale-fornitori|crm-vendite)",
+      "source": "/demo/(portale-fornitori|crm-vendite|onboarding-kyc)",
       "destination": "/index.html"
     },
     {
@@ -53,7 +53,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/en/demo/(portale-fornitori|crm-vendite)",
+      "source": "/en/demo/(portale-fornitori|crm-vendite|onboarding-kyc)",
       "destination": "/index.html"
     },
     {
