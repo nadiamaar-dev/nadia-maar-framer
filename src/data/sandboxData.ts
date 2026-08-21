@@ -65,6 +65,7 @@ export const SANDBOX_ART: Omit<SandboxItem, "title" | "description">[] = [
     tech: ["React", "TypeScript", "Zustand", "Zod", "Framer Motion"],
     accent: "#6D5AE6",
     demo: "onboarding-kyc",
+    previewUrl: "/previews/onboarding-kyc",
   },
   {
     id: "b2b-distributor-hub",
