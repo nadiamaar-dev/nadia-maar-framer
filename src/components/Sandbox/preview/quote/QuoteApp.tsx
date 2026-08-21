@@ -25,6 +25,19 @@ export { QUOTE_CSS } from "./theme"
 
 export type QuoteCapability = "piattaforma" | "moduli" | "vincolo" | "regime" | "roi" | "json"
 
+/* La checklist sta NEL flusso, sotto il preventivo, e non in un riquadro
+   che galleggia sopra la pagina: con una colonna a destra larga 358 px, un
+   pannello fisso nell'angolo copriva proprio i prezzi. Un aiuto che nasconde
+   il contenuto non è un aiuto. */
+export const QUOTE_CAPS: { id: QuoteCapability; label: string }[] = [
+  { id: "piattaforma", label: "Scegli la piattaforma" },
+  { id: "moduli",      label: "Aggiungi qualche modulo" },
+  { id: "vincolo",     label: "Tocca un modulo escluso" },
+  { id: "regime",      label: "Cambia il regime di sincronia" },
+  { id: "roi",         label: "Muovi i tuoi numeri" },
+  { id: "json",        label: "Genera l'ordine JSON" },
+]
+
 const PASSI: { n: Passo; label: string }[] = [
   { n: 1, label: "Piattaforma" },
   { n: 2, label: "Moduli" },
@@ -338,16 +351,23 @@ function Conto() {
 
       <div className="qt-tot">
         <div className="qt-tot-r">
-          <span className="qt-tot-l">Totale imponibile</span>
+          <span className="qt-tot-l">Totale una tantum</span>
           <span className="qt-tot-v" data-batte={batte} data-testid="qt-totale">{eur(p.totale)}</span>
         </div>
         <div className="qt-tot-n">
           {p.giorni > 0 ? `${p.giorni} giorni/uomo · circa ${p.settimane} settimane` : "nessuna voce"}
         </div>
+        {p.righe.length > 0 && (
+          <p className="qt-nota">
+            Comprende analisi, sviluppo, collaudo e messa in produzione. Non comprende le licenze
+            della piattaforma, i contenuti e le fotografie. IVA esclusa · prezzi dimostrativi.
+          </p>
+        )}
       </div>
 
       {r.risparmioMensile > 0 && (
         <div className="qt-roi">
+          <p className="qt-conto-t" style={{ margin: "0 0 8px" }}>Risparmio stimato</p>
           <div className="qt-roi-r">
             <span className="qt-roi-l">Ore tolte · {r.oreTolte} h/sett.</span>
             <span className="qt-roi-v">{eur(r.risparmioOre)}/mese</span>
@@ -361,12 +381,18 @@ function Conto() {
             <i style={{ width: `${(r.recuperoErrori / tot) * 100}%`, background: "#FFC46B" }} />
           </div>
 
+          <p className="qt-formula">
+            ({r.oreTolte} h × {attivita.costoOrario} € × 4,33 sett.){r.recuperoErrori > 0
+              ? ` + (${numero(attivita.ordini)} ordini × ${eur(attivita.scontrino)} × ${(attivita.quotaErrori * 100).toFixed(1)} % evitati)`
+              : ""} = {eur(r.risparmioMensile)}/mese
+          </p>
+
           {r.rientro !== null && (
             <div className="qt-rientro">
               <div className="qt-rientro-n" data-testid="qt-rientro">{r.rientro} mesi</div>
               <div className="qt-rientro-l">
                 {rientroBuono
-                  ? "Rientro dentro l'anno e mezzo: l'investimento si ripaga da solo prima del secondo ciclo di budget."
+                  ? `Con questi numeri l'investimento si ripaga in ${r.rientro} mesi: dopo, il risparmio resta.`
                   : "Rientro lungo: conviene ridurre il perimetro o partire dai moduli che tolgono più ore."}
               </div>
             </div>
@@ -380,7 +406,9 @@ function Conto() {
 /* ══════════════════════════════════════════════════════════════════════════
    L'insieme.
 ══════════════════════════════════════════════════════════════════════════ */
-export default function QuoteApp({ onCaps }: { onCaps?: (caps: QuoteCapability[]) => void }) {
+export default function QuoteApp({ onCaps, mostraCaps = true }: {
+  onCaps?: (caps: QuoteCapability[]) => void; mostraCaps?: boolean
+}) {
   const passo = useQuoteStore(s => s.passo)
   const maxPasso = useQuoteStore(s => s.maxPasso)
   const piattaforma = useQuoteStore(s => s.piattaforma)
@@ -403,6 +431,7 @@ export default function QuoteApp({ onCaps }: { onCaps?: (caps: QuoteCapability[]
     : passo === 3 ? Boolean(regime)
     : false
 
+  const [caps, setCaps] = useState<QuoteCapability[]>([])
   const capsRef = useRef("")
   useEffect(() => {
     const caps: QuoteCapability[] = []
@@ -413,7 +442,7 @@ export default function QuoteApp({ onCaps }: { onCaps?: (caps: QuoteCapability[]
     if (roiVisto) caps.push("roi")
     if (jsonVisto) caps.push("json")
     const k = caps.join(",")
-    if (k !== capsRef.current) { capsRef.current = k; onCaps?.(caps) }
+    if (k !== capsRef.current) { capsRef.current = k; setCaps(caps); onCaps?.(caps) }
   }, [piattaforma, moduli, regime, vincoloVisto, roiVisto, jsonVisto, onCaps])
 
   const raggiungibile = (n: Passo): boolean => {
@@ -437,6 +466,28 @@ export default function QuoteApp({ onCaps }: { onCaps?: (caps: QuoteCapability[]
           <button type="button" className="qt-btn gho mini" style={{ marginLeft: "auto" }} onClick={azzera}>
             Azzera
           </button>
+        </div>
+
+        <h1 className="qt-titolone">Quanto costa, quanto dura, quando rientra</h1>
+        <p className="qt-sottotitolo">
+          Configura un progetto e-commerce come lo configureremmo insieme in call: scegli la
+          piattaforma, aggiungi le funzioni che ti servono e guarda il preventivo scriversi da
+          solo a destra. <b>I prezzi non sono una tabella fissa</b>: si adeguano alle scelte,
+          perché la stessa funzione non costa uguale su piattaforme diverse.
+        </p>
+
+        <div className="qt-intro">
+          {[
+            { n: "01", t: "Configuri", d: "Piattaforma e moduli. Alcune combinazioni sono impossibili, e la scheda dice perché." },
+            { n: "02", t: "Il prezzo si adegua", d: "Ogni scelta riprezza le altre: niente listino finto, niente «da concordare»." },
+            { n: "03", t: "Vedi quando rientra", d: "Con i tuoi numeri di ordini e ore manuali, in quanti mesi l'investimento si ripaga." },
+          ].map(c => (
+            <div key={c.n} className="qt-intro-c">
+              <div className="qt-intro-n">{c.n}</div>
+              <div className="qt-intro-t">{c.t}</div>
+              <p className="qt-intro-d">{c.d}</p>
+            </div>
+          ))}
         </div>
 
         <div className="qt-passi" role="tablist" aria-label="Passi del preventivo">
@@ -477,7 +528,20 @@ export default function QuoteApp({ onCaps }: { onCaps?: (caps: QuoteCapability[]
             </div>
           </div>
 
-          <Conto />
+          <div>
+            <Conto />
+            {mostraCaps && (
+              <div className="qt-caps">
+                <p className="qt-caps-t"><span>Da provare</span><b>{caps.length}/{QUOTE_CAPS.length}</b></p>
+                {QUOTE_CAPS.map(c => (
+                  <div key={c.id} className="qt-cap" data-done={caps.includes(c.id)}>
+                    <span className="dot" aria-hidden>{caps.includes(c.id) ? "✓" : ""}</span>
+                    {c.label}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

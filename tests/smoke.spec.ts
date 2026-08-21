@@ -147,7 +147,7 @@ test.describe("demo preventivo & roi", () => {
 
     /* §1 — su Shopify due moduli sono impossibili, e lo dicono. */
     await page.getByRole("button", { name: /Shopify Plus/ }).click()
-    await expect(totale).toContainText("21.000")
+    await expect(totale).toContainText("6.400")
     await continua.click()
 
     await expect(page.locator('[data-modulo="listini"]')).toBeDisabled()
@@ -159,10 +159,10 @@ test.describe("demo preventivo & roi", () => {
     await expect(page.locator('[data-modulo="pim"]')).toHaveAttribute("data-on", "true")
 
     /* Il magazzino integra, quindi su Shopify costa il 35% in più del
-       listino base (7.800 → 10.530): la rettifica è dichiarata nella scheda,
+       listino base (2.600 → 3.510): la rettifica è dichiarata nella scheda,
        non un arrotondamento nascosto. Applicarla due volte era il difetto
        che questo controllo ha scoperto. */
-    await expect(page.locator('[data-modulo="magazzino"]')).toContainText("10.530")
+    await expect(page.locator('[data-modulo="magazzino"]')).toContainText("3.510")
     await page.locator('[data-modulo="magazzino"]').click()
 
     /* §3 esiste solo perché ora c'è qualcosa da sincronizzare. */

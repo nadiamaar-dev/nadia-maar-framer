@@ -16,11 +16,11 @@ const FONT = "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', R
 const MONO = "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace"
 
 const PAGE_CSS = `
-  html, body { margin: 0; background: #05070A; }
+  html, body { margin: 0; background: #151E29; }
   .qtp-bar {
     position: sticky; top: 0; z-index: 40;
     display: flex; align-items: center; gap: 14px; padding: 11px 18px;
-    background: rgba(5,7,10,0.78);
+    background: rgba(21,30,41,0.84);
     backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3);
     border-bottom: 1px solid rgba(255,255,255,0.07);
     font-family: ${FONT};
@@ -41,42 +41,8 @@ const PAGE_CSS = `
     background: rgba(45,225,194,0.10); border: 1px solid rgba(45,225,194,0.2);
     border-radius: 999px; padding: 4px 10px;
   }
-  .qtp-caps {
-    position: fixed; right: 16px; bottom: 16px; z-index: 41; width: 236px;
-    border-radius: 14px; padding: 14px 16px;
-    background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-    backdrop-filter: blur(24px) saturate(1.3); -webkit-backdrop-filter: blur(24px) saturate(1.3);
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 22px 56px rgba(0,0,0,0.62);
-    font-family: ${FONT};
-  }
-  .qtp-caps-t {
-    display: flex; align-items: center; justify-content: space-between;
-    font-family: ${MONO}; font-size: 10px; font-weight: 650; letter-spacing: 0.16em;
-    text-transform: uppercase; color: rgba(234,242,244,0.36); margin: 0 0 11px;
-  }
-  .qtp-caps-t b { color: rgba(123,243,220,0.95); font-weight: 700; }
-  .qtp-cap { display: flex; align-items: center; gap: 9px; font-size: 12px; color: rgba(234,242,244,0.58); padding: 4px 0; transition: color .2s ease; }
-  .qtp-cap[data-done="true"] { color: #EAF2F4; }
-  .qtp-cap .dot {
-    width: 15px; height: 15px; border-radius: 50%; flex-shrink: 0;
-    border: 1.5px solid rgba(255,255,255,0.16);
-    display: flex; align-items: center; justify-content: center; font-size: 8.5px; color: #04120F;
-    transition: all .25s ease;
-  }
-  .qtp-cap[data-done="true"] .dot { background: #2DE1C2; border-color: #2DE1C2; box-shadow: 0 0 12px rgba(45,225,194,0.5); }
-  @media (max-width: 1100px) { .qtp-caps { display: none; } }
   @media (max-width: 860px) { .qtp-chips { display: none; } }
 `
-
-const CAPS: { id: QuoteCapability; label: string }[] = [
-  { id: "piattaforma", label: "Scegli la piattaforma" },
-  { id: "moduli",      label: "Aggiungi moduli" },
-  { id: "vincolo",     label: "Tocca un modulo escluso" },
-  { id: "regime",      label: "Cambia il regime di sincronia" },
-  { id: "roi",         label: "Muovi i tuoi numeri" },
-  { id: "json",        label: "Genera l'ordine JSON" },
-]
 
 export default function DemoQuoteEngine() {
   useEffect(() => { trackEvent("demo_open", { demo: "b2b-preventivo-roi", via: "page" }) }, [])
@@ -112,7 +78,7 @@ export default function DemoQuoteEngine() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#05070A" }}>
+    <div style={{ minHeight: "100vh", background: "#151E29" }}>
       <style>{QUOTE_CSS}</style>
       <style>{PAGE_CSS}</style>
 
@@ -137,19 +103,8 @@ export default function DemoQuoteEngine() {
         </header>
       )}
 
-      <QuoteApp onCaps={setCaps} />
+      <QuoteApp onCaps={setCaps} mostraCaps={!embedded} />
 
-      {!embedded && (
-        <aside className="qtp-caps" aria-label="Cose da provare">
-          <p className="qtp-caps-t"><span>Da provare</span><b>{caps.length}/{CAPS.length}</b></p>
-          {CAPS.map(c => (
-            <div key={c.id} className="qtp-cap" data-done={caps.includes(c.id)}>
-              <span className="dot" aria-hidden>{caps.includes(c.id) ? "✓" : ""}</span>
-              {c.label}
-            </div>
-          ))}
-        </aside>
-      )}
     </div>
   )
 }

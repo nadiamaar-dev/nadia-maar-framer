@@ -17,21 +17,27 @@ const MONO = "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace"
 
 export const QUOTE_CSS = `
 .qt-root {
-  --nero: #05070A;
+  /* Non nero pieno: #05070A faceva sparire i bordi dei pannelli e rendeva
+     la pagina un buco. Un grigio-blu profondo tiene lo stesso carattere
+     tecnico e lascia respirare i contorni. */
+  --nero: #151E29;
   --ink: #EAF2F4;
   --ink-2: rgba(234,242,244,0.62);
   --ink-3: rgba(234,242,244,0.36);
-  --linea: rgba(255,255,255,0.085);
-  --linea-2: rgba(255,255,255,0.05);
+  --linea: rgba(255,255,255,0.12);
+  --linea-2: rgba(255,255,255,0.07);
   --ciano: #2DE1C2;
   --ciano-2: #7BF3DC;
   --ciano-glow: rgba(45,225,194,0.35);
   --ambra: #FFC46B;
   --rosso: #FF6B78;
-  --vetro: rgba(255,255,255,0.035);
+  --vetro: rgba(255,255,255,0.05);
 
   position: relative; min-height: 100%;
-  font-family: ${FONT}; color: var(--ink); background: var(--nero);
+  font-family: ${FONT}; color: var(--ink);
+  background:
+    radial-gradient(120% 80% at 50% -10%, #22303F 0%, transparent 62%),
+    linear-gradient(180deg, #1A2431 0%, var(--nero) 58%);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -39,8 +45,8 @@ export const QUOTE_CSS = `
 .qt-root::before {
   content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
   background-image:
-    linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
+    linear-gradient(rgba(255,255,255,0.038) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.038) 1px, transparent 1px);
   background-size: 46px 46px;
   mask-image: radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 78%);
   -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 78%);
@@ -49,7 +55,7 @@ export const QUOTE_CSS = `
 .qt-root::after {
   content: ""; position: fixed; top: -30%; left: 50%; width: 120%; height: 70%;
   transform: translateX(-50%); z-index: -1; pointer-events: none;
-  background: radial-gradient(50% 60% at 50% 50%, rgba(45,225,194,0.10), transparent 70%);
+  background: radial-gradient(50% 60% at 50% 50%, rgba(45,225,194,0.14), transparent 70%);
   filter: blur(20px);
 }
 
@@ -67,6 +73,39 @@ export const QUOTE_CSS = `
 }
 .qt-brand-n { font-weight: 700; font-size: 15px; letter-spacing: -0.015em; }
 .qt-brand-s { font-family: ${MONO}; font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em; }
+
+/* ── introduzione: a che serve questo arnese ─────────────────────────────
+   Senza, il visitatore atterra su tre carte e un totale e deve indovinare
+   che cosa sta guardando. Tre righe in cima costano poco spazio e tolgono
+   l'unica domanda che fa chiudere la pagina: «e quindi?». */
+.qt-intro {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--linea-2); border: 1px solid var(--linea);
+  border-radius: 16px; overflow: hidden; margin-bottom: 16px;
+}
+.qt-intro-c { background: rgba(255,255,255,0.028); padding: 15px 17px; }
+.qt-intro-n {
+  font-family: ${MONO}; font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+  color: var(--ciano); margin-bottom: 7px;
+}
+.qt-intro-t { font-size: 13px; font-weight: 690; letter-spacing: -0.01em; margin-bottom: 4px; }
+.qt-intro-d { font-size: 12px; line-height: 1.55; color: var(--ink-2); margin: 0; }
+.qt-titolone { font-size: clamp(20px,2.6vw,26px); font-weight: 780; letter-spacing: -0.03em; margin: 0 0 6px; }
+.qt-sottotitolo { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); margin: 0 0 16px; max-width: 74ch; }
+.qt-sottotitolo b { color: var(--ink); font-weight: 640; }
+
+/* nota sotto il conto: che cosa comprende e che cosa no */
+.qt-nota {
+  font-size: 11px; line-height: 1.55; color: var(--ink-3);
+  margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--linea-2);
+}
+.qt-formula {
+  font-family: ${MONO}; font-size: 10.5px; line-height: 1.6; color: var(--ink-3);
+  margin: 10px 0 0; padding: 9px 11px; border-radius: 9px;
+  background: rgba(0,0,0,0.22); border: 1px solid var(--linea-2);
+}
+
+@media (max-width: 860px) { .qt-intro { grid-template-columns: 1fr; } }
 
 /* ── passi ───────────────────────────────────────────────────────────── */
 .qt-passi { display: flex; align-items: center; gap: 4px; margin-bottom: 18px; flex-wrap: wrap; }
@@ -86,7 +125,7 @@ export const QUOTE_CSS = `
 
 /* ── pannelli ────────────────────────────────────────────────────────── */
 .qt-pan {
-  background: linear-gradient(165deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+  background: linear-gradient(165deg, rgba(255,255,255,0.062), rgba(255,255,255,0.028));
   border: 1px solid var(--linea); border-radius: 18px;
   padding: clamp(18px,2.6vw,26px);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 20px 50px rgba(0,0,0,0.5);
@@ -153,7 +192,7 @@ export const QUOTE_CSS = `
 /* ── preventivo (colonna di destra) ──────────────────────────────────── */
 .qt-conto {
   position: sticky; top: 18px;
-  background: linear-gradient(165deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  background: linear-gradient(165deg, rgba(255,255,255,0.075), rgba(255,255,255,0.035));
   backdrop-filter: blur(26px) saturate(1.3); -webkit-backdrop-filter: blur(26px) saturate(1.3);
   border: 1px solid var(--linea); border-radius: 18px; padding: 20px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px rgba(0,0,0,0.55);
@@ -201,6 +240,27 @@ export const QUOTE_CSS = `
 .qt-barra { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.08); margin-top: 10px; overflow: hidden; display: flex; }
 .qt-barra i { height: 100%; transition: width .5s cubic-bezier(0.16,1,0.3,1); }
 
+/* ── checklist sotto il preventivo ───────────────────────────────────── */
+.qt-caps {
+  margin-top: 14px; padding: 15px 17px; border-radius: 16px;
+  background: var(--vetro); border: 1px solid var(--linea);
+}
+.qt-caps-t {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: ${MONO}; font-size: 10px; font-weight: 650; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-3); margin: 0 0 11px;
+}
+.qt-caps-t b { color: var(--ciano-2); font-weight: 700; }
+.qt-cap { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--ink-2); padding: 4px 0; transition: color .2s ease; }
+.qt-cap[data-done="true"] { color: var(--ink); }
+.qt-cap .dot {
+  width: 15px; height: 15px; border-radius: 50%; flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,0.18);
+  display: flex; align-items: center; justify-content: center; font-size: 8.5px; color: #04120F;
+  transition: all .25s ease;
+}
+.qt-cap[data-done="true"] .dot { background: var(--ciano); border-color: var(--ciano); box-shadow: 0 0 12px var(--ciano-glow); }
+
 /* ── azioni ──────────────────────────────────────────────────────────── */
 .qt-nav { display: flex; gap: 10px; margin-top: 20px; }
 .qt-btn {
@@ -223,7 +283,7 @@ export const QUOTE_CSS = `
 /* ── JSON ────────────────────────────────────────────────────────────── */
 .qt-json {
   margin: 0; padding: 15px 16px; border-radius: 12px; overflow: auto; max-height: 340px;
-  background: rgba(0,0,0,0.5); border: 1px solid var(--linea);
+  background: rgba(0,0,0,0.34); border: 1px solid var(--linea);
   font-family: ${MONO}; font-size: 11.5px; line-height: 1.6; color: rgba(234,242,244,0.82);
 }
 .qt-json .k { color: var(--ciano-2); }

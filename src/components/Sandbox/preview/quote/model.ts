@@ -39,21 +39,21 @@ export const PIATTAFORME: Piattaforma[] = [
     id: "shopify",
     nome: "Shopify Plus",
     sommario: "Il checkout è già risolto e aggiornato da altri: si parte in fretta, si personalizza dentro i binari.",
-    giorni: 24, prezzo: 21000, fattoreIntegrazione: 1.35,
+    giorni: 18, prezzo: 6400, fattoreIntegrazione: 1.35,
     tratti: ["Checkout gestito", "App store maturo", "Vincoli sul dominio dati"],
   },
   {
     id: "headless",
     nome: "Headless su misura",
     sommario: "Frontend e dominio dati sono nostri: nessun vincolo di piattaforma, tutto il peso dell'infrastruttura.",
-    giorni: 42, prezzo: 38000, fattoreIntegrazione: 0.85,
+    giorni: 32, prezzo: 12800, fattoreIntegrazione: 0.85,
     tratti: ["Modello dati libero", "Prestazioni sotto controllo", "Richiede presidio tecnico"],
   },
   {
     id: "portale",
     nome: "Portale B2B riservato",
     sommario: "Niente vetrina pubblica: listini per fascia, fido, ordini ricorrenti e agenti.",
-    giorni: 34, prezzo: 31000, fattoreIntegrazione: 0.95,
+    giorni: 26, prezzo: 9800, fattoreIntegrazione: 0.95,
     tratti: ["Prezzi per cliente", "Fido e scoperto", "Ordini ricorrenti"],
   },
 ]
@@ -85,8 +85,8 @@ export const MODULI: Modulo[] = [
     id: "pim",
     nome: "PIM · anagrafica prodotti",
     sommario: "Una sola fonte per schede, attributi e traduzioni, con pubblicazione controllata.",
-    prezzo: 9500, giorni: 12, oreRisparmiate: 6,
-    prezzoPer: { shopify: 11500 },
+    prezzo: 3200, giorni: 9, oreRisparmiate: 6,
+    prezzoPer: { shopify: 3900 },
   },
   {
     id: "magazzino",
@@ -97,45 +97,45 @@ export const MODULI: Modulo[] = [
        `fattoreIntegrazione`. Metterla anche nel listino la conterebbe due
        volte — il primo giro di test lo ha beccato: 13.365 € invece di
        10.530 €. Una causa, un posto solo. */
-    prezzo: 7800, giorni: 9, integra: true, oreRisparmiate: 9,
+    prezzo: 2600, giorni: 7, integra: true, oreRisparmiate: 9,
   },
   {
     id: "listini",
     nome: "Listini per fascia cliente",
     sommario: "Prezzi diversi per cliente o gruppo, scaglioni e valute.",
-    prezzo: 6400, giorni: 8, oreRisparmiate: 3,
+    prezzo: 2200, giorni: 6, oreRisparmiate: 3,
     esclusoDa: { shopify: "Su Shopify i listini per cliente richiedono B2B nativo, fuori da questo perimetro." },
   },
   {
     id: "configuratore",
     nome: "Configuratore di prodotto",
     sommario: "Varianti dipendenti, regole di compatibilità e prezzo calcolato.",
-    prezzo: 12500, giorni: 15, richiede: "pim", oreRisparmiate: 4,
+    prezzo: 4200, giorni: 11, richiede: "pim", oreRisparmiate: 4,
   },
   {
     id: "rivenditori",
     nome: "Area rivenditori",
     sommario: "Ordini per conto terzi, fido, storico e documenti scaricabili.",
-    prezzo: 10800, giorni: 13, oreRisparmiate: 7,
+    prezzo: 3600, giorni: 10, oreRisparmiate: 7,
     esclusoDa: { shopify: "L'area rivenditori con fido non si regge sulle app di piattaforma." },
   },
   {
     id: "ricerca-ai",
     nome: "Ricerca semantica",
     sommario: "Ricerca che capisce la domanda invece di cercare la parola esatta.",
-    prezzo: 8200, giorni: 10, richiede: "pim", oreRisparmiate: 2,
+    prezzo: 2700, giorni: 8, richiede: "pim", oreRisparmiate: 2,
   },
   {
     id: "fatturazione",
     nome: "Fatturazione elettronica",
     sommario: "Emissione verso SdI, conservazione e riconciliazione degli incassi.",
-    prezzo: 7200, giorni: 9, integra: true, oreRisparmiate: 8,
+    prezzo: 2400, giorni: 7, integra: true, oreRisparmiate: 8,
   },
   {
     id: "analytics",
     nome: "Cruscotto direzionale",
     sommario: "Margine per canale, rotazione di magazzino, coorti di riacquisto.",
-    prezzo: 5900, giorni: 7, integra: true, oreRisparmiate: 4,
+    prezzo: 1900, giorni: 5, integra: true, oreRisparmiate: 4,
   },
 ]
 
@@ -187,7 +187,7 @@ export interface Attivita {
 }
 
 export const ATTIVITA_INIZIALE: Attivita = {
-  ordini: 1400, scontrino: 180, oreManuali: 22, costoOrario: 32, quotaErrori: 0.025,
+  ordini: 600, scontrino: 140, oreManuali: 14, costoOrario: 28, quotaErrori: 0.015,
 }
 
 /** Tariffa giornaliera usata per tradurre i giorni in una data di consegna. */
