@@ -43,6 +43,7 @@ const it = {
     demos: [
       { title: "Portale fornitori B2B", desc: "Ordini, fido, listini e fatture SdI — funzionante" },
       { title: "CRM di vendita", desc: "Pipeline, clienti e report PDF — funzionante" },
+      { title: "Area clienti — entra come ospite", desc: "Un cabinet vero in sola lettura: la sicurezza è nel database" },
     ],
     demoCta: "Apri la demo",
     credit: "Studio © 2026",
@@ -261,6 +262,7 @@ const en: typeof it = {
     demos: [
       { title: "B2B supplier portal", desc: "Orders, credit limits, price lists and invoices — working" },
       { title: "Sales CRM", desc: "Pipeline, customers and PDF reports — working" },
+      { title: "Client area — enter as a guest", desc: "A real cabinet in read-only mode: the security lives in the database" },
     ],
     demoCta: "Open the demo",
     credit: "Studio © 2026",

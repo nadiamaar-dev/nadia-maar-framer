@@ -134,6 +134,23 @@ test.describe("architettura e prove", () => {
   })
 })
 
+test.describe("cabinet ospite", () => {
+  test("l'ospite entra in sola lettura e vede il progetto demo", async ({ page }) => {
+    /* Accesso VERO contro Supabase di produzione: le credenziali sono
+       pubbliche per progetto (migrazione 25) e la sola lettura la impone il
+       database — è esattamente ciò che questo test certifica dal lato UI. */
+    await page.goto("/cabinet")
+    await page.getByText("Entra come ospite", { exact: false }).click()
+
+    /* Il progetto seminato compare: la sessione è attiva e la RLS mostra i
+       dati dell'ospite. */
+    await expect(page.locator("body")).toContainText("Aurora Living", { timeout: 25_000 })
+
+    /* La targa dichiara la natura dell'account. */
+    await expect(page.locator("body")).toContainText(/sola lettura/i)
+  })
+})
+
 test.describe("area riservata", () => {
   test("il pannello non si apre senza accesso", async ({ page }) => {
     await page.goto("/dashboard")

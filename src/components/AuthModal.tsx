@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { useT } from "../lib/i18n/t"
 import { AUTH_STR } from "../lib/i18n/strings/auth"
 import { supabase } from "../lib/supabase"
+import { signInAsDemo } from "../lib/demoAccess"
 import { useBlueprint } from "../context/BlueprintContext"
 
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
@@ -162,6 +163,16 @@ export default function AuthModal() {
   }
 
   const switchMode = (m: Mode) => { setMode(m); setError(""); setBusy(""); setMagicSent(false); setFullName(""); setCompany("") }
+
+  /* L'accesso ospite porta DENTRO il cabinet, non su questa pagina: dopo il
+     login si naviga lì, qualunque sia la pagina da cui si è aperta la
+     finestra. La sola lettura la impone il database (migrazione 25). */
+  const demoLogin = async () => {
+    setError(""); setBusy("loading")
+    const err = await signInAsDemo("auth_modal")
+    if (err) { setError(err); setBusy("") }
+    else window.location.assign("/cabinet")
+  }
 
   return (
     <div
@@ -343,6 +354,26 @@ export default function AuthModal() {
                     <rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 7l-10 6L2 7" />
                   </svg>
                   {t.magicLink}
+                </button>
+                <button
+                  type="button"
+                  onClick={demoLogin}
+                  disabled={busy === "loading"}
+                  title={t.demoHint}
+                  style={{
+                    width: "100%", padding: 13,
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.24)",
+                    borderRadius: 10, cursor: busy === "loading" ? "not-allowed" : "pointer",
+                    fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 600, color: "#FFFFFF",
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    transition: "all 0.18s ease",
+                  }}
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
+                  </svg>
+                  {t.demoButton}
                 </button>
               </>
             )}

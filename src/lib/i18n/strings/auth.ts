@@ -31,6 +31,8 @@ const it = {
     doneMagic: "Ti abbiamo inviato un link per accedere senza password.",
     doneRegister: "Abbiamo inviato un link di conferma al tuo indirizzo email.",
     doneWelcome: "Benvenuto nel tuo Blueprint.",
+    demoButton: "Entra come ospite — cabinet demo",
+    demoHint: "Un progetto vero in sola lettura, senza registrazione.",
   },
 
   chrome: {
@@ -68,6 +70,8 @@ const en: typeof it = {
     doneMagic: "We've sent you a link to sign in without a password.",
     doneRegister: "We've sent a confirmation link to your email address.",
     doneWelcome: "Welcome to your Blueprint.",
+    demoButton: "Enter as a guest — demo cabinet",
+    demoHint: "A real project in read-only mode, no sign-up.",
   },
 
   chrome: {

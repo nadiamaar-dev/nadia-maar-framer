@@ -542,6 +542,10 @@ function HeroLiveCards({ onOpen }: { onOpen: () => void }) {
 const DEMO_ART = [
   { id: "b2b-supplier-portal", href: "/demo/portale-fornitori", accent: "#1E6FAF" },
   { id: "b2b-crm-dashboard",   href: "/demo/crm-vendite",       accent: "#C6F24E" },
+  /* `raw`: /cabinet è una rotta privata senza variante /en — il prefisso di
+     lingua qui produrrebbe un 404. L'accesso ospite parte da solo (?demo=1),
+     la sola lettura la impone il database (migrazione 25). */
+  { id: "cabinet-clienti",     href: "/cabinet?demo=1",         accent: "#E4A22D", raw: true },
 ]
 
 function HeroDemos() {
@@ -559,7 +563,7 @@ function HeroDemos() {
       </div>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" as const }}>
         {DEMO_ART.map((art, i) => (
-          <a key={art.id} href={L(art.href)}
+          <a key={art.id} href={"raw" in art && art.raw ? art.href : L(art.href)}
             onClick={() => trackEvent("demo_open", { demo: art.id, via: "hero" })}
             style={{
               flex: "1 1 190px", minWidth: 0, padding: "12px 14px", borderRadius: 11,

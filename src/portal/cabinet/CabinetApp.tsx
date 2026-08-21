@@ -4,6 +4,7 @@ import type { ClientHome, OwnProfile, PortalAction } from "../../lib/api"
 import {
   fetchClientHome, fetchOwnProfile, subscribe, supabase, SUPABASE_READY,
 } from "../../lib/api"
+import { isDemoUser, signInAsDemo } from "../../lib/demoAccess"
 import Background from "../../components/Background"
 import ErrorBoundary from "../ErrorBoundary"
 import Shell, { type ShellNavItem } from "../Shell"
@@ -56,9 +57,22 @@ export default function CabinetApp() {
   const { section, id: projectId, go } = useHashRoute("panoramica", SECTION_IDS)
   const [wizardOpen, setWizardOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [demoErr, setDemoErr] = useState("")
   const debounceRef = useRef<ReturnType<typeof setTimeout>>()
 
   const userId = user?.id ?? null
+  const demo = isDemoUser(user?.email)
+
+  /* /cabinet?demo=1 — il percorso dalla carta in home: entra da solo come
+     ospite, senza chiedere niente. Il parametro sparisce dall'indirizzo per
+     non restare in un segnalibro. */
+  useEffect(() => {
+    if (authLoading || user) return
+    const q = new URLSearchParams(window.location.search)
+    if (q.get("demo") !== "1") return
+    window.history.replaceState(null, "", window.location.pathname + window.location.hash)
+    signInAsDemo("hero_card").then(err => { if (err) setDemoErr(err) })
+  }, [authLoading, user])
 
   const reload = useCallback(async () => {
     if (!userId) return
@@ -164,6 +178,23 @@ export default function CabinetApp() {
             <Btn variant="primary" icon="lock" onClick={openAuthModal} style={{ width: "100%", justifyContent: "center", padding: "13px 20px", fontSize: 14 }}>
               Accedi al tuo spazio
             </Btn>
+            {/* La visita guidata: un account vero in sola lettura. La
+                serratura è nel database (migrazione 25), non qui. */}
+            <button
+              onClick={() => { setDemoErr(""); signInAsDemo("cabinet_gate").then(err => { if (err) setDemoErr(err) }) }}
+              className="portal-link"
+              style={{
+                display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+                padding: "12px 16px", borderRadius: 10, cursor: "pointer",
+                border: "1px solid rgba(228,162,45,0.40)", background: "rgba(228,162,45,0.08)",
+                fontFamily: DISPLAY, fontSize: 13.5, fontWeight: 600, color: "#F0C36A",
+              }}
+            >
+              Entra come ospite — demo in sola lettura
+            </button>
+            {demoErr && (
+              <p style={{ fontFamily: DISPLAY, fontSize: 12, color: "#E07060", margin: 0 }}>{demoErr}</p>
+            )}
             <a href="/" className="portal-link" style={{
               display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
               padding: "10px 16px", borderRadius: 10,
@@ -227,7 +258,7 @@ export default function CabinetApp() {
       active={section}
       onSelect={handleSelect}
       email={profile?.email ?? user.email ?? undefined}
-      roleLabel={profile?.companyName ?? profile?.contactName ?? "Cliente"}
+      roleLabel={demo ? "Ospite · demo" : (profile?.companyName ?? profile?.contactName ?? "Cliente")}
       areaLabel="Area Clienti"
       showLogo={false}
       showQuickContact
@@ -256,6 +287,25 @@ export default function CabinetApp() {
         </button>
       ) : undefined}
     >
+      {/* La targa dell'ospite: dichiara la sola lettura PRIMA che un clic la
+          scopra. Il rifiuto vero però arriva dal database — provateci pure. */}
+      {demo && (
+        <div style={{
+          display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10,
+          padding: "11px 16px", marginBottom: 18, borderRadius: 12,
+          background: "rgba(228,162,45,0.10)", border: "1px solid rgba(228,162,45,0.35)",
+        }}>
+          <span aria-hidden style={{ width: 7, height: 7, borderRadius: "50%", background: "#E4A22D", boxShadow: "0 0 8px rgba(228,162,45,0.6)", flexShrink: 0 }} />
+          <span style={{ fontFamily: DISPLAY, fontSize: 12.5, lineHeight: 1.5, color: "#F0C36A" }}>
+            <strong>Modalità demo · sola lettura.</strong>{" "}
+            Questo è un cabinet cliente vero con dati dimostrativi: le scritture le rifiuta la
+            Row-Level Security del database, non l'interfaccia. Provate «Approva» su una fase.
+          </span>
+          <a href="/contatti" style={{ marginLeft: "auto", fontFamily: MONO, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "#F0C36A", textDecoration: "none", whiteSpace: "nowrap" }}>
+            Richiedi il tuo →
+          </a>
+        </div>
+      )}
       {/* Scoped per section: a throw in one view no longer blanks the shell. */}
       <ErrorBoundary resetKey={`${section}:${projectId ?? ""}`}>
         {section === "panoramica" && (
