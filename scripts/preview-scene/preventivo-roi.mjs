@@ -6,18 +6,15 @@
  * avrebbe il conto vuoto, cioè metà messaggio. */
 
 export default async function scena(page) {
-  await page.getByRole("button", { name: /Shopify Plus/ }).click()
-  await page.getByRole("button", { name: "Continua" }).click()
-
-  /* Il configuratore tira dentro il PIM da sé: due voci nel conto con una
-     mossa sola, e la riga «prezzo adeguato» ben visibile. */
-  await page.locator('[data-modulo="configuratore"]').click()
-  await page.locator('[data-modulo="magazzino"]').click()
-  await page.waitForTimeout(700)
+  /* Un preset popola tutto in un colpo: il cruscotto in alto si riempie di
+     numeri veri e le schede mostrano gli stati accesi. Con la sola
+     piattaforma scelta, metà anteprima sarebbe a zero. */
+  await page.getByRole("button", { name: /Scala e integra/ }).click()
+  await page.waitForTimeout(900)
 
   /* Il pannello scende sotto la piega su schermi corti: si rimpicciolisce
      quel tanto che basta a tenere in quadro schede e preventivo interi. */
-  await page.addStyleTag({ content: ".qt-shell { zoom: 0.86; padding-top: 16px; }" })
+  await page.addStyleTag({ content: ".qt-shell { zoom: 0.84; padding-top: 12px; }" })
   await page.waitForTimeout(300)
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }))
 }

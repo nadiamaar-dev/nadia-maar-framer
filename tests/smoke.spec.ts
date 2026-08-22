@@ -206,6 +206,37 @@ test.describe("demo preventivo & roi", () => {
     await expect(page.locator('[data-modulo="listini"]')).toBeDisabled()
     await expect(page.locator('[data-modulo="fatturazione"]')).toHaveAttribute("data-on", "true")
   })
+
+  test("preset, annulla, piano e confronto fanno il loro mestiere", async ({ page }) => {
+    await page.goto("/demo/preventivo-roi")
+    const totale = page.getByTestId("qt-totale")
+
+    /* Un preset riempie la configurazione in un clic: chi apre la demo non
+       deve partire da una pagina bianca. */
+    await page.getByRole("button", { name: /Scala e integra/ }).click()
+    await expect(totale).toContainText("20.896")
+
+    /* Il piano nasce dallo stesso impegno del preventivo: le tre rate
+       sommano al totale. Un piano di pagamenti che non torna alla cifra
+       firmata è un piano che il commercialista rimanda indietro. */
+    await expect(page.locator(".qt-piano")).toContainText("Discovery")
+    const rate = page.locator(".qt-rata-v")
+    expect(await rate.count()).toBe(3)
+    const somma = (await rate.allInnerTexts())
+      .reduce((t, x) => t + Number(x.replace(/[^0-9]/g, "")), 0)
+    expect(somma, "le tre rate devono sommare al totale").toBe(20896)
+
+    /* Annulla riporta alla configurazione precedente. */
+    await page.locator('[data-modulo="ricerca-ai"]').click()
+    await expect(totale).not.toContainText("20.896")
+    await page.getByRole("button", { name: "Annulla l'ultima scelta" }).click()
+    await expect(totale).toContainText("20.896")
+
+    /* Due strade a confronto: si mette da parte e si ritrova. */
+    await page.getByRole("button", { name: /Metti da parte questa/ }).click()
+    await expect(page.locator(".qt-scen-c")).toContainText("20.896")
+  })
+
 })
 
 test.describe("demo onboarding kyc", () => {

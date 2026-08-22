@@ -72,7 +72,7 @@ export const SANDBOX_ART: Omit<SandboxItem, "title" | "description">[] = [
     category: "B2B Portals",
     type: "full-site",
     tech: ["React", "TypeScript", "Zustand", "Framer Motion"],
-    accent: "#FF7A45",
+    accent: "#5C7061",
     demo: "preventivo-roi",
     previewUrl: "/previews/preventivo-roi",
   },

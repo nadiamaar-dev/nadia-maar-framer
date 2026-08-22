@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import {
-  type Attivita, eur, MODULI, numero, PIATTAFORME, REGIMI,
+  type Attivita, eur, MODULI, numero, perc, PIATTAFORME, PRESET, REGIMI,
 } from "./model"
 import {
-  calcola, componiOrdine, type Passo, prezzoModulo, serveRegime, statoModulo,
-  ULTIMO_PASSO, useQuoteStore,
+  calcola, componiOrdine, type Passo, pianoFasi, pianoRate, prezzoModulo,
+  serveRegime, statoModulo, ULTIMO_PASSO, useQuoteStore,
 } from "./store"
 
 export { QUOTE_CSS } from "./theme"
@@ -38,6 +38,16 @@ export const QUOTE_CAPS: { id: QuoteCapability; label: string }[] = [
   { id: "json",        label: "Genera l'ordine JSON" },
 ]
 
+/* Un pittogramma per passo: nella colonna da 64px un numero non dice
+   niente, un'icona sì. L'etichetta resta nel title e per gli screen
+   reader. */
+const ICONE: Record<Passo, React.ReactNode> = {
+  1: <><rect x="3" y="4" width="18" height="14" rx="2" /><path d="M3 9h18" /></>,
+  2: <><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></>,
+  3: <><path d="M4 8h11a4 4 0 0 1 0 8H9" /><path d="M7 5L4 8l3 3" /><path d="M17 13l3 3-3 3" /></>,
+  4: <><path d="M4 17l5-5 4 3 6-7" /><path d="M15 8h5v5" /></>,
+}
+
 const PASSI: { n: Passo; label: string }[] = [
   { n: 1, label: "Piattaforma" },
   { n: 2, label: "Moduli" },
@@ -65,7 +75,7 @@ function Spunta() {
 /* ── §1 piattaforma ──────────────────────────────────────────────────── */
 function PassoPiattaforma() {
   const scelta = useQuoteStore(s => s.piattaforma)
-  const { scegliPiattaforma } = useQuoteStore.getState()
+  const { scegliPiattaforma, applicaPreset } = useQuoteStore.getState()
   return (
     <>
       <h2 className="qt-h1">Su cosa lo costruiamo</h2>
@@ -73,6 +83,20 @@ function PassoPiattaforma() {
         È la scelta che vincola tutte le altre: <b>cambia i prezzi dei moduli</b> che le stanno
         sopra e, in due casi, li rende impossibili. Il preventivo a fianco si riscrive a ogni tocco.
       </p>
+
+      {/* Chi apre la demo senza sapere da dove cominciare parte da qui: un
+          clic e la configurazione è già coerente, da lì si toglie e si
+          aggiunge. Una pagina bianca è il primo motivo per cui si chiude
+          un configuratore. */}
+      <div className="qt-preset">
+        {PRESET.map(pr => (
+          <button key={pr.id} type="button" className="qt-preset-b" data-preset={pr.id}
+            onClick={() => applicaPreset(pr.id)}>
+            <div className="qt-preset-n">{pr.nome}</div>
+            <div className="qt-preset-s">{pr.sommario}</div>
+          </button>
+        ))}
+      </div>
       <div className="qt-carte" data-col="3">
         {PIATTAFORME.map(p => (
           <button key={p.id} type="button" className="qt-carta" data-on={scelta === p.id}
@@ -296,6 +320,213 @@ function PassoRitorno({ onRoi, onJson }: { onRoi: () => void; onJson: () => void
   )
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   I GRAFICI — SVG scritto a mano, nessuna libreria.
+
+   Tre forme bastano a questo cruscotto e pesano zero: una spezzata per la
+   storia del totale, un arco per il rientro, un nastro per le fasi. Una
+   libreria di grafici qui costerebbe più dell'intera demo.
+══════════════════════════════════════════════════════════════════════════ */
+
+/** Spezzata della serie dei totali. Con meno di due punti non disegna
+ *  niente: una linea che unisce un punto solo è una bugia grafica. */
+function Sparkline({ serie, largo = 62, alto = 30 }: { serie: number[]; largo?: number; alto?: number }) {
+  if (serie.length < 2) return <span style={{ width: largo, display: "inline-block" }} aria-hidden />
+  const min = Math.min(...serie), max = Math.max(...serie)
+  const span = max - min || 1
+  const punti = serie.map((v, i) => {
+    const x = (i / (serie.length - 1)) * (largo - 2) + 1
+    const y = alto - 3 - ((v - min) / span) * (alto - 6)
+    return `${x.toFixed(1)},${y.toFixed(1)}`
+  })
+  const salito = serie[serie.length - 1] >= serie[0]
+  return (
+    <svg width={largo} height={alto} viewBox={`0 0 ${largo} ${alto}`} fill="none" aria-hidden>
+      <polyline points={punti.join(" ")} stroke={salito ? "#5C7061" : "#D2694E"}
+        strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx={punti[punti.length - 1].split(",")[0]} cy={punti[punti.length - 1].split(",")[1]}
+        r="2.4" fill={salito ? "#5C7061" : "#D2694E"} />
+    </svg>
+  )
+}
+
+/** Arco del rientro: quanto dell'anno serve per ripagarsi. Oltre i dodici
+ *  mesi l'arco è pieno e il numero parla da solo — un indicatore che
+ *  continuasse a girare oltre il giro completo non direbbe più niente. */
+function Arco({ mesi }: { mesi: number | null }) {
+  const R = 26, C = Math.PI * R
+  const quota = mesi === null ? 0 : Math.min(1, mesi / 12)
+  const buono = mesi !== null && mesi <= 12
+  return (
+    <svg width="68" height="40" viewBox="0 0 68 40" fill="none" aria-hidden>
+      <path d="M8 34 A 26 26 0 0 1 60 34" stroke="rgba(28,32,28,0.09)" strokeWidth="6" strokeLinecap="round" />
+      <path d="M8 34 A 26 26 0 0 1 60 34" stroke={buono ? "#5C7061" : "#C9A227"} strokeWidth="6"
+        strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C * (1 - quota)}
+        style={{ transition: "stroke-dashoffset .6s cubic-bezier(0.16,1,0.3,1)" }} />
+    </svg>
+  )
+}
+
+/* ── la riga dei numeri che contano ──────────────────────────────────── */
+function Kpi() {
+  const piattaforma = useQuoteStore(s => s.piattaforma)
+  const moduli = useQuoteStore(s => s.moduli)
+  const regime = useQuoteStore(s => s.regime)
+  const attivita = useQuoteStore(s => s.attivita)
+  const serie = useQuoteStore(s => s.serieTotali)
+
+  const p = calcola(piattaforma, moduli, regime, attivita)
+  const r = p.ritorno
+  /* Variazione rispetto alla configurazione precedente: dice se l'ultima
+     mossa ha alzato o abbassato il preventivo, che è la domanda che uno si
+     fa mentre configura. */
+  const delta = serie.length >= 2 ? p.totale - serie[serie.length - 2] : 0
+
+  return (
+    <div className="qt-kpi-riga">
+      <div className="qt-kpi">
+        <div className="qt-kpi-testo">
+          <p className="qt-kpi-l">Preventivo</p>
+          <p className="qt-kpi-v" data-testid="qt-totale-kpi">{eur(p.totale)}</p>
+          {delta !== 0 && (
+            <p className="qt-kpi-n">
+              <span className="qt-delta" data-verso={delta > 0 ? "su" : "giu"}>
+                {delta > 0 ? "▲" : "▼"} {eur(Math.abs(delta))}
+              </span>{" "}dall'ultima scelta
+            </p>
+          )}
+        </div>
+        <span className="qt-kpi-graf"><Sparkline serie={serie} /></span>
+      </div>
+
+      <div className="qt-kpi">
+        <div className="qt-kpi-testo">
+          <p className="qt-kpi-l">Durata stimata</p>
+          <p className="qt-kpi-v">{p.giorni > 0 ? `${p.settimane} sett.` : "—"}</p>
+          <p className="qt-kpi-n">{p.giorni > 0 ? `${p.giorni} giorni/uomo` : "nessuna voce"}</p>
+        </div>
+        <span className="qt-kpi-icona" aria-hidden>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round">
+            <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />
+          </svg>
+        </span>
+      </div>
+
+      <div className="qt-kpi">
+        <div className="qt-kpi-testo">
+          <p className="qt-kpi-l">Risparmio stimato</p>
+          <p className="qt-kpi-v">{r.risparmioMensile > 0 ? `${eur(r.risparmioMensile)}` : "—"}</p>
+          <p className="qt-kpi-n">al mese, dalle ore tolte</p>
+        </div>
+        <span className="qt-kpi-icona" aria-hidden>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 17l5-5 4 3 6-7" /><path d="M15 8h5v5" />
+          </svg>
+        </span>
+      </div>
+
+      <div className="qt-kpi forte">
+        <div className="qt-kpi-testo">
+          <p className="qt-kpi-l">Rientro</p>
+          <p className="qt-kpi-v" data-testid="qt-rientro">{r.rientro !== null ? `${r.rientro} mesi` : "—"}</p>
+          <p className="qt-kpi-n">{r.rientro !== null && r.rientro <= 12 ? "dentro il primo anno" : "poi il risparmio resta"}</p>
+        </div>
+        <span className="qt-kpi-graf"><Arco mesi={r.rientro} /></span>
+      </div>
+    </div>
+  )
+}
+
+/* ── il piano: quando consegniamo, quando si paga ────────────────────── */
+const COLORI_FASE = ["#8FA891", "#6E876F", "#5C7061", "#44553F"]
+
+function Piano() {
+  const piattaforma = useQuoteStore(s => s.piattaforma)
+  const moduli = useQuoteStore(s => s.moduli)
+  const regime = useQuoteStore(s => s.regime)
+  const attivita = useQuoteStore(s => s.attivita)
+
+  const p = calcola(piattaforma, moduli, regime, attivita)
+  const fasi = pianoFasi(p.giorni)
+  const rate = pianoRate(p.totale)
+  if (fasi.length === 0) return null
+
+  return (
+    <section className="qt-piano" aria-label="Piano di consegna e pagamenti">
+      <p className="qt-sez-t">
+        <span>Come si svolge · {p.settimane} settimane</span>
+        <span style={{ letterSpacing: 0, textTransform: "none" }}>SAL a consegne verificabili</span>
+      </p>
+
+      <div className="qt-nastro" aria-hidden>
+        {fasi.map((f, i) => (
+          <i key={f.id} style={{ width: `${f.quota * 100}%`, background: COLORI_FASE[i] }} />
+        ))}
+      </div>
+
+      <div className="qt-fasi">
+        {fasi.map((f, i) => (
+          <div key={f.id} className="qt-fase" style={{ flexGrow: f.quota * 100 }}>
+            <div className="qt-fase-n" style={{ color: COLORI_FASE[i] }}>{f.nome}</div>
+            <div className="qt-fase-g">sett. {f.daSettimana}–{f.aSettimana} · {f.giorni} gg</div>
+            <p className="qt-fase-s">{f.sommario}</p>
+          </div>
+        ))}
+      </div>
+
+      <p className="qt-sez-t" style={{ marginTop: 18 }}><span>Pagamenti</span></p>
+      <div className="qt-rate">
+        {rate.map(r => (
+          <div key={r.id} className="qt-rata">
+            <div className="qt-rata-q">{perc(r.quota)}</div>
+            <div className="qt-rata-v">{eur(r.importo)}</div>
+            <div className="qt-rata-l">{r.nome} · {r.quando}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+/* ── due strade a confronto ──────────────────────────────────────────── */
+function Scenari() {
+  const scenari = useQuoteStore(s => s.scenari)
+  const piattaforma = useQuoteStore(s => s.piattaforma)
+  const { salvaScenario, ripristinaScenario, eliminaScenario } = useQuoteStore.getState()
+
+  return (
+    <section className="qt-extra" aria-label="Scenari a confronto">
+      <p className="qt-sez-t">
+        <span>Due strade a confronto</span>
+        <button type="button" className="qt-btn gho mini" disabled={!piattaforma}
+          onClick={salvaScenario}>Metti da parte questa</button>
+      </p>
+
+      {scenari.length === 0 ? (
+        <p className="qt-scen-vuoto">
+          Configura una strada, mettila da parte, poi cambiane una e confronta i due preventivi
+          fianco a fianco. È la conversazione che si fa davvero in call: «e se invece…».
+        </p>
+      ) : (
+        <div className="qt-scen">
+          {scenari.map(sc => (
+            <div key={sc.id} className="qt-scen-c">
+              <button type="button" className="qt-scen-x" onClick={() => eliminaScenario(sc.id)}
+                aria-label={`Elimina ${sc.nome}`}>×</button>
+              <div className="qt-scen-n">{sc.nome}</div>
+              <div className="qt-scen-r"><span>Preventivo</span><span>{eur(sc.totale)}</span></div>
+              <div className="qt-scen-r"><span>Durata</span><span>{Math.ceil(sc.giorni / 5)} sett.</span></div>
+              <div className="qt-scen-r"><span>Rientro</span><span>{sc.rientro !== null ? `${sc.rientro} mesi` : "—"}</span></div>
+              <button type="button" className="qt-btn gho mini qt-scen-b"
+                onClick={() => ripristinaScenario(sc.id)}>Riprendi questa</button>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  )
+}
+
 /* ── il preventivo, colonna di destra ────────────────────────────────── */
 function Conto() {
   const piattaforma = useQuoteStore(s => s.piattaforma)
@@ -377,8 +608,8 @@ function Conto() {
             <span className="qt-roi-v">{r.recuperoErrori > 0 ? `${eur(r.recuperoErrori)}/mese` : "—"}</span>
           </div>
           <div className="qt-barra" role="img" aria-label="Peso delle due fonti di risparmio">
-            <i style={{ width: `${(r.risparmioOre / tot) * 100}%`, background: "#2DE1C2" }} />
-            <i style={{ width: `${(r.recuperoErrori / tot) * 100}%`, background: "#FFC46B" }} />
+            <i style={{ width: `${(r.risparmioOre / tot) * 100}%`, background: "#5C7061" }} />
+            <i style={{ width: `${(r.recuperoErrori / tot) * 100}%`, background: "#C9A227" }} />
           </div>
 
           <p className="qt-formula">
@@ -389,7 +620,7 @@ function Conto() {
 
           {r.rientro !== null && (
             <div className="qt-rientro">
-              <div className="qt-rientro-n" data-testid="qt-rientro">{r.rientro} mesi</div>
+              <div className="qt-rientro-n">{r.rientro} mesi</div>
               <div className="qt-rientro-l">
                 {rientroBuono
                   ? `Con questi numeri l'investimento si ripaga in ${r.rientro} mesi: dopo, il risparmio resta.`
@@ -454,100 +685,98 @@ export default function QuoteApp({ onCaps, mostraCaps = true }: {
     return false
   }
 
+  const storico = useQuoteStore(st => st.storico)
+  const { annulla } = useQuoteStore.getState()
+
   return (
     <div className="qt-root">
       <div className="qt-shell">
-        <div className="qt-brand">
-          <span className="qt-mark" aria-hidden>≈</span>
-          <div>
-            <div className="qt-brand-n">Meridiana · preventivo commerce</div>
-            <div className="qt-brand-s">configuratore dimostrativo · prezzi indicativi</div>
-          </div>
-          <button type="button" className="qt-btn gho mini" style={{ marginLeft: "auto" }} onClick={azzera}>
-            Azzera
-          </button>
-        </div>
-
-        <span className="qt-kicker">Configuratore di preventivo</span>
-        <h1 className="qt-titolone">Quanto costa, quanto dura, quando rientra</h1>
-        <p className="qt-sottotitolo">
-          Configura un progetto e-commerce come lo configureremmo insieme in call: scegli la
-          piattaforma, aggiungi le funzioni che ti servono e guarda il preventivo scriversi da
-          solo a destra. <b>I prezzi non sono una tabella fissa</b>: si adeguano alle scelte,
-          perché la stessa funzione non costa uguale su piattaforme diverse.
-        </p>
-
-        <div className="qt-intro">
-          {[
-            { n: "01", t: "Configuri", d: "Piattaforma e moduli. Alcune combinazioni sono impossibili, e la scheda dice perché." },
-            { n: "02", t: "Il prezzo si adegua", d: "Ogni scelta riprezza le altre: niente listino finto, niente «da concordare»." },
-            { n: "03", t: "Vedi quando rientra", d: "Con i tuoi numeri di ordini e ore manuali, in quanti mesi l'investimento si ripaga." },
-          ].map(c => (
-            <div key={c.n} className="qt-intro-c">
-              <div className="qt-intro-n">{c.n}</div>
-              <div className="qt-intro-t">{c.t}</div>
-              <p className="qt-intro-d">{c.d}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="qt-passi" role="tablist" aria-label="Passi del preventivo">
+        {/* Colonna delle icone: la navigazione fra i passi in 64px. Le
+            etichette stanno nel title, non a schermo — su un cruscotto lo
+            spazio orizzontale vale più di quattro parole ripetute. */}
+        <nav className="qt-rail" aria-label="Passi del preventivo">
           {PASSI.filter(p => p.n !== 3 || serve3).map((p, i) => (
             <React.Fragment key={p.n}>
-              {i > 0 && <span className="qt-passo-sep" aria-hidden />}
-              <button type="button" className="qt-passo"
+              {i > 0 && <span className="qt-rail-sep" aria-hidden />}
+              <button type="button" className="qt-rail-b qt-passo" title={p.label}
                 data-stato={passo === p.n ? "attivo" : passo > p.n ? "fatto" : "idle"}
                 data-on={raggiungibile(p.n)}
                 onClick={() => { if (raggiungibile(p.n)) vai(p.n) }}
                 aria-current={passo === p.n ? "step" : undefined}>
-                <span className="n">0{p.n}</span>
-                <span className="lbl">{p.label}</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  {ICONE[p.n]}
+                </svg>
+                <span className="lbl" style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>{p.label}</span>
               </button>
             </React.Fragment>
           ))}
-        </div>
+        </nav>
 
-        {/* Tre colonne indipendenti nella griglia, non due incolonnate: la
-            checklist non condivide più il contenitore della scheda. Prima
-            "Da provare" stava impilata sotto il preventivo nella stessa
-            colonna, ed è lì che un secondo `position` in cascata aveva
-            scavalcato lo spazio riservato. Da sole, sticky l'una accanto
-            all'altra, non hanno più un bordo comune da scavalcare. */}
-        <div className="qt-grid" data-caps={mostraCaps}>
-          <div className="qt-pan">
-            <AnimatePresence mode="wait" custom={dir} initial={false}>
-              <motion.div key={passo} custom={dir} variants={slide}
-                initial="enter" animate="center" exit="exit" transition={TRANS}>
-                {passo === 1 ? <PassoPiattaforma />
-                  : passo === 2 ? <PassoModuli onVincolo={() => setVincoloVisto(true)} />
-                  : passo === 3 ? <PassoRegime />
-                  : <PassoRitorno onRoi={() => setRoiVisto(true)} onJson={() => setJsonVisto(true)} />}
-              </motion.div>
-            </AnimatePresence>
-
-            <div className="qt-nav">
-              {passo > 1 && <button type="button" className="qt-btn gho" onClick={indietro}>Indietro</button>}
-              {passo < ULTIMO_PASSO && (
-                <button type="button" className="qt-btn pri" onClick={avanti} disabled={!puoAvanzare}>
-                  Continua
-                </button>
-              )}
+        <div>
+          <header className="qt-top">
+            <div className="qt-saluto">
+              <h1 className="qt-titolone">Quanto costa, quanto dura, quando rientra</h1>
+              <p className="qt-sottotitolo">
+                Configura un progetto e-commerce come lo faremmo insieme in call.
+                <b> I prezzi non sono una tabella fissa</b>: si adeguano alle scelte, perché la
+                stessa funzione non costa uguale su piattaforme diverse.
+              </p>
             </div>
+            <div className="qt-azioni-top">
+              <button type="button" className="qt-pill tondo" onClick={annulla}
+                disabled={storico.length === 0} title="Annulla l'ultima scelta" aria-label="Annulla l'ultima scelta">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M9 14L4 9l5-5" /><path d="M4 9h11a5 5 0 0 1 0 10h-3" />
+                </svg>
+              </button>
+              <button type="button" className="qt-pill" onClick={azzera}>Azzera</button>
+            </div>
+          </header>
+
+          <Kpi />
+
+          <div className="qt-grid" data-caps={mostraCaps}>
+            <div className="qt-pan">
+              <AnimatePresence mode="wait" custom={dir} initial={false}>
+                <motion.div key={passo} custom={dir} variants={slide}
+                  initial="enter" animate="center" exit="exit" transition={TRANS}>
+                  {passo === 1 ? <PassoPiattaforma />
+                    : passo === 2 ? <PassoModuli onVincolo={() => setVincoloVisto(true)} />
+                    : passo === 3 ? <PassoRegime />
+                    : <PassoRitorno onRoi={() => setRoiVisto(true)} onJson={() => setJsonVisto(true)} />}
+                </motion.div>
+              </AnimatePresence>
+
+              <div className="qt-nav">
+                {passo > 1 && <button type="button" className="qt-btn gho" onClick={indietro}>Indietro</button>}
+                {passo < ULTIMO_PASSO && (
+                  <button type="button" className="qt-btn pri" onClick={avanti} disabled={!puoAvanzare}>
+                    Continua
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <Conto />
+
+            {mostraCaps && (
+              <aside className="qt-caps" aria-label="Cose da provare">
+                <p className="qt-caps-t"><span>Da provare</span><b>{caps.length}/{QUOTE_CAPS.length}</b></p>
+                {QUOTE_CAPS.map(c => (
+                  <div key={c.id} className="qt-cap" data-done={caps.includes(c.id)}>
+                    <span className="dot" aria-hidden>{caps.includes(c.id) ? "✓" : ""}</span>
+                    {c.label}
+                  </div>
+                ))}
+              </aside>
+            )}
+
+            <Piano />
           </div>
 
-          <Conto />
-
-          {mostraCaps && (
-            <aside className="qt-caps" aria-label="Cose da provare">
-              <p className="qt-caps-t"><span>Da provare</span><b>{caps.length}/{QUOTE_CAPS.length}</b></p>
-              {QUOTE_CAPS.map(c => (
-                <div key={c.id} className="qt-cap" data-done={caps.includes(c.id)}>
-                  <span className="dot" aria-hidden>{caps.includes(c.id) ? "✓" : ""}</span>
-                  {c.label}
-                </div>
-              ))}
-            </aside>
-          )}
+          <Scenari />
         </div>
       </div>
     </div>

@@ -16,32 +16,31 @@ const FONT = "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', R
 const MONO = "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace"
 
 const PAGE_CSS = `
-  html, body { margin: 0; background: #16130F; }
+  html, body { margin: 0; background: #E4E1D8; }
   .qtp-bar {
     position: sticky; top: 0; z-index: 40;
     display: flex; align-items: center; gap: 14px; padding: 11px 18px;
-    background: linear-gradient(180deg, rgba(30,26,21,0.92), rgba(22,19,15,0.88));
+    background: rgba(255,255,255,0.92);
     backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4);
-    border-bottom: 1px solid rgba(255,255,255,0.09);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.04), 0 12px 30px rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(23,26,22,0.09);
+    box-shadow: 0 2px 14px rgba(23,26,22,0.06);
     font-family: ${FONT};
   }
   .qtp-back {
     display: inline-flex; align-items: center; gap: 7px;
-    font-family: inherit; font-size: 13px; font-weight: 650; color: rgba(247,243,236,0.6);
+    font-family: inherit; font-size: 13px; font-weight: 650; color: #565C52;
     background: none; border: none; cursor: pointer; padding: 6px 4px; transition: color .18s ease;
   }
-  .qtp-back:hover { color: #F7F3EC; }
-  .qtp-t { font-size: 13.5px; color: #F7F3EC; }
+  .qtp-back:hover { color: #171A16; }
+  .qtp-t { font-size: 13.5px; color: #171A16; }
   .qtp-t strong { font-weight: 740; letter-spacing: -0.015em; }
-  .qtp-s { display: block; font-family: ${MONO}; font-size: 11px; color: rgba(247,243,236,0.36); letter-spacing: 0.03em; }
+  .qtp-s { display: block; font-family: ${MONO}; font-size: 11px; color: #7E857A; letter-spacing: 0.03em; }
   .qtp-chips { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
   .qtp-chip {
     font-family: ${MONO}; font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
-    color: rgba(255,196,145,0.95);
-    background: linear-gradient(165deg, rgba(255,122,69,0.16), rgba(255,122,69,0.05));
-    border: 1px solid rgba(255,122,69,0.24);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    color: #35452F;
+    background: #DFE7DD;
+    border: none;
     border-radius: 999px; padding: 4px 10px;
   }
   @media (max-width: 860px) { .qtp-chips { display: none; } }
@@ -81,7 +80,7 @@ export default function DemoQuoteEngine() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#16130F" }}>
+    <div style={{ minHeight: "100vh", background: "#E4E1D8" }}>
       <style>{QUOTE_CSS}</style>
       <style>{PAGE_CSS}</style>
 

@@ -205,3 +205,79 @@ export const eur = (n: number) =>
 
 export const numero = (n: number) =>
   new Intl.NumberFormat("it-IT", { maximumFractionDigits: 0 }).format(n)
+
+/* ══════════════════════════════════════════════════════════════════════════
+   IL PIANO — fasi, pagamenti, punti di partenza.
+
+   Un preventivo che dice solo «quanto» è mezzo preventivo: chi firma vuole
+   sapere anche QUANDO consegnamo e QUANDO paga. Le due cose stanno qui
+   perché derivano dallo stesso impegno in giorni già calcolato, e non
+   devono poter divergere da esso.
+══════════════════════════════════════════════════════════════════════════ */
+
+export interface Fase {
+  id: string
+  nome: string
+  /** Quota dell'impegno totale che questa fase assorbe. Somma = 1. */
+  quota: number
+  sommario: string
+}
+
+/** Le quattro fasi con cui lavoriamo davvero, nelle proporzioni tipiche.
+ *  Non sono uguali fra loro: la costruzione pesa più del doppio della
+ *  scoperta, e un piano che le mostrasse identiche mentirebbe sul rischio. */
+export const FASI: Fase[] = [
+  { id: "discovery", nome: "Discovery", quota: 0.15, sommario: "Requisiti, dati esistenti, vincoli dei sistemi da collegare." },
+  { id: "design",    nome: "Design",    quota: 0.22, sommario: "Architettura, modello dati, interfacce dei flussi principali." },
+  { id: "build",     nome: "Sviluppo",  quota: 0.45, sommario: "Implementazione, integrazioni, test automatici." },
+  { id: "lancio",    nome: "Lancio",    quota: 0.18, sommario: "Migrazione, collaudo in produzione, formazione." },
+]
+
+export interface Rata {
+  id: string
+  nome: string
+  quota: number
+  quando: string
+}
+
+/** Stato avanzamento lavori: si paga contro consegne verificabili, non a
+ *  calendario. È la struttura che protegge entrambe le parti. */
+export const RATE: Rata[] = [
+  { id: "avvio",   nome: "All'avvio",           quota: 0.30, quando: "firma" },
+  { id: "sal",     nome: "A metà sviluppo",     quota: 0.40, quando: "demo funzionante" },
+  { id: "consegna", nome: "Alla messa in linea", quota: 0.30, quando: "collaudo superato" },
+]
+
+export interface Preset {
+  id: string
+  nome: string
+  sommario: string
+  piattaforma: PiattaformaId
+  moduli: ModuloId[]
+  regime: RegimeId | null
+}
+
+/** Tre punti di partenza realistici. Servono a chi apre la demo e non sa
+ *  da dove cominciare: un clic e il preventivo è già popolato di scelte
+ *  coerenti, da lì si toglie e si aggiunge. */
+export const PRESET: Preset[] = [
+  {
+    id: "avvio", nome: "Primo e-commerce",
+    sommario: "Vendere online in fretta, con il catalogo in ordine.",
+    piattaforma: "shopify", moduli: ["pim"], regime: null,
+  },
+  {
+    id: "crescita", nome: "Scala e integra",
+    sommario: "Il gestionale parla col negozio, niente più doppio inserimento.",
+    piattaforma: "headless", moduli: ["pim", "magazzino", "analytics"], regime: "webhook",
+  },
+  {
+    id: "b2b", nome: "Rete di rivenditori",
+    sommario: "Listini per fascia, fido e ordini ricorrenti.",
+    piattaforma: "portale", moduli: ["pim", "listini", "rivenditori", "fatturazione"], regime: "batch",
+  },
+]
+
+/** Percentuale con una cifra, per etichette compatte. */
+export const perc = (n: number) =>
+  new Intl.NumberFormat("it-IT", { style: "percent", maximumFractionDigits: 0 }).format(n)
