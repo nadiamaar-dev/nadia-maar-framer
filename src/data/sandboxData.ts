@@ -89,10 +89,8 @@ export const SANDBOX_ART: Omit<SandboxItem, "title" | "description">[] = [
     id: "shopify-luxury-fashion",
     category: "E-commerce & Shopify",
     type: "full-site",
-    tech: ["React", "TypeScript", "Zustand", "Framer Motion"],
+    tech: ["Shopify", "Liquid", "Three.js", "Alpine.js"],
     accent: "#B04A38",
-    demo: "luxury-fashion",
-    previewUrl: "/previews/luxury-fashion",
   },
   {
     id: "shopify-b2b-wholesale",

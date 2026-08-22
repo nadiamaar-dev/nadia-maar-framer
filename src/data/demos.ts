@@ -7,14 +7,16 @@
    capisca perché.
 ══════════════════════════════════════════════════════════════════════════ */
 
-export type DemoId = "supplier-portal" | "crm-dashboard" | "onboarding-kyc" | "preventivo-roi" | "luxury-fashion" | "saas-launch"
+/* "luxury-fashion" (/demo/atelier-moda) è spenta a richiesta: tolta da
+   qui perché un DemoId non collegato a nessuna rotta farebbe puntare
+   una scheda del catalogo a un 404. Il componente resta nel repository. */
+export type DemoId = "supplier-portal" | "crm-dashboard" | "onboarding-kyc" | "preventivo-roi" | "saas-launch"
 
 export const DEMO_HREF: Record<DemoId, string> = {
   "supplier-portal": "/demo/portale-fornitori",
   "crm-dashboard": "/demo/crm-vendite",
   "onboarding-kyc": "/demo/onboarding-kyc",
   "preventivo-roi": "/demo/preventivo-roi",
-  "luxury-fashion": "/demo/atelier-moda",
   "saas-launch": "/demo/lancio-saas",
 }
 

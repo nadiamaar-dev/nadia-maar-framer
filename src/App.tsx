@@ -25,7 +25,6 @@ const DemoSupplierPortal = lazy(() => import("./DemoSupplierPortal"))
 const DemoCrmDashboard   = lazy(() => import("./DemoCrmDashboard"))
 const DemoOnboardingKyc  = lazy(() => import("./DemoOnboardingKyc"))
 const DemoQuoteEngine    = lazy(() => import("./DemoQuoteEngine"))
-const DemoAtelier        = lazy(() => import("./DemoAtelier"))
 const DemoSoglia         = lazy(() => import("./DemoSoglia"))
 const CabinetApp        = lazy(() => import("./portal/cabinet/CabinetApp"))
 const DashboardGate     = lazy(() => import("./DashboardGate"))
@@ -100,9 +99,10 @@ export default function App() {
     case "/demo/preventivo-roi":
       if (foundryOn) { el = <DemoQuoteEngine />; bare = true; break }
       el = <NotFound />; known = false; break
-    case "/demo/atelier-moda":
-      if (foundryOn) { el = <DemoAtelier />; bare = true; break }
-      el = <NotFound />; known = false; break
+    /* /demo/atelier-moda è spenta a richiesta: nessun case qui vuol dire
+       che cade nel default e risponde 404, come qualunque rotta ignota.
+       Il componente (./DemoAtelier e components/Sandbox/preview/atelier)
+       resta nel repository per un'eventuale riaccensione. */
     case "/demo/lancio-saas":
       if (foundryOn) { el = <DemoSoglia />; bare = true; break }
       el = <NotFound />; known = false; break
