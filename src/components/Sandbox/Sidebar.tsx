@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { SandboxCategory, SandboxType } from "../../data/sandboxData"
+import { CATEGORIE_CON_DEMO, SandboxCategory, SandboxType } from "../../data/sandboxData"
 import { useBlueprint } from "../../context/BlueprintContext"
 import { useT } from "../../lib/i18n/t"
 import { LAB_STR } from "../../lib/i18n/strings/lab"
@@ -8,13 +8,10 @@ const MONO    = "'JetBrains Mono',monospace"
 const DISPLAY = "'Plus Jakarta Sans',system-ui,sans-serif"
 const ACCENT  = "#B83240"
 
-const CATEGORIES: SandboxCategory[] = [
-  "All",
-  "B2B Portals",
-  "E-commerce & Shopify",
-  "Landing Pages",
-  "UI Components",
-]
+/* Solo le categorie che hanno almeno una demo dal vivo: vedi
+   CATEGORIE_CON_DEMO in data/sandboxData.ts. Una categoria senza niente
+   dietro sparisce da qui invece di restare come pulsante muto. */
+const CATEGORIES: SandboxCategory[] = CATEGORIE_CON_DEMO
 
 /* Le etichette — per esteso nella colonna, accorciate nella barra
    orizzontale — arrivano dal dizionario: qui resta solo l'ordine. */

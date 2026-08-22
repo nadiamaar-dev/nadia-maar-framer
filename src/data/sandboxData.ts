@@ -37,9 +37,36 @@ export interface SandboxItem {
 
 /* La struttura delle voci: categoria, tipo, tecnologie, colore, anteprima.
    Titolo e descrizione sono testo e vivono in lib/i18n/strings/lab.ts,
-   indicizzati per `id`; `sandboxItems(locale)` qui sotto li unisce. */
+   indicizzati per `id`; `sandboxItems(locale)` qui sotto li unisce.
+
+   Per ora la libreria mostra SOLO le schede con una demo dal vivo: le
+   voci di solo catalogo (nessun `demo`) sono state tolte perché una
+   scheda che promette un'anteprima e apre il nulla è peggio di uno
+   scaffale corto. Restano nel repository nella cronologia git — si
+   rimettono aggiungendo la voce e la sua categoria tornerà a comparire
+   da sé nella barra laterale (vedi `CATEGORIE_CON_DEMO` sotto).
+
+   Soglia e Regia aprono l'elenco: sono le due demo più recenti e più
+   complete, e chi entra nel Lab le vede per prime. */
 export const SANDBOX_ART: Omit<SandboxItem, "title" | "description">[] = [
-  /* ── B2B Portals ── */
+  {
+    id: "landing-saas-launch",
+    category: "Landing Pages",
+    type: "full-site",
+    tech: ["React", "TypeScript", "Zustand", "Framer Motion"],
+    accent: "#663AF3",
+    demo: "saas-launch",
+    previewUrl: "/previews/lancio-saas",
+  },
+  {
+    id: "b2b-regia-operativa",
+    category: "B2B Portals",
+    type: "full-site",
+    tech: ["React", "TypeScript", "Zustand", "Framer Motion"],
+    accent: "#3B82F6",
+    demo: "ops-control",
+    previewUrl: "/previews/regia",
+  },
   {
     id: "b2b-supplier-portal",
     category: "B2B Portals",
@@ -76,100 +103,25 @@ export const SANDBOX_ART: Omit<SandboxItem, "title" | "description">[] = [
     demo: "preventivo-roi",
     previewUrl: "/previews/preventivo-roi",
   },
-  {
-    id: "b2b-regia-operativa",
-    category: "B2B Portals",
-    type: "full-site",
-    tech: ["React", "TypeScript", "Zustand", "Framer Motion"],
-    accent: "#3B82F6",
-    demo: "ops-control",
-    previewUrl: "/previews/regia",
-  },
-  {
-    id: "b2b-distributor-hub",
-    category: "B2B Portals",
-    type: "full-site",
-    tech: ["Next.js", "Prisma", "Stripe", "Vercel"],
-    accent: "#7B4FCF",
-  },
+]
 
-  /* ── E-commerce & Shopify ── */
-  {
-    id: "shopify-luxury-fashion",
-    category: "E-commerce & Shopify",
-    type: "full-site",
-    tech: ["Shopify", "Liquid", "Three.js", "Alpine.js"],
-    accent: "#B04A38",
-  },
-  {
-    id: "shopify-b2b-wholesale",
-    category: "E-commerce & Shopify",
-    type: "full-site",
-    tech: ["Shopify Plus", "Liquid", "Klaviyo", "ERP API"],
-    accent: "#C17D1E",
-  },
-  {
-    id: "ecommerce-headless",
-    category: "E-commerce & Shopify",
-    type: "full-site",
-    tech: ["Next.js", "Shopify Storefront API", "Sanity", "Vercel"],
-    accent: "#10B981",
-  },
+/** Ordine canonico delle categorie: fissa come si susseguono nella barra
+ *  laterale, indipendentemente dall'ordine (pensato per le SCHEDE, non
+ *  per le categorie) di `SANDBOX_ART` qui sopra. */
+const ORDINE_CATEGORIE: Exclude<SandboxCategory, "All">[] = [
+  "B2B Portals",
+  "E-commerce & Shopify",
+  "Landing Pages",
+  "UI Components",
+]
 
-  /* ── Landing Pages ── */
-  {
-    id: "landing-saas-launch",
-    category: "Landing Pages",
-    type: "full-site",
-    tech: ["React", "TypeScript", "Zustand", "Framer Motion"],
-    accent: "#663AF3",
-    demo: "saas-launch",
-    previewUrl: "/previews/lancio-saas",
-  },
-  {
-    id: "landing-event-conference",
-    category: "Landing Pages",
-    type: "full-site",
-    tech: ["Next.js", "Stripe", "SendGrid", "Supabase"],
-    accent: "#7B4FCF",
-  },
-  {
-    id: "landing-product-reveal",
-    category: "Landing Pages",
-    type: "full-site",
-    tech: ["React", "GSAP", "Three.js", "Framer Motion"],
-    accent: "#B04A38",
-  },
-
-  /* ── UI Components ── */
-  {
-    id: "ui-glass-nav",
-    category: "UI Components",
-    type: "component",
-    tech: ["React", "TypeScript", "Framer Motion"],
-    accent: "#2A8A6E",
-  },
-  {
-    id: "ui-data-table",
-    category: "UI Components",
-    type: "component",
-    tech: ["React", "TypeScript", "TanStack Table"],
-    accent: "#1E6FAF",
-  },
-  {
-    id: "ui-form-wizard",
-    category: "UI Components",
-    type: "component",
-    tech: ["React", "TypeScript", "React Hook Form", "Zod"],
-    accent: "#C17D1E",
-  },
-  {
-    id: "ui-dashboard-widgets",
-    category: "UI Components",
-    type: "component",
-    tech: ["React", "Recharts", "DnD Kit", "TypeScript"],
-    accent: "#10B981",
-  },
+/** Le categorie che hanno almeno una scheda con una demo dal vivo. La
+ *  barra laterale mostra solo queste (più "All"): una categoria vuota
+ *  è un pulsante che porta a uno scaffale vuoto, e per ora non ne
+ *  esistono — quando una tornerà popolata, comparirà da sé. */
+export const CATEGORIE_CON_DEMO: SandboxCategory[] = [
+  "All",
+  ...ORDINE_CATEGORIE.filter(c => SANDBOX_ART.some(a => a.category === c && a.demo)),
 ]
 
 /** Le voci della libreria, già nella lingua richiesta. */
