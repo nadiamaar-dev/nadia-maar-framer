@@ -662,4 +662,34 @@ test.describe("demo regia (torre di controllo)", () => {
     await expect(page.locator('.rg-firma a[href="/foundry"]')).toBeVisible()
     await expect(page.locator(".rg-firma")).toContainText("Nadia Maar")
   })
+
+  test("eco risponde coi dati e le testimonianze girano", async ({ page }) => {
+    await page.goto("/demo/regia")
+
+    /* Eco: la domanda si scrive da sola e la risposta è una TABELLA. */
+    const eco = page.getByTestId("rg-eco")
+    await eco.scrollIntoViewIfNeeded()
+    await page.locator('[data-eco-chip="fermi"]').click()
+    await expect(eco).toContainText("RG-4187", { timeout: 12_000 })
+    await expect(eco).toContainText("presa rifiutata")
+
+    /* Una seconda domanda sostituisce la prima: la scena si riusa. */
+    await page.locator('[data-eco-chip="roma"]').click()
+    await expect(eco).toContainText("DHL", { timeout: 12_000 })
+    await expect(eco).not.toContainText("RG-4187")
+
+    /* Le quattro capacità con la loro micro-scena. */
+    await expect(page.locator(".rg-capa")).toHaveCount(4)
+    await expect(page.locator(".rg-capacita")).toContainText("Sincronia bidirezionale")
+
+    /* Le testimonianze: i punti cambiano la voce in scena. */
+    const teste = page.getByTestId("rg-teste")
+    await teste.scrollIntoViewIfNeeded()
+    await teste.getByRole("tab", { name: "Elena Pruni" }).click()
+    await expect(teste).toContainText("Elena Pruni")
+
+    /* La giostra dei loghi è una, duplicata: la seconda copia è muta
+       per gli screen reader. */
+    await expect(page.locator(".rg-loghi-fila")).toBeVisible()
+  })
 })

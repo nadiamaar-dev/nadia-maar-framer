@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import {
-  ECCEZIONI, LINGUETTE, NODI, PIASTRELLE, REGISTRO, TABELLE,
+  DOMANDE_ECO, ECCEZIONI, LINGUETTE, NODI, PIASTRELLE, REGISTRO, TABELLE, TESTIMONIANZE,
 } from "./model"
 import { useMarea, useProva, useRegia } from "./store"
 
@@ -221,6 +221,242 @@ function PannelloNastro({ passoProva }: { passoProva: number }) {
   )
 }
 
+/* ══ ECO — l'agente che risponde sui dati ════════════════════════════════
+   Il copione: si sceglie una domanda, la domanda si SCRIVE da sola nella
+   riga di comando (il progresso viene dal tempo trascorso, mai da un
+   contatore dentro un timer — lezione pagata due demo fa), l'agente
+   «pensa» tre puntini e poi la risposta arriva con la sua tabella,
+   una riga alla volta. ══ */
+
+const BATTITO_MS = 34      // una lettera ogni ~34 ms: velocità da persona
+const PENSA_MS = 900
+
+function Eco() {
+  const [scelta, setScelta] = useState<string | null>(null)
+  /* Ogni domanda è una corsa nuova; dentro lo stato ci sta il RISULTATO
+     del tempo (lettere scritte, fase), calcolato nel tick — non l'ora. */
+  const [corsa, setCorsa] = useState(0)
+  const [scena, setScena] = useState<{ lettere: number; fase: "scrive" | "pensa" | "risponde" }>({ lettere: 0, fase: "scrive" })
+
+  const domanda = DOMANDE_ECO.find(d => d.id === scelta) ?? null
+
+  useEffect(() => {
+    if (corsa === 0 || !domanda) return
+    const inizio = performance.now()
+    const durataScrittura = domanda.chip.length * BATTITO_MS
+    let raf = 0
+    const tick = () => {
+      const trascorso = performance.now() - inizio
+      const lettere = Math.min(domanda.chip.length, Math.floor(trascorso / BATTITO_MS))
+      const fase = trascorso < durataScrittura ? "scrive" as const
+        : trascorso < durataScrittura + PENSA_MS ? "pensa" as const : "risponde" as const
+      setScena({ lettere, fase })
+      if (fase !== "risponde") raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [corsa, domanda])
+
+  const chiedi = (id: string) => {
+    setScelta(id)
+    setScena({ lettere: 0, fase: "scrive" })
+    setCorsa(c => c + 1)
+  }
+
+  const scritta = domanda ? domanda.chip.slice(0, scena.lettere) : ""
+  const finita = domanda !== null && scena.fase !== "scrive"
+  const pensa = domanda !== null && scena.fase === "pensa"
+  const risponde = domanda !== null && scena.fase === "risponde"
+  const occupato = domanda !== null && !risponde
+
+  return (
+    <div className="rg-pannello" data-testid="rg-eco">
+      <div className="rg-pannello-testa">
+        <b>Eco</b> · l&apos;agente della regia
+        <span className="rg-vivo">In ascolto</span>
+      </div>
+      <div className="rg-eco-corpo">
+        <div className="rg-eco-chiedi">
+          <svg {...ico}><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>
+          {domanda
+            ? <span>{scritta}{!finita && <span className="rg-eco-caret" aria-hidden />}</span>
+            : <span className="segna">Chiedi qualcosa ai tuoi dati — o scegli una domanda qui sotto.</span>}
+        </div>
+
+        <AnimatePresence mode="wait">
+          {pensa && (
+            <motion.div key="pensa" className="rg-eco-risposta"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <span className="rg-eco-avatar">
+                <svg {...ico} width="13" height="13"><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3.5 2" /></svg>
+              </span>
+              <span className="rg-eco-pensa" aria-label="Eco sta pensando"><i /><i /><i /></span>
+            </motion.div>
+          )}
+          {risponde && domanda && (
+            <motion.div key={domanda.id} className="rg-eco-risposta"
+              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+              <span className="rg-eco-avatar">
+                <svg {...ico} width="13" height="13"><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3.5 2" /></svg>
+              </span>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <p className="rg-eco-testo">{domanda.risposta}</p>
+                <div className="rg-eco-tab">
+                  <table className="rg-tab">
+                    <thead><tr>{domanda.tabella.intestazioni.map(h => <th key={h}>{h}</th>)}</tr></thead>
+                    <tbody>
+                      {domanda.tabella.righe.map((r, i) => (
+                        <motion.tr key={i}
+                          initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.25 + i * 0.18, duration: 0.3 }}>
+                          {r.map((c, j) => <td key={j} className={j >= 1 && /^\d/.test(c) ? "num" : undefined}>{c}</td>)}
+                        </motion.tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="rg-eco-chip-fila">
+          {DOMANDE_ECO.map(d => (
+            <button key={d.id} type="button" className="rg-eco-chip" data-eco-chip={d.id}
+              disabled={occupato} onClick={() => chiedi(d.id)}>
+              {d.chip}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ══ LE CAPACITÀ — micro-scene animate, non icone ferme ══════════════════ */
+
+function ScenaSincronia() {
+  return (
+    <motion.svg width="64" height="40" viewBox="0 0 64 40" fill="none" stroke="currentColor"
+      strokeWidth="1.5" strokeLinecap="round" aria-hidden>
+      <rect x="2" y="12" width="16" height="16" rx="4" />
+      <rect x="46" y="12" width="16" height="16" rx="4" />
+      <motion.path d="M22 16h18M36 12.5 40 16.5l-4 4" stroke="#60a5fa"
+        initial={{ pathLength: 0 }} animate={{ pathLength: [0, 1, 1] }}
+        transition={{ duration: 2.2, times: [0, 0.5, 1], repeat: Infinity, ease: "easeInOut" }} />
+      <motion.path d="M42 24H24M28 27.5 24 23.5l4-4" stroke="#60a5fa"
+        initial={{ pathLength: 0 }} animate={{ pathLength: [0, 1, 1] }}
+        transition={{ duration: 2.2, times: [0, 0.5, 1], delay: 1.1, repeat: Infinity, ease: "easeInOut" }} />
+    </motion.svg>
+  )
+}
+
+function ScenaIdentita() {
+  return (
+    <svg width="64" height="40" viewBox="0 0 64 40" fill="none" stroke="currentColor"
+      strokeWidth="1.5" strokeLinecap="round" aria-hidden>
+      <motion.circle cy="20" r="10"
+        animate={{ cx: [18, 27, 27, 18] }}
+        transition={{ duration: 3.6, times: [0, 0.35, 0.75, 1], repeat: Infinity, ease: "easeInOut" }} />
+      <motion.circle cy="20" r="10" stroke="#60a5fa"
+        animate={{ cx: [46, 37, 37, 46] }}
+        transition={{ duration: 3.6, times: [0, 0.35, 0.75, 1], repeat: Infinity, ease: "easeInOut" }} />
+    </svg>
+  )
+}
+
+function ScenaAccesso() {
+  return (
+    <div style={{ position: "relative", display: "grid", placeItems: "center" }}>
+      <motion.span aria-hidden style={{
+        position: "absolute", width: 34, height: 34, borderRadius: 9999,
+        boxShadow: "0 0 0 1px rgba(96, 165, 250, 0.5)",
+      }}
+        animate={{ scale: [1, 1.8], opacity: [0.6, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }} />
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <path d="M9 7V4M15 7V4M7.5 7h9v5a4.5 4.5 0 0 1-9 0V7ZM12 16.5V20" />
+      </svg>
+    </div>
+  )
+}
+
+function ScenaRegistro() {
+  const RIGHE = ["riga 4407 scritta", "firma verificata", "replica in UE — ok"]
+  return (
+    <div className="rg-capa-log" aria-hidden>
+      {RIGHE.map((r, i) => (
+        <motion.div key={r}
+          animate={{ opacity: [0, 1, 1, 0.35] }}
+          transition={{ duration: 3.3, times: [0, 0.15, 0.8, 1], delay: i * 1.1, repeat: Infinity }}>
+          {i === 2 ? <>{r.replace(" — ok", "")} — <b>ok</b></> : r}
+        </motion.div>
+      ))}
+    </div>
+  )
+}
+
+const CAPACITA = [
+  {
+    titolo: "Sincronia bidirezionale",
+    testo: "Chi scrive per ultimo non vince: vince la regola. I conflitti si risolvono, non si sovrascrivono.",
+    scena: <ScenaSincronia />,
+  },
+  {
+    titolo: "Identità unificata",
+    testo: "Lo stesso cliente sul negozio, nel gestionale e dal corriere è UNA riga, non tre omonimi.",
+    scena: <ScenaIdentita />,
+  },
+  {
+    titolo: "Accesso nativo",
+    testo: "API e webhook di prima classe: la regia si comanda anche senza aprirla.",
+    scena: <ScenaAccesso />,
+  },
+  {
+    titolo: "Registro immutabile",
+    testo: "Ogni decisione firmata e replicata in UE. Si può leggere, non riscrivere.",
+    scena: <ScenaRegistro />,
+  },
+]
+
+/* ══ TESTIMONIANZE — giostra che avanza da sola ══════════════════════════ */
+
+function Testimonianze() {
+  const [su, setSu] = useState(0)
+  const [fermo, setFermo] = useState(false)
+
+  useEffect(() => {
+    if (fermo) return
+    const t = setInterval(() => setSu(i => (i + 1) % TESTIMONIANZE.length), 5200)
+    return () => clearInterval(t)
+  }, [fermo])
+
+  const voce = TESTIMONIANZE[su]
+  return (
+    <div className="rg-teste" data-testid="rg-teste"
+      onMouseEnter={() => setFermo(true)} onMouseLeave={() => setFermo(false)}>
+      <AnimatePresence mode="wait">
+        <motion.figure key={su} className="rg-testimonianza"
+          initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
+          style={{ margin: 0 }}>
+          <span className="rg-teste-avatar">{voce.iniziali}</span>
+          <blockquote className="rg-teste-citazione" style={{ margin: 0 }}>&ldquo;{voce.citazione}&rdquo;</blockquote>
+          <figcaption className="rg-teste-chi"><b>{voce.nome}</b> — {voce.ruolo}</figcaption>
+        </motion.figure>
+      </AnimatePresence>
+      <div className="rg-teste-punti" role="tablist" aria-label="Testimonianze">
+        {TESTIMONIANZE.map((t, i) => (
+          <button key={t.iniziali} type="button" className="rg-teste-punto" role="tab"
+            data-on={su === i} aria-selected={su === i} aria-label={t.nome}
+            onClick={() => setSu(i)} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 /* ══ SEZIONE A LINGUETTE ═════════════════════════════════════════════════ */
 
 function Linguette() {
@@ -387,17 +623,40 @@ export default function RegiaApp({ onIngaggio }: RegiaAppProps) {
             </div>
           </motion.div>
 
-          {/* nastro loghi */}
+          {/* nastro loghi: giostra infinita, due copie della stessa fila */}
           <Rivela className="rg-loghi" ritardo={0.15}>
-            {["Bottega Prisma", "Arreda Più", "Elettra Forniture", "Marelli Casa", "Studio Manin"].map((n, i) => (
-              <span key={n} className="rg-logo-voce"><SegnoPiastrella i={i} />{n}</span>
-            ))}
+            <div className="rg-loghi-fila">
+              {[0, 1].map(copia => (
+                <React.Fragment key={copia}>
+                  {["Bottega Prisma", "Arreda Più", "Elettra Forniture", "Marelli Casa", "Studio Manin", "Officine Duso"].map((n, i) => (
+                    <span key={`${copia}-${n}`} className="rg-logo-voce" aria-hidden={copia === 1}>
+                      <SegnoPiastrella i={i} />{n}
+                    </span>
+                  ))}
+                </React.Fragment>
+              ))}
+            </div>
           </Rivela>
         </div>
       </header>
 
-      {/* ══ LINGUETTE ══ */}
+      {/* ══ ECO — chiedi ai dati ══ */}
       <section className="rg-sezione">
+        <div className="rg-contenitore">
+          <Rivela>
+            <span className="rg-occhiello">L&apos;agente</span>
+            <h2 className="rg-titolo">Le domande si fanno in italiano. Le risposte arrivano in righe.</h2>
+            <p className="rg-sotto">
+              Eco legge gli stessi dati del quadro comandi: niente prosa motivazionale,
+              tabelle. Scegli una domanda e guardala scriversi da sola.
+            </p>
+          </Rivela>
+          <Rivela ritardo={0.1}><div style={{ marginTop: 44 }}><Eco /></div></Rivela>
+        </div>
+      </section>
+
+      {/* ══ LINGUETTE ══ */}
+      <section className="rg-sezione" style={{ paddingTop: 0 }}>
         <div className="rg-contenitore">
           <Rivela>
             <span className="rg-occhiello">Un&apos;infrastruttura, quattro fronti</span>
@@ -408,6 +667,17 @@ export default function RegiaApp({ onIngaggio }: RegiaAppProps) {
             </p>
           </Rivela>
           <Rivela ritardo={0.1}><Linguette /></Rivela>
+
+          {/* le quattro capacità, ognuna con la sua micro-scena in moto */}
+          <Rivela className="rg-capacita" ritardo={0.1}>
+            {CAPACITA.map(c => (
+              <div key={c.titolo} className="rg-capa">
+                <div className="rg-capa-scena">{c.scena}</div>
+                <h3>{c.titolo}</h3>
+                <p>{c.testo}</p>
+              </div>
+            ))}
+          </Rivela>
         </div>
       </section>
 
@@ -424,9 +694,14 @@ export default function RegiaApp({ onIngaggio }: RegiaAppProps) {
           </Rivela>
           <Rivela className="rg-piastrelle" ritardo={0.1}>
             {PIASTRELLE.map((p, i) => (
-              <span key={p.nome} className="rg-piastrella" data-piano={p.piano}>
+              /* i tre piani galleggiano a velocità diverse: il primo quasi
+                 fermo, il fondo lento e sfocato — è la profondità di campo
+                 dello «stack» sull'originale */
+              <motion.span key={p.nome} className="rg-piastrella" data-piano={p.piano}
+                animate={{ y: [0, p.piano * -3.5, 0] }}
+                transition={{ duration: 6 + p.piano * 2.5, delay: i * 0.55, repeat: Infinity, ease: "easeInOut" }}>
                 <SegnoPiastrella i={i} />{p.nome}
-              </span>
+              </motion.span>
             ))}
           </Rivela>
         </div>
@@ -444,6 +719,21 @@ export default function RegiaApp({ onIngaggio }: RegiaAppProps) {
             </p>
           </Rivela>
           <Rivela ritardo={0.1}><Terminale /></Rivela>
+        </div>
+      </section>
+
+      {/* ══ TESTIMONIANZE ══ */}
+      <section className="rg-sezione" style={{ paddingTop: 0 }}>
+        <div className="rg-contenitore">
+          <Rivela>
+            <span className="rg-occhiello">Chi la usa in scena</span>
+            <h2 className="rg-titolo">Tre voci dalla sala macchine.</h2>
+            <p className="rg-sotto">
+              Clienti di scena come tutto il resto — ma le frasi sono quelle che sentiamo
+              davvero quando un&apos;integrazione inizia a fare il suo lavoro.
+            </p>
+          </Rivela>
+          <Testimonianze />
 
           {/* ══ LA FIRMA ══ */}
           <Rivela className="rg-firma" ritardo={0.1}>

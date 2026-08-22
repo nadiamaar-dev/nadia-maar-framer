@@ -225,6 +225,91 @@ export const PIASTRELLE: Piastrella[] = [
   { nome: "Stripe", piano: 2 },
 ]
 
+/* ── ECO, l'agente: domande pronte e risposte scritte. La demo non
+   chiama nessun modello — recita un copione, e lo dichiara nel piè di
+   pagina. Ma il copione è quello giusto: domanda in linguaggio comune,
+   risposta coi DATI, non con la prosa. ── */
+
+export interface DomandaEco {
+  id: string
+  chip: string
+  risposta: string
+  tabella: { intestazioni: string[]; righe: string[][] }
+}
+
+export const DOMANDE_ECO: DomandaEco[] = [
+  {
+    id: "fermi",
+    chip: "Quali ordini sono fermi da più di 24 ore?",
+    risposta: "Tre ordini superano la soglia. Due aspettano il magazzino, uno il corriere — e per RG-4187 conviene cambiare vettore: BRT ha già rifiutato la presa due volte.",
+    tabella: {
+      intestazioni: ["Ordine", "Fermo da", "Dove", "Perché"],
+      righe: [
+        ["RG-4187", "52 ore", "Corriere", "presa rifiutata × 2"],
+        ["RG-4193", "31 ore", "Magazzino", "lotto in arrivo"],
+        ["RG-4201", "26 ore", "Magazzino", "inventario in corso"],
+      ],
+    },
+  },
+  {
+    id: "roma",
+    chip: "Chi consegna meglio a Roma?",
+    risposta: "Sul mese, DHL: consegna in 1,3 giorni con il 99,2% di puntualità. GLS costa meno ma perde un giorno pieno sulla fascia serale.",
+    tabella: {
+      intestazioni: ["Corriere", "Tempo medio", "Puntualità", "Spedizioni"],
+      righe: [
+        ["DHL", "1,3 giorni", "99,2%", "84"],
+        ["BRT", "1,8 giorni", "97,6%", "212"],
+        ["GLS", "2,4 giorni", "95,1%", "146"],
+      ],
+    },
+  },
+  {
+    id: "resi",
+    chip: "Da dove arrivano i resi di marzo?",
+    risposta: "Quasi tutti da un articolo solo: la Sedia Tempo spedita dal lotto 2187 — il difetto è del lotto, non del prodotto. Bloccato in uscita, il fornitore è già avvisato.",
+    tabella: {
+      intestazioni: ["Articolo", "Resi", "Lotto", "Causa"],
+      righe: [
+        ["Sedia Tempo", "11", "2187", "gamba difettosa"],
+        ["Lampada Iride", "2", "2201", "vetro incrinato"],
+        ["Mensola Voce", "1", "2195", "ripensamento"],
+      ],
+    },
+  },
+]
+
+/* ── le testimonianze: clienti di scena, monogrammi al posto delle foto
+   (il linguaggio visivo di questa pagina non ammette fotografia) ── */
+
+export interface Testimonianza {
+  iniziali: string
+  citazione: string
+  nome: string
+  ruolo: string
+}
+
+export const TESTIMONIANZE: Testimonianza[] = [
+  {
+    iniziali: "GM",
+    citazione: "Prima la mattina si apriva con cinque schede e una preghiera. Adesso si apre la regia, e basta guardare dove c'è il punto rosso.",
+    nome: "Giulia Marelli",
+    ruolo: "Operations, Marelli Casa",
+  },
+  {
+    iniziali: "SC",
+    citazione: "L'eccezione che prima era mezz'ora di telefonate — magazzino, corriere, cliente — adesso è un clic e quattro righe di registro.",
+    nome: "Stefano Carbone",
+    ruolo: "Logistica, Arreda Più",
+  },
+  {
+    iniziali: "EP",
+    citazione: "Il venerdì sera qualcosa si rompe sempre. La differenza è che ora sappiamo DOVE, prima ancora che chiami il cliente.",
+    nome: "Elena Pruni",
+    ruolo: "E-commerce, Elettra Forniture",
+  },
+]
+
 /* ── il terminale: le righe che scorrono nel registro eventi ── */
 
 export const REGISTRO: string[] = [

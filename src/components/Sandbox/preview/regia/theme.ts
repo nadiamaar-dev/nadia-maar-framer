@@ -270,7 +270,14 @@ export const REGIA_CSS = `
   .rg-nodo[data-tinta="ambra"] .rg-nodo-nome svg { color: var(--ambra); }
   .rg-nodo-descr { font-size: 10px; line-height: 1.4; color: var(--nebbia); margin-top: 4px; }
   .rg-giunto { flex: none; width: 22px; display: grid; place-items: center; position: relative; }
-  .rg-giunto::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 0.5px; background: var(--capello-forte); }
+  /* il tratteggio scorre: i dati passano anche quando nessuno guarda */
+  .rg-giunto::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+    background: repeating-linear-gradient(90deg, var(--capello-forte) 0 4px, transparent 4px 9px);
+    animation: rg-tratteggio 1.1s linear infinite;
+    opacity: 0.8;
+  }
+  @keyframes rg-tratteggio { to { background-position: 9px 0; } }
   .rg-giunto i { width: 5px; height: 5px; border-radius: 999px; background: var(--fumo); position: relative; }
   .rg-giunto[data-acceso="true"] i { background: var(--blu); box-shadow: 0 0 6px rgba(59, 130, 246, 0.7); }
   @media (max-width: 920px) { .rg-nastro { flex-direction: column; gap: 8px; } .rg-giunto { display: none; } }
@@ -285,11 +292,19 @@ export const REGIA_CSS = `
   }
   .rg-diario .blu { color: var(--blu-arco); }
 
-  /* ══ NASTRO LOGHI ══ */
+  /* ══ NASTRO LOGHI — giostra infinita, come sull'originale ══ */
   .rg-loghi {
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 20px 48px;
-    margin-top: 40px; opacity: 0.9;
+    margin-top: 44px; overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
   }
+  .rg-loghi-fila {
+    display: flex; align-items: center; gap: 56px; width: max-content;
+    padding-right: 56px;
+    animation: rg-giostra 26s linear infinite;
+  }
+  .rg-loghi:hover .rg-loghi-fila { animation-play-state: paused; }
+  @keyframes rg-giostra { to { transform: translateX(-50%); } }
   .rg-logo-voce { font-size: 14px; letter-spacing: -0.023em; color: var(--nebbia); white-space: nowrap;
     display: inline-flex; align-items: center; gap: 7px; }
   .rg-logo-voce svg { opacity: 0.7; }
@@ -353,6 +368,96 @@ export const REGIA_CSS = `
     background: var(--blu-arco); animation: rg-lampeggia 1.1s steps(2, start) infinite;
   }
   @keyframes rg-lampeggia { 50% { opacity: 0; } }
+
+  /* ══ ECO — l'agente che risponde sui dati ══ */
+  .rg-eco-corpo { padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; min-height: 330px; }
+  .rg-eco-chiedi {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--carbone); border-radius: 10px; padding: 11px 14px;
+    box-shadow: 0 0 0 0.5px var(--capello);
+    font-size: 13.5px; letter-spacing: -0.026em; color: var(--neve);
+    min-height: 42px;
+  }
+  .rg-eco-chiedi svg { flex: none; color: var(--acciaio); }
+  .rg-eco-chiedi .segna { color: var(--acciaio); }
+  .rg-eco-caret {
+    display: inline-block; width: 1.5px; height: 15px; margin-left: 1px; vertical-align: -2px;
+    background: var(--blu-arco); animation: rg-lampeggia 1s steps(2, start) infinite;
+  }
+  .rg-eco-pensa { display: inline-flex; gap: 4px; padding: 4px 2px; }
+  .rg-eco-pensa i {
+    width: 5px; height: 5px; border-radius: 999px; background: var(--nebbia);
+    animation: rg-pensa 1s ease-in-out infinite;
+  }
+  .rg-eco-pensa i:nth-child(2) { animation-delay: 0.16s; }
+  .rg-eco-pensa i:nth-child(3) { animation-delay: 0.32s; }
+  @keyframes rg-pensa { 0%, 100% { opacity: 0.25; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+  .rg-eco-risposta { display: flex; gap: 12px; align-items: flex-start; }
+  .rg-eco-avatar {
+    flex: none; width: 26px; height: 26px; border-radius: 999px; display: grid; place-items: center;
+    background: rgba(59, 130, 246, 0.14); color: var(--blu-arco);
+    box-shadow: 0 0 0 0.5px rgba(59, 130, 246, 0.4);
+  }
+  .rg-eco-testo { font-size: 13px; line-height: 1.55; letter-spacing: -0.026em; color: var(--gesso); }
+  .rg-eco-tab { margin-top: 10px; border-radius: 8.77px; overflow: hidden;
+    box-shadow: 0 0 0 0.5px var(--capello); }
+  .rg-eco-chip-fila { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+  .rg-eco-chip {
+    background: var(--velo); color: var(--gesso);
+    border: none; border-radius: 999px; padding: 7px 13px; cursor: pointer;
+    font-size: 12.5px; letter-spacing: -0.026em;
+    box-shadow: 0 0 0 0.5px var(--capello);
+    transition: background 0.18s ease, color 0.18s ease;
+  }
+  .rg-eco-chip:hover { background: rgba(255, 255, 255, 0.09); color: var(--neve); }
+  .rg-eco-chip:disabled { opacity: 0.45; cursor: default; }
+  .rg-eco-vuoto { font-size: 12.5px; color: var(--acciaio); }
+
+  /* ══ LE CAPACITÀ — quattro schede con la loro micro-grafica ══ */
+  .rg-capacita { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 44px; }
+  .rg-capa {
+    background: var(--grafite); border-radius: 12px; padding: 20px;
+    box-shadow: var(--ril-pannello);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .rg-capa-scena {
+    height: 74px; border-radius: 8.77px; display: grid; place-items: center;
+    background: var(--tela); box-shadow: 0 0 0 0.5px var(--capello);
+    color: var(--nebbia); overflow: hidden; position: relative;
+  }
+  .rg-capa h3 { font-size: 14px; font-weight: 500; letter-spacing: -0.023em; color: var(--neve); margin: 4px 0 0; }
+  .rg-capa p { font-size: 12px; line-height: 1.5; color: var(--nebbia); margin: 0; }
+  @media (max-width: 980px) { .rg-capacita { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .rg-capacita { grid-template-columns: 1fr; } }
+
+  /* le micro-scene */
+  .rg-capa-log { font-family: ${RG_MONO}; font-size: 8.5px; line-height: 1.9; color: var(--acciaio);
+    padding: 0 14px; width: 100%; }
+  .rg-capa-log b { color: var(--menta); font-weight: 400; }
+
+  /* ══ TESTIMONIANZE ══ */
+  .rg-teste { position: relative; max-width: 680px; margin: 44px auto 0; }
+  .rg-testimonianza {
+    background: var(--grafite); border-radius: 12px; padding: 28px 32px;
+    box-shadow: var(--ril-pannello); text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+  .rg-teste-avatar {
+    width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center;
+    background: var(--velo); color: var(--gesso);
+    box-shadow: 0 0 0 0.5px var(--capello-forte);
+    font-size: 14px; letter-spacing: 0.02em;
+  }
+  .rg-teste-citazione { font-size: 17px; font-weight: 400; line-height: 1.5; letter-spacing: -0.2px;
+    color: var(--neve); max-width: 46ch; margin: 0; }
+  .rg-teste-chi { font-size: 12.5px; color: var(--acciaio); }
+  .rg-teste-chi b { color: var(--gesso); font-weight: 500; }
+  .rg-teste-punti { display: flex; gap: 8px; justify-content: center; margin-top: 18px; }
+  .rg-teste-punto {
+    width: 6px; height: 6px; border-radius: 999px; border: none; cursor: pointer; padding: 0;
+    background: var(--fumo); transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .rg-teste-punto[data-on="true"] { background: var(--blu); transform: scale(1.25); }
 
   /* ══ LA FIRMA DELL'AGENZIA ══ */
   .rg-firma {
