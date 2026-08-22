@@ -630,4 +630,40 @@ test.describe("demo lancio saas (Soglia)", () => {
     await expect(page.getByTestId("sg-scheda-banco")).toHaveCSS("background-color", "rgb(255, 255, 255)")
     await expect(page.locator(".sg-root")).toHaveCSS("background-color", "rgb(5, 6, 15)")
   })
+
+  test("i blocchi di coinvolgimento raccontano e l'agenzia firma", async ({ page }) => {
+    await page.goto("/demo/lancio-saas")
+
+    /* Il nastro dei clienti scorre e i marchi sono dichiarati inventati. */
+    await expect(page.locator(".sg-nastro")).toBeVisible()
+    await expect(page.locator("footer.sg-piede")).toContainText("fantasia")
+
+    /* Il diagramma spiega il prodotto: dentro c'è il token, non fuffa. */
+    await expect(page.locator(".sg-flusso")).toContainText("JWT firmato")
+    await expect(page.locator(".sg-flusso")).toContainText("Il tuo backend")
+
+    /* I contatori salgono fino al valore vero quando entrano in vista. */
+    await page.locator(".sg-statistiche").scrollIntoViewIfNeeded()
+    await expect(page.locator(".sg-statistiche")).toContainText("99,99", { timeout: 10_000 })
+    await expect(page.locator(".sg-statistiche")).toContainText("10.000", { timeout: 10_000 })
+
+    /* Niente prezzi: è una dimostrazione, non una vendita. La sezione
+       sicurezza mostra il radar e le quattro difese. */
+    await expect(page.locator(".sg-root")).not.toContainText("€")
+    await expect(page.locator(".sg-radar")).toBeVisible()
+    await expect(page.locator(".sg-sicurezza")).toContainText("Password trapelate")
+
+    /* L'orbita tiene i sei metodi intorno alla stessa sessione. */
+    await expect(page.locator(".sg-orbita .sg-orb-icona")).toHaveCount(6)
+
+    /* Le domande si aprono e rispondono sul serio (portabilità dei dati). */
+    await page.getByRole("button", { name: /portare via i miei utenti/i }).click()
+    await expect(page.locator(".sg-faq")).toContainText(/CSV/i)
+
+    /* La firma dell'agenzia porta alle pagine VERE del sito: è l'unico
+       punto della demo che esce dalla finzione, e deve uscire bene. */
+    await expect(page.locator('.sg-agenzia a[href="/foundry"]')).toBeVisible()
+    await expect(page.locator('.sg-agenzia a[href="/contatti"]')).toBeVisible()
+    await expect(page.locator(".sg-agenzia")).toContainText("Nadia Maar")
+  })
 })
