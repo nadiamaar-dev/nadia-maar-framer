@@ -16,6 +16,8 @@ import { CONTACT, mailLink } from "../lib/contact"
 import { useLocale } from "../lib/i18n/LocaleContext"
 import { useT } from "../lib/i18n/t"
 import { FOOTER_STR } from "../lib/i18n/strings/footer"
+import { LEGAL_COMMON_STR } from "../lib/i18n/strings/legalCommon"
+import { LEGAL_ROUTES } from "../lib/legal"
 
 /* ── design tokens (self-contained so the component has no peer deps) ── */
 const T = {
@@ -71,6 +73,24 @@ const FOOTER_CSS = `
     width: 100%;
     box-sizing: border-box;
   }
+
+  .nm-footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+  }
+  .nm-footer-legal a {
+    font-family: 'JetBrains Mono','SF Mono',ui-monospace,monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.62);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nm-footer-legal a:hover { color: #FFFFFF; text-decoration: underline; text-underline-offset: 3px; }
+  .nm-footer-legal span[aria-hidden] { color: rgba(255,255,255,0.22); }
 
   @media (max-width: 768px) {
     .nm-footer-wrap {
@@ -225,8 +245,20 @@ export interface FooterProps {
 
 export default function Footer({ onContact }: FooterProps) {
   const t = useT(FOOTER_STR)
+  const legal = useT(LEGAL_COMMON_STR).links
   const { href: L } = useLocale()
   const NAV_LINKS = navLinks(t, L)
+
+  /* I documenti legali vivono in fondo, dove chi li cerca li cerca — e dove
+     devono comunque essere: l'informativa privacy va resa raggiungibile da
+     ogni pagina, non solo da quella del modulo di contatto. Le etichette
+     arrivano dalle stringhe dei documenti stessi, così il footer non ha una
+     seconda versione dei loro nomi da tenere allineata. */
+  const LEGAL_LINKS = [
+    { label: legal.privacy, href: L(LEGAL_ROUTES.privacy) },
+    { label: legal.cookie,  href: L(LEGAL_ROUTES.cookie) },
+    { label: legal.terms,   href: L(LEGAL_ROUTES.terms) },
+  ]
 
   /* inject scoped CSS once */
   useEffect(() => {
@@ -335,9 +367,19 @@ export default function Footer({ onContact }: FooterProps) {
 
         {/* ── bottom row — copyright + socials ── */}
         <div className="nm-footer-bottom">
-          <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: "#FFFFFF" }}>
-            {t.copyright}
-          </span>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", textTransform: "uppercase", color: "#FFFFFF" }}>
+              {t.copyright}
+            </span>
+            <nav className="nm-footer-legal" aria-label={t.legalNav}>
+              {LEGAL_LINKS.map(({ label, href }, i) => (
+                <React.Fragment key={href}>
+                  {i > 0 && <span aria-hidden>·</span>}
+                  <a href={href}>{label}</a>
+                </React.Fragment>
+              ))}
+            </nav>
+          </div>
           <ProofStrip />
           <div className="nm-footer-socials" style={{ display: "flex", gap: 8 }}>
             {SOCIALS.map(({ label, href, Icon }) => (

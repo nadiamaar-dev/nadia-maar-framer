@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { useT } from "../lib/i18n/t"
 import { AUTH_STR } from "../lib/i18n/strings/auth"
+import { useLocale } from "../lib/i18n/LocaleContext"
+import { LEGAL_ROUTES } from "../lib/legal"
 import { DEFAULT_PUBLIC_SETTINGS, getSiteSettings, type PublicSiteSettings } from "../lib/siteSettings"
 import { grantConsent, hasStoredConsent, refuseConsent } from "../lib/measure"
 
@@ -26,6 +28,7 @@ const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 export default function SiteChrome() {
   const t = useT(AUTH_STR).chrome
+  const { href: L } = useLocale()
   const [s, setS] = useState<PublicSiteSettings | null>(null)
   const [promoClosed, setPromoClosed] = useState(() => {
     try { return sessionStorage.getItem("nm-promo-closed") === "1" } catch { return false }
@@ -120,6 +123,16 @@ export default function SiteChrome() {
           }}>
             {t.consentBody}
           </p>
+          <a
+            href={L(LEGAL_ROUTES.cookie)}
+            style={{
+              display: "inline-block", margin: "0 0 14px",
+              fontFamily: MONO, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase",
+              color: "#E4697A", textDecoration: "underline", textUnderlineOffset: 3,
+            }}
+          >
+            {t.consentMore}
+          </a>
           <div style={{ display: "flex", gap: 9 }}>
             <button
               type="button"

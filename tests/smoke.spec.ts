@@ -448,3 +448,78 @@ test.describe("regressioni sulle prestazioni", () => {
     }
   })
 })
+
+test.describe("documenti legali", () => {
+  /* Il criterio di questo file — «se si rompe, smettono di arrivare
+     richieste, o ne arrivano di sbagliate» — qui vale al contrario: se si
+     rompe, il sito raccoglie dati di persone senza dire loro come li tratta.
+     Un'informativa raggiungibile solo digitando l'indirizzo a mano non
+     assolve l'articolo 13 del GDPR, e un modulo che invia nome ed email
+     senza un link all'informativa è il difetto contestato per primo. */
+
+  test("le tre pagine legali rispondono nelle due lingue e non si somigliano", async ({ page }) => {
+    const rotte = ["/privacy", "/cookie-policy", "/termini"]
+    const titoli = new Set<string>()
+
+    for (const rotta of rotte) {
+      const risposta = await page.goto(rotta)
+      expect(risposta?.status(), `${rotta} deve rispondere 200`).toBe(200)
+      await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 })
+      titoli.add((await page.locator("h1").first().innerText()).trim())
+
+      /* L'indice ancorato è ciò che rende citabile una singola clausola:
+         senza, /termini#recesso-risoluzione non porta da nessuna parte. */
+      expect(await page.locator(".lg-toc a").count(), `${rotta} deve avere un indice`).toBeGreaterThan(4)
+
+      const inglese = await page.goto(`/en${rotta}`)
+      expect(inglese?.status(), `/en${rotta} deve rispondere 200`).toBe(200)
+      await expect(page.locator("html")).toHaveAttribute("lang", "en")
+      titoli.add((await page.locator("h1").first().innerText()).trim())
+    }
+
+    /* Sei versioni, sei titoli: due documenti con lo stesso titolo vogliono
+       dire che una traduzione non è stata agganciata. */
+    expect(titoli.size).toBe(rotte.length * 2)
+  })
+
+  test("il footer porta ai tre documenti restando nella lingua che si legge", async ({ page }) => {
+    await page.goto("/")
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 })
+    await page.locator("footer").scrollIntoViewIfNeeded()
+
+    const legale = page.locator(".nm-footer-legal a")
+    await expect(legale).toHaveCount(3)
+    expect(await legale.evaluateAll(as => as.map(a => a.getAttribute("href"))))
+      .toEqual(["/privacy", "/cookie-policy", "/termini"])
+
+    /* Dal footer inglese si resta in inglese: un rimando che riporta in
+       italiano a metà lettura è il modo più rapido di perdere chi legge. */
+    await page.goto("/en")
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 })
+    await page.locator("footer").scrollIntoViewIfNeeded()
+    expect(await page.locator(".nm-footer-legal a").evaluateAll(as => as.map(a => a.getAttribute("href"))))
+      .toEqual(["/en/privacy", "/en/cookie-policy", "/en/termini"])
+  })
+
+  test("l'informativa è raggiungibile dal modulo, prima dell'invio", async ({ page }) => {
+    await page.goto("/contatti")
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 })
+    await expect(page.locator('form a[href="/privacy"]')).toBeVisible()
+  })
+
+  test("il titolare è identificato e i dati non ancora attribuiti sono dichiarati tali", async ({ page }) => {
+    await page.goto("/privacy")
+    await expect(page.locator("h1").first()).toBeVisible({ timeout: 15_000 })
+
+    /* Un'informativa senza un titolare identificabile e senza un recapito a
+       cui esercitare i diritti non è un'informativa. */
+    const scheda = page.locator(".lg-idcard")
+    await expect(scheda).toContainText("Nadia Maar")
+    await expect(scheda).toContainText("@")
+
+    /* Finché la partita IVA non esiste, la pagina non deve mostrarne una:
+       né inventata, né come campo vuoto. Il segnaposto "—" è quello usato in
+       tutto il progetto per «non c'è ancora», e non va mai in pagina. */
+    await expect(scheda).not.toContainText("—")
+  })
+})

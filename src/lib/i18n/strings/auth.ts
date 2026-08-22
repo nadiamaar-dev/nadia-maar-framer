@@ -43,6 +43,10 @@ const it = {
     consentBody: "Vorrei usare strumenti di analisi di terze parti per capire come viene usato il sito. Le mie statistiche interne funzionano già senza cookie e senza il tuo indirizzo IP: se rifiuti, non perdo nulla di importante.",
     consentRefuse: "Rifiuta",
     consentAccept: "Accetta",
+    /* Il banner deve dire dove si legge il dettaglio: senza il rimando alla
+       cookie policy il consenso non è informato, e un consenso non informato
+       non è un consenso. */
+    consentMore: "Leggi la cookie policy",
   },
 }
 
@@ -82,6 +86,7 @@ const en: typeof it = {
     consentBody: "I'd like to use third-party analytics tools to understand how the site is used. My own internal statistics already work without cookies and without your IP address: if you decline, I lose nothing important.",
     consentRefuse: "Decline",
     consentAccept: "Accept",
+    consentMore: "Read the cookie policy",
   },
 }
 

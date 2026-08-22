@@ -12,6 +12,9 @@ const it = {
   bookCall: "Prenota una Call",
   writeUs: "Scrivici",
   copyright: "© NADIA MAAR 2026 — Digital Architecture Studio",
+  /* L'etichetta del gruppo di link legali, letta dagli screen reader: senza,
+     è una fila di parole sciolte accanto al copyright. */
+  legalNav: "Informative e condizioni",
 
   nav: {
     home: "Home",
@@ -43,6 +46,7 @@ const en: typeof it = {
   bookCall: "Book a Call",
   writeUs: "Write to us",
   copyright: "© NADIA MAAR 2026 — Digital Architecture Studio",
+  legalNav: "Policies and terms",
 
   nav: {
     home: "Home",

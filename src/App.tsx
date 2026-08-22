@@ -20,6 +20,12 @@ const CorporatePage     = lazy(() => import("./NadiaMaar_ServicePage").then(m =>
 const WebAppPage        = lazy(() => import("./NadiaMaar_ServicePage").then(m => ({ default: m.WebAppPage })))
 const SeoPage           = lazy(() => import("./NadiaMaar_ServicePage").then(m => ({ default: m.SeoPage })))
 const AiPage            = lazy(() => import("./NadiaMaar_ServicePage").then(m => ({ default: m.AiPage })))
+/* I tre documenti legali stanno in un pacchetto solo: chi apre l'informativa
+   privacy apre spesso subito dopo la cookie policy, e la seconda arriva
+   allora senza un altro viaggio di rete. */
+const PrivacyPage       = lazy(() => import("./NadiaMaar_Legal").then(m => ({ default: m.PrivacyPage })))
+const CookiePage        = lazy(() => import("./NadiaMaar_Legal").then(m => ({ default: m.CookiePage })))
+const TermsPage         = lazy(() => import("./NadiaMaar_Legal").then(m => ({ default: m.TermsPage })))
 const DigitalFoundry    = lazy(() => import("./DigitalFoundry"))
 const DemoSupplierPortal = lazy(() => import("./DemoSupplierPortal"))
 const DemoCrmDashboard   = lazy(() => import("./DemoCrmDashboard"))
@@ -80,6 +86,12 @@ export default function App() {
     case "/web-app":   el = <WebAppPage />; break
     case "/seo":       el = <SeoPage />; break
     case "/ai":        el = <AiPage />; break
+    /* Le pagine legali non dipendono da nessuna impostazione del pannello:
+       un'informativa privacy raggiungibile solo quando una funzione è accesa
+       non assolve l'obbligo di informare. */
+    case "/privacy":      el = <PrivacyPage />; break
+    case "/cookie-policy": el = <CookiePage />; break
+    case "/termini":      el = <TermsPage />; break
     case "/foundry":
       if (foundryOn) { el = <DigitalFoundry />; break }
       el = <NotFound />; known = false; break

@@ -25,6 +25,12 @@ export const SITE_ROUTES: { slug: string; label: string }[] = [
   { slug: "/web-app", label: "Web app" },
   { slug: "/seo", label: "SEO" },
   { slug: "/ai", label: "AI" },
+  /* I tre documenti legali: indicizzabili come le altre, e quindi con una
+     scheda propria che si può scrivere dal pannello invece di ereditare il
+     titolo predefinito del sito. */
+  { slug: "/privacy", label: "Privacy policy" },
+  { slug: "/cookie-policy", label: "Cookie policy" },
+  { slug: "/termini", label: "Termini e condizioni" },
 ]
 
 /** Rotte private: non entrano in sitemap né in llms.txt, e vanno bloccate. */

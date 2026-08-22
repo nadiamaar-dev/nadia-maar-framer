@@ -41,7 +41,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/(about|architecture|projects|contatti|foundry|ecommerce|corporate|web-app|seo|ai|cabinet|dashboard)",
+      "source": "/(about|architecture|projects|contatti|foundry|ecommerce|corporate|web-app|seo|ai|privacy|cookie-policy|termini|cabinet|dashboard)",
       "destination": "/index.html"
     },
     {
@@ -49,7 +49,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/en/(about|architecture|projects|contatti|foundry|ecommerce|corporate|web-app|seo|ai)",
+      "source": "/en/(about|architecture|projects|contatti|foundry|ecommerce|corporate|web-app|seo|ai|privacy|cookie-policy|termini)",
       "destination": "/index.html"
     },
     {

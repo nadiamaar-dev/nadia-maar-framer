@@ -55,6 +55,18 @@ const it: Record<string, PageMeta> = {
     title: "Integrazione AI & sistemi intelligenti — Nadia Maar",
     description: "Agenti, modelli linguistici e ricerca sui documenti aziendali, integrati nei processi esistenti. Casi d'uso scelti perché hanno un ritorno calcolabile.",
   },
+  "/privacy": {
+    title: "Informativa privacy — Nadia Maar",
+    description: "Quali dati raccoglie questo sito, per quali finalità, su quale base giuridica e per quanto tempo. Statistiche senza cookie, IP mai conservato in chiaro, diritti dell'interessato.",
+  },
+  "/cookie-policy": {
+    title: "Cookie policy — Nadia Maar",
+    description: "L'elenco completo dei cookie e delle memorie usate dal sito, con finalità e durata. Nessun cookie di profilazione proprio: gli strumenti di terze parti partono solo con il consenso.",
+  },
+  "/termini": {
+    title: "Termini e condizioni — Nadia Maar",
+    description: "Regole d'uso del sito e condizioni dei servizi: conclusione del contratto, perimetro, pagamenti, proprietà del codice consegnato, garanzia, recesso e foro competente.",
+  },
   "/foundry": {
     title: "Digital Foundry — la libreria di soluzioni",
     description: "Esplora soluzioni e componenti reali: portali B2B, e-commerce, landing e componenti UI. Salva ciò che serve nel Blueprint e ricevi un'offerta su misura.",
@@ -101,6 +113,18 @@ const en: Record<string, PageMeta> = {
   "/ai": {
     title: "AI integration & intelligent systems — Nadia Maar",
     description: "Agents, language models and search over company documents, built into existing processes. Use cases chosen because the return can be calculated.",
+  },
+  "/privacy": {
+    title: "Privacy notice — Nadia Maar",
+    description: "What data this site collects, for which purposes, on which legal basis and for how long. Cookieless statistics, IP addresses never stored in clear, data subject rights.",
+  },
+  "/cookie-policy": {
+    title: "Cookie policy — Nadia Maar",
+    description: "The full list of cookies and browser storage this site uses, with purposes and durations. No first-party profiling cookies: third-party tools load only with consent.",
+  },
+  "/termini": {
+    title: "Terms and conditions — Nadia Maar",
+    description: "Site rules and service conditions: how the contract is formed, scope, payments, ownership of delivered code, warranty, withdrawal and jurisdiction.",
   },
   "/foundry": {
     title: "Digital Foundry — the solutions library",

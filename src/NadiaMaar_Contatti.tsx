@@ -27,7 +27,10 @@ import FoundryConfigurator from "./components/foundry/FoundryConfigurator"
 import { sendContact } from "./lib/sendContact"
 import { CONTACT } from "./lib/contact"
 import { useT } from "./lib/i18n/t"
+import { useLocale } from "./lib/i18n/LocaleContext"
 import { CONTATTI_STR } from "./lib/i18n/strings/contatti"
+import { LEGAL_COMMON_STR } from "./lib/i18n/strings/legalCommon"
+import { LEGAL_ENTITY, LEGAL_ROUTES, isSet } from "./lib/legal"
 
 const T = {
   bg: "#060C18", text: "#FFFFFF", muted: "#FFFFFF",
@@ -49,13 +52,16 @@ const TEL_DISPLAY = CONTACT.telDisplay
 const TEL_HREF = CONTACT.telHref
 const TELEGRAM = CONTACT.telegram
 
-/* PLACEHOLDER — dati amministrativi da sostituire con quelli reali.
-   Finché contengono "—" il blocco non viene mostrato: meglio niente che
-   un numero inventato su una pagina che deve ispirare fiducia. */
+/* I dati amministrativi arrivano da src/lib/legal.ts, lo stesso posto da cui
+   li prendono le tre pagine legali: prima erano ricopiati qui, e due copie
+   dello stesso numero sono due numeri che il giorno dell'attribuzione della
+   partita IVA vanno aggiornati entrambi — cioè uno solo, in pratica.
+   Finché valgono "—" il blocco non viene mostrato: meglio niente che un
+   numero inventato su una pagina che deve ispirare fiducia. */
 const LEGALE = {
-  ragioneSociale: "—",
-  piva: "—",
-  pec: "—",
+  ragioneSociale: LEGAL_ENTITY.name,
+  piva: LEGAL_ENTITY.vat,
+  pec: LEGAL_ENTITY.pec,
 }
 
 const CSS = `
@@ -143,6 +149,8 @@ const labelStyle: React.CSSProperties = {
 
 function ContactForm() {
   const t = useT(CONTATTI_STR).form
+  const legal = useT(LEGAL_COMMON_STR)
+  const { href: L } = useLocale()
   const [f, setF] = useState({ name: "", email: "", company: "", message: "", website: "" })
   const [busy, setBusy] = useState(false)
   const [sent, setSent] = useState(false)
@@ -233,8 +241,14 @@ function ContactForm() {
         </span>
       </motion.button>
 
+      {/* L'articolo 13 del GDPR vuole che l'informativa sia raggiungibile
+          PRIMA dell'invio, non dopo: il link sta accanto al pulsante, non
+          solo in fondo alla pagina. */}
       <p style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.6, color: "rgba(255,255,255,0.5)", margin: 0 }}>
-        {t.privacy}
+        {t.privacy}{" "}
+        <a href={L(LEGAL_ROUTES.privacy)} style={{ color: "rgba(255,255,255,0.72)", textDecoration: "underline", textUnderlineOffset: 3 }}>
+          {legal.formNotice}
+        </a>
       </p>
     </form>
   )
@@ -311,7 +325,9 @@ export default function NadiaMaarContatti() {
   const t = useT(CONTATTI_STR)
   const COSA_SCRIVERE = t.how.points
   const DOPO = t.after.steps
-  const hasLegale = Object.values(LEGALE).some(v => v !== "—")
+  /* Il nome c'è sempre; ciò che rende utile il blocco sono partita IVA e
+     PEC, e senza almeno uno dei due la riga direbbe soltanto «Nadia Maar». */
+  const hasLegale = isSet(LEGALE.piva) || isSet(LEGALE.pec)
   const [cfgOpen, setCfgOpen] = useState(false)
 
   return (

@@ -12,6 +12,8 @@ import { useLocale } from "../../lib/i18n/LocaleContext"
 import { firstTouch, sessionId, trackEvent } from "../../lib/measure"
 import { DATE_TAG, useT } from "../../lib/i18n/t"
 import { CONFIGURATOR_STR } from "../../lib/i18n/strings/configurator"
+import { LEGAL_COMMON_STR } from "../../lib/i18n/strings/legalCommon"
+import { LEGAL_ROUTES } from "../../lib/legal"
 
 /* ══════════════════════════════════════════════════════════════════════════
    DIGITAL FOUNDRY — SOLUTION ARCHITECT
@@ -726,7 +728,8 @@ function FInput({ label, placeholder, type = "text", value, onChange, required =
 function LeadModal() {
   const tCfg          = useT(CONFIGURATOR_STR)
   const t             = tCfg.modal
-  const { locale }    = useLocale()
+  const legal         = useT(LEGAL_COMMON_STR)
+  const { locale, href: L } = useLocale()
   const vector        = useFoundryStore(s => s.vector)
   const selected      = useFoundryStore(s => s.selected)
   const closeModal    = useFoundryStore(s => s.closeModal)
@@ -958,8 +961,15 @@ function LeadModal() {
                 ) : (<>{t.submit} <span style={{ fontSize: 15 }}>→</span></>)}
               </motion.button>
 
+              {/* Come nel modulo di /contatti: l'informativa va raggiungibile
+                  prima dell'invio, non dopo. */}
               <p style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)", margin: "2px 0 0", textAlign: "center" }}>
                 {t.privacy}
+                {" · "}
+                <a href={L(LEGAL_ROUTES.privacy)} target="_blank" rel="noopener noreferrer"
+                  style={{ color: "rgba(255,255,255,0.78)", textDecoration: "underline", textUnderlineOffset: 3 }}>
+                  {legal.formNotice}
+                </a>
               </p>
             </form>
           </>

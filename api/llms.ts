@@ -44,9 +44,12 @@ const FALLBACK: Record<string, string> = {
   "/web-app": "Applicazioni web su misura: aree riservate, dashboard, gestionali.",
   "/seo": "SEO tecnica e contenutistica: indicizzazione, Core Web Vitals, struttura semantica.",
   "/ai": "Integrazioni AI: assistenti, automazioni e ricerca semantica dentro il prodotto.",
+  "/privacy": "Informativa privacy: dati trattati, finalità, basi giuridiche, destinatari, conservazione e diritti dell'interessato.",
+  "/cookie-policy": "Cookie policy: elenco di cookie e memorie del browser usati dal sito, con finalità e durata.",
+  "/termini": "Termini e condizioni d'uso del sito e condizioni generali dei servizi professionali.",
 }
 
-const ORDER = ["/", "/foundry", "/ecommerce", "/corporate", "/web-app", "/seo", "/ai", "/projects", "/about", "/contatti"]
+const ORDER = ["/", "/foundry", "/ecommerce", "/corporate", "/web-app", "/seo", "/ai", "/projects", "/about", "/contatti", "/privacy", "/cookie-policy", "/termini"]
 
 export default async function handler(req: EdgeReq, res: EdgeRes) {
   const origin = originOf(req)
