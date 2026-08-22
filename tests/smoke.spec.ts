@@ -601,3 +601,65 @@ test.describe("demo lancio saas (Soglia)", () => {
     await expect(page.locator(".sg-agenzia")).toContainText("Nadia Maar")
   })
 })
+
+test.describe("demo regia (torre di controllo)", () => {
+  test.slow()
+
+  test("la coda scorre, l'eccezione si risolve e l'ordine attraversa il nastro", async ({ page }) => {
+    await page.goto("/demo/regia")
+
+    /* La marea: la tabella si riempie da sola e i contatori salgono. */
+    await expect(page.locator('[data-testid="rg-feed"] tbody tr')).not.toHaveCount(0)
+    const arrivatiPrima = Number(await page.getByTestId("rg-arrivati").innerText())
+    await expect
+      .poll(async () => Number(await page.getByTestId("rg-arrivati").innerText()), { timeout: 10_000 })
+      .toBeGreaterThan(arrivatiPrima)
+
+    /* Gli stati maturano: prima o poi una riga è «in consegna». */
+    await expect(page.locator('[data-s="in consegna"]').first()).toBeVisible({ timeout: 15_000 })
+
+    /* L'eccezione si risolve DAVANTI agli occhi: i passi del rimedio
+       compaiono uno alla volta, poi il contatore scende. */
+    await expect(page.getByTestId("rg-ecc-aperte")).toHaveText("2")
+    await page.locator('[data-ecc="ex-1"]').getByRole("button", { name: "Risolvi con la regia" }).click()
+    await expect(page.locator('[data-ecc="ex-1"]')).toContainText("magazzino di Bergamo", { timeout: 10_000 })
+    await expect(page.locator('[data-ecc="ex-1"]')).toContainText("Risolta", { timeout: 10_000 })
+    await expect(page.getByTestId("rg-ecc-aperte")).toHaveText("1")
+
+    /* Un nodo si interroga col clic: il diario mostra le sue righe. */
+    await page.locator('[data-nodo="stock"]').click()
+    await expect(page.getByTestId("rg-diario")).toContainText("bergamo: 14 disponibili")
+
+    /* «Fai correre un ordine»: il nastro si accende nodo per nodo e alla
+       fine il pulsante invita a rifarlo — la prova è ripetibile. */
+    await page.getByTestId("rg-avvia").click()
+    await expect(page.locator('[data-nodo="chiusura"]')).toHaveAttribute("data-attivo", "true", { timeout: 10_000 })
+    await expect(page.getByTestId("rg-avvia")).toHaveText(/un altro ordine/, { timeout: 10_000 })
+    await expect(page.getByTestId("rg-diario")).toContainText("XML inviato allo SdI")
+  })
+
+  test("linguette, terminale e la firma dell'agenzia", async ({ page }) => {
+    await page.goto("/demo/regia")
+
+    /* Le linguette cambiano la vetrina: il magazzino mostra le giacenze. */
+    await page.locator('[data-linguetta="magazzino"]').click()
+    await expect(page.getByTestId("rg-vetrina")).toContainText("Lampada Iride")
+    await page.locator('[data-linguetta="regole"]').click()
+    await expect(page.getByTestId("rg-vetrina")).toContainText("B2B > 30 colli")
+
+    /* Il registro scrive righe nuove col passare del tempo. */
+    const t = page.getByTestId("rg-terminale")
+    await t.scrollIntoViewIfNeeded()
+    const righePrima = (await t.innerText()).split("\n").filter(Boolean).length
+    await expect
+      .poll(async () => (await t.innerText()).split("\n").filter(Boolean).length, { timeout: 10_000 })
+      .toBeGreaterThan(righePrima)
+
+    /* Niente prezzi: si dimostra, non si vende. E la firma porta alle
+       pagine vere del sito. */
+    await expect(page.locator(".rg-root")).not.toContainText("€")
+    await expect(page.locator('.rg-firma a[href="/contatti"]')).toBeVisible()
+    await expect(page.locator('.rg-firma a[href="/foundry"]')).toBeVisible()
+    await expect(page.locator(".rg-firma")).toContainText("Nadia Maar")
+  })
+})

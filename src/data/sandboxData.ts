@@ -77,6 +77,15 @@ export const SANDBOX_ART: Omit<SandboxItem, "title" | "description">[] = [
     previewUrl: "/previews/preventivo-roi",
   },
   {
+    id: "b2b-regia-operativa",
+    category: "B2B Portals",
+    type: "full-site",
+    tech: ["React", "TypeScript", "Zustand", "Framer Motion"],
+    accent: "#3B82F6",
+    demo: "ops-control",
+    previewUrl: "/previews/regia",
+  },
+  {
     id: "b2b-distributor-hub",
     category: "B2B Portals",
     type: "full-site",

@@ -82,6 +82,10 @@ const it = {
       title: "Preventivo & ROI",
       description: "Configuratore dove le scelte si vincolano: la piattaforma cambia i prezzi dei moduli, il ritorno si calcola sui tuoi numeri, l'ordine esce in JSON.",
     },
+    "b2b-regia-operativa": {
+      title: "Regia operativa",
+      description: "Torre di controllo per l'e-commerce: la coda ordini scorre in diretta, le eccezioni si risolvono con un clic e un ordine attraversa il nastro sotto i tuoi occhi.",
+    },
     "b2b-distributor-hub": {
       title: "Distributor Hub",
       description: "Gestione agenti, listini per area geografica e ordini white-label.",
@@ -197,6 +201,10 @@ const en: typeof it = {
     "b2b-preventivo-roi": {
       title: "Quote & ROI engine",
       description: "A configurator where choices constrain each other: the platform reprices the modules, the return is computed on your own numbers, the order comes out as JSON.",
+    },
+    "b2b-regia-operativa": {
+      title: "Ops mission control",
+      description: "A control tower for e-commerce: the order queue streams live, exceptions resolve with one click and an order runs the pipeline before your eyes.",
     },
     "b2b-distributor-hub": {
       title: "Distributor Hub",

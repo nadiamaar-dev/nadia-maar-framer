@@ -10,7 +10,7 @@
 /* "luxury-fashion" (/demo/atelier-moda) è spenta a richiesta: tolta da
    qui perché un DemoId non collegato a nessuna rotta farebbe puntare
    una scheda del catalogo a un 404. Il componente resta nel repository. */
-export type DemoId = "supplier-portal" | "crm-dashboard" | "onboarding-kyc" | "preventivo-roi" | "saas-launch"
+export type DemoId = "supplier-portal" | "crm-dashboard" | "onboarding-kyc" | "preventivo-roi" | "saas-launch" | "ops-control"
 
 export const DEMO_HREF: Record<DemoId, string> = {
   "supplier-portal": "/demo/portale-fornitori",
@@ -18,6 +18,7 @@ export const DEMO_HREF: Record<DemoId, string> = {
   "onboarding-kyc": "/demo/onboarding-kyc",
   "preventivo-roi": "/demo/preventivo-roi",
   "saas-launch": "/demo/lancio-saas",
+  "ops-control": "/demo/regia",
 }
 
 /** Tutte le rotte demo: serve a App.tsx e alla sitemap per non divergere. */

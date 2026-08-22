@@ -26,6 +26,7 @@ const DemoCrmDashboard   = lazy(() => import("./DemoCrmDashboard"))
 const DemoOnboardingKyc  = lazy(() => import("./DemoOnboardingKyc"))
 const DemoQuoteEngine    = lazy(() => import("./DemoQuoteEngine"))
 const DemoSoglia         = lazy(() => import("./DemoSoglia"))
+const DemoRegia          = lazy(() => import("./DemoRegia"))
 const CabinetApp        = lazy(() => import("./portal/cabinet/CabinetApp"))
 const DashboardGate     = lazy(() => import("./DashboardGate"))
 
@@ -105,6 +106,9 @@ export default function App() {
        resta nel repository per un'eventuale riaccensione. */
     case "/demo/lancio-saas":
       if (foundryOn) { el = <DemoSoglia />; bare = true; break }
+      el = <NotFound />; known = false; break
+    case "/demo/regia":
+      if (foundryOn) { el = <DemoRegia />; bare = true; break }
       el = <NotFound />; known = false; break
     case "/cabinet":   el = <CabinetApp />; break
     case "/dashboard": el = <DashboardGate />; break
