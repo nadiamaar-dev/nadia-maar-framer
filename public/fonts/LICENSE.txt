@@ -8,6 +8,7 @@ licenza accompagni le copie.
   Space Grotesk      © Florian Karsten https://github.com/floriankarsten/space-grotesk
   Geist              © Vercel          https://github.com/vercel/geist-font
   Inter              © Rasmus Andersson https://github.com/rsms/inter
+  Fraunces           © Undercase Type   https://github.com/undercasetype/fraunces
 
 Testo completo della licenza: https://openfontlicense.org
 I file sono i sottoinsiemi latin e latin-ext delle versioni variabili

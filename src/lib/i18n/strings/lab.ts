@@ -88,7 +88,7 @@ const it = {
     },
     "shopify-luxury-fashion": {
       title: "Luxury Fashion Store",
-      description: "Storefront Shopify con configuratore 3D e checkout ottimizzato per mobile.",
+      description: "La boutique di una maison: borsa configurabile in cinque pelli con le iniziali impresse, busta di vetro e cassa da pollice con i wallet simulati.",
     },
     "shopify-b2b-wholesale": {
       title: "Wholesale B2B Shop",
@@ -204,7 +204,7 @@ const en: typeof it = {
     },
     "shopify-luxury-fashion": {
       title: "Luxury Fashion Store",
-      description: "A Shopify storefront with a 3D configurator and a checkout optimised for mobile.",
+      description: "A maison's boutique: a bag configurable in five leathers with hot-stamped initials, a frosted-glass cart and a thumb-first checkout with simulated wallets.",
     },
     "shopify-b2b-wholesale": {
       title: "Wholesale B2B Shop",

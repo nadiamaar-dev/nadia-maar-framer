@@ -479,3 +479,74 @@ test.describe("regressioni sulle prestazioni", () => {
     }
   })
 })
+
+test.describe("demo atelier moda", () => {
+  test.slow()
+
+  test("dal configuratore alla cassa: prezzo vivo, busta, wallet, ordine", async ({ page }) => {
+    await page.goto("/demo/atelier-moda")
+    const prezzo = page.getByTestId("at-prezzo")
+
+    /* Il prezzo di partenza: Vela media in cognac (1.850 + 90). */
+    await expect(prezzo).toContainText("1.940")
+
+    /* Ogni scelta lo riscrive: pelle inclusa, misura più grande, iniziali. */
+    await page.locator('[data-pelle="nero"]').click()
+    await expect(prezzo).toContainText("1.850")
+    await page.locator('[data-misura="grande"]').click()
+    await expect(prezzo).toContainText("2.250")
+    await page.getByLabel("Le tue iniziali").fill("nm")
+    await expect(prezzo).toContainText("2.295")
+
+    /* La borsa entra nella busta con la configurazione congelata. */
+    await page.getByRole("button", { name: /Aggiungi alla busta/ }).click()
+    await expect(page.getByTestId("at-badge")).toHaveText("1")
+    const busta = page.getByRole("dialog", { name: "La tua busta" })
+    await expect(busta).toContainText("iniziali NM")
+    await expect(page.getByTestId("at-subtotale")).toContainText("2.295")
+
+    /* Un accessorio dal catalogo si somma, e la quantità pure. */
+    await page.getByRole("button", { name: "Chiudi la busta" }).click()
+    await page.getByRole("button", { name: /Aggiungi Foulard Alba/ }).click()
+    await expect(page.getByTestId("at-badge")).toHaveText("2")
+    await expect(page.getByTestId("at-subtotale")).toContainText("2.615")
+    await busta.locator(".at-riga", { hasText: "Foulard" })
+      .getByRole("button", { name: "Aumenta quantità" }).click()
+    await expect(page.getByTestId("at-subtotale")).toContainText("2.935")
+
+    /* Il wallet recita la sua parte e l'ordine torna con numero e totale.
+       La busta si svuota: il distintivo sparisce. */
+    await page.getByRole("button", { name: "Paga con Apple Pay" }).click()
+    await expect(page.locator(".at-foglio")).toContainText("2.935")
+    await expect(page.getByTestId("at-ordine")).toContainText(/MA-26-\d{4}/, { timeout: 10_000 })
+    await expect(page.getByTestId("at-ordine")).toContainText("2.935")
+    await page.getByRole("button", { name: "Continua a esplorare" }).click()
+    await expect(page.getByTestId("at-badge")).toHaveCount(0)
+  })
+
+  test("la busta sa stare vuota, contare e togliere", async ({ page }) => {
+    await page.goto("/demo/atelier-moda")
+
+    /* Vuota lo dice, e rimanda alla collezione invece di lasciare il nulla. */
+    await page.getByRole("button", { name: "Apri la busta" }).click()
+    const busta = page.getByRole("dialog", { name: "La tua busta" })
+    await expect(busta).toContainText("La busta è vuota")
+    await busta.getByRole("button", { name: "Scopri la collezione" }).click()
+    await expect(busta).toHaveCount(0)
+
+    /* Due clic sullo stesso accessorio: una riga sola, quantità due. */
+    await page.getByRole("button", { name: /Aggiungi Portacarte Linea/ }).click()
+    await page.getByRole("button", { name: "Chiudi la busta" }).click()
+    await page.getByRole("button", { name: /Aggiungi Portacarte Linea/ }).click()
+    await expect(page.getByTestId("at-badge")).toHaveText("2")
+    await expect(busta.locator(".at-riga")).toHaveCount(1)
+    await expect(page.getByTestId("at-subtotale")).toContainText("480")
+
+    /* Ridurre e togliere riportano al punto di partenza, senza residui. */
+    await busta.getByRole("button", { name: "Riduci quantità" }).click()
+    await expect(page.getByTestId("at-subtotale")).toContainText("240")
+    await busta.getByRole("button", { name: "togli" }).click()
+    await expect(busta).toContainText("La busta è vuota")
+    await expect(page.getByTestId("at-badge")).toHaveCount(0)
+  })
+})
