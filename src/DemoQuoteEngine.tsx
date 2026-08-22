@@ -16,13 +16,14 @@ const FONT = "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', R
 const MONO = "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace"
 
 const PAGE_CSS = `
-  html, body { margin: 0; background: #151E29; }
+  html, body { margin: 0; background: #131B25; }
   .qtp-bar {
     position: sticky; top: 0; z-index: 40;
     display: flex; align-items: center; gap: 14px; padding: 11px 18px;
-    background: rgba(21,30,41,0.84);
-    backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
+    background: linear-gradient(180deg, rgba(27,37,50,0.92), rgba(19,27,37,0.88));
+    backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4);
+    border-bottom: 1px solid rgba(255,255,255,0.09);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.04), 0 12px 30px rgba(0,0,0,0.25);
     font-family: ${FONT};
   }
   .qtp-back {
@@ -37,8 +38,10 @@ const PAGE_CSS = `
   .qtp-chips { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
   .qtp-chip {
     font-family: ${MONO}; font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
-    color: rgba(123,243,220,0.9);
-    background: rgba(45,225,194,0.10); border: 1px solid rgba(45,225,194,0.2);
+    color: rgba(143,246,225,0.95);
+    background: linear-gradient(165deg, rgba(45,225,194,0.16), rgba(45,225,194,0.05));
+    border: 1px solid rgba(45,225,194,0.24);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
     border-radius: 999px; padding: 4px 10px;
   }
   @media (max-width: 860px) { .qtp-chips { display: none; } }
@@ -78,7 +81,7 @@ export default function DemoQuoteEngine() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#151E29" }}>
+    <div style={{ minHeight: "100vh", background: "#131B25" }}>
       <style>{QUOTE_CSS}</style>
       <style>{PAGE_CSS}</style>
 
