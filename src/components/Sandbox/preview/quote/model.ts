@@ -11,8 +11,14 @@
    foglio di calcolo regge a lungo: le regole vivono qui, dichiarate e
    leggibili, non sparse dentro i componenti.
 
-   I prezzi sono realistici ma dimostrativi: servono a far vedere come si
-   muove il preventivo, non a impegnare nessuno.
+   I PREZZI. Tarati sul mercato italiano 2026 per uno studio strutturato:
+   la tariffa implicita è intorno ai 480 €/giorno, coerente con le agenzie
+   di fascia media (300-400 € il freelance, 600-800 € le grandi società di
+   consulenza). Gli impegni in giorni sono quelli veri: un impianto Shopify
+   Plus con personalizzazioni serie non si chiude in tre settimane-uomo, e
+   scriverlo sarebbe il primo modo per perdere credibilità davanti a chi
+   quei progetti li ha già comprati. Restano prezzi dimostrativi: servono a
+   far vedere come si muove il preventivo, non a impegnare nessuno.
 ══════════════════════════════════════════════════════════════════════════ */
 
 export type PiattaformaId = "shopify" | "headless" | "portale"
@@ -39,21 +45,21 @@ export const PIATTAFORME: Piattaforma[] = [
     id: "shopify",
     nome: "Shopify Plus",
     sommario: "Il checkout è già risolto e aggiornato da altri: si parte in fretta, si personalizza dentro i binari.",
-    giorni: 18, prezzo: 6400, fattoreIntegrazione: 1.35,
+    giorni: 32, prezzo: 14500, fattoreIntegrazione: 1.35,
     tratti: ["Checkout gestito", "App store maturo", "Vincoli sul dominio dati"],
   },
   {
     id: "headless",
     nome: "Headless su misura",
     sommario: "Frontend e dominio dati sono nostri: nessun vincolo di piattaforma, tutto il peso dell'infrastruttura.",
-    giorni: 32, prezzo: 12800, fattoreIntegrazione: 0.85,
+    giorni: 78, prezzo: 38000, fattoreIntegrazione: 0.85,
     tratti: ["Modello dati libero", "Prestazioni sotto controllo", "Richiede presidio tecnico"],
   },
   {
     id: "portale",
     nome: "Portale B2B riservato",
     sommario: "Niente vetrina pubblica: listini per fascia, fido, ordini ricorrenti e agenti.",
-    giorni: 26, prezzo: 9800, fattoreIntegrazione: 0.95,
+    giorni: 62, prezzo: 29500, fattoreIntegrazione: 0.95,
     tratti: ["Prezzi per cliente", "Fido e scoperto", "Ordini ricorrenti"],
   },
 ]
@@ -85,8 +91,8 @@ export const MODULI: Modulo[] = [
     id: "pim",
     nome: "PIM · anagrafica prodotti",
     sommario: "Una sola fonte per schede, attributi e traduzioni, con pubblicazione controllata.",
-    prezzo: 3200, giorni: 9, oreRisparmiate: 6,
-    prezzoPer: { shopify: 3900 },
+    prezzo: 11500, giorni: 24, oreRisparmiate: 6,
+    prezzoPer: { shopify: 13800 },
   },
   {
     id: "magazzino",
@@ -97,45 +103,45 @@ export const MODULI: Modulo[] = [
        `fattoreIntegrazione`. Metterla anche nel listino la conterebbe due
        volte — il primo giro di test lo ha beccato: 13.365 € invece di
        10.530 €. Una causa, un posto solo. */
-    prezzo: 2600, giorni: 7, integra: true, oreRisparmiate: 9,
+    prezzo: 9800, giorni: 20, integra: true, oreRisparmiate: 9,
   },
   {
     id: "listini",
     nome: "Listini per fascia cliente",
     sommario: "Prezzi diversi per cliente o gruppo, scaglioni e valute.",
-    prezzo: 2200, giorni: 6, oreRisparmiate: 3,
+    prezzo: 7200, giorni: 15, oreRisparmiate: 3,
     esclusoDa: { shopify: "Su Shopify i listini per cliente richiedono B2B nativo, fuori da questo perimetro." },
   },
   {
     id: "configuratore",
     nome: "Configuratore di prodotto",
     sommario: "Varianti dipendenti, regole di compatibilità e prezzo calcolato.",
-    prezzo: 4200, giorni: 11, richiede: "pim", oreRisparmiate: 4,
+    prezzo: 16800, giorni: 35, richiede: "pim", oreRisparmiate: 4,
   },
   {
     id: "rivenditori",
     nome: "Area rivenditori",
     sommario: "Ordini per conto terzi, fido, storico e documenti scaricabili.",
-    prezzo: 3600, giorni: 10, oreRisparmiate: 7,
+    prezzo: 13500, giorni: 28, oreRisparmiate: 7,
     esclusoDa: { shopify: "L'area rivenditori con fido non si regge sulle app di piattaforma." },
   },
   {
     id: "ricerca-ai",
     nome: "Ricerca semantica",
     sommario: "Ricerca che capisce la domanda invece di cercare la parola esatta.",
-    prezzo: 2700, giorni: 8, richiede: "pim", oreRisparmiate: 2,
+    prezzo: 8900, giorni: 18, richiede: "pim", oreRisparmiate: 2,
   },
   {
     id: "fatturazione",
     nome: "Fatturazione elettronica",
     sommario: "Emissione verso SdI, conservazione e riconciliazione degli incassi.",
-    prezzo: 2400, giorni: 7, integra: true, oreRisparmiate: 8,
+    prezzo: 7400, giorni: 15, integra: true, oreRisparmiate: 8,
   },
   {
     id: "analytics",
     nome: "Cruscotto direzionale",
     sommario: "Margine per canale, rotazione di magazzino, coorti di riacquisto.",
-    prezzo: 1900, giorni: 5, integra: true, oreRisparmiate: 4,
+    prezzo: 6200, giorni: 13, integra: true, oreRisparmiate: 4,
   },
 ]
 
@@ -186,12 +192,25 @@ export interface Attivita {
   quotaErrori: number
 }
 
+/* Un'azienda che valuta un progetto da decine di migliaia di euro non fa
+   600 ordini al mese: i valori di partenza sono quelli di una PMI già
+   strutturata. Il costo orario è quello AZIENDALE pieno (RAL + contributi
+   + TFR), non lo stipendio netto — chi firma ragiona su quello. */
 export const ATTIVITA_INIZIALE: Attivita = {
-  ordini: 600, scontrino: 140, oreManuali: 14, costoOrario: 28, quotaErrori: 0.015,
+  ordini: 2000, scontrino: 145, oreManuali: 30, costoOrario: 30, quotaErrori: 0.015,
 }
 
-/** Tariffa giornaliera usata per tradurre i giorni in una data di consegna. */
-export const GIORNI_PER_SETTIMANA = 5
+export const GIORNI_LAVORATIVI_SETTIMANA = 5
+
+/** Persone che lavorano in parallelo su un progetto tipico: uno sviluppo
+ *  pieno più le quote parziali di design, PM e collaudo. Serve a tradurre
+ *  i giorni/uomo in settimane di calendario — dividere per una persona
+ *  sola darebbe date di consegna che nessuno rispetta, e che nessun
+ *  cliente crederebbe. */
+export const PERSONE_TEAM = 2.5
+
+/** Giorni/uomo assorbiti in una settimana di calendario dal team. */
+export const GIORNI_PER_SETTIMANA = GIORNI_LAVORATIVI_SETTIMANA * PERSONE_TEAM
 
 /* `useGrouping: true` non è ridondante: in italiano il separatore di
    migliaia parte solo da cinque cifre (8200 resta «8200», 11500 diventa

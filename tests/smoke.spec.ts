@@ -147,7 +147,7 @@ test.describe("demo preventivo & roi", () => {
 
     /* §1 — su Shopify due moduli sono impossibili, e lo dicono. */
     await page.getByRole("button", { name: /Shopify Plus/ }).click()
-    await expect(totale).toContainText("6.400")
+    await expect(totale).toContainText("14.500")
     await continua.click()
 
     await expect(page.locator('[data-modulo="listini"]')).toBeDisabled()
@@ -159,10 +159,10 @@ test.describe("demo preventivo & roi", () => {
     await expect(page.locator('[data-modulo="pim"]')).toHaveAttribute("data-on", "true")
 
     /* Il magazzino integra, quindi su Shopify costa il 35% in più del
-       listino base (2.600 → 3.510): la rettifica è dichiarata nella scheda,
+       listino base (9.800 → 13.230): la rettifica è dichiarata nella scheda,
        non un arrotondamento nascosto. Applicarla due volte era il difetto
        che questo controllo ha scoperto. */
-    await expect(page.locator('[data-modulo="magazzino"]')).toContainText("3.510")
+    await expect(page.locator('[data-modulo="magazzino"]')).toContainText("13.230")
     await page.locator('[data-modulo="magazzino"]').click()
 
     /* §3 esiste solo perché ora c'è qualcosa da sincronizzare. */
@@ -214,7 +214,7 @@ test.describe("demo preventivo & roi", () => {
     /* Un preset riempie la configurazione in un clic: chi apre la demo non
        deve partire da una pagina bianca. */
     await page.getByRole("button", { name: /Scala e integra/ }).click()
-    await expect(totale).toContainText("20.896")
+    await expect(totale).toContainText("66.908")
 
     /* Il piano nasce dallo stesso impegno del preventivo: le tre rate
        sommano al totale. Un piano di pagamenti che non torna alla cifra
@@ -224,17 +224,17 @@ test.describe("demo preventivo & roi", () => {
     expect(await rate.count()).toBe(3)
     const somma = (await rate.allInnerTexts())
       .reduce((t, x) => t + Number(x.replace(/[^0-9]/g, "")), 0)
-    expect(somma, "le tre rate devono sommare al totale").toBe(20896)
+    expect(somma, "le tre rate devono sommare al totale").toBe(66908)
 
     /* Annulla riporta alla configurazione precedente. */
     await page.locator('[data-modulo="ricerca-ai"]').click()
-    await expect(totale).not.toContainText("20.896")
+    await expect(totale).not.toContainText("66.908")
     await page.getByRole("button", { name: "Annulla l'ultima scelta" }).click()
-    await expect(totale).toContainText("20.896")
+    await expect(totale).toContainText("66.908")
 
     /* Due strade a confronto: si mette da parte e si ritrova. */
     await page.getByRole("button", { name: /Metti da parte questa/ }).click()
-    await expect(page.locator(".qt-scen-c")).toContainText("20.896")
+    await expect(page.locator(".qt-scen-c")).toContainText("66.908")
   })
 
 })
