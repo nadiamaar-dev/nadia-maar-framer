@@ -468,6 +468,7 @@ export default function QuoteApp({ onCaps, mostraCaps = true }: {
           </button>
         </div>
 
+        <span className="qt-kicker">Configuratore di preventivo</span>
         <h1 className="qt-titolone">Quanto costa, quanto dura, quando rientra</h1>
         <p className="qt-sottotitolo">
           Configura un progetto e-commerce come lo configureremmo insieme in call: scegli la
@@ -506,7 +507,13 @@ export default function QuoteApp({ onCaps, mostraCaps = true }: {
           ))}
         </div>
 
-        <div className="qt-grid">
+        {/* Tre colonne indipendenti nella griglia, non due incolonnate: la
+            checklist non condivide più il contenitore della scheda. Prima
+            "Da provare" stava impilata sotto il preventivo nella stessa
+            colonna, ed è lì che un secondo `position` in cascata aveva
+            scavalcato lo spazio riservato. Da sole, sticky l'una accanto
+            all'altra, non hanno più un bordo comune da scavalcare. */}
+        <div className="qt-grid" data-caps={mostraCaps}>
           <div className="qt-pan">
             <AnimatePresence mode="wait" custom={dir} initial={false}>
               <motion.div key={passo} custom={dir} variants={slide}
@@ -528,20 +535,19 @@ export default function QuoteApp({ onCaps, mostraCaps = true }: {
             </div>
           </div>
 
-          <div>
-            <Conto />
-            {mostraCaps && (
-              <div className="qt-caps">
-                <p className="qt-caps-t"><span>Da provare</span><b>{caps.length}/{QUOTE_CAPS.length}</b></p>
-                {QUOTE_CAPS.map(c => (
-                  <div key={c.id} className="qt-cap" data-done={caps.includes(c.id)}>
-                    <span className="dot" aria-hidden>{caps.includes(c.id) ? "✓" : ""}</span>
-                    {c.label}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <Conto />
+
+          {mostraCaps && (
+            <aside className="qt-caps" aria-label="Cose da provare">
+              <p className="qt-caps-t"><span>Da provare</span><b>{caps.length}/{QUOTE_CAPS.length}</b></p>
+              {QUOTE_CAPS.map(c => (
+                <div key={c.id} className="qt-cap" data-done={caps.includes(c.id)}>
+                  <span className="dot" aria-hidden>{caps.includes(c.id) ? "✓" : ""}</span>
+                  {c.label}
+                </div>
+              ))}
+            </aside>
+          )}
         </div>
       </div>
     </div>
