@@ -100,7 +100,7 @@ const it = {
     },
     "landing-saas-launch": {
       title: "SaaS Launch Page",
-      description: "Hero animato, pricing interattivo e form di pre-registrazione collegato al CRM.",
+      description: "Pagina di lancio di vetro smerigliato su fondo notte, con il widget di accesso che funziona davvero e si riveste del tuo marchio.",
     },
     "landing-event-conference": {
       title: "Event & Conference",
@@ -216,7 +216,7 @@ const en: typeof it = {
     },
     "landing-saas-launch": {
       title: "SaaS Launch Page",
-      description: "Animated hero, interactive pricing and a pre-registration form wired to the CRM.",
+      description: "A frosted-glass launch page on a midnight canvas, with a sign-in widget that actually works and rebrands itself live.",
     },
     "landing-event-conference": {
       title: "Event & Conference",

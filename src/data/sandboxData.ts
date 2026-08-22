@@ -114,8 +114,10 @@ export const SANDBOX_ART: Omit<SandboxItem, "title" | "description">[] = [
     id: "landing-saas-launch",
     category: "Landing Pages",
     type: "full-site",
-    tech: ["React", "Framer Motion", "Resend", "Vercel"],
-    accent: "#1E6FAF",
+    tech: ["React", "TypeScript", "Zustand", "Framer Motion"],
+    accent: "#663AF3",
+    demo: "saas-launch",
+    previewUrl: "/previews/lancio-saas",
   },
   {
     id: "landing-event-conference",

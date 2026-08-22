@@ -7,7 +7,7 @@
    capisca perché.
 ══════════════════════════════════════════════════════════════════════════ */
 
-export type DemoId = "supplier-portal" | "crm-dashboard" | "onboarding-kyc" | "preventivo-roi" | "luxury-fashion"
+export type DemoId = "supplier-portal" | "crm-dashboard" | "onboarding-kyc" | "preventivo-roi" | "luxury-fashion" | "saas-launch"
 
 export const DEMO_HREF: Record<DemoId, string> = {
   "supplier-portal": "/demo/portale-fornitori",
@@ -15,6 +15,7 @@ export const DEMO_HREF: Record<DemoId, string> = {
   "onboarding-kyc": "/demo/onboarding-kyc",
   "preventivo-roi": "/demo/preventivo-roi",
   "luxury-fashion": "/demo/atelier-moda",
+  "saas-launch": "/demo/lancio-saas",
 }
 
 /** Tutte le rotte demo: serve a App.tsx e alla sitemap per non divergere. */

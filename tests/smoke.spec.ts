@@ -550,3 +550,84 @@ test.describe("demo atelier moda", () => {
     await expect(page.getByTestId("at-badge")).toHaveCount(0)
   })
 })
+
+test.describe("demo lancio saas (Soglia)", () => {
+  test.slow()
+
+  test("i tre metodi di accesso arrivano in fondo, e l'errore si vede", async ({ page }) => {
+    await page.goto("/demo/lancio-saas")
+    const scheda = page.getByTestId("sg-scheda-apertura")
+    const cta = page.getByTestId("sg-cta-apertura")
+
+    /* §1 — password: le regole si applicano PRIMA di far perdere tempo. */
+    await scheda.getByLabel("Indirizzo e-mail").fill("chi.sono")
+    await cta.click()
+    await expect(scheda).toContainText("indirizzo e-mail valido")
+
+    await scheda.getByLabel("Indirizzo e-mail").fill("laura@acme.it")
+    await scheda.getByLabel("Password").fill("corta")
+    await cta.click()
+    await expect(scheda).toContainText("almeno 8 caratteri")
+
+    /* Password buona: si passa al secondo fattore, non direttamente dentro. */
+    await scheda.getByLabel("Password").fill("passwordlunga")
+    await cta.click()
+    await expect(scheda).toContainText("Secondo fattore", { timeout: 10_000 })
+
+    /* Una sequenza di zeri viene rifiutata: lo stato di errore esiste. */
+    for (let i = 0; i < 6; i++) await scheda.locator(`[data-cifra="${i}"]`).fill("0")
+    await cta.click()
+    await expect(scheda).toContainText("Codice non valido", { timeout: 10_000 })
+
+    /* Un codice valido chiude il giro, e la sessione porta con sé
+       l'organizzazione ricavata dal dominio. */
+    for (let i = 0; i < 6; i++) await scheda.locator(`[data-cifra="${i}"]`).fill(String(i + 1))
+    await cta.click()
+    await expect(page.getByTestId("sg-esito-apertura")).toContainText("acme.it", { timeout: 10_000 })
+    await expect(page.getByTestId("sg-esito-apertura")).toContainText("laura@acme.it")
+
+    /* §2 — SSO: un indirizzo personale non ha un IdP aziendale, e il
+       widget lo dice invece di mandare l'utente contro un muro. */
+    await scheda.getByRole("button", { name: "Prova un altro metodo" }).click()
+    await scheda.locator('[data-modo="sso"]').click()
+    await scheda.getByLabel("Indirizzo e-mail").fill("tizio@gmail.com")
+    await cta.click()
+    await expect(scheda).toContainText("dominio aziendale")
+
+    await scheda.getByLabel("Indirizzo e-mail").fill("laura@acme.it")
+    await cta.click()
+    await expect(scheda).toContainText("idp.acme.it", { timeout: 10_000 })
+    await cta.click()
+    await expect(page.getByTestId("sg-esito-apertura")).toContainText("SAML", { timeout: 10_000 })
+  })
+
+  test("gli ispettori rivestono la scheda in tempo reale", async ({ page }) => {
+    await page.goto("/demo/lancio-saas")
+    const cta = page.getByTestId("sg-cta-banco")
+    await cta.scrollIntoViewIfNeeded()
+
+    /* Il viola è l'unico accento del sistema: è lì che si parte. */
+    await expect(cta).toHaveCSS("background-color", "rgb(102, 58, 243)")
+
+    /* Un campione cambia il colore di TUTTE le schede in pagina: è la
+       promessa della sezione, non un'anteprima isolata. */
+    await page.locator('[data-colore="teal"]').click()
+    await expect(cta).toHaveCSS("background-color", "rgb(38, 150, 132)")
+    await expect(page.getByTestId("sg-cta-apertura")).toHaveCSS("background-color", "rgb(38, 150, 132)")
+
+    /* Il testo del pulsante è quello scritto nell'ispettore. */
+    await page.getByLabel("Testo del pulsante").fill("Entra ora")
+    await expect(cta).toHaveText("Entra ora")
+
+    /* Il raggio arriva davvero fino agli angoli della scheda. */
+    await page.getByLabel("Raggio degli angoli").fill("0")
+    await expect(page.getByTestId("sg-raggio")).toHaveText("0px")
+    await expect(page.getByTestId("sg-scheda-banco")).toHaveCSS("border-radius", "0px")
+
+    /* Il tema chiaro è una funzione del prodotto: la pagina resta scura,
+       la scheda si veste di bianco. */
+    await page.locator('[data-tema="chiaro"]').click()
+    await expect(page.getByTestId("sg-scheda-banco")).toHaveCSS("background-color", "rgb(255, 255, 255)")
+    await expect(page.locator(".sg-root")).toHaveCSS("background-color", "rgb(5, 6, 15)")
+  })
+})
