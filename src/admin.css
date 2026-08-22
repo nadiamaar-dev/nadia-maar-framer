@@ -153,7 +153,7 @@ input.portal-input[type="date"]::-webkit-calendar-picker-indicator { filter: inv
 
 /* ═══ Portal responsive ═════════════════════════════════════════
    The portal was built desktop-first with fixed inline sizes. These
-   three blocks are what makes it usable on a phone; everything else
+   four blocks are what makes it usable on a phone; everything else
    is handled by min() in the grid tracks. */
 
 /* Hamburger: only below the sidebar breakpoint. Owned here rather than by a
@@ -167,6 +167,43 @@ input.portal-input[type="date"]::-webkit-calendar-picker-indicator { filter: inv
   .pt-main   { padding: 18px 14px 40px !important; }
   .pt-header { padding: 0 14px !important; }
 }
+
+/* Shell height + the header that must never scroll away.
+   Shell.tsx sizes .pt-shell-root to exactly one screen (`height`, not
+   `min-height`) and relies on `overflow:hidden` there so only `.pt-main`
+   scrolls — the header, a plain flex sibling of main, stays put simply by
+   never being asked to move. That holds only as long as the root is never
+   even one pixel taller than the true visible viewport.
+
+   On a phone it can be, easily: `100vh` is measured against the LARGEST
+   viewport (address bar collapsed), so while the bar is showing — on load,
+   or after the smallest upward drag — the root is taller than what's
+   actually on screen. `html` has `overflow-y: visible` on purpose (further
+   up this file: `overflow-x: hidden` would break `position: sticky`
+   elsewhere on the site), so that extra height doesn't just clip — it
+   makes the WHOLE PAGE draggable, header included, which is the "menu
+   isn't fixed" bug. `100dvh` tracks the real visible viewport instead;
+   the `100vh` line first is the fallback for browsers that ignore `dvh`
+   (same two-line pattern already used for the foundry modal and the
+   Valtecnica preview window).
+
+   `position: sticky` on `.pt-header` looks like the obvious second line of
+   defence and it was tried here — measured, not assumed: it does nothing.
+   `.pt-shell-root` sits between the header and the document with its own
+   `overflow: hidden`, which makes IT the header's sticky containing block.
+   Since nothing ever overflows inside `.pt-shell-root` (header + main are
+   sized to fit it exactly), that containing block's own scroll position
+   never moves — so sticky has nothing to react to. The scroll that drags
+   the header away happens one level further out, at the document, which
+   sticky here can't see past. Don't re-add it as a "just in case": the fix
+   is keeping the root's height honest, not pinning the header a second way.
+
+   `overscroll-behavior-y: contain` on `.pt-main` stops the browser from
+   chaining a rubber-band bounce at the top or bottom of that scroller into
+   the document behind it — the other way the page ends up moving as a
+   whole when only the content column should. */
+.pt-shell-root { height: 100vh; height: 100dvh; }
+.pt-main { overscroll-behavior-y: contain; -webkit-overflow-scrolling: touch; }
 
 /* Row: the right-hand cluster (amount + badge + two buttons) is
    flex-shrink:0, so on a narrow card it squeezes the title to nothing

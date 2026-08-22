@@ -327,8 +327,8 @@ export default function Shell({
   /* ── Layout ─────────────────────────────────────────────────────────── */
   return (
     <div
-      className="portal-root"
-      style={{ display: "flex", height: "100vh", overflow: "hidden", background: T.bg, fontFamily: DISPLAY }}
+      className="portal-root pt-shell-root"
+      style={{ display: "flex", overflow: "hidden", background: T.bg, fontFamily: DISPLAY }}
     >
       {/* Mobile body-copy floor — mirrors the site's .hp-body rule.
           Only prose/description paragraphs carry .pt-body; data cells,
